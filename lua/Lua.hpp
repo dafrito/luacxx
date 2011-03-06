@@ -9,21 +9,27 @@ using std::string;
 class Lua
 {
 private:
-	lua_State * state;
 public:
+	// XXX make this private once testing is complete
+	lua_State * state;
 
 	class LuaValue
 	{
 	private:
 		Lua& lua;
 		string key;
+
+		void push_key();
+		const char* char_value() const;
 	public:
 		LuaValue(Lua& lua, const string& key) :
 			lua(lua), key(key) {}
 
 		const LuaValue& operator=(const char *value);
+		bool operator==(const char* other);
 		bool operator==(const string& other);
-		operator string() const;
+		operator const char*();
+		operator string();
 	};
 	Lua();
 	~Lua();
