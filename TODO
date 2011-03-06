@@ -1,0 +1,32 @@
+#1 Manage my life
+
+Provide ways to evaluate/organize my information.
+Viewable via the web.
+
+#2 Ask questions
+
+Here's the process:
+
+1. Tell Tentacles to ask me a question periodically, optionally with
+answers provided.
+
+Question
+{
+	String question
+	Choices answers
+	Period period
+};
+
+2. Tentacles saves the question and answers.
+
+3. I log in online.
+
+4. Tentacles checks to see if any questions are waiting to be answered.
+
+Set<Question> questions
+
+5. On the page, these questions are posed to me.
+
+6. I respond to the questions asked.
+
+7. Tentacles saves my responses.
