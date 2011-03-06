@@ -2,8 +2,10 @@
 #define HEADER_LUA_HPP
 
 #include <string>
+#include <istream>
 #include <lua.hpp>
 
+using std::istream;
 using std::string;
 
 class Lua
@@ -35,6 +37,8 @@ public:
 	~Lua();
 
 	LuaValue operator[](const string& key);
+
+	void operator()(istream& stream, const char* name);
 
 	friend class LuaValue;
 };

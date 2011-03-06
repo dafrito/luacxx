@@ -2,6 +2,7 @@
 #include <string>
 #include "../Lua.hpp"
 #include <lua.hpp>
+#include <fstream>
 
 using namespace std;
 
@@ -12,7 +13,16 @@ public:
 	{
 		Lua lua;
 		lua["No"] = "Time";
-		TS_ASSERT(lua["No"] == "Time");
+		TS_ASSERT_EQUALS(lua["No"], "Time");
+	}
+
+	void testLuaCanLoadAFile()
+	{
+		ifstream f("tests/simple.lua", ios::in);
+		TS_ASSERT(f.is_open());
+		Lua lua;
+		lua["No"] = "Time";
+		lua(f, "tests/simple.lua");
 	}
 
 	void testLuaSetsAValue()
