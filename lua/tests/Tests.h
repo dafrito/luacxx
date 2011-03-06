@@ -1,4 +1,5 @@
 #include <cxxtest/TestSuite.h>
+#include <string>
 #include "../Lua.hpp"
 
 using namespace std;
@@ -9,7 +10,7 @@ public:
 	void testLuaIsInstantiated()
 	{
 		Lua lua;
-		TS_ASSERT_EQUALS(1, 1);
+		lua["No"] = "Time";
 	}
 
 };
