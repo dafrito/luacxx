@@ -1,16 +1,17 @@
-export OUTDIR := $(CURDIR)/artifact
+export OUTDIR := $(CURDIR)/artifacts
 
-all: | $(OUTDIR)
+clean: 
 	$(MAKE) -C lua $@
-
-clean:
-	$(MAKE) -C lua $@
+	$(MAKE) -C tentacle $@
+	$(MAKE) -C ctnt $@
 	rm -rf $(OUTDIR)
+.PHONY: clean
 
-test: | $(OUTDIR)
+all test: | $(OUTDIR)
 	$(MAKE) -C lua $@
-
-.PHONY: all clean test
+	$(MAKE) -C tentacle $@
+	$(MAKE) -C ctnt $@
+.PHONY: all test
 
 $(OUTDIR):
 	mkdir -p $(OUTDIR)

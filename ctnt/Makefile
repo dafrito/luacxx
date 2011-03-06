@@ -1,22 +1,35 @@
-NAME=lua-c++
-LIB=$(OUTDIR)/lib$(NAME).so
-
 BUILDDIR = build
 OUTDIR ?= $(BUILDDIR)
 TESTDIR=tests
 
-CXXFLAGS=-Wall -Werror -g -std=c++0x 
-CXXFLAGS+= -L$(OUTDIR) -Wl,-R$(OUTDIR) -llua
+NAME=ctnt
+LIB=$(OUTDIR)/lib$(NAME).so
+APP=$(OUTDIR)/$(NAME)
 
-all: $(LIB)
+CXXFLAGS=-Wall -Werror -g -std=c++0x 
+CXXFLAGS+= -L$(OUTDIR) -Wl,-R$(OUTDIR) 
+CXXFLAGS+= `pkg-config --libs ncurses lua`
+
+all: lib app
 .PHONY: all
+
+lib: $(LIB)
+
+app: $(APP)
+.PHONY: app lib
 
 objects := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 $(LIB): $(addprefix $(BUILDDIR)/, $(objects)) | $(BUILDDIR)
 	g++ $(CXXFLAGS) -shared -fPIC -o $@ $<
 
+$(APP): $(addprefix $(BUILDDIR)/, $(objects)) $(BUILDDIR)/main.o | $(BUILDDIR)
+	g++ $(CXXFLAGS) -fPIC -o $@ $^
+
+$(BUILDDIR)/main.o: main
+	g++ $(CXXFLAGS) -fPIC -c -o $@ -x c++ main
+
 $(BUILDDIR)/%.o: %.cpp | $(BUILDDIR)
-	g++ $(CXXFLAGS) -c -o $@ $<
+	g++ $(CXXFLAGS) -fPIC -c -o $@ $<
 
 $(BUILDDIR):
 	mkdir $(BUILDDIR)

@@ -1,4 +1,4 @@
-NAME=lua-c++
+NAME=tentacle
 LIB=$(OUTDIR)/lib$(NAME).so
 
 BUILDDIR = build
@@ -6,9 +6,9 @@ OUTDIR ?= $(BUILDDIR)
 TESTDIR=tests
 
 CXXFLAGS=-Wall -Werror -g -std=c++0x 
-CXXFLAGS+= -L$(OUTDIR) -Wl,-R$(OUTDIR) -llua
+CXXFLAGS+= -L$(OUTDIR) -Wl,-R$(OUTDIR) 
 
-all: $(LIB)
+all: $(LIB) $(APP)
 .PHONY: all
 
 objects := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
