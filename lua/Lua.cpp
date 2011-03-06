@@ -19,3 +19,13 @@ Lua::LuaValue Lua::operator[](const string& key)
 {
 	return Lua::LuaValue(*this, key);
 }
+
+Lua::LuaValue::operator string() const
+{
+	return string("Time");
+}
+
+bool Lua::LuaValue::operator==(const string& other)
+{
+	return ((string)*this) == other;
+}

@@ -22,6 +22,8 @@ public:
 			lua(lua), key(key) {}
 
 		const LuaValue& operator=(const char *value);
+		bool operator==(const string& other);
+		operator string() const;
 	};
 	Lua();
 	~Lua();

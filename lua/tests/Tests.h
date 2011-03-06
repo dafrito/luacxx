@@ -11,6 +11,7 @@ public:
 	{
 		Lua lua;
 		lua["No"] = "Time";
+		TS_ASSERT(lua["No"] == "Time");
 	}
 
 };
