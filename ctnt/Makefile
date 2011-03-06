@@ -35,6 +35,7 @@ $(BUILDDIR):
 	mkdir $(BUILDDIR)
 
 test: $(BUILDDIR)/testrunner
+	@echo Testing $(NAME):
 	$<
 .PHONY: test
 
