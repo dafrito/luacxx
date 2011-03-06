@@ -30,3 +30,9 @@ Set<Question> questions
 6. I respond to the questions asked.
 
 7. Tentacles saves my responses.
+
+What's the simplest thing that could possibly work?
+
+In other words, what do I currently know/have?
+
+FritoMod + nCurses + C++.
