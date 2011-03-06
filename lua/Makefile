@@ -6,17 +6,19 @@ OUTDIR ?= $(BUILDDIR)
 TESTDIR=tests
 
 CXXFLAGS=-Wall -Werror -g -std=c++0x 
-CXXFLAGS+= -L$(OUTDIR) -Wl,-R$(OUTDIR) -llua
+CXXFLAGS+= -L$(OUTDIR) -Wl,-R$(OUTDIR)
+CXXFLAGS+= `pkg-config --libs lua`
 
 all: $(LIB)
 .PHONY: all
 
 objects := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 $(LIB): $(addprefix $(BUILDDIR)/, $(objects)) | $(BUILDDIR)
-	g++ $(CXXFLAGS) -shared -fPIC -o $@ $<
+	g++ $(CXXFLAGS) -shared -fPIC -o $@ $^
 
 $(BUILDDIR)/%.o: %.cpp | $(BUILDDIR)
-	g++ $(CXXFLAGS) -c -o $@ $<
+	@echo building $<
+	g++ $(CXXFLAGS) -fPIC -c -o $@ $<
 
 $(BUILDDIR):
 	mkdir $(BUILDDIR)
