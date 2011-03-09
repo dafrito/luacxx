@@ -9,14 +9,30 @@ using namespace std;
 class Tests : public CxxTest::TestSuite
 {
 public:
-	void testLuaIsInstantiated()
+	void testLuaOffersSubscriptSupportForGlobalValues()
 	{
 		Lua lua;
 		lua["No"] = "Time";
 		TS_ASSERT_EQUALS(lua["No"], "Time");
 	}
 
-	void testLuaCanLoadAFile()
+	void testLuaRunsStringsDirectly()
+	{
+		Lua lua;
+		lua["No"] = "Time";
+		lua("_G['No']='Foo'");
+		TS_ASSERT_EQUALS(lua["No"], "Foo");
+	}
+
+	void testLuaValueIsAProxyForTheGlobalTable()
+	{
+		Lua lua;
+		LuaValue v = lua["No"];
+		v = "Time";
+		TS_ASSERT_EQUALS(lua["No"], "Time");
+	}
+
+	void testLuaCanLoadAFileStreamIntoItsEnvironment()
 	{
 		ifstream f("tests/simple.lua", ios::in);
 		TS_ASSERT(f.is_open());
