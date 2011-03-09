@@ -5,6 +5,8 @@
 #include <istream>
 #include <lua.hpp>
 
+#include "LuaValue.hpp"
+
 using std::istream;
 using std::string;
 
@@ -14,31 +16,13 @@ private:
 public:
 	// XXX make this private once testing is complete
 	lua_State * state;
-
-	class LuaValue
-	{
-	private:
-		Lua& lua;
-		string key;
-
-		void push_key();
-		const char* char_value() const;
-	public:
-		LuaValue(Lua& lua, const string& key) :
-			lua(lua), key(key) {}
-
-		const LuaValue& operator=(const char *value);
-		bool operator==(const char* other);
-		bool operator==(const string& other);
-		operator const char*();
-		operator string();
-	};
 	Lua();
 	~Lua();
 
 	LuaValue operator[](const string& key);
 
 	void operator()(istream& stream, const char* name);
+	void operator()(const string& input);
 
 	friend class LuaValue;
 };
