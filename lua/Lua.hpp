@@ -22,7 +22,6 @@ public:
 	LuaValue operator[](const string& key);
 
 	void operator()(istream& stream, const string& name);
-	void operator()(const string& input);
 
 	friend class LuaValue;
 };

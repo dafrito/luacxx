@@ -21,7 +21,7 @@ public:
 	void testLuaRunsStringsDirectly()
 	{
 		Lua lua;
-		lua("_G['No']='Foo'");
+		lua::load_string(lua, "_G['No']='Foo'");
 		TS_ASSERT_EQUALS(lua["No"], "Foo");
 	}
 

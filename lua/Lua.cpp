@@ -42,12 +42,6 @@ void Lua::operator()(istream& stream, const string& name = nullptr)
 	lua_call(state, 0, 0);
 }
 
-void Lua::operator()(const string& input)
-{
-	std::istringstream stream(input);
-	(*this)(stream, "string input");
-}
-
 LuaValue Lua::operator[](const string& key)
 {
 	return LuaValue(*this, key);
