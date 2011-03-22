@@ -1,8 +1,8 @@
 #include <cxxtest/TestSuite.h>
 #include <string>
 #include "../Lua.hpp"
+#include "../lua.hpp"
 #include <lua.hpp>
-#include <fstream>
 #include "../exceptions.hpp"
 #include "../LuaStack.hpp"
 
@@ -35,11 +35,9 @@ public:
 
 	void testLuaCanLoadAFileStreamIntoItsEnvironment()
 	{
-		ifstream f("tests/simple.lua", ios::in);
-		TS_ASSERT(f.is_open());
 		Lua lua;
 		lua["No"] = "Time";
-		lua(f, "tests/simple.lua");
+		lua::load_file(lua, "tests/simple.lua");
 	}
 
 	void testLuaStackManagesItOwnStack()
