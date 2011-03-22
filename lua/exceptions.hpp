@@ -2,7 +2,7 @@
 
 using namespace std;
 
-class LuaException : std::runtime_error
+class LuaException : public std::runtime_error
 {
 private:
 	const Lua& lua;
