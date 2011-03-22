@@ -6,8 +6,7 @@
 
 const LuaValue& LuaValue::operator=(const char *value)
 {
-	lua_pushstring(lua.state, value);
-	lua_setglobal(lua.state, key.c_str());
+	LuaStack(lua).setGlobal(key, value);
 	return *this;
 }
 
