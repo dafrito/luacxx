@@ -2,8 +2,18 @@
 #include "LuaStack.hpp"
 #include "exceptions.hpp"
 
-LuaStack::LuaStack(Lua& lua) : lua(lua), initialPosition(lua_gettop(lua.state))
+LuaStack::LuaStack(Lua& lua) :
+	lua(lua),
+	initialPosition(lua_gettop(lua.state)),
+	minimumSize(0)
 {}
+
+LuaStack::LuaStack(Lua& lua, int initialPosition, int minimumSize) :
+	lua(lua),
+	initialPosition(initialPosition),
+	minimumSize(minimumSize)
+{}
+
 
 bool LuaStack::isMagicalPos(const int& pos)
 {
@@ -102,7 +112,7 @@ LuaStack::~LuaStack()
 {
 	int popped=lua_gettop(lua.state) - initialPosition;
 	if (popped > 0)
-		lua_pop(lua.state, popped);
+		lua_pop(lua.state, max(0, popped - minimumSize));
 	else if (popped < 0)
 		throw LuaException(lua, "Stack underflow");
 }

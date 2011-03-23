@@ -10,10 +10,13 @@ class LuaStack
 private:
 	Lua& lua;
 	const int initialPosition;
+	const int minimumSize;
 
 	void checkPos(const int& pos);
 	void checkSize(const int& min);
 	bool isMagicalPos(const int& pos);
+
+	LuaStack(Lua& lua, int initialPosition, int retained);
 public:
 	LuaStack(Lua& lua);
 	const char* cstring(int pos = -1);
