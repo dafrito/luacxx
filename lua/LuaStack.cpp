@@ -55,7 +55,7 @@ double LuaStack::number(int pos)
 	return lua_tonumber(lua.state, pos);
 }
 
-LuaStack& LuaStack::global(const char* name) 
+LuaStack& LuaStack::global(const char* name)
 {
 	lua_getglobal(lua.state, name);
 	return (*this);
