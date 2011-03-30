@@ -4,34 +4,37 @@
 #include "Lua.hpp"
 #include "LuaStack.hpp"
 
-const LuaValue& LuaValue::operator=(const char *value)
-{
-	LuaStack(lua).setGlobal(key, value);
-	return *this;
-}
-
 const char* LuaValue::char_value() const
 {
 	return LuaStack(lua).global(key).cstring();
 }
 
-LuaValue::operator const char*()
+LuaValue::operator const char*() const
 {
-	return LuaStack(lua).global(key).cstring();
+	return char_value();
 }
 
-LuaValue::operator string()
+LuaValue::operator string() const
 {
 	return LuaStack(lua).global(key).string();
 }
 
-bool LuaValue::operator==(const char* other)
+LuaValue::operator bool() const
+{
+	return LuaStack(lua).global(key).boolean();
+}
+
+LuaValue::operator int() const
+{
+	return LuaStack(lua).global(key).number();
+}
+
+LuaValue::operator lua_Number() const
+{
+	return LuaStack(lua).global(key).number();
+}
+
+bool LuaValue::operator==(const char* other) const
 {
 	return !strcmp(char_value(), other);
 }
-
-bool LuaValue::operator==(const string& other)
-{
-	return other == char_value();
-}
-

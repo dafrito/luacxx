@@ -2,6 +2,7 @@
 #define HEADER_LUAVALUE_HPP
 
 #include <string>
+#include "LuaStack.hpp"
 using std::string;
 
 class Lua;
@@ -18,11 +19,23 @@ public:
 	LuaValue(Lua& lua, const string& key) :
 		lua(lua), key(key) {}
 
-	const LuaValue& operator=(const char *value);
-	bool operator==(const char* other);
-	bool operator==(const string& other);
-	operator const char*();
-	operator string();
+	operator const char*() const;
+	operator string() const;
+	operator lua_Number() const;
+
+	template<typename T>
+	bool operator==(T other) const
+	{
+		return other == static_cast<T>(*this);
+	}
+	bool operator==(const char* other) const;
+
+	template<typename T>
+	const LuaValue& operator=(T value)
+	{
+		LuaStack(lua).setGlobal(key, value);
+		return *this;
+	}
 };
 
 #endif
