@@ -43,6 +43,7 @@ public:
 		return pop(size());
 	}
 
+	int type(int pos = -1) const;
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
 	lua_Number number(int pos = -1);

@@ -92,9 +92,9 @@ public:
 	void testLuaStackPushesABoolean()
 	{
 		Lua lua;
-		LuaStack s(lua);
-		s.setGlobal("Good", false);
+		LuaStack(lua).setGlobal("Good", false);
 		TS_ASSERT_EQUALS(lua["Good"], false);
+		TS_ASSERT_EQUALS(LuaStack(lua).global("Good").type(), LUA_TBOOLEAN);
 	}
 
 	void testLuaStackSetsANumber()

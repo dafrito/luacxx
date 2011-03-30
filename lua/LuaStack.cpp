@@ -68,6 +68,12 @@ void LuaStack::checkPos(int pos) const
 		throw LuaException(lua, "Stack position is beyond the top of the lua stack");
 }
 
+int LuaStack::type(int pos) const
+{
+	checkPos(pos);
+	return lua_type(lua.state, pos);
+}
+
 const char* LuaStack::cstring(int pos)
 {
 	checkPos(pos);
