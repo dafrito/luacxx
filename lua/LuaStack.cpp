@@ -175,3 +175,11 @@ LuaStack::~LuaStack()
 	if (size() > 0)
 		lua_pop(lua.state, size());
 }
+
+void LuaStack::ForwardingLuaFunction::operator ()()
+{
+	LuaStack stack(lua);
+	stack.offset(0);
+	f(lua, stack);
+	stack.offset(stack.size());
+}

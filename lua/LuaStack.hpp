@@ -5,9 +5,10 @@
 #include <functional>
 #include <lua.hpp>
 
-#include "LuaFunction.hpp"
-
 class Lua;
+class LuaStack;
+
+typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
 
 class LuaStack
 {
@@ -21,6 +22,16 @@ private:
 	bool isMagicalPos(const int& pos) const;
 
 	LuaStack& offset(int offset);
+
+	class ForwardingLuaFunction
+	{
+		Lua& lua;
+		LuaCallable f;
+		void operator()();
+	public:
+		ForwardingLuaFunction(Lua& lua, LuaCallable f) : lua(lua), f(f) {}
+		friend class LuaStack;
+	};
 public:
 	LuaStack(Lua& lua);
 
@@ -91,7 +102,6 @@ public:
 
 	~LuaStack();
 
-	friend class ForwardingLuaFunction;
 };
 
 #endif
