@@ -21,6 +21,8 @@ public:
 
 	operator const char*() const;
 	operator string() const;
+	operator bool() const;
+	operator int() const;
 	operator lua_Number() const;
 
 	template<typename T>
