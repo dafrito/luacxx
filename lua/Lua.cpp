@@ -33,7 +33,7 @@ Lua::Lua()
 	luaL_openlibs(state);
 }
 
-void Lua::operator()(istream& stream, const string& name = nullptr)
+void Lua::operator()(istream& stream, const string& name = NULL)
 {
 	LuaReadingData d(stream);
 	if(0 != lua_load(state, &read_stream, &d, name.c_str())) {
