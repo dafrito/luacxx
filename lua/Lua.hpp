@@ -12,10 +12,8 @@ using std::string;
 
 class Lua
 {
-private:
-public:
-	// XXX make this private once testing is complete
 	lua_State * state;
+public:
 	Lua();
 	~Lua();
 
