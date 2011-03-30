@@ -11,7 +11,6 @@ namespace {
 	{
 		istream& stream;
 		char buffer[4096];
-
 		LuaReadingData(istream& stream) : stream(stream) {}
 	};
 
@@ -25,7 +24,6 @@ namespace {
 		return d->buffer;
 	}
 }
-
 
 Lua::Lua()
 {
@@ -51,4 +49,3 @@ Lua::~Lua()
 {
 	lua_close(state);
 }
-
