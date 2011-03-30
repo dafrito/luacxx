@@ -2,39 +2,70 @@
 #include "LuaStack.hpp"
 #include "exceptions.hpp"
 
+int LuaStack::invokeWrappedFunction(lua_State* state)
+{
+	void* p = lua_touserdata(state, lua_upvalueindex(1));
+	ForwardingLuaFunction* func = static_cast<ForwardingLuaFunction*>(p);
+	(*func)();
+	return lua_gettop(state);
+}
+
 LuaStack::LuaStack(Lua& lua) :
 	lua(lua),
-	initialPosition(lua_gettop(lua.state)),
-	minimumSize(0)
+	_offset(lua_gettop(lua.state))
 {}
 
-LuaStack::LuaStack(Lua& lua, int initialPosition, int minimumSize) :
-	lua(lua),
-	initialPosition(initialPosition),
-	minimumSize(minimumSize)
-{}
+LuaStack& LuaStack::offset(int offset)
+{
+	if(offset < 0)
+		throw LuaException(lua, "Offset must be non-negative");
+	if(offset > lua_gettop(lua.state))
+		throw LuaException(lua, "Offset must be less than the top of lua's stack");
+	_offset = offset;
+	return (*this);
+}
 
+int LuaStack::size() const
+{
+	return lua_gettop(lua.state) - offset();
+}
 
-bool LuaStack::isMagicalPos(const int& pos)
+LuaStack& LuaStack::pop(int count)
+{
+	if(count > size())
+		throw LuaException(lua, "Refusing to pop elements not managed by this stack");
+	lua_pop(lua.state, count);
+	return (*this);
+}
+
+LuaStack& LuaStack::replace(int pos)
+{
+	checkPos(pos);
+	if (empty())
+		throw LuaException(lua, "Stack must not be empty when replacing elements");
+	lua_replace(lua.state, pos);
+	return (*this);
+}
+
+bool LuaStack::isMagicalPos(const int& pos) const
 {
 	return pos == LUA_GLOBALSINDEX;
 }
 
-void LuaStack::checkPos(const int& pos)
+void LuaStack::checkPos(int pos) const
 {
 	if (isMagicalPos(pos))
 		return;
 	const int top=lua_gettop(lua.state);
-	if (top + pos < initialPosition)
+	if (pos == 0)
+		throw LuaException(lua, "Stack position must not be zero");
+	// Convert relative positions to absolute ones.
+	if (pos < 0)
+		pos += top;
+	if (pos < offset())
 		throw LuaException(lua, "Stack position is not managed by this stack");
-	if (pos >= 0)
-		throw LuaException(lua, "Stack position is non-negative");
-}
-
-void LuaStack::checkSize(const int& min)
-{
-	if(min > lua_gettop(lua.state) - initialPosition)
-		throw LuaException(lua, "Stack size is too small");
+	if (pos > top)
+		throw LuaException(lua, "Stack position is beyond the top of the lua stack");
 }
 
 const char* LuaStack::cstring(int pos)
@@ -47,6 +78,12 @@ std::string LuaStack::string(int pos)
 {
 	checkPos(pos);
 	return std::string(cstring(pos));
+}
+
+bool LuaStack::boolean(int pos)
+{
+	checkPos(pos);
+	return lua_toboolean(lua.state, pos);
 }
 
 double LuaStack::number(int pos)
@@ -96,23 +133,39 @@ LuaStack& LuaStack::push(const lua_Number& value)
 	return (*this);
 }
 
-LuaStack& LuaStack::push(const bool& value)
+LuaStack& LuaStack::push(const int& value)
 {
-	lua_pushboolean(lua.state, value);
+	lua_pushnumber(lua.state, value);
 	return (*this);
 }
 
-LuaStack& LuaStack::push(lua_CFunction f)
+LuaStack& LuaStack::push(void* const p)
 {
-	lua_pushcfunction(lua.state, f);
+	lua_pushlightuserdata(lua.state, p);
+	return (*this);
+}
+
+LuaStack& LuaStack::push(const bool& b)
+{
+	lua_pushboolean(lua.state, b);
+	return (*this);
+}
+
+LuaStack& LuaStack::push(void(*p)(Lua& lua, LuaStack& stack))
+{
+	return this->push(LuaCallable(p));
+}
+
+LuaStack& LuaStack::push(const LuaCallable& f)
+{
+	// XXX This definitely, definitely leaks.
+	lua_pushlightuserdata(lua.state, new ForwardingLuaFunction(lua, f));
+	lua_pushcclosure(lua.state, invokeWrappedFunction, 1);
 	return (*this);
 }
 
 LuaStack::~LuaStack()
 {
-	int popped=lua_gettop(lua.state) - initialPosition;
-	if (popped > 0)
-		lua_pop(lua.state, max(0, popped - minimumSize));
-	else if (popped < 0)
-		throw LuaException(lua, "Stack underflow");
+	if (size() > 0)
+		lua_pop(lua.state, size());
 }

@@ -21,7 +21,7 @@ public:
 
 	void operator()(istream& stream, const string& name);
 
-	friend class LuaValue;
+	friend class LuaStack;
 };
 
 #endif

@@ -2,26 +2,51 @@
 #define HEADER_LUASTACK_HPP
 
 #include <string>
+#include <functional>
+#include <lua.hpp>
+
+#include "LuaFunction.hpp"
 
 class Lua;
 
 class LuaStack
 {
 private:
+	static int invokeWrappedFunction(lua_State* state);
+
 	Lua& lua;
-	const int initialPosition;
-	const int minimumSize;
+	int _offset;
 
-	void checkPos(const int& pos);
-	void checkSize(const int& min);
-	bool isMagicalPos(const int& pos);
+	void checkPos(int pos) const;
+	bool isMagicalPos(const int& pos) const;
 
-	LuaStack(Lua& lua, int initialPosition, int retained);
+	LuaStack& offset(int offset);
 public:
 	LuaStack(Lua& lua);
+
+	int size() const;
+	bool empty() const
+	{
+		return size() == 0;
+	}
+
+	int offset() const
+	{
+		return _offset;
+	}
+
+	LuaStack& shift(int count = -1);
+	LuaStack& pop(int count = 1);
+	LuaStack& replace(int pos);
+	LuaStack& clear()
+	{
+		return pop(size());
+	}
+
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
 	lua_Number number(int pos = -1);
+	bool boolean(int pos = -1);
 	LuaStack& global(const char* name);
 	LuaStack& global(const std::string& name);
 
@@ -31,8 +56,11 @@ public:
 	LuaStack& push(const char* value);
 	LuaStack& push(const std::string& value);
 	LuaStack& push(const lua_Number& value);
-	LuaStack& push(const bool& value);
-	LuaStack& push(lua_CFunction f);
+	LuaStack& push(void* const p);
+	LuaStack& push(const LuaCallable& f);
+	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
+	LuaStack& push(const bool& b);
+	LuaStack& push(const int& b);
 
 	// We need this definition since integers can be 
 	// implicitly converted to booleans or numbers, which
@@ -61,6 +89,8 @@ public:
 	}
 
 	~LuaStack();
+
+	friend class ForwardingLuaFunction;
 };
 
 #endif
