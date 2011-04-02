@@ -74,6 +74,13 @@ int LuaStack::type(int pos) const
 	return lua_type(lua.state, pos);
 }
 
+LuaStack& LuaStack::to(const char* sink, int pos)
+{
+	checkPos(pos);
+	sink = lua_tostring(lua.state, pos);
+	return (*this);
+}
+
 const char* LuaStack::cstring(int pos)
 {
 	checkPos(pos);
@@ -86,16 +93,39 @@ std::string LuaStack::string(int pos)
 	return std::string(cstring(pos));
 }
 
-bool LuaStack::boolean(int pos)
+LuaStack& LuaStack::to(bool& sink, int pos)
 {
 	checkPos(pos);
-	return lua_toboolean(lua.state, pos);
+	sink = lua_toboolean(lua.state, pos);
+	return (*this);
+}
+
+bool LuaStack::boolean(int pos)
+{
+	bool b;
+	to(b, pos);
+	return b;
+}
+
+LuaStack& LuaStack::to(lua_Number& sink, int pos)
+{
+	checkPos(pos);
+	sink = lua_tonumber(lua.state, pos);
+	return (*this);
+}
+
+LuaStack& LuaStack::to(int&sink, int pos)
+{
+	checkPos(pos);
+	sink = lua_tointeger(lua.state, pos);
+	return (*this);
 }
 
 double LuaStack::number(int pos)
 {
-	checkPos(pos);
-	return lua_tonumber(lua.state, pos);
+	double b;
+	to(b, pos);
+	return b;
 }
 
 LuaStack& LuaStack::global(const char* name)

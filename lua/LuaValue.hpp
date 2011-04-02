@@ -19,11 +19,19 @@ public:
 	LuaValue(Lua& lua, const string& key) :
 		lua(lua), key(key) {}
 
-	operator const char*() const;
-	operator string() const;
-	operator bool() const;
-	operator int() const;
-	operator lua_Number() const;
+	template <typename T>
+	void to(T& value) const
+	{
+		LuaStack(lua).global(key).to(value);
+	}
+
+	template<typename T>
+	operator T() const
+	{
+		T t;
+		this->to(t);
+		return t;
+	}
 
 	template<typename T>
 	bool operator==(T other) const

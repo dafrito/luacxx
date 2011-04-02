@@ -55,6 +55,12 @@ public:
 	}
 
 	int type(int pos = -1) const;
+
+	LuaStack& to(bool& sink, int pos = -1);
+	LuaStack& to(lua_Number& sink, int pos = -1);
+	LuaStack& to(const char* sink, int pos = -1);
+	LuaStack& to(int& sink, int pos = -1);
+
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
 	lua_Number number(int pos = -1);
