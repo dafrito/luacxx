@@ -5,8 +5,13 @@
 int LuaStack::invokeWrappedFunction(lua_State* state)
 {
 	void* p = lua_touserdata(state, lua_upvalueindex(1));
-	ForwardingLuaFunction* func = static_cast<ForwardingLuaFunction*>(p);
-	(*func)();
+	Lua* lua = static_cast<Lua*>(p);
+	p = lua_touserdata(state, lua_upvalueindex(2));
+	LuaCallable* func = static_cast<LuaCallable*>(p);
+	LuaStack stack(*lua);
+	stack.offset(0);
+	(*func)(*lua, stack);
+	stack.offset(stack.size());
 	return lua_gettop(state);
 }
 
@@ -201,8 +206,9 @@ LuaStack& LuaStack::push(void(*p)(Lua& lua, LuaStack& stack))
 LuaStack& LuaStack::push(const LuaCallable& f)
 {
 	// XXX This definitely, definitely leaks.
-	lua_pushlightuserdata(lua.state, new ForwardingLuaFunction(lua, f));
-	lua_pushcclosure(lua.state, invokeWrappedFunction, 1);
+	lua_pushlightuserdata(lua.state, &lua);
+	lua_pushlightuserdata(lua.state, new LuaCallable(f));
+	lua_pushcclosure(lua.state, invokeWrappedFunction, 2);
 	return (*this);
 }
 
@@ -210,12 +216,4 @@ LuaStack::~LuaStack()
 {
 	if (size() > 0)
 		lua_pop(lua.state, size());
-}
-
-void LuaStack::ForwardingLuaFunction::operator ()()
-{
-	LuaStack stack(lua);
-	stack.offset(0);
-	f(lua, stack);
-	stack.offset(stack.size());
 }

@@ -23,16 +23,6 @@ private:
 	bool isMagicalPos(const int& pos) const;
 
 	LuaStack& offset(int offset);
-
-	class ForwardingLuaFunction
-	{
-		Lua& lua;
-		LuaCallable f;
-		void operator()();
-	public:
-		ForwardingLuaFunction(Lua& lua, LuaCallable f) : lua(lua), f(f) {}
-		friend class LuaStack;
-	};
 public:
 	LuaStack(Lua& lua);
 
