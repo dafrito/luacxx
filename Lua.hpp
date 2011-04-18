@@ -3,7 +3,6 @@
 
 #include <string>
 #include <istream>
-#include <lua.hpp>
 
 #include "LuaValue.hpp"
 
