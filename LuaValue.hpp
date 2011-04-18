@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include "LuaStack.hpp"
+#include "types.hpp"
 using std::string;
 
 class Lua;
@@ -18,6 +19,17 @@ private:
 public:
 	LuaValue(Lua& lua, const string& key) :
 		lua(lua), key(key) {}
+
+	
+	lua::Type type()
+	{
+		return LuaStack(lua).global(key).type();
+	}
+
+	string typestring()
+	{
+		return LuaStack(lua).global(key).typestring();
+	}
 
 	template <typename T>
 	void to(T& value) const

@@ -94,7 +94,7 @@ public:
 		Lua lua;
 		LuaStack(lua).setGlobal("Good", false);
 		TS_ASSERT_EQUALS(lua["Good"], false);
-		TS_ASSERT_EQUALS(LuaStack(lua).global("Good").type(), LUA_TBOOLEAN);
+		TS_ASSERT_EQUALS(LuaStack(lua).global("Good").type(), lua::Type::BOOLEAN);
 	}
 
 	void testLuaStackSetsANumber()

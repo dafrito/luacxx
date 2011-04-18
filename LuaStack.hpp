@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <lua.hpp>
+#include "types.hpp"
 
 class Lua;
 class LuaStack;
@@ -54,7 +55,9 @@ public:
 		return pop(size());
 	}
 
-	int type(int pos = -1) const;
+	lua::Type type(int pos = -1) const;
+
+	std::string typestring(int pos = -1) const;
 
 	LuaStack& to(bool& sink, int pos = -1);
 	LuaStack& to(lua_Number& sink, int pos = -1);
