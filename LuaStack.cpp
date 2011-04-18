@@ -71,23 +71,13 @@ void LuaStack::checkPos(int pos) const
 lua::Type LuaStack::type(int pos) const
 {
 	checkPos(pos);
-	switch (lua_type(lua.state, pos)) {
-		case LUA_TNIL:			return lua::Type::NIL;
-		case LUA_TBOOLEAN:		return lua::Type::BOOLEAN;
-		case LUA_TNUMBER:		return lua::Type::NUMBER;
-		case LUA_TSTRING:		return lua::Type::STRING;
-		case LUA_TTABLE:		return lua::Type::TABLE;
-		case LUA_TFUNCTION:		return lua::Type::FUNCTION;
-		case LUA_TTHREAD:		return lua::Type::THREAD;
-		case LUA_TUSERDATA:		return lua::Type::USERDATA;
-		case LUA_TLIGHTUSERDATA:	return lua::Type::LIGHTUSERDATA;
-		default:			return lua::Type::INVALID;
-	}
+	return lua::convert_lua_type(lua_type(lua.state, pos));
 }
 
-string LuaStack::typestring(int pos) const
+std::string LuaStack::typestring(int pos) const
 {
-	return std::string(lua_typename(lua.state, this->type(pos)));
+	checkPos(pos);
+	return std::string(lua_typename(lua.state, lua_type(lua.state, pos)));
 }
 
 LuaStack& LuaStack::to(const char*& sink, int pos)

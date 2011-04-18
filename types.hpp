@@ -18,6 +18,8 @@ namespace lua
 		USERDATA = LUA_TUSERDATA,
 		LIGHTUSERDATA = LUA_TLIGHTUSERDATA
 	};
+
+	Type convert_lua_type(const int& luaType);
 }
 
 #endif
