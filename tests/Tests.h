@@ -70,6 +70,7 @@ public:
 
 	void testLuaStackHandlesNilValuesProperly()
 	{
+		// TODO: Figure out if/how we want to support nil values.
 		//TS_ASSERT_EQUALS(nil?, s.global("No").string());
 	}
 
