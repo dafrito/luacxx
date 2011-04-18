@@ -74,7 +74,7 @@ int LuaStack::type(int pos) const
 	return lua_type(lua.state, pos);
 }
 
-LuaStack& LuaStack::to(const char* sink, int pos)
+LuaStack& LuaStack::to(const char*& sink, int pos)
 {
 	checkPos(pos);
 	sink = lua_tostring(lua.state, pos);

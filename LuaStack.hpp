@@ -58,7 +58,7 @@ public:
 
 	LuaStack& to(bool& sink, int pos = -1);
 	LuaStack& to(lua_Number& sink, int pos = -1);
-	LuaStack& to(const char* sink, int pos = -1);
+	LuaStack& to(const char*& sink, int pos = -1);
 	LuaStack& to(int& sink, int pos = -1);
 
 	const char* cstring(int pos = -1);

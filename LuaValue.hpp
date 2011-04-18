@@ -2,6 +2,7 @@
 #define HEADER_LUAVALUE_HPP
 
 #include <string>
+#include <cstring>
 #include "LuaStack.hpp"
 using std::string;
 
@@ -14,7 +15,6 @@ private:
 	string key;
 
 	void push_key();
-	const char* char_value() const;
 public:
 	LuaValue(Lua& lua, const string& key) :
 		lua(lua), key(key) {}
@@ -38,7 +38,12 @@ public:
 	{
 		return other == static_cast<T>(*this);
 	}
-	bool operator==(const char* other) const;
+
+	bool operator==(const char* other) const
+	{
+		const char* p = static_cast<const char*>(*this);
+		return !std::strcmp(other, p);
+	}
 
 	template<typename T>
 	const LuaValue& operator=(T value)
