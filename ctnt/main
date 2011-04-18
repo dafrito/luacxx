@@ -1,7 +1,0 @@
-#include "menu.hpp"
-
-int main()
-{
-	make_menu();
-	return 0;
-}
