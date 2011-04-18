@@ -74,7 +74,7 @@ public:
 		//TS_ASSERT_EQUALS(nil?, s.global("No").string());
 	}
 
-	static void foo(Lua& lua, LuaStack& stack)
+	static void luaAdd(Lua& lua, LuaStack& stack)
 	{
 		int a = stack.number(1);
 		int b = stack.number(2);
@@ -85,7 +85,7 @@ public:
 	void testLuaCallsACFunction()
 	{
 		Lua lua;
-		lua["Do"] = foo;
+		lua["Do"] = luaAdd;
 		lua::load_string(lua, "Bar = Do(2, 2)");
 		TS_ASSERT_EQUALS(lua["Bar"], 4);
 	}
