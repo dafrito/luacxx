@@ -19,7 +19,6 @@ namespace lua
 		std::istringstream stream(input);
 		lua(stream, "string input");
 	}
-
 }
 
 #endif

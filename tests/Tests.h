@@ -1,8 +1,7 @@
 #include <cxxtest/TestSuite.h>
 #include <string>
 #include "../Lua.hpp"
-#include "../lua.hpp"
-#include <lua.hpp>
+#include "../loaders.hpp"
 #include "../exceptions.hpp"
 #include "../LuaStack.hpp"
 
