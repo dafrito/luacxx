@@ -84,8 +84,9 @@ public:
 	void testLuaCallsACFunction()
 	{
 		Lua lua;
-		lua["Do"] = luaAdd;
-		lua::load_string(lua, "Bar = Do(2, 2)");
+		lua["luaAdd"] = luaAdd;
+		TS_ASSERT_EQUALS("function", lua["luaAdd"].typestring());
+		lua::load_string(lua, "Bar = luaAdd(2, 2)");
 		TS_ASSERT_EQUALS(lua["Bar"], 4);
 	}
 
