@@ -43,6 +43,15 @@ LuaStack& LuaStack::pop(int count)
 	return (*this);
 }
 
+LuaStack& LuaStack::shift(int count)
+{
+	while(count-- > 0) {
+		// TODO We need to check if the offset is being moved here.
+		lua_remove(lua.state, 1);
+	}
+	return (*this);
+}
+
 LuaStack& LuaStack::replace(int pos)
 {
 	checkPos(pos);
