@@ -3,13 +3,22 @@
 
 #include <string>
 #include <functional>
+#include <tuple>
 #include <lua.hpp>
 #include "types.hpp"
 
 class Lua;
 class LuaStack;
 
-typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
+namespace lua
+{
+	typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
+
+	template <typename RV, typename... Args>
+	class LuaWrapper;
+}
+
+using lua::LuaCallable;
 
 class LuaStack
 {
@@ -79,6 +88,13 @@ public:
 	LuaStack& push(const float& b);
 	LuaStack& push(const short& b);
 
+	template <typename RV, typename... Args>
+	LuaStack& push(RV(*p)(Args...))
+	{
+		this->push(lua::LuaWrapper<RV, Args...>(p));
+		return (*this);
+	}
+
 	// We need this definition since integers can be 
 	// implicitly converted to booleans or numbers, which
 	// is ambiguous.
@@ -108,5 +124,77 @@ public:
 	~LuaStack();
 
 };
+
+namespace
+{
+	/**
+	 * This implementation was based off of:
+	 * http://dvandyk.wordpress.com/2010/08/15/apply-functions-to-stdtuple/
+	 */
+	
+	template <unsigned I>
+	struct Filler
+	{
+		template <typename Tuple>
+		static void fill(LuaStack& stack, Tuple& tuple)
+		{
+			stack.to(std::get<I-1>(tuple));
+			stack.pop();
+			Filler<I-1>::fill(stack, tuple);
+		}
+	};
+
+	template <>
+	struct Filler<0>
+	{
+		template <typename Tuple>
+		static void fill(LuaStack& stack, Tuple& tuple)
+		{}
+	};
+
+	template <unsigned I>
+	struct Chain
+	{
+		template <typename Function, typename Tuple, typename... Args>
+		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
+		{
+			Chain<I-1>::apply(stack, f, tuple, std::get<I-1>(tuple), args...);
+		}
+	};
+
+	template <>
+	struct Chain <0>
+	{
+		template <typename Function, typename Tuple, typename... Args>
+		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
+		{
+			stack.push(f(args...));
+		}
+	};
+	
+}
+
+namespace lua
+{
+
+	template <typename RV, typename... Args>
+	class LuaWrapper
+	{
+		typedef std::tuple<Args...> ArgsTuple;
+
+		std::function<RV(Args...)> func;
+
+	public:
+		LuaWrapper(RV(*func)(Args...)) : func(func)
+		{}
+	
+		void operator()(Lua& lua, LuaStack& stack)
+		{
+			ArgsTuple args;
+			Filler<sizeof...(Args)>::fill(stack, args);
+			Chain<sizeof...(Args)>::apply(stack, func, args);
+		}
+	};
+}
 
 #endif

@@ -91,6 +91,66 @@ public:
 		TS_ASSERT_EQUALS(lua["Bar"], 4);
 	}
 
+	static int getMagicNumber()
+	{
+		return 42;
+	}
+
+	void testLuaCallsAZeroParamFunction()
+	{
+		Lua lua;
+		string name("getMagicNumber");
+		lua[name] = getMagicNumber;
+		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		lua::load_string(lua, string("Bar = ") + name + "()");
+		TS_ASSERT_EQUALS(lua["Bar"], 42);
+	}
+
+	static int addToMagicNumber(int v)
+	{
+		return 42 + v;
+	}
+
+	void testLuaCallsAOneParameterFunction()
+	{
+		Lua lua;
+		string name("addToMagicNumber");
+		lua[name] = addToMagicNumber;
+		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		lua::load_string(lua, string("Bar = ") + name + "(2)");
+		TS_ASSERT_EQUALS(lua["Bar"], 44);
+	}
+
+	static double addNumbers(int a, int b)
+	{
+		return a + b;
+	}
+
+	void testLuaCallsATwoParameterFunction()
+	{
+		Lua lua;
+		string name("addNumbers");
+		lua[name] = addNumbers;
+		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		lua::load_string(lua, string("Bar = ") + name + "(2, 3)");
+		TS_ASSERT_EQUALS(lua["Bar"], 5);
+	}
+
+	static double addBonanza(int a, long b, float c, double d, short e)
+	{
+		return a+b+c+d+e;
+	}
+
+	void testLuaCallsABonanza()
+	{
+		Lua lua;
+		string name("addBonanza");
+		lua[name] = addBonanza;
+		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		lua::load_string(lua, string("Bar = ") + name + "(2, 3, 4, 5, 6)");
+		TS_ASSERT_EQUALS(lua["Bar"], 2+3+4+5+6);
+	}
+
 	void testLuaStackPushesABoolean()
 	{
 		Lua lua;
