@@ -151,6 +151,19 @@ public:
 		TS_ASSERT_EQUALS(lua["Bar"], 2+3+4+5+6);
 	}
 
+	static void doNothing(int)
+	{
+	}
+
+	void testLuaStackCallsAVoidFunction()
+	{
+		Lua lua;
+		string name("doNothing");
+		lua[name] = doNothing;
+		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		lua::load_string(lua, string("Bar = ") + name + "(2)");
+	}
+
 	void testLuaStackPushesABoolean()
 	{
 		Lua lua;

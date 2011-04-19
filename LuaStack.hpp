@@ -155,18 +155,18 @@ namespace
 		{}
 	};
 
-	template <unsigned I>
+	template <typename RV, unsigned I>
 	struct Chain
 	{
 		template <typename Function, typename Tuple, typename... Args>
 		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
 		{
-			Chain<I-1>::apply(stack, f, tuple, std::get<I-1>(tuple), args...);
+			Chain<RV, I-1>::apply(stack, f, tuple, std::get<I-1>(tuple), args...);
 		}
 	};
 
-	template <>
-	struct Chain <0>
+	template <typename RV>
+	struct Chain <RV, 0>
 	{
 		template <typename Function, typename Tuple, typename... Args>
 		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
@@ -175,6 +175,15 @@ namespace
 		}
 	};
 
+	template <>
+	struct Chain <void, 0>
+	{
+		template <typename Function, typename Tuple, typename... Args>
+		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
+		{
+			f(args...);
+		}
+	};
 
 	template <typename RV, typename... Args>
 	class LuaWrapper
@@ -190,7 +199,7 @@ namespace
 		{
 			ArgsTuple args;
 			Filler<sizeof...(Args)>::fill(stack, args);
-			Chain<sizeof...(Args)>::apply(stack, func, args);
+			Chain<RV, sizeof...(Args)>::apply(stack, func, args);
 		}
 	};
 }
