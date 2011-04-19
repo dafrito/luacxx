@@ -10,12 +10,15 @@
 class Lua;
 class LuaStack;
 
+namespace
+{
+	template <typename RV, typename... Args>
+	class LuaWrapper;
+}
+
 namespace lua
 {
 	typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
-
-	template <typename RV, typename... Args>
-	class LuaWrapper;
 }
 
 using lua::LuaCallable;
@@ -91,7 +94,7 @@ public:
 	template <typename RV, typename... Args>
 	LuaStack& push(RV(*p)(Args...))
 	{
-		this->push(lua::LuaWrapper<RV, Args...>(p));
+		this->push(LuaWrapper<RV, Args...>(p));
 		return (*this);
 	}
 
@@ -171,17 +174,12 @@ namespace
 			stack.push(f(args...));
 		}
 	};
-	
-}
 
-namespace lua
-{
 
 	template <typename RV, typename... Args>
 	class LuaWrapper
 	{
 		typedef std::tuple<Args...> ArgsTuple;
-
 		std::function<RV(Args...)> func;
 
 	public:
