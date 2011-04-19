@@ -46,8 +46,8 @@ public:
 		return _offset;
 	}
 
-	LuaStack& shift(int count = -1);
 	LuaStack& pop(int count = 1);
+	LuaStack& shift(int count = 1);
 	LuaStack& replace(int pos);
 	LuaStack& clear()
 	{
