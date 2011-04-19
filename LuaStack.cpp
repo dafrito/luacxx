@@ -134,10 +134,31 @@ LuaStack& LuaStack::to(lua_Number& sink, int pos)
 	return (*this);
 }
 
+LuaStack& LuaStack::to(short& sink, int pos)
+{
+	checkPos(pos);
+	sink = lua_tointeger(lua.state, pos);
+	return (*this);
+}
+
 LuaStack& LuaStack::to(int&sink, int pos)
 {
 	checkPos(pos);
 	sink = lua_tointeger(lua.state, pos);
+	return (*this);
+}
+
+LuaStack& LuaStack::to(long&sink, int pos)
+{
+	checkPos(pos);
+	sink = lua_tonumber(lua.state, pos);
+	return (*this);
+}
+
+LuaStack& LuaStack::to(float&sink, int pos)
+{
+	checkPos(pos);
+	sink = lua_tonumber(lua.state, pos);
 	return (*this);
 }
 
@@ -189,7 +210,25 @@ LuaStack& LuaStack::push(const lua_Number& value)
 	return (*this);
 }
 
+LuaStack& LuaStack::push(const short& value)
+{
+	lua_pushinteger(lua.state, value);
+	return (*this);
+}
+
 LuaStack& LuaStack::push(const int& value)
+{
+	lua_pushinteger(lua.state, value);
+	return (*this);
+}
+
+LuaStack& LuaStack::push(const long& value)
+{
+	lua_pushnumber(lua.state, value);
+	return (*this);
+}
+
+LuaStack& LuaStack::push(const float& value)
 {
 	lua_pushnumber(lua.state, value);
 	return (*this);

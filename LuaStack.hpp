@@ -53,6 +53,9 @@ public:
 	LuaStack& to(lua_Number& sink, int pos = -1);
 	LuaStack& to(const char*& sink, int pos = -1);
 	LuaStack& to(int& sink, int pos = -1);
+	LuaStack& to(long& sink, int pos = -1);
+	LuaStack& to(float& sink, int pos = -1);
+	LuaStack& to(short& sink, int pos = -1);
 
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
@@ -72,6 +75,9 @@ public:
 	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(const bool& b);
 	LuaStack& push(const int& b);
+	LuaStack& push(const long& b);
+	LuaStack& push(const float& b);
+	LuaStack& push(const short& b);
 
 	// We need this definition since integers can be 
 	// implicitly converted to booleans or numbers, which
