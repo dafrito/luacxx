@@ -61,13 +61,13 @@ public:
 
 	std::string typestring(int pos = -1) const;
 
-	LuaStack& to(bool& sink, int pos = -1);
-	LuaStack& to(lua_Number& sink, int pos = -1);
-	LuaStack& to(const char*& sink, int pos = -1);
-	LuaStack& to(int& sink, int pos = -1);
-	LuaStack& to(long& sink, int pos = -1);
-	LuaStack& to(float& sink, int pos = -1);
-	LuaStack& to(short& sink, int pos = -1);
+	LuaStack& to(bool* sink, int pos = -1);
+	LuaStack& to(lua_Number* sink, int pos = -1);
+	LuaStack& to(const char** sink, int pos = -1);
+	LuaStack& to(int* sink, int pos = -1);
+	LuaStack& to(long* sink, int pos = -1);
+	LuaStack& to(float* sink, int pos = -1);
+	LuaStack& to(short* sink, int pos = -1);
 
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
@@ -141,7 +141,7 @@ namespace
 		template <typename Tuple>
 		static void fill(LuaStack& stack, Tuple& tuple)
 		{
-			stack.to(std::get<I-1>(tuple));
+			stack.to(&std::get<I-1>(tuple));
 			stack.pop();
 			Filler<I-1>::fill(stack, tuple);
 		}

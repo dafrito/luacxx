@@ -32,7 +32,7 @@ public:
 	}
 
 	template <typename T>
-	void to(T& value) const
+	void to(T* value) const
 	{
 		LuaStack(lua).global(key).to(value);
 	}
@@ -41,17 +41,17 @@ public:
 	operator T() const
 	{
 		T t;
-		this->to(t);
+		this->to(&t);
 		return t;
 	}
 
 	template<typename T>
-	bool operator==(T other) const
+	bool operator==(const T& other) const
 	{
 		return other == static_cast<T>(*this);
 	}
 
-	bool operator==(const char* other) const
+	bool operator==(const char* const other) const
 	{
 		const char* p = static_cast<const char*>(*this);
 		return !std::strcmp(other, p);
