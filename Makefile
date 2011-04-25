@@ -1,4 +1,4 @@
-NAME=lua-c++
+NAME=lua-cxx
 LIB=$(OUTDIR)/lib$(NAME).so
 
 BUILDDIR = build
