@@ -16,7 +16,7 @@ objects := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 $(LIB): $(addprefix $(BUILDDIR)/, $(objects)) | $(BUILDDIR)
 	g++ $(CXXFLAGS) -shared -fPIC -o $@ $^
 
-$(BUILDDIR)/%.o: %.cpp | $(BUILDDIR)
+$(BUILDDIR)/%.o: %.cpp %.hpp | $(BUILDDIR)
 	@echo building $<
 	g++ $(CXXFLAGS) -fPIC -c -o $@ $<
 
