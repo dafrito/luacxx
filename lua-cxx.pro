@@ -4,7 +4,7 @@
 
 TEMPLATE = lib
 TARGET = 
-DEPENDPATH += . src tests
+DEPENDPATH += . src
 INCLUDEPATH += . src
 OBJECTS_DIR = build
 MOC_DIR = build
@@ -24,4 +24,3 @@ SOURCES += \
 	src/Lua.cpp \
 	src/LuaStack.cpp \
 	src/types.cpp \
-	tests/Tests.cpp

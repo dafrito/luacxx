@@ -17,14 +17,14 @@ private slots:
 	{
 		Lua lua;
 		lua["No"] = "Time";
-		QCOMPARE(lua["No"], "Time");
+		QCOMPARE((const char*)lua["No"], "Time");
 	}
 
 	void testLuaRunsStringsDirectly()
 	{
 		Lua lua;
 		lua::load_string(lua, "_G['No']='Foo'");
-		QCOMPARE(lua["No"], "Foo");
+		QCOMPARE((const char*)lua["No"], "Foo");
 	}
 
 	void testLuaValueIsAProxyForTheGlobalTable()
@@ -32,7 +32,7 @@ private slots:
 		Lua lua;
 		LuaValue v = lua["No"];
 		v = "Time";
-		QCOMPARE(lua["No"], "Time");
+		QCOMPARE((const char*)lua["No"], "Time");
 	}
 
 	void testLuaCanLoadAFileStreamIntoItsEnvironment()
@@ -67,7 +67,7 @@ private slots:
 		Lua lua;
 		LuaStack s(lua);
 		s.setGlobal("No", "Time");
-		QCOMPARE(lua["No"], "Time");
+		QCOMPARE((const char*)lua["No"], "Time");
 	}
 
 	static void luaAdd(Lua& lua, LuaStack& stack)
@@ -89,9 +89,9 @@ private slots:
 		Lua lua;
 		string name("luaAdd");
 		lua[name] = luaAdd;
-		QCOMPARE("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring().c_str());
 		lua::load_string(lua, string("Bar = ") + name + "(2, 2)");
-		QCOMPARE(lua["Bar"], 4);
+		QCOMPARE((int)lua["Bar"], 4);
 	}
 
 	static int getMagicNumber()
@@ -104,9 +104,9 @@ private slots:
 		Lua lua;
 		string name("getMagicNumber");
 		lua[name] = getMagicNumber;
-		QCOMPARE("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring().c_str());
 		lua::load_string(lua, string("Bar = ") + name + "()");
-		QCOMPARE(lua["Bar"], 42);
+		QVERIFY(lua["Bar"] == 42);
 	}
 
 	static int addToMagicNumber(int v)
@@ -119,9 +119,9 @@ private slots:
 		Lua lua;
 		string name("addToMagicNumber");
 		lua[name] = addToMagicNumber;
-		QCOMPARE("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring().c_str());
 		lua::load_string(lua, string("Bar = ") + name + "(2)");
-		QCOMPARE(lua["Bar"], 44);
+		QCOMPARE((int)lua["Bar"], 44);
 	}
 
 	static double addNumbers(int a, int b)
@@ -134,9 +134,9 @@ private slots:
 		Lua lua;
 		string name("addNumbers");
 		lua[name] = addNumbers;
-		QCOMPARE("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring().c_str());
 		lua::load_string(lua, string("Bar = ") + name + "(2, 3)");
-		QCOMPARE(lua["Bar"], 5);
+		QCOMPARE((int)lua["Bar"], 5);
 	}
 
 	static double addBonanza(int a, long b, float c, double d, short e)
@@ -149,9 +149,9 @@ private slots:
 		Lua lua;
 		string name("addBonanza");
 		lua[name] = addBonanza;
-		QCOMPARE("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring().c_str());
 		lua::load_string(lua, string("Bar = ") + name + "(2, 3, 4, 5, 6)");
-		QCOMPARE(lua["Bar"], 2+3+4+5+6);
+		QCOMPARE((int)lua["Bar"], 2+3+4+5+6);
 	}
 
 	static void doNothing(int)
@@ -163,7 +163,7 @@ private slots:
 		Lua lua;
 		string name("doNothing");
 		lua[name] = doNothing;
-		QCOMPARE("function", lua[name].typestring());
+		QVERIFY("function" == lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "(2)");
 	}
 
@@ -171,7 +171,7 @@ private slots:
 	{
 		Lua lua;
 		LuaStack(lua).setGlobal("Good", false);
-		QCOMPARE(lua["Good"], false);
+		QCOMPARE((bool)lua["Good"], false);
 		QCOMPARE(LuaStack(lua).global("Good").type(), lua::Type::BOOLEAN);
 	}
 
@@ -184,8 +184,9 @@ private slots:
 		// number() returns a double, instead of the integer
 		// that we originally passed.
 		s.setGlobal("No", 42);
-		QCOMPARE(s.global("No").number(), 42);
+		QCOMPARE((int)s.global("No").number(), 42);
 	}
 };
 
 QTEST_MAIN(Tests)
+#include "Tests.moc"
