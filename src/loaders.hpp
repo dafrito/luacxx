@@ -2,6 +2,7 @@
 #define LUA_NAMESPACE_HPP
 
 #include <fstream>
+#include <sstream>
 #include "Lua.hpp"
 
 using namespace std;
