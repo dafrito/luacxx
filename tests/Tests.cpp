@@ -1,27 +1,30 @@
-#include <cxxtest/TestSuite.h>
 #include <string>
-#include "../Lua.hpp"
-#include "../loaders.hpp"
-#include "../exceptions.hpp"
-#include "../LuaStack.hpp"
+
+#include <QtTest/QtTest>
+
+#include "Lua.hpp"
+#include "loaders.hpp"
+#include "exceptions.hpp"
+#include "LuaStack.hpp"
 
 using namespace std;
 
-class Tests : public CxxTest::TestSuite
+class Tests : public QObject
 {
-public:
+	Q_OBJECT
+private slots:
 	void testLuaOffersSubscriptSupportForGlobalValues()
 	{
 		Lua lua;
 		lua["No"] = "Time";
-		TS_ASSERT_EQUALS(lua["No"], "Time");
+		QCOMPARE(lua["No"], "Time");
 	}
 
 	void testLuaRunsStringsDirectly()
 	{
 		Lua lua;
 		lua::load_string(lua, "_G['No']='Foo'");
-		TS_ASSERT_EQUALS(lua["No"], "Foo");
+		QCOMPARE(lua["No"], "Foo");
 	}
 
 	void testLuaValueIsAProxyForTheGlobalTable()
@@ -29,7 +32,7 @@ public:
 		Lua lua;
 		LuaValue v = lua["No"];
 		v = "Time";
-		TS_ASSERT_EQUALS(lua["No"], "Time");
+		QCOMPARE(lua["No"], "Time");
 	}
 
 	void testLuaCanLoadAFileStreamIntoItsEnvironment()
@@ -47,16 +50,16 @@ public:
 			s.global("No");
 			{
 				LuaStack s2(lua);
-				TS_ASSERT_EQUALS(1, s2.offset());
+				QCOMPARE(1, s2.offset());
 				s2.global("No");
 				s2.global("Foo");
-				TS_ASSERT_EQUALS(2, s2.size());
+				QCOMPARE(2, s2.size());
 			}
 			// Stack is emptied when LuaStack goes out of scope.
-			TS_ASSERT_EQUALS(0, s.offset());
-			TS_ASSERT_EQUALS(1, s.size());
+			QCOMPARE(0, s.offset());
+			QCOMPARE(1, s.size());
 		}
-		TS_ASSERT_EQUALS(0, LuaStack(lua).size());
+		QCOMPARE(0, LuaStack(lua).size());
 	}
 
 	void testLuaStackCanSetGlobalValues()
@@ -64,13 +67,7 @@ public:
 		Lua lua;
 		LuaStack s(lua);
 		s.setGlobal("No", "Time");
-		TS_ASSERT_EQUALS(lua["No"], "Time");
-	}
-
-	void testLuaStackHandlesNilValuesProperly()
-	{
-		// TODO: Figure out if/how we want to support nil values.
-		//TS_ASSERT_EQUALS(nil?, s.global("No").string());
+		QCOMPARE(lua["No"], "Time");
 	}
 
 	static void luaAdd(Lua& lua, LuaStack& stack)
@@ -81,14 +78,20 @@ public:
 		stack.push(a + b);
 	}
 
+	void testLuaStackHandlesNilValuesProperly()
+	{
+		// TODO: Figure out if/how we want to support nil values.
+		//QCOMPARE(nil?, s.global("No").string());
+	}
+
 	void testLuaCallsACFunction()
 	{
 		Lua lua;
 		string name("luaAdd");
 		lua[name] = luaAdd;
-		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "(2, 2)");
-		TS_ASSERT_EQUALS(lua["Bar"], 4);
+		QCOMPARE(lua["Bar"], 4);
 	}
 
 	static int getMagicNumber()
@@ -101,9 +104,9 @@ public:
 		Lua lua;
 		string name("getMagicNumber");
 		lua[name] = getMagicNumber;
-		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "()");
-		TS_ASSERT_EQUALS(lua["Bar"], 42);
+		QCOMPARE(lua["Bar"], 42);
 	}
 
 	static int addToMagicNumber(int v)
@@ -116,9 +119,9 @@ public:
 		Lua lua;
 		string name("addToMagicNumber");
 		lua[name] = addToMagicNumber;
-		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "(2)");
-		TS_ASSERT_EQUALS(lua["Bar"], 44);
+		QCOMPARE(lua["Bar"], 44);
 	}
 
 	static double addNumbers(int a, int b)
@@ -131,9 +134,9 @@ public:
 		Lua lua;
 		string name("addNumbers");
 		lua[name] = addNumbers;
-		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "(2, 3)");
-		TS_ASSERT_EQUALS(lua["Bar"], 5);
+		QCOMPARE(lua["Bar"], 5);
 	}
 
 	static double addBonanza(int a, long b, float c, double d, short e)
@@ -146,9 +149,9 @@ public:
 		Lua lua;
 		string name("addBonanza");
 		lua[name] = addBonanza;
-		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "(2, 3, 4, 5, 6)");
-		TS_ASSERT_EQUALS(lua["Bar"], 2+3+4+5+6);
+		QCOMPARE(lua["Bar"], 2+3+4+5+6);
 	}
 
 	static void doNothing(int)
@@ -160,7 +163,7 @@ public:
 		Lua lua;
 		string name("doNothing");
 		lua[name] = doNothing;
-		TS_ASSERT_EQUALS("function", lua[name].typestring());
+		QCOMPARE("function", lua[name].typestring());
 		lua::load_string(lua, string("Bar = ") + name + "(2)");
 	}
 
@@ -168,8 +171,8 @@ public:
 	{
 		Lua lua;
 		LuaStack(lua).setGlobal("Good", false);
-		TS_ASSERT_EQUALS(lua["Good"], false);
-		TS_ASSERT_EQUALS(LuaStack(lua).global("Good").type(), lua::Type::BOOLEAN);
+		QCOMPARE(lua["Good"], false);
+		QCOMPARE(LuaStack(lua).global("Good").type(), lua::Type::BOOLEAN);
 	}
 
 	void testLuaStackSetsANumber()
@@ -181,6 +184,8 @@ public:
 		// number() returns a double, instead of the integer
 		// that we originally passed.
 		s.setGlobal("No", 42);
-		TS_ASSERT_EQUALS(s.global("No").number(), 42);
+		QCOMPARE(s.global("No").number(), 42);
 	}
 };
+
+QTEST_MAIN(Tests)
