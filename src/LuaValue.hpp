@@ -58,7 +58,7 @@ public:
 	}
 
 	template<typename T>
-	const LuaValue& operator=(T value)
+	const LuaValue& operator=(const T& value)
 	{
 		LuaStack(lua).setGlobal(key, value);
 		return *this;

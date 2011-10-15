@@ -108,7 +108,7 @@ public:
 	}
 
 	template <typename K, typename V>
-	LuaStack& set(K key, V value, int tablePos)
+	LuaStack& set(K key, const V& value, int tablePos)
 	{
 		checkPos(tablePos);
 		push(value);
@@ -119,7 +119,7 @@ public:
 	}
 
 	template <typename K, typename V>
-	LuaStack& setGlobal(K key, V value)
+	LuaStack& setGlobal(K key, const V& value)
 	{
 		return set(key, value, LUA_GLOBALSINDEX);
 	}
