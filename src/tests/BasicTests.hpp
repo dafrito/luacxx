@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class Tests : public QObject
+class BasicTests : public QObject
 {
 	Q_OBJECT
 private slots:
@@ -187,6 +187,3 @@ private slots:
 		QCOMPARE((int)s.global("No").number(), 42);
 	}
 };
-
-QTEST_MAIN(Tests)
-#include "Tests.moc"
