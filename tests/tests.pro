@@ -5,8 +5,8 @@ CONFIG += qt qtestlib
 TARGET = run-tests
 INCLUDEPATH += ../lib
 VPATH += ../lib
-OBJECTS_DIR = build
-MOC_DIR = build
+OBJECTS_DIR = ../build
+MOC_DIR = ../build
 DESTDIR = ..
 
 LIBS += -llua
