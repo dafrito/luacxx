@@ -78,13 +78,13 @@ public:
 	LuaStack& push(const std::string& value);
 	LuaStack& push(const lua_Number& value);
 	LuaStack& push(void* const p);
-	LuaStack& push(const lua::LuaCallable& f);
-	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(const bool& b);
 	LuaStack& push(const int& b);
 	LuaStack& push(const long& b);
 	LuaStack& push(const float& b);
 	LuaStack& push(const short& b);
+	LuaStack& push(const lua::LuaCallable& f);
+	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(QObject* const obj);
 
 	template <typename RV, typename... Args>
