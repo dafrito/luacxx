@@ -260,9 +260,9 @@ LuaStack& LuaStack::push(const LuaCallable& f)
 	return (*this);
 }
 
-LuaStack& LuaStack::push(const QObject& obj)
+LuaStack& LuaStack::push(QObject* const obj)
 {
-	lua_pushlightuserdata(lua.state, 0);
+	lua_pushlightuserdata(lua.state, obj);
 	return (*this);
 }
 

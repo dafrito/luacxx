@@ -16,7 +16,7 @@ private slots:
 	{
 		Lua lua;
 		Counter counter;
-		lua["foo"] = counter;
+		lua["foo"] = &counter;
 		QVERIFY("userdata" == lua["foo"].typestring());
 	}
 

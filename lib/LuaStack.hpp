@@ -91,7 +91,7 @@ public:
 	LuaStack& push(const long& b);
 	LuaStack& push(const float& b);
 	LuaStack& push(const short& b);
-	LuaStack& push(const QObject& b);
+	LuaStack& push(QObject* const obj);
 
 	template <typename RV, typename... Args>
 	LuaStack& push(RV(*p)(Args...))
