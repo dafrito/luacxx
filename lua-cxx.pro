@@ -20,4 +20,4 @@ SOURCES += \
 	src/loaders.cpp \
 	src/Lua.cpp \
 	src/LuaStack.cpp \
-	src/types.cpp \
+	src/types.cpp
