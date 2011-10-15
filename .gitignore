@@ -4,3 +4,4 @@ artifacts
 lib*.so
 lib*.so.*
 Makefile
+run-tests

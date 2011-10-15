@@ -7,6 +7,7 @@ INCLUDEPATH += ..
 VPATH += ..
 OBJECTS_DIR = build
 MOC_DIR = build
+DESTDIR = ../..
 
 LIBS += -llua
 
