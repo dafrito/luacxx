@@ -18,7 +18,8 @@ int LuaStack::invokeWrappedFunction(lua_State* state)
 LuaStack::LuaStack(Lua& lua) :
 	lua(lua),
 	_offset(lua_gettop(lua.state))
-{}
+{
+}
 
 LuaStack& LuaStack::offset(int offset)
 {
