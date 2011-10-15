@@ -1,16 +1,14 @@
+include (../lib/lib.pro)
+
 TEMPLATE = app
 TARGET = run-tests
 
 CONFIG += qt qtestlib
 
-INCLUDEPATH += ../lib
-VPATH += ../lib
-OBJECTS_DIR = ../build
-MOC_DIR = ../build
-DESTDIR = ..
+INCLUDEPATH = ../lib
+DEPENDPATH = ../lib
 
 LIBS += -llua
-
 QMAKE_CXXFLAGS += -std=c++0x
 
 HEADERS += \
@@ -19,7 +17,3 @@ HEADERS += \
 
 SOURCES += \
 	tests.cpp \
-	LuaStack.cpp \
-	Lua.cpp \
-	types.cpp \
-	loaders.cpp
