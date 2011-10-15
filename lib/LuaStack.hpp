@@ -93,6 +93,8 @@ public:
 	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(QObject* const obj);
 
+	LuaStack& newTable();
+
 	template <typename RV, typename... Args>
 	LuaStack& push(RV(*p)(Args...))
 	{

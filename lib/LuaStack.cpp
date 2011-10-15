@@ -265,6 +265,12 @@ LuaStack& LuaStack::push(QObject* const obj)
 	return (*this);
 }
 
+LuaStack& LuaStack::newTable()
+{
+	lua_newtable(lua.state);
+	return (*this);
+}
+
 LuaStack::~LuaStack()
 {
 	if (size() > 0)
