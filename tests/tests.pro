@@ -3,11 +3,11 @@ TEMPLATE = app
 CONFIG += qt qtestlib
 
 TARGET = run-tests
-INCLUDEPATH += ..
-VPATH += ..
+INCLUDEPATH += ../lib
+VPATH += ../lib
 OBJECTS_DIR = build
 MOC_DIR = build
-DESTDIR = ../..
+DESTDIR = ..
 
 LIBS += -llua
 
