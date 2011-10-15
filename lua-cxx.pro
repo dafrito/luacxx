@@ -17,6 +17,7 @@ HEADERS += \
 	src/types.hpp
 
 SOURCES += \
+	src/loaders.cpp \
 	src/Lua.cpp \
 	src/LuaStack.cpp \
 	src/types.cpp \

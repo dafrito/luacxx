@@ -12,8 +12,12 @@ LIBS += -llua
 
 QMAKE_CXXFLAGS += -std=c++0x
 
+HEADERS += \
+	loaders.hpp
+
 SOURCES += \
 	Tests.cpp \
 	LuaStack.cpp \
 	Lua.cpp \
-	types.cpp
+	types.cpp \
+	loaders.cpp
