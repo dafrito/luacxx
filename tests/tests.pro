@@ -13,7 +13,9 @@ QMAKE_CXXFLAGS += -std=c++0x
 
 HEADERS += \
 	loaders.hpp \
-	BasicTests.hpp
+	BasicTests.hpp \
+	TableTests.hpp \
+	mocks.hpp
 
 SOURCES += \
 	tests.cpp \

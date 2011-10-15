@@ -260,6 +260,12 @@ LuaStack& LuaStack::push(const LuaCallable& f)
 	return (*this);
 }
 
+LuaStack& LuaStack::push(const QObject& obj)
+{
+	lua_pushlightuserdata(lua.state, 0);
+	return (*this);
+}
+
 LuaStack::~LuaStack()
 {
 	if (size() > 0)

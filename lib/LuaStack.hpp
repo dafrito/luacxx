@@ -1,6 +1,7 @@
 #ifndef HEADER_LUASTACK_HPP
 #define HEADER_LUASTACK_HPP
 
+#include <QObject>
 #include <string>
 #include <functional>
 #include <tuple>
@@ -90,6 +91,7 @@ public:
 	LuaStack& push(const long& b);
 	LuaStack& push(const float& b);
 	LuaStack& push(const short& b);
+	LuaStack& push(const QObject& b);
 
 	template <typename RV, typename... Args>
 	LuaStack& push(RV(*p)(Args...))
