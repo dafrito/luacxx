@@ -7,6 +7,7 @@
 #include <tuple>
 #include <lua.hpp>
 #include "types.hpp"
+#include "QLuaCallable.hpp"
 
 class Lua;
 class LuaStack;
@@ -16,13 +17,6 @@ namespace
 	template <typename RV, typename... Args>
 	class LuaWrapper;
 }
-
-namespace lua
-{
-	typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
-}
-
-using lua::LuaCallable;
 
 class LuaStack
 {
@@ -84,7 +78,7 @@ public:
 	LuaStack& push(const std::string& value);
 	LuaStack& push(const lua_Number& value);
 	LuaStack& push(void* const p);
-	LuaStack& push(const LuaCallable& f);
+	LuaStack& push(const lua::LuaCallable& f);
 	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(const bool& b);
 	LuaStack& push(const int& b);

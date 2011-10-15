@@ -1,6 +1,7 @@
 #ifndef HEADER_LUA_HPP
 #define HEADER_LUA_HPP
 
+#include <QObject>
 #include <string>
 #include <istream>
 
@@ -9,8 +10,10 @@
 using std::istream;
 using std::string;
 
-class Lua
+class Lua : public QObject
 {
+	Q_OBJECT
+
 	lua_State * state;
 public:
 	Lua();
