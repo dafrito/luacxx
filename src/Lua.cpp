@@ -14,7 +14,7 @@ namespace {
 		LuaReadingData(istream& stream) : stream(stream) {}
 	};
 
-	const char* read_stream(lua_State *L, void *data, size_t *size)
+	const char* read_stream(lua_State *, void *data, size_t *size)
 	{
 		LuaReadingData* d = static_cast<LuaReadingData*>(data);
 		if (!d->stream)

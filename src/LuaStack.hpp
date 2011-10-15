@@ -151,7 +151,7 @@ namespace
 	struct Filler<0>
 	{
 		template <typename Tuple>
-		static void fill(LuaStack& stack, Tuple& tuple)
+		static void fill(LuaStack&, Tuple&)
 		{}
 	};
 
@@ -169,7 +169,7 @@ namespace
 	struct Chain <RV, 0>
 	{
 		template <typename Function, typename Tuple, typename... Args>
-		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
+		static void apply(LuaStack& stack, const Function& f, const Tuple&, Args... args)
 		{
 			stack.push(f(args...));
 		}
@@ -179,7 +179,7 @@ namespace
 	struct Chain <void, 0>
 	{
 		template <typename Function, typename Tuple, typename... Args>
-		static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
+		static void apply(LuaStack&, const Function& f, const Tuple&, Args... args)
 		{
 			f(args...);
 		}
@@ -195,7 +195,7 @@ namespace
 		LuaWrapper(RV(*func)(Args...)) : func(func)
 		{}
 	
-		void operator()(Lua& lua, LuaStack& stack)
+		void operator()(Lua&, LuaStack& stack)
 		{
 			ArgsTuple args;
 			Filler<sizeof...(Args)>::fill(stack, args);

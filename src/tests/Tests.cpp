@@ -70,7 +70,7 @@ private slots:
 		QCOMPARE((const char*)lua["No"], "Time");
 	}
 
-	static void luaAdd(Lua& lua, LuaStack& stack)
+	static void luaAdd(Lua&, LuaStack& stack)
 	{
 		int a = stack.number(1);
 		int b = stack.number(2);
