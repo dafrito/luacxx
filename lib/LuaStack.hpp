@@ -30,6 +30,12 @@ private:
 	bool isMagicalPos(const int& pos) const;
 
 	LuaStack& offset(int offset);
+	LuaStack& grab() {
+		return offset(0);
+	}
+	LuaStack& disown() {
+		return offset(size());
+	}
 public:
 	LuaStack(Lua& lua);
 

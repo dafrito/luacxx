@@ -9,9 +9,9 @@ int LuaStack::invokeWrappedFunction(lua_State* state)
 	p = lua_touserdata(state, lua_upvalueindex(2));
 	lua::QLuaCallable* func = static_cast<lua::QLuaCallable*>(p);
 	LuaStack stack(*lua);
-	stack.offset(0);
+	stack.grab();
 	(*func)(*lua, stack);
-	stack.offset(stack.size());
+	stack.disown();
 	return lua_gettop(state);
 }
 
