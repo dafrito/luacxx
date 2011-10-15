@@ -1,8 +1,8 @@
 TEMPLATE = app
+TARGET = run-tests
 
 CONFIG += qt qtestlib
 
-TARGET = run-tests
 INCLUDEPATH += ../lib
 VPATH += ../lib
 OBJECTS_DIR = ../build

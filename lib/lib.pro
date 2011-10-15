@@ -1,11 +1,11 @@
 TEMPLATE = lib
 TARGET = lua-cxx
+
 OBJECTS_DIR = ../build
 MOC_DIR = ../build
 DESTDIR = ..
 
 LIBS += -llua
-
 QMAKE_CXXFLAGS += -std=c++0x
 
 HEADERS += \
