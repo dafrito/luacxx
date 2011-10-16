@@ -28,6 +28,39 @@ namespace {
 	}
 }
 
+void callMethod(Lua&, LuaStack& stack)
+{
+	const char* name = stack.cstring(1);
+	QObject* const obj = stack.object(2);
+	stack.shift(2);
+	const QMetaObject* const metaObject = obj->metaObject();
+	QMetaMethod method;
+	for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+		method = metaObject->method(i);
+		QString sig = QString::fromLatin1(method.signature());
+		if (sig.startsWith(QString(name) + "(")) {
+			goto convert_params;
+		}
+	}
+	throw "No method found";
+convert_params:
+	int rtype = QMetaType::type(method.typeName());
+	QList<QByteArray> params = method.parameterTypes();
+	if (params.count() == 0) {
+		// No params, so no need to convert.
+	}
+	QVariant ret(rtype, (void *)0);
+	void* vvargs[11];
+	vvargs[0] = ret.data();
+	QMetaObject::metacall(
+		obj,
+		QMetaObject::InvokeMetaMethod,
+		method.methodIndex(),
+		vvargs);
+	if (ret.isValid()) {
+		stack.push(ret);
+	}
+}
 
 /**
  * Handles Lua's __index metamethod for all light userdata.
@@ -54,13 +87,17 @@ void __index(Lua&, LuaStack& stack)
 		stack << propValue;
 		return;
 	}
-	// Not a property, so return a method for the given the name.
+	// Not a property, so look for a method for the given the name.
 	const QMetaObject* const metaObject = obj->metaObject();
-	int idx = metaObject->indexOfMethod(name);
-	if (idx == -1) {
-		stack.pushNil();
-		return;
+	for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+		QString sig = QString::fromLatin1(metaObject->method(i).signature());
+		if (sig.startsWith(QString(name) + "(")) {
+			stack << name;
+			stack.push(callMethod, 1);
+			return;
+		}
 	}
+	stack.pushNil();
 }
 
 void __newindex(Lua&, LuaStack& stack)

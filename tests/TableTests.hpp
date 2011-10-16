@@ -32,4 +32,13 @@ private slots:
 		QCOMPARE(24, counter.getValue());
 	}
 
+	void luaCanCallQObjectMethods()
+	{
+		Lua lua;
+		Counter counter(42);
+		lua["c"] = &counter;
+		lua::load_string(lua, "foo = c:getValue()");
+		QVERIFY(lua["foo"] == 42);
+	}
+
 };
