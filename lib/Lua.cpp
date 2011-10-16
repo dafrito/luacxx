@@ -2,6 +2,9 @@
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
+#include "LuaStack.hpp"
+#include <QMetaObject>
+#include <QMetaMethod>
 
 using std::runtime_error;
 using std::istream;
@@ -25,10 +28,53 @@ namespace {
 	}
 }
 
+
+/**
+ * Handles Lua's __index metamethod for all light userdata.
+ */
+void __index(Lua&, LuaStack& stack)
+{
+	QObject* const obj = stack.object(1);
+	if (obj == 0) {
+		// No object, so just return nil.
+		stack.clear();
+		stack.pushNil();
+		return;
+	}
+	const char* name = stack.cstring(2);
+	if (name == 0) {
+		stack.clear();
+		stack.pushNil();
+		return;
+	}
+	stack.clear();
+	// First, check for properties
+	QVariant propValue = obj->property(name);
+	if (propValue.isValid()) {
+		stack << propValue;
+		return;
+	}
+	// Not a property, so return a method for the given the name.
+	const QMetaObject* const metaObject = obj->metaObject();
+	int idx = metaObject->indexOfMethod(name);
+	if (idx == -1) {
+		stack.pushNil();
+		return;
+	}
+}
+
 Lua::Lua()
 {
 	state = luaL_newstate();
 	luaL_openlibs(state);
+	{
+		LuaStack stack(*this);
+		lua_pushlightuserdata(state, 0);
+		stack.pushNewTable();
+		stack.set("__index", __index, -1);
+		lua_setmetatable(state, -2);
+		stack.grab();
+	}
 }
 
 void Lua::operator()(istream& stream, const string& name = NULL)

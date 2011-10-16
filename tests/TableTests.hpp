@@ -12,12 +12,14 @@ class TableTests : public QObject
 	Q_OBJECT
 private slots:
 
-	void testLuaConvertsAQObjectToUserdata()
+	void luaRetrievesQObjectProperties()
 	{
 		Lua lua;
-		Counter counter;
+		Counter counter(42);
 		lua["foo"] = &counter;
 		QVERIFY("userdata" == lua["foo"].typestring());
+		lua::load_string(lua, "bar = foo.value");
+		QVERIFY(lua["bar"] == 42);
 	}
 
 };

@@ -153,6 +153,8 @@ public:
 	{
 		return stack.to(&value);
 	}
+
+	friend class Lua;
 };
 
 namespace
