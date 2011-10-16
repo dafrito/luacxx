@@ -148,6 +148,12 @@ public:
 		return set(key, value, LUA_GLOBALSINDEX);
 	}
 
+	template <typename K>
+	LuaStack& setGlobal(K key)
+	{
+		return set(key, LUA_GLOBALSINDEX);
+	}
+
 	~LuaStack();
 
 	template <typename T>
