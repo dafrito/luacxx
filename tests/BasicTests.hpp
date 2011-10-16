@@ -80,8 +80,11 @@ private slots:
 
 	void testLuaStackHandlesNilValuesProperly()
 	{
-		// TODO: Figure out if/how we want to support nil values.
-		//QCOMPARE(nil?, s.global("No").string());
+		Lua lua;
+		LuaStack s(lua);
+
+		s.pushNil();
+		QVERIFY(s.isNil());
 	}
 
 	void testLuaStackSupportsBitwiseOperators()

@@ -324,6 +324,18 @@ LuaStack& LuaStack::newTable()
 	return (*this);
 }
 
+LuaStack& LuaStack::pushNil()
+{
+	lua_pushnil(lua.state);
+	return (*this);
+}
+
+bool LuaStack::isNil(const int pos)
+{
+	checkPos(pos);
+	return lua_isnil(lua.state, pos) == 1;
+}
+
 LuaStack::~LuaStack()
 {
 	if (size() > 0)

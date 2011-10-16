@@ -101,6 +101,8 @@ public:
 	LuaStack& push(const QVariant& variant);
 
 	LuaStack& newTable();
+	LuaStack& pushNil();
+	bool isNil(const int pos = -1);
 
 	template <typename RV, typename... Args>
 	LuaStack& push(RV(*p)(Args...))
