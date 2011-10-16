@@ -331,8 +331,7 @@ LuaStack& LuaStack::push(const QVariant& variant)
 	case QVariant::UInt:
 		return push(variant.toDouble());
 	default:
-		qWarning("Type not supported!");
-		return pushNil();
+		throw QString("Type not supported: ") + variant.typeName();
 	}
 	return (*this);
 }
