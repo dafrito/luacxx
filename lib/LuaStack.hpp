@@ -75,6 +75,12 @@ public:
 	LuaStack& to(QObject** const sink, int pos = -1);
 	LuaStack& to(QVariant* const sink, int pos = -1);
 
+	template <typename T>
+	LuaStack& to(T& sink, int pos = -1)
+	{
+		return to(&sink, pos);
+	}
+
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
 	QString qstring(int pos = -1);
