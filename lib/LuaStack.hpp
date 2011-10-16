@@ -105,7 +105,7 @@ public:
 	LuaStack& push(const long& b);
 	LuaStack& push(const float& b);
 	LuaStack& push(const short& b);
-	LuaStack& push(const lua::LuaCallable& f);
+	LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
 	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(QObject* const obj);
 	LuaStack& push(const QVariant& variant);
@@ -116,9 +116,9 @@ public:
 	LuaStack& pushNewTable();
 
 	template <typename RV, typename... Args>
-	LuaStack& push(RV(*p)(Args...))
+	LuaStack& push(RV(*p)(Args...), const int closed = 0)
 	{
-		this->push(LuaWrapper<RV, Args...>(p));
+		this->push(LuaWrapper<RV, Args...>(p), closed);
 		return (*this);
 	}
 

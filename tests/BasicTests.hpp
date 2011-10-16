@@ -263,4 +263,15 @@ private slots:
 		lua["foo"] = QVariant(42);
 		QVERIFY(lua["foo"] == 42);
 	}
+
+	void testLuaCanPushClosures()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		s << 42;
+		s << 24;
+		s.push(addNumbers, 2);
+		s.setGlobal("foo");
+		lua("assert(foo() == 66)");
+	}
 };

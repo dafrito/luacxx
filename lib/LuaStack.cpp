@@ -8,6 +8,13 @@ int LuaStack::invokeWrappedFunction(lua_State* state)
 	Lua* lua = static_cast<Lua*>(p);
 	p = lua_touserdata(state, lua_upvalueindex(2));
 	lua::QLuaCallable* func = static_cast<lua::QLuaCallable*>(p);
+	// Push all upvalues unto the stack.
+	int i = 3;
+	while (!lua_isnone(state, lua_upvalueindex(i))) {
+		lua_pushvalue(state, lua_upvalueindex(i));
+		lua_insert(state, 1);
+		i++;
+	}
 	LuaStack stack(*lua);
 	stack.grab();
 	(*func)(*lua, stack);
@@ -338,11 +345,16 @@ LuaStack& LuaStack::push(void(*p)(Lua& lua, LuaStack& stack))
 	return this->push(lua::LuaCallable(p));
 }
 
-LuaStack& LuaStack::push(const lua::LuaCallable& f)
+LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
 {
-	lua_pushlightuserdata(lua.state, &lua);
-	lua_pushlightuserdata(lua.state, new lua::QLuaCallable(&lua, f));
-	lua_pushcclosure(lua.state, invokeWrappedFunction, 2);
+	if (closed > 0) {
+		checkPos(-closed);
+	}
+	push(&lua);
+	push(new lua::QLuaCallable(&lua, f));
+	lua_insert(lua.state, -2-closed);
+	lua_insert(lua.state, -2-closed);
+	lua_pushcclosure(lua.state, invokeWrappedFunction, 2 + closed);
 	return (*this);
 }
 
