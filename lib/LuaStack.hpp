@@ -72,11 +72,13 @@ public:
 	LuaStack& to(short* sink, int pos = -1);
 	LuaStack& to(std::string* const sink, int pos = -1);
 	LuaStack& to(QString* const sink, int pos = -1);
+	LuaStack& to(QObject** sink, int pos = -1);
 
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
 	lua_Number number(int pos = -1);
 	bool boolean(int pos = -1);
+	QObject* object(int pos = -1);
 	LuaStack& global(const char* name);
 	LuaStack& global(const std::string& name);
 

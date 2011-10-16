@@ -128,6 +128,14 @@ LuaStack& LuaStack::to(QString* const sink, int pos)
 	return (*this);
 }
 
+QObject* LuaStack::object(int pos)
+{
+	checkPos(pos);
+	QObject* ptr;
+	to(&ptr, pos);
+	return ptr;
+}
+
 LuaStack& LuaStack::to(bool* sink, int pos)
 {
 	checkPos(pos);
@@ -175,6 +183,17 @@ LuaStack& LuaStack::to(float* sink, int pos)
 	checkPos(pos);
 	*sink = lua_tonumber(lua.state, pos);
 	return (*this);
+}
+
+LuaStack& LuaStack::to(QObject** sink, int pos)
+{
+	checkPos(pos);
+	if (lua_islightuserdata(lua.state, pos)) {
+		*sink = static_cast<QObject*>(lua_touserdata(lua.state, pos));
+	} else {
+		*sink = 0;
+	}
+	return *this;
 }
 
 double LuaStack::number(int pos)
