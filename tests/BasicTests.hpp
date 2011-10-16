@@ -274,4 +274,20 @@ private slots:
 		s.setGlobal("foo");
 		lua("assert(foo() == 66)");
 	}
+
+	static void receive(Lua&, LuaStack& stack)
+	{
+		QVERIFY(QString("getValue") == stack.qstring(1));
+		QVERIFY(2 == stack.number(2));
+	}
+
+	void testLuaHandlesStringsProperly()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		s << "getValue";
+		s.push(receive, 1);
+		s.setGlobal("foo");
+		lua("foo(2)");
+	}
 };
