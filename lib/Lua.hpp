@@ -21,6 +21,7 @@ public:
 
 	LuaValue operator[](const string& key);
 
+	void operator()(const string& runnable);
 	void operator()(istream& stream, const string& name);
 
 	friend class LuaStack;

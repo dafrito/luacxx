@@ -98,6 +98,12 @@ Lua::Lua()
 	}
 }
 
+void Lua::operator()(const string& runnable)
+{
+	std::istringstream stream(runnable);
+	(*this)(stream, "string input");
+}
+
 void Lua::operator()(istream& stream, const string& name = NULL)
 {
 	LuaReadingData d(stream);
