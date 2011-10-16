@@ -22,4 +22,14 @@ private slots:
 		QVERIFY(lua["bar"] == 42);
 	}
 
+	void luaCanSetQObjectProperties()
+	{
+		Lua lua;
+		Counter counter(42);
+		lua["c"] = &counter;
+
+		lua::load_string(lua, "c.value = 24");
+		QCOMPARE(24, counter.getValue());
+	}
+
 };

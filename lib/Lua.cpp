@@ -63,6 +63,26 @@ void __index(Lua&, LuaStack& stack)
 	}
 }
 
+void __newindex(Lua&, LuaStack& stack)
+{
+	QObject* const obj = stack.object(1);
+	if (obj == 0) {
+		// No object, so just return nil.
+		stack.clear();
+		stack.pushNil();
+		return;
+	}
+	const char* name = stack.cstring(2);
+	if (name == 0) {
+		stack.clear();
+		stack.pushNil();
+		return;
+	}
+	QVariant v;
+	stack.to(&v, 3);
+	obj->setProperty(name, v);
+}
+
 Lua::Lua()
 {
 	state = luaL_newstate();
@@ -72,6 +92,7 @@ Lua::Lua()
 		lua_pushlightuserdata(state, 0);
 		stack.pushNewTable();
 		stack.set("__index", __index, -1);
+		stack.set("__newindex", __newindex, -1);
 		lua_setmetatable(state, -2);
 		stack.grab();
 	}

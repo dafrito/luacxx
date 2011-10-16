@@ -151,6 +151,34 @@ LuaStack& LuaStack::to(bool* sink, int pos)
 	return (*this);
 }
 
+LuaStack& LuaStack::to(QVariant* const sink, int pos)
+{
+	checkPos(pos);
+	switch(type(pos)) {
+	case lua::NIL:
+		sink->clear();
+		break;
+	case lua::BOOLEAN:
+		sink->setValue(boolean(pos));
+		break;
+	case lua::NUMBER:
+		sink->setValue(number(pos));
+		break;
+	case lua::STRING:
+		sink->setValue(qstring(pos));
+		break;
+	case lua::LIGHTUSERDATA:
+		sink->setValue(object());
+		break;
+	case lua::TABLE:
+	case lua::FUNCTION:
+	case lua::THREAD:
+	default:
+		throw QString("Type not supported: ") + type(pos);
+	}
+	return (*this);
+}
+
 bool LuaStack::boolean(int pos)
 {
 	bool b;
