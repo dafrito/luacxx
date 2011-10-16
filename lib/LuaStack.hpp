@@ -70,6 +70,8 @@ public:
 	LuaStack& to(long* sink, int pos = -1);
 	LuaStack& to(float* sink, int pos = -1);
 	LuaStack& to(short* sink, int pos = -1);
+	LuaStack& to(std::string* const sink, int pos = -1);
+	LuaStack& to(QString* const sink, int pos = -1);
 
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
@@ -82,6 +84,9 @@ public:
 	LuaStack& set(const std::string& key, int tablePos);
 
 	LuaStack& push(const char* value);
+	LuaStack& push(const char* value, int len);
+	LuaStack& push(const QChar& value);
+	LuaStack& push(const QString& value);
 	LuaStack& push(const std::string& value);
 	LuaStack& push(const lua_Number& value);
 	LuaStack& push(void* const p);

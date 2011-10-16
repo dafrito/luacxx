@@ -199,6 +199,39 @@ private slots:
 		QCOMPARE((int)s.global("No").number(), 42);
 	}
 
+	void testLuaHandlesInterestingCharValues()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		char c = 'c';
+		s.push(&c, 1);
+		string sink;
+		s >> sink;
+		QVERIFY(sink == "c");
+	}
+
+	void testLuaHandlesQString()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		QString i('c');
+		s << i;
+		QString o;
+		s >> o;
+		QVERIFY(o == "c");
+	}
+
+	void testLuaHandlesQChar()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		QChar i('c');
+		s << i;
+		QString o;
+		s >> o;
+		QVERIFY(o == "c");
+	}
+
 	void testLuaHandlesQVariants()
 	{
 		Lua lua;

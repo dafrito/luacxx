@@ -114,6 +114,20 @@ std::string LuaStack::string(int pos)
 	return std::string(cstring(pos));
 }
 
+LuaStack& LuaStack::to(std::string* const sink, int pos)
+{
+	checkPos(pos);
+	*sink = lua_tostring(lua.state, pos);
+	return (*this);
+}
+
+LuaStack& LuaStack::to(QString* const sink, int pos)
+{
+	checkPos(pos);
+	*sink = lua_tostring(lua.state, pos);
+	return (*this);
+}
+
 LuaStack& LuaStack::to(bool* sink, int pos)
 {
 	checkPos(pos);
@@ -198,6 +212,23 @@ LuaStack& LuaStack::push(const char* value)
 {
 	lua_pushstring(lua.state, value);
 	return (*this);
+}
+
+LuaStack& LuaStack::push(const char* value, int len)
+{
+	lua_pushlstring(lua.state, value, len);
+	return (*this);
+}
+
+LuaStack& LuaStack::push(const QChar& value)
+{
+	char v = value.toAscii();
+	return push(&v, 1);
+}
+
+LuaStack& LuaStack::push(const QString& value)
+{
+	return push(value.toAscii().data());
 }
 
 LuaStack& LuaStack::push(const std::string& value)
