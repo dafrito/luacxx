@@ -340,9 +340,9 @@ LuaStack& LuaStack::push(const bool& b)
 	return (*this);
 }
 
-LuaStack& LuaStack::push(void(*p)(Lua& lua, LuaStack& stack))
+LuaStack& LuaStack::push(void(*p)(Lua& lua, LuaStack& stack), const int closed)
 {
-	return this->push(lua::LuaCallable(p));
+	return this->push(lua::LuaCallable(p), closed);
 }
 
 LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)

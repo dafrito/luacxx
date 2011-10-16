@@ -106,7 +106,7 @@ public:
 	LuaStack& push(const float& b);
 	LuaStack& push(const short& b);
 	LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
-	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
+	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack), const int closed = 0);
 	LuaStack& push(QObject* const obj);
 	LuaStack& push(const QVariant& variant);
 
