@@ -130,6 +130,17 @@ public:
 
 	~LuaStack();
 
+	template <typename T>
+	friend LuaStack& operator<<(LuaStack& stack, const T& value)
+	{
+		return stack.push(value);
+	}
+
+	template <typename T>
+	friend LuaStack& operator>>(LuaStack& stack, T& value)
+	{
+		return stack.to(&value);
+	}
 };
 
 namespace

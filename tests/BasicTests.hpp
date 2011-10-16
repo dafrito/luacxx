@@ -84,6 +84,18 @@ private slots:
 		//QCOMPARE(nil?, s.global("No").string());
 	}
 
+	void testLuaStackSupportsBitwiseOperators()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		s << 42 << 34;
+		int a, b;
+		s >> a;
+		QVERIFY(a == 34);
+		s >> b;
+		QVERIFY(b == 34);
+	}
+
 	void testLuaCallsACFunction()
 	{
 		Lua lua;
