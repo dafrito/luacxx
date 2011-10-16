@@ -29,7 +29,7 @@ private slots:
 		lua["c"] = &counter;
 
 		lua::load_string(lua, "c.value = 24");
-		QCOMPARE(24, counter.getValue());
+		QCOMPARE(counter.getValue(), 24);
 	}
 
 	void luaCanCallQObjectMethods()
@@ -39,6 +39,15 @@ private slots:
 		lua["c"] = &counter;
 		lua::load_string(lua, "foo = c:getValue()");
 		QVERIFY(lua["foo"] == 42);
+	}
+
+	void luaCanPassValuesToQObjectMethods()
+	{
+		Lua lua;
+		Counter counter(42);
+		lua["c"] = &counter;
+		lua::load_string(lua, "c:setValue(24)");
+		QCOMPARE(counter.getValue(), 24);
 	}
 
 };
