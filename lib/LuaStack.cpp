@@ -318,7 +318,9 @@ LuaStack& LuaStack::push(const QVariant& variant)
 	return (*this);
 }
 
-LuaStack& LuaStack::newTable()
+
+
+LuaStack& LuaStack::pushNewTable()
 {
 	lua_newtable(lua.state);
 	return (*this);

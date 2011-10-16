@@ -202,6 +202,14 @@ private slots:
 		QCOMPARE((int)s.global("No").number(), 42);
 	}
 
+	void testYouCanPushTables()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		s.pushNewTable();
+		QVERIFY("table" == s.typestring());
+	}
+
 	void testLuaHandlesInterestingCharValues()
 	{
 		Lua lua;
