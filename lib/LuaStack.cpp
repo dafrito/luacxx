@@ -266,6 +266,27 @@ LuaStack& LuaStack::push(QObject* const obj)
 	return (*this);
 }
 
+LuaStack& LuaStack::push(const QVariant& variant)
+{
+	switch (variant.type()) {
+	case QVariant::Invalid:
+		return pushNil();
+	case QVariant::Bool:
+		return push(variant.toBool());
+	case QVariant::Char:
+		return push(variant.toChar());
+	case QVariant::Int:
+		return push(variant.toInt());
+	case QVariant::Double:
+	case QVariant::UInt:
+		return push(variant.toDouble());
+	default:
+		qWarning("Type not supported!");
+		return pushNil();
+	}
+	return (*this);
+}
+
 LuaStack& LuaStack::newTable()
 {
 	lua_newtable(lua.state);

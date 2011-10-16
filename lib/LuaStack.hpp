@@ -2,6 +2,7 @@
 #define HEADER_LUASTACK_HPP
 
 #include <QObject>
+#include <QVariant>
 #include <string>
 #include <functional>
 #include <tuple>
@@ -92,6 +93,7 @@ public:
 	LuaStack& push(const lua::LuaCallable& f);
 	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack));
 	LuaStack& push(QObject* const obj);
+	LuaStack& push(const QVariant& variant);
 
 	LuaStack& newTable();
 

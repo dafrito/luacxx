@@ -198,4 +198,11 @@ private slots:
 		s.setGlobal("No", 42);
 		QCOMPARE((int)s.global("No").number(), 42);
 	}
+
+	void testLuaHandlesQVariants()
+	{
+		Lua lua;
+		lua["foo"] = QVariant(42);
+		QVERIFY(lua["foo"] == 42);
+	}
 };
