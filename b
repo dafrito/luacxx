@@ -1,1 +1,1 @@
-make -j && ./run-tests
+make -j && ./run-tests $*
