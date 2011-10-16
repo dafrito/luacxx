@@ -185,7 +185,7 @@ LuaStack& LuaStack::to(float* sink, int pos)
 	return (*this);
 }
 
-LuaStack& LuaStack::to(QObject** sink, int pos)
+LuaStack& LuaStack::to(QObject** const sink, int pos)
 {
 	checkPos(pos);
 	if (lua_islightuserdata(lua.state, pos)) {

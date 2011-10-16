@@ -72,7 +72,7 @@ public:
 	LuaStack& to(short* sink, int pos = -1);
 	LuaStack& to(std::string* const sink, int pos = -1);
 	LuaStack& to(QString* const sink, int pos = -1);
-	LuaStack& to(QObject** sink, int pos = -1);
+	LuaStack& to(QObject** const sink, int pos = -1);
 
 	const char* cstring(int pos = -1);
 	std::string string(int pos = -1);
