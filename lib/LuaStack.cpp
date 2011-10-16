@@ -114,6 +114,14 @@ std::string LuaStack::string(int pos)
 	return std::string(cstring(pos));
 }
 
+QString LuaStack::qstring(int pos)
+{
+	checkPos(pos);
+	QString str;
+	to(&str, pos);
+	return str;
+}
+
 LuaStack& LuaStack::to(std::string* const sink, int pos)
 {
 	checkPos(pos);
