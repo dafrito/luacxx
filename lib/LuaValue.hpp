@@ -14,8 +14,6 @@ class LuaValue
 private:
 	Lua& lua;
 	string key;
-
-	void push_key();
 public:
 	LuaValue(Lua& lua, const string& key) :
 		lua(lua), key(key) {}
