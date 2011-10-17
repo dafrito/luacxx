@@ -5,6 +5,7 @@
 #include <cstring>
 #include "LuaStack.hpp"
 #include "types.hpp"
+
 using std::string;
 
 class Lua;
