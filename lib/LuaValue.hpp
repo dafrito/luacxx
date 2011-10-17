@@ -51,12 +51,6 @@ public:
 		return other == static_cast<T>(*this);
 	}
 
-	bool operator==(const char* const other) const
-	{
-		const char* p = static_cast<const char*>(*this);
-		return !std::strcmp(other, p);
-	}
-
 	template<typename T>
 	const LuaValue& operator=(const T& value)
 	{
