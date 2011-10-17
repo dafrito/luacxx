@@ -14,6 +14,7 @@ HEADERS += \
 	Lua.hpp \
 	LuaStack.hpp \
 	LuaValue.hpp \
+	LuaGlobal.hpp \
 	types.hpp \
 
 SOURCES += \

@@ -30,7 +30,7 @@ private slots:
 	void testLuaValueIsAProxyForTheGlobalTable()
 	{
 		Lua lua;
-		LuaValue v = lua["No"];
+		LuaGlobal v = lua["No"];
 		v = "Time";
 		QCOMPARE((const char*)lua["No"], "Time");
 	}

@@ -95,9 +95,11 @@ public:
 	QObject* object(int pos = -1);
 	LuaStack& global(const char* name);
 	LuaStack& global(const std::string& name);
+	LuaStack& global(const QString& name);
 
 	LuaStack& set(const char* key, int tablePos);
 	LuaStack& set(const std::string& key, int tablePos);
+	LuaStack& set(const QString& key, int tablePos);
 
 	LuaStack& push(const char* value);
 	LuaStack& push(const char* value, int len);

@@ -270,6 +270,12 @@ LuaStack& LuaStack::global(const std::string& name)
 	return (*this);
 }
 
+LuaStack& LuaStack::global(const QString& name)
+{
+	global(name.toAscii().data());
+	return (*this);
+}
+
 LuaStack& LuaStack::set(const char* key, int tablePos)
 {
 	checkPos(tablePos);
@@ -280,6 +286,11 @@ LuaStack& LuaStack::set(const char* key, int tablePos)
 LuaStack& LuaStack::set(const std::string& key, int tablePos)
 {
 	return set(key.c_str(), tablePos);
+}
+
+LuaStack& LuaStack::set(const QString& key, int tablePos)
+{
+	return set(key.toAscii().constData(), tablePos);
 }
 
 LuaStack& LuaStack::push(const char* value)

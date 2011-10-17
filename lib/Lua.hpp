@@ -5,7 +5,7 @@
 #include <string>
 #include <istream>
 
-#include "LuaValue.hpp"
+#include "LuaGlobal.hpp"
 
 using std::istream;
 using std::string;
@@ -19,7 +19,9 @@ public:
 	Lua();
 	~Lua();
 
-	LuaValue operator[](const string& key);
+	LuaGlobal operator[](const char* key);
+	LuaGlobal operator[](const QString& key);
+	LuaGlobal operator[](const string& key);
 
 	void operator()(const string& runnable);
 	void operator()(istream& stream, const string& name);

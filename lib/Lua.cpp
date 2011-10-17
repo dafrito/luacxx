@@ -156,9 +156,20 @@ void Lua::operator()(istream& stream, const string& name = NULL)
 	lua_call(state, 0, 0);
 }
 
-LuaValue Lua::operator[](const string& key)
+LuaGlobal Lua::operator[](const char* key)
 {
-	return LuaValue(*this, key);
+	return LuaGlobal(*this, QString(key));
+}
+
+LuaGlobal Lua::operator[](const QString& key)
+{
+	return LuaGlobal(*this, key);
+}
+
+LuaGlobal Lua::operator[](const string& key)
+{
+	QString str(key.c_str());
+	return (*this)[str];
 }
 
 Lua::~Lua()

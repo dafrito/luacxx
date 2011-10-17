@@ -11,28 +11,33 @@ class Lua;
 
 class LuaValue
 {
-private:
+protected:
 	Lua& lua;
-	string key;
-public:
-	LuaValue(Lua& lua, const string& key) :
-		lua(lua), key(key) {}
 
-	
+	virtual void push(LuaStack& stack) const=0;
+public:
+	LuaValue(Lua& lua) : lua(lua) {}
+
 	lua::Type type()
 	{
-		return LuaStack(lua).global(key).type();
+		LuaStack stack(lua);
+		push(stack);
+		return stack.type();
 	}
 
 	string typestring()
 	{
-		return LuaStack(lua).global(key).typestring();
+		LuaStack stack(lua);
+		push(stack);
+		return stack.typestring();
 	}
 
 	template <typename T>
 	void to(T* value) const
 	{
-		LuaStack(lua).global(key).to(value);
+		LuaStack stack(lua);
+		push(stack);
+		stack.to(value);
 	}
 
 	template<typename T>
@@ -47,13 +52,6 @@ public:
 	bool operator==(const T& other) const
 	{
 		return other == static_cast<T>(*this);
-	}
-
-	template<typename T>
-	const LuaValue& operator=(const T& value)
-	{
-		LuaStack(lua).setGlobal(key, value);
-		return *this;
 	}
 };
 
