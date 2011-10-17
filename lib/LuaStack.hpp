@@ -11,6 +11,8 @@
 
 class Lua;
 class LuaStack;
+class LuaValue;
+class LuaReference;
 
 namespace
 {
@@ -93,6 +95,7 @@ public:
 	lua_Number number(int pos = -1);
 	bool boolean(int pos = -1);
 	QObject* object(int pos = -1);
+	LuaReference save();
 	LuaStack& global(const char* name);
 	LuaStack& global(const std::string& name);
 	LuaStack& global(const QString& name);
@@ -117,6 +120,7 @@ public:
 	LuaStack& push(void (*p)(Lua& lua, LuaStack& stack), const int closed = 0);
 	LuaStack& push(QObject* const obj);
 	LuaStack& push(const QVariant& variant);
+	LuaStack& push(const LuaValue& value);
 
 	LuaStack& pushNil();
 	bool isNil(const int pos = -1);

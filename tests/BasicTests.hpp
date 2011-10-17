@@ -6,6 +6,7 @@
 #include "loaders.hpp"
 #include "exceptions.hpp"
 #include "LuaStack.hpp"
+#include "LuaReference.hpp"
 
 using namespace std;
 
@@ -289,5 +290,16 @@ private slots:
 		s.push(receive, 1);
 		s.setGlobal("foo");
 		lua("foo(2)");
+	}
+
+	void testLuaHandlesReferencesProperly()
+	{
+		Lua lua;
+		LuaStack s(lua);
+		s << "No Time";
+		LuaReference r = s.save();
+		QVERIFY(s.size() == 0);
+		s << r;
+		QVERIFY(s.qstring() == "No Time");
 	}
 };

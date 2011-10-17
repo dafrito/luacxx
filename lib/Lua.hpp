@@ -27,6 +27,7 @@ public:
 	void operator()(istream& stream, const string& name);
 
 	friend class LuaStack;
+	friend class LuaReference;
 };
 
 #endif

@@ -1,6 +1,7 @@
 #include "Lua.hpp"
 #include "LuaStack.hpp"
 #include "exceptions.hpp"
+#include "LuaReference.hpp"
 
 namespace
 {
@@ -161,6 +162,12 @@ QObject* LuaStack::object(int pos)
 	QObject* ptr;
 	to(&ptr, pos);
 	return ptr;
+}
+
+LuaReference LuaStack::save()
+{
+	checkPos(-1);
+	return LuaReference(lua);
 }
 
 LuaStack& LuaStack::to(bool* sink, int pos)
@@ -407,7 +414,11 @@ LuaStack& LuaStack::push(const QVariant& variant)
 	return (*this);
 }
 
-
+LuaStack& LuaStack::push(const LuaValue& value)
+{
+	value.push(*this);
+	return *this;
+}
 
 LuaStack& LuaStack::pushNewTable()
 {
