@@ -4,8 +4,9 @@
 #include <QObject>
 #include <string>
 #include <istream>
+#include <lua.hpp>
 
-#include "LuaGlobal.hpp"
+class LuaGlobal;
 
 using std::istream;
 using std::string;
@@ -27,7 +28,7 @@ public:
 	void operator()(istream& stream, const string& name);
 
 	friend class LuaStack;
-	friend class LuaReference;
+	friend class LuaValue;
 };
 
 #endif

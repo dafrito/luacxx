@@ -4,6 +4,7 @@
 #include "exceptions.hpp"
 #include "LuaStack.hpp"
 #include "mocks.hpp"
+#include "LuaGlobal.hpp"
 
 using namespace std;
 
@@ -48,6 +49,17 @@ private slots:
 		lua["c"] = &counter;
 		lua::load_string(lua, "c:setValue(24)");
 		QCOMPARE(counter.getValue(), 24);
+	}
+
+	void luaFunctionsCanBeCalledFromC()
+	{
+		Lua lua;
+		lua(""
+		"function foo(a, b)\n"
+		"    return a + b\n"
+		"end");
+		int result = lua["foo"](42, "24");
+		QVERIFY(result == 66);
 	}
 
 };

@@ -15,6 +15,11 @@ protected:
 	Lua& lua;
 
 	virtual void push(LuaStack& stack) const=0;
+
+	lua_State* luaState() const
+	{
+		return lua.state;
+	}
 public:
 	LuaValue(Lua& lua) : lua(lua) {}
 
@@ -53,6 +58,9 @@ public:
 	{
 		return other == static_cast<T>(*this);
 	}
+
+private:
+	friend class LuaStack;
 };
 
 #endif

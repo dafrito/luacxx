@@ -7,6 +7,7 @@
 #include "exceptions.hpp"
 #include "LuaStack.hpp"
 #include "LuaReference.hpp"
+#include "LuaGlobal.hpp"
 
 using namespace std;
 

@@ -2,6 +2,7 @@
 #define LUAGLOBAL_HPP
 
 #include "LuaValue.hpp"
+#include "LuaReference.hpp"
 
 class LuaGlobal : public LuaValue
 {
@@ -22,6 +23,13 @@ public:
 		return *this;
 	}
 
+	template <typename... Args>
+	LuaReference operator()(Args... args)
+	{
+		LuaStack stack(lua);
+		push(stack);
+		return callLua(luaState(), stack, args...);
+	}
 };
 
 #endif // LUAGLOBAL_HPP

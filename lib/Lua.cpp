@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <sstream>
 #include "LuaStack.hpp"
+#include "LuaGlobal.hpp"
 #include <QMetaObject>
 #include <QMetaMethod>
 

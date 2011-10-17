@@ -22,4 +22,5 @@ SOURCES += \
 	loaders.cpp \
 	Lua.cpp \
 	LuaStack.cpp \
+	LuaValue.cpp \
 	types.cpp
