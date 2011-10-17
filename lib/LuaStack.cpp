@@ -2,12 +2,24 @@
 #include "LuaStack.hpp"
 #include "exceptions.hpp"
 
+namespace
+{
+	class QLuaCallable : public QObject, public lua::LuaCallable
+	{
+	public:
+		QLuaCallable(QObject* const parent, const lua::LuaCallable& func) :
+			QObject(parent),
+			lua::LuaCallable(func)
+		{}
+	};
+}
+
 int LuaStack::invokeWrappedFunction(lua_State* state)
 {
 	void* p = lua_touserdata(state, lua_upvalueindex(1));
 	Lua* lua = static_cast<Lua*>(p);
 	p = lua_touserdata(state, lua_upvalueindex(2));
-	lua::QLuaCallable* func = static_cast<lua::QLuaCallable*>(p);
+	QLuaCallable* func = static_cast<QLuaCallable*>(p);
 	// Push all upvalues unto the stack.
 	int i = 3;
 	while (!lua_isnone(state, lua_upvalueindex(i))) {
@@ -351,7 +363,7 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
 		checkPos(-closed);
 	}
 	push(&lua);
-	push(new lua::QLuaCallable(&lua, f));
+	push(new QLuaCallable(&lua, f));
 	lua_insert(lua.state, -2-closed);
 	lua_insert(lua.state, -2-closed);
 	lua_pushcclosure(lua.state, invokeWrappedFunction, 2 + closed);

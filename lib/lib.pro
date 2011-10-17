@@ -15,7 +15,6 @@ HEADERS += \
 	LuaStack.hpp \
 	LuaValue.hpp \
 	types.hpp \
-	QLuaCallable.hpp
 
 SOURCES += \
 	loaders.cpp \
