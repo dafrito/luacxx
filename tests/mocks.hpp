@@ -11,9 +11,14 @@ class Counter : public QObject
 	Q_PROPERTY(int value READ getValue WRITE setValue);
 public slots:
 	void setValue(const int value) {
-		this->value = value;
+		if (this->value != value) {
+			this->value = value;
+			emit valueChanged(value);
+		}
 	}
 	int getValue() const { return value; }
+signals:
+	void valueChanged(int value) const;
 public:
 	Counter(int value = 0) : value(value) {}
 };
