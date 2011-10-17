@@ -5,7 +5,7 @@
 
 class LuaGlobal : public LuaValue
 {
-	QString key;
+	const QString key;
 protected:
 	void push(LuaStack& stack) const
 	{
