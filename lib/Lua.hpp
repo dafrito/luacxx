@@ -5,6 +5,7 @@
 #include <string>
 #include <istream>
 #include <lua.hpp>
+#include <QFile>
 
 class LuaGlobal;
 
@@ -26,6 +27,7 @@ public:
 
 	void operator()(const string& runnable);
 	void operator()(istream& stream, const string& name);
+	void operator()(QFile& file);
 
 	friend class LuaStack;
 	friend class LuaValue;

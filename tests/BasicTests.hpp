@@ -44,6 +44,14 @@ private slots:
 		lua::load_file(lua, "tests/simple.lua");
 	}
 
+	void testLuaSupportsQFile()
+	{
+		Lua lua;
+		lua["No"] = "Time";
+		QFile file("tests/simple.lua");
+		lua(file);
+	}
+
 	void testLuaStackManagesItOwnStack()
 	{
 		Lua lua;

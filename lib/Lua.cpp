@@ -6,6 +6,7 @@
 #include "LuaGlobal.hpp"
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QTextStream>
 
 using std::runtime_error;
 using std::istream;
@@ -18,14 +19,33 @@ namespace {
 		LuaReadingData(istream& stream) : stream(stream) {}
 	};
 
+	struct QtReadingData
+	{
+		QTextStream stream;
+		QByteArray chunk;
+		QtReadingData(QFile& file) : stream(&file) {}
+	};
+
+	const int CHUNKSIZE = 4096;
+
 	const char* read_stream(lua_State *, void *data, size_t *size)
 	{
 		LuaReadingData* d = static_cast<LuaReadingData*>(data);
 		if (!d->stream)
 			return NULL;
-		d->stream.read(d->buffer, 4096);
+		d->stream.read(d->buffer, CHUNKSIZE);
 		*size = d->stream.gcount();
 		return d->buffer;
+	}
+
+	const char* read_qstream(lua_State*, void *pstream, size_t *size)
+	{
+		QtReadingData* d = static_cast<QtReadingData*>(pstream);
+		if(d->stream.atEnd())
+			return NULL;
+		d->chunk = d->stream.read(CHUNKSIZE).toUtf8();
+		*size = d->chunk.size();
+		return d->chunk.constData();
 	}
 }
 
@@ -152,6 +172,21 @@ void Lua::operator()(istream& stream, const string& name = NULL)
 {
 	LuaReadingData d(stream);
 	if(0 != lua_load(state, &read_stream, &d, name.c_str())) {
+		throw runtime_error(lua_tostring(state, -1));
+	}
+	lua_call(state, 0, 0);
+}
+
+void Lua::operator()(QFile& file)
+{
+	if (!file.open(QIODevice::ReadOnly)) {
+		throw runtime_error(
+			(QString("Cannot open file ") +
+			file.fileName() + ": " +
+			file.errorString()).toAscii().constData());
+	}
+	QtReadingData d(file);
+	if(0 != lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData())) {
 		throw runtime_error(lua_tostring(state, -1));
 	}
 	lua_call(state, 0, 0);
