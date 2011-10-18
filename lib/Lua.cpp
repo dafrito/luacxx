@@ -116,7 +116,7 @@ void __index(Lua&, LuaStack& stack)
 	}
 	// Not a property, so look for a method for the given the name.
 	const QMetaObject* const metaObject = obj->metaObject();
-	for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+	for(int i = 0; i < metaObject->methodCount(); ++i) {
 		QString sig = QString::fromLatin1(metaObject->method(i).signature());
 		if (sig.startsWith(QString(name) + "(")) {
 			stack << name;
