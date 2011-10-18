@@ -5,11 +5,8 @@ TARGET = run-tests
 
 CONFIG += qt qtestlib
 
-INCLUDEPATH = ../lib
-DEPENDPATH = ../lib
-
-LIBS += -llua
-QMAKE_CXXFLAGS += -std=c++0x
+INCLUDEPATH += ../lib
+DEPENDPATH += ../lib
 
 HEADERS += \
 	loaders.hpp \

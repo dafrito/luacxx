@@ -5,7 +5,17 @@ OBJECTS_DIR = ../build
 MOC_DIR = ../build
 DESTDIR = ..
 
-LIBS += -llua
+exists(/usr/include/lua5.1) {
+	# Linux Mint and likely Ubuntu
+	INCLUDEPATH  += /usr/include/lua5.1
+	LIBS += -llua5.1
+}
+
+exists(/usr/include/lua.hpp) {
+	# Fedora
+	LIBS += -llua
+}
+
 QMAKE_CXXFLAGS += -std=c++0x
 
 HEADERS *= exceptions.hpp
