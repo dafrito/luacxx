@@ -62,4 +62,13 @@ private slots:
 		QVERIFY(result == 66);
 	}
 
+	void luaSetsPropertiesDirectly()
+	{
+		Lua lua;
+		QFile file("tests/anim.lua");
+		lua(file);
+		Square square;
+		lua["Tick"](&square, .1);
+	}
+
 };

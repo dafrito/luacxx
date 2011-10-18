@@ -3,6 +3,32 @@
 
 #include <QObject>
 
+class Square : public QObject
+{
+	Q_OBJECT
+
+	Q_PROPERTY(int x READ getX WRITE setX)
+	Q_PROPERTY(int y READ getY WRITE setY)
+public:
+	int x, y;
+	void setX(int x)
+	{
+		this->x = x;
+	}
+	int getX()
+	{
+		return x;
+	}
+	void setY(int y)
+	{
+		this->y = y;
+	}
+	int getY()
+	{
+		return y;
+	}
+};
+
 class Counter : public QObject
 {
 	Q_OBJECT
