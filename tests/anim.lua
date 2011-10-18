@@ -1,3 +1,3 @@
 function Tick(square, elapsed)
-	square.x = math.cos(elapsed);
+	square.x = 250 * math.cos(elapsed);
 end

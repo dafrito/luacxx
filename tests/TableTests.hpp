@@ -68,7 +68,9 @@ private slots:
 		QFile file("tests/anim.lua");
 		lua(file);
 		Square square;
-		lua["Tick"](&square, .1);
+		int old = square.getX();
+		lua["Tick"](&square, M_PI);
+		QVERIFY(square.getX() != old);
 	}
 
 };
