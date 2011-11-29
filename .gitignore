@@ -6,3 +6,4 @@ lib*.so.*
 Makefile
 run-tests
 *.a
+*.gdb-index
