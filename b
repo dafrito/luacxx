@@ -1,3 +1,3 @@
 #!/bin/sh
 qmake
-make -j && ./run-tests $*
+make -j 8 && ./run-tests $*
