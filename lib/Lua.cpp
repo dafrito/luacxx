@@ -147,10 +147,19 @@ void __newindex(Lua&, LuaStack& stack)
 	obj->setProperty(name, v);
 }
 
+int throwFromPanic(lua_State* state)
+{
+	const char* msg = lua_tostring(state, -1);
+	std::cerr << "Fatal exception from Lua: " << msg << std::endl;
+	// XXX This should throw something more Lua-specific
+	throw msg;
+}
+
 Lua::Lua()
 {
 	state = luaL_newstate();
 	luaL_openlibs(state);
+	lua_atpanic(state, throwFromPanic);
 	{
 		LuaStack stack(*this);
 		lua_pushlightuserdata(state, 0);
