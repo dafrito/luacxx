@@ -4,7 +4,7 @@
 
 #include "Lua.hpp"
 #include "loaders.hpp"
-#include "exceptions.hpp"
+#include "LuaException.hpp"
 #include "LuaStack.hpp"
 #include "LuaReference.hpp"
 #include "LuaGlobal.hpp"

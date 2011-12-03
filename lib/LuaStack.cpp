@@ -1,6 +1,6 @@
 #include "Lua.hpp"
 #include "LuaStack.hpp"
-#include "exceptions.hpp"
+#include "LuaException.hpp"
 #include "LuaReference.hpp"
 
 namespace
@@ -44,9 +44,9 @@ LuaStack::LuaStack(Lua& lua) :
 LuaStack& LuaStack::offset(int offset)
 {
 	if(offset < 0)
-		throw LuaException(lua, "Offset must be non-negative");
+		throw LuaException(&lua, "Offset must be non-negative");
 	if(offset > lua_gettop(lua.state))
-		throw LuaException(lua, "Offset must be less than the top of lua's stack");
+		throw LuaException(&lua, "Offset must be less than the top of lua's stack");
 	_offset = offset;
 	return (*this);
 }
@@ -59,7 +59,7 @@ int LuaStack::size() const
 LuaStack& LuaStack::pop(int count)
 {
 	if(count > size())
-		throw LuaException(lua, "Refusing to pop elements not managed by this stack");
+		throw LuaException(&lua, "Refusing to pop elements not managed by this stack");
 	lua_pop(lua.state, count);
 	return (*this);
 }
@@ -77,7 +77,7 @@ LuaStack& LuaStack::replace(int pos)
 {
 	checkPos(pos);
 	if (empty())
-		throw LuaException(lua, "Stack must not be empty when replacing elements");
+		throw LuaException(&lua, "Stack must not be empty when replacing elements");
 	lua_replace(lua.state, pos);
 	return (*this);
 }
@@ -93,14 +93,14 @@ void LuaStack::checkPos(int pos) const
 		return;
 	const int top=lua_gettop(lua.state);
 	if (pos == 0)
-		throw LuaException(lua, "Stack position must not be zero");
+		throw LuaException(&lua, "Stack position must not be zero");
 	// Convert relative positions to absolute ones.
 	if (pos < 0)
 		pos += top;
 	if (pos < offset())
-		throw LuaException(lua, "Stack position is not managed by this stack");
+		throw LuaException(&lua, "Stack position is not managed by this stack");
 	if (pos > top)
-		throw LuaException(lua, "Stack position is beyond the top of the lua stack");
+		throw LuaException(&lua, "Stack position is beyond the top of the lua stack");
 }
 
 lua::Type LuaStack::type(int pos) const
@@ -200,7 +200,7 @@ LuaStack& LuaStack::to(QVariant* const sink, int pos)
 	case lua::FUNCTION:
 	case lua::THREAD:
 	default:
-		throw QString("Type not supported: ") + type(pos);
+		throw LuaException(&lua, std::string("Type not supported: ") + typestring(pos));
 	}
 	return (*this);
 }
@@ -409,7 +409,7 @@ LuaStack& LuaStack::push(const QVariant& variant)
 	case QVariant::UInt:
 		return push(variant.toDouble());
 	default:
-		throw QString("Type not supported: ") + variant.typeName();
+		throw LuaException(&lua, std::string("Type not supported: ") + variant.typeName());
 	}
 	return (*this);
 }

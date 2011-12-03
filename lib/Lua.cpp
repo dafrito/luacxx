@@ -7,6 +7,7 @@
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QTextStream>
+#include "LuaException.hpp"
 
 using std::runtime_error;
 using std::istream;
@@ -63,7 +64,7 @@ void callMethod(Lua&, LuaStack& stack)
 			goto convert_params;
 		}
 	}
-	throw "No method found";
+	throw LuaException(string("No method found with name: ") + name);
 convert_params:
 	QList<QVariant> variants;
 	void* vvargs[11];
@@ -150,9 +151,7 @@ void __newindex(Lua&, LuaStack& stack)
 int throwFromPanic(lua_State* state)
 {
 	const char* msg = lua_tostring(state, -1);
-	std::cerr << "Fatal exception from Lua: " << msg << std::endl;
-	// XXX This should throw something more Lua-specific
-	throw msg;
+	throw LuaException(string("Fatal exception from Lua: ") + msg);
 }
 
 Lua::Lua()
@@ -188,27 +187,33 @@ void Lua::operator()(const string& runnable)
 	(*this)(stream, "string input");
 }
 
+void Lua::handleLoadValue(const int rv)
+{
+	switch (rv) {
+		case LUA_ERRSYNTAX:
+			throw LuaException(this, string("Syntax error during compilation: ") + lua_tostring(state, -1));
+		case LUA_ERRMEM:
+			throw LuaException(this, string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
+	}
+}
+
 void Lua::operator()(istream& stream, const string& name = NULL)
 {
 	LuaReadingData d(stream);
-	if(0 != lua_load(state, &read_stream, &d, name.c_str())) {
-		throw runtime_error(lua_tostring(state, -1));
-	}
+	handleLoadValue(lua_load(state, &read_stream, &d, name.c_str()));
 	lua_call(state, 0, 0);
 }
 
 void Lua::operator()(QFile& file)
 {
 	if (!file.open(QIODevice::ReadOnly)) {
-		throw runtime_error(
-			(QString("Cannot open file ") +
+		throw LuaException(this,
+			QString("Cannot open file ") +
 			file.fileName() + ": " +
-			file.errorString()).toAscii().constData());
+			file.errorString());
 	}
 	QtReadingData d(file);
-	if(0 != lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData())) {
-		throw runtime_error(lua_tostring(state, -1));
-	}
+	handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData()));
 	lua_call(state, 0, 0);
 }
 
