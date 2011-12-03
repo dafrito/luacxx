@@ -25,7 +25,9 @@ public:
 	LuaGlobal operator[](const QString& key);
 	LuaGlobal operator[](const string& key);
 
+	void operator()(const char* runnable);
 	void operator()(const string& runnable);
+	void operator()(const QString& runnable);
 	void operator()(istream& stream, const string& name);
 	void operator()(QFile& file);
 

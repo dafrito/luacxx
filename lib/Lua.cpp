@@ -162,6 +162,17 @@ Lua::Lua()
 	}
 }
 
+void Lua::operator()(const char* runnable)
+{
+	luaL_loadstring(state, runnable);
+	lua_call(state, 0, 0);
+}
+
+void Lua::operator()(const QString& runnable)
+{
+	(*this)(runnable.toUtf8().constData());
+}
+
 void Lua::operator()(const string& runnable)
 {
 	std::istringstream stream(runnable);
