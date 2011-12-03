@@ -8,6 +8,9 @@
 
 using namespace std;
 
+// XXX This is a misnomer; these tests aren't fundamentally different from those
+// in BasicTests. However, they're typically more advanced since they were written
+// after those in BasicTests.
 class TableTests : public QObject
 {
 	Q_OBJECT
