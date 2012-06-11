@@ -33,5 +33,5 @@ AX_CXX_COMPILE_STDCXX_11
 
 # Checks for library functions.
 
-AC_CONFIG_FILES([Makefile lib/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile tests/Makefile])
 AC_OUTPUT
