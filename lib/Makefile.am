@@ -15,3 +15,13 @@ libluacxx_la_SOURCES = \
 	LuaStack.cpp \
 	LuaValue.cpp \
 	types.cpp
+
+pkginclude_HEADERS = \
+	loaders.hpp \
+	Lua.hpp \
+	LuaStack.hpp \
+	LuaValue.hpp \
+	LuaGlobal.hpp \
+	LuaReference.hpp \
+	types.hpp \
+	LuaException.hpp
