@@ -77,6 +77,7 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
     )
     AC_LANG_POP([C++])
 
+    AC_MSG_RESULT([$ax_have_luacxx])
     if test x"$ax_have_luacxx" = "xyes"; then
       AC_DEFINE(HAVE_LUA_CXX,,[define if Lua-Cxx is available])
     else
