@@ -79,7 +79,6 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
 
     if test x"$ax_have_luacxx" = "xyes"; then
       AC_DEFINE(HAVE_LUA_CXX,,[define if Lua-Cxx is available])
-      AC_DEFINE(LUA_CXX_CPPFLAGS,,[define if Lua-Cxx is available])
     else
       AC_MSG_ERROR([Could not find Lua-Cxx])
     fi
