@@ -1,0 +1,4 @@
+Currently, we only have symlinks for several macros that we depend on. You'll
+need to pick them up from my autoconf-archive mirror:
+
+https://github.com/dafrito/autoconf-archive.git
