@@ -12,7 +12,8 @@
 #
 #   This macro calls:
 #
-#     AC_SUBST(BOOST_FILESYSTEM_LIB)
+#     AC_SUBST(LUA_CXX_INCLUDE)
+#     AC_SUBST(LUA_CXX_LIBS)
 #
 #   And sets:
 #
@@ -55,12 +56,14 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
     # Ensure we have Qt
     AC_REQUIRE([AX_HAVE_QT])
 
-    ax_luacxx_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$CPPFLAGS $LUA_INCLUDE $QT_CXXFLAGS"
+    ax_luacxx_saved_CPPFLAGS="$CPPFLAGS"
+    ax_luacxx_INCLUDE="$LUA_INCLUDE $QT_CXXFLAGS"
+    CPPFLAGS="$CPPFLAGS $ax_luacxx_INCLUDE"
     export CPPFLAGS
 
-    ax_luacxx_LIBS="$LIBS"
-    LIBS="$LIBS $LUA_LIB $QT_LIBS"
+    ax_luacxx_saved_LIBS="$LIBS"
+    ax_luacxx_LIBS="$LUA_LIB $QT_LIBS"
+    LIBS="$LIBS $ax_luacxx_LIBS"
     export LIBS
 
     AC_LANG_PUSH([C++])
@@ -80,11 +83,18 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
     AC_MSG_RESULT([$ax_have_luacxx])
     if test x"$ax_have_luacxx" = "xyes"; then
       AC_DEFINE(HAVE_LUA_CXX,,[define if Lua-Cxx is available])
+      LUA_CXX_INCLUDE="$ax_luacxx_INCLUDE"
+      dnl This doesn't yet test the location of luacxx
+      LUA_CXX_LIBS="$ax_luacxx_LIBS -lluacxx"
     else
       AC_MSG_ERROR([Could not find Lua-Cxx])
+      LUA_CXX_INCLUDE=""
+      LUA_CXX_LIBS=""
     fi
+    AC_SUBST(LUA_CXX_INCLUDE)
+    AC_SUBST(LUA_CXX_LIBS)
 
-    CPPFLAGS="$ax_luacxx_CPPFLAGS"
-    LIBS="$ax_luacxx_LIBS"
+    CPPFLAGS="$ax_luacxx_saved_CPPFLAGS"
+    LIBS="$ax_luacxx_saved_LIBS"
   fi;
 ])
