@@ -1,6 +1,6 @@
 lib_LTLIBRARIES = libluacxx.la
-libluacxx_la_CXXFLAGS = -std=c++0x @QT_CXXFLAGS@
-libluacxx_la_LIBADD = @QT_LIBS@
+libluacxx_la_CXXFLAGS = @QT_CXXFLAGS@ @LUA_INCLUDE@
+libluacxx_la_LIBADD = @QT_LIBS@ @LUA_LIB@
 libluacxx_la_SOURCES = \
 	loaders.hpp \
 	Lua.hpp \
