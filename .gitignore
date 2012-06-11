@@ -1,9 +1,33 @@
 a.out
 build
 artifacts
-lib*.so
-lib*.so.*
 Makefile
 run-tests
+
+# Object files
+lib*.so
+lib*.so.*
 *.a
 *.gdb-index
+*.o
+*.lo
+*.la
+
+# Autotools artifacts
+stamp*
+configure
+config.*
+autom4te.cache/**
+depcomp
+*.log
+INSTALL
+missing
+m4/**
+aclocal.m4
+install-sh
+Makefile.in
+libtool
+ltmain.sh
+
+# Qt artifacts
+moc_*
