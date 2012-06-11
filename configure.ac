@@ -16,6 +16,9 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_LIBTOOL
 
+AX_LUA_LIBS
+AX_LUA_HEADERS
+
 AX_HAVE_QT
 
 # Checks for header files.
@@ -23,6 +26,10 @@ AX_HAVE_QT
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
 AC_TYPE_SIZE_T
+
+AC_LANG([C++])
+
+AX_CXX_COMPILE_STDCXX_11
 
 # Checks for library functions.
 
