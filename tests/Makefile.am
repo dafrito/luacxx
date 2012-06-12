@@ -27,6 +27,8 @@ check_SCRIPTS = \
 	anim.lua \
 	simple.lua
 
+CLEANFILES = $(check_SCRIPTS)
+
 anim.lua:
 	cat >$@ <<EOF \
 	function Tick(square, elapsed) \
