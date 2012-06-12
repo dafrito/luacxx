@@ -35,6 +35,7 @@ public:
 
 	friend class LuaStack;
 	friend class LuaValue;
+	friend class LuaAccessible;
 };
 
 #endif

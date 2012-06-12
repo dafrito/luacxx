@@ -30,6 +30,7 @@ pkginclude_HEADERS = \
 	loaders.hpp \
 	Lua.hpp \
 	LuaStack.hpp \
+	LuaAccessible.hpp \
 	LuaValue.hpp \
 	LuaGlobal.hpp \
 	LuaReference.hpp \
