@@ -22,7 +22,9 @@ protected:
 		return lua.state;
 	}
 public:
-	LuaValue(Lua& lua) : lua(lua) {}
+	LuaValue(Lua& lua) :
+        lua(lua)
+    {}
 
 	lua::Type type()
 	{
