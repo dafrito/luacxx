@@ -5,7 +5,7 @@ QT_CXXFLAGS = @QT_CXXFLAGS@
 QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 
-noinst_PROGRAMS = runtest
+check_PROGRAMS = runtest
 runtest_CXXFLAGS = $(QT_CXXFLAGS) $(LUA_INCLUDE)
 runtest_LIBADD = $(QT_LIBS) $(LUA_LIB)
 
@@ -25,6 +25,15 @@ runtest_HEADERS = \
 EXTRA_DIST = \
 	anim.lua \
 	simple.lua
+
+anim.lua:
+	cat >$@ <<EOF \
+	function Tick(square, elapsed) \
+		square.x = 250 * math.cos(elapsed); \
+	end
+
+simple.lua:
+	echo "assert(_G['No']=="Time");" >$@
 
 moc_mocks.cpp: mocks.hpp
 	$(QT_MOC) -o $@ $<

@@ -68,12 +68,11 @@ private slots:
 	void luaSetsPropertiesDirectly()
 	{
 		Lua lua;
-		QFile file("tests/anim.lua");
+		QFile file("anim.lua");
 		lua(file);
 		Square square;
 		int old = square.getX();
 		lua["Tick"](&square, M_PI);
 		QVERIFY(square.getX() != old);
 	}
-
 };
