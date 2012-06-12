@@ -31,10 +31,11 @@ anim.lua:
 	cat >$@ <<EOF \
 	function Tick(square, elapsed) \
 		square.x = 250 * math.cos(elapsed); \
-	end
+	end \
+	EOF
 
 simple.lua:
-	echo "assert(_G['No']=="Time");" >$@
+	echo "assert(_G['No']=='Time');" >$@
 
 moc_mocks.cpp: mocks.hpp
 	$(QT_MOC) -o $@ $<
