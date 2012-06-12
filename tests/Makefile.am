@@ -30,11 +30,9 @@ check_SCRIPTS = \
 CLEANFILES = $(check_SCRIPTS)
 
 anim.lua:
-	cat >$@ <<EOF \
-	function Tick(square, elapsed) \
-		square.x = 250 * math.cos(elapsed); \
-	end \
-	EOF
+	echo "function Tick(square, elapsed)" >>$@
+	echo "	square.x = 250 * math.cos(elapsed);" >>$@
+	echo "end" >>$@
 
 simple.lua:
 	echo "assert(_G['No']=='Time');" >$@
