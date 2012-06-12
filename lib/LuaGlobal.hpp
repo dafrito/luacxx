@@ -3,23 +3,30 @@
 
 #include "LuaValue.hpp"
 #include "LuaReference.hpp"
+#include "LuaGlobalAccessible.hpp"
 
 class LuaGlobal : public LuaValue
 {
-    const QString key;
+    LuaGlobalAccessible accessor;
+
 protected:
     void push(LuaStack& stack) const
     {
-        stack.global(key);
+        accessor.push(stack);
     }
+
 public:
     LuaGlobal(Lua& lua, const QString& key) :
-        LuaValue(lua), key(key) {}
+        LuaValue(lua),
+        accessor(lua, key)
+    {}
 
     template<typename T>
     const LuaValue& operator=(const T& value)
     {
-        LuaStack(lua).setGlobal(key, value);
+        LuaStack s(lua);
+        s.push(value);
+        accessor.store(s);
         return *this;
     }
 
@@ -27,7 +34,7 @@ public:
     LuaReference operator()(Args... args)
     {
         LuaStack stack(lua);
-        push(stack);
+        accessor.push(stack);
         return callLua(luaState(), stack, args...);
     }
 };
