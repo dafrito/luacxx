@@ -7,6 +7,7 @@
 #include "LuaException.hpp"
 #include "LuaStack.hpp"
 #include "LuaReference.hpp"
+#include "LuaReferenceAccessible.hpp"
 #include "LuaGlobal.hpp"
 
 using namespace std;
@@ -311,4 +312,14 @@ private slots:
 		s << r;
 		QVERIFY(s.qstring() == "No Time");
 	}
+
+    void testAccessibleCanGetAReference()
+    {
+        Lua lua;
+        LuaReferenceAccessible accessor(lua);
+        LuaStack s(lua);
+        s << "No Time";
+        accessor.store(s);
+        QVERIFY(s.qstring() == "No Time");
+    }
 };
