@@ -322,7 +322,6 @@ private slots:
         accessor.store(s);
         QVERIFY(s.qstring() == "No Time");
         s.clear();
-        QVERIFY(s.empty());
         accessor.push(s);
         QVERIFY(s.qstring() == "No Time");
     }
