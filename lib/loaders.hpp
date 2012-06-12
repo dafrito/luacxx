@@ -6,8 +6,8 @@
 
 namespace lua
 {
-	void load_file(Lua& lua, const std::string& file);
-	void load_string(Lua& lua, const std::string& input);
+    void load_file(Lua& lua, const std::string& file);
+    void load_string(Lua& lua, const std::string& input);
 }
 
 #endif // LOADERS_HPP

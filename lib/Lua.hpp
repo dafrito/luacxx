@@ -14,28 +14,28 @@ using std::string;
 
 class Lua : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	lua_State* state;
+    lua_State* state;
 
-	void handleLoadValue(const int rv);
+    void handleLoadValue(const int rv);
 public:
-	Lua();
-	~Lua();
+    Lua();
+    ~Lua();
 
-	LuaGlobal operator[](const char* key);
-	LuaGlobal operator[](const QString& key);
-	LuaGlobal operator[](const string& key);
+    LuaGlobal operator[](const char* key);
+    LuaGlobal operator[](const QString& key);
+    LuaGlobal operator[](const string& key);
 
-	void operator()(const char* runnable);
-	void operator()(const string& runnable);
-	void operator()(const QString& runnable);
-	void operator()(istream& stream, const string& name);
-	void operator()(QFile& file);
+    void operator()(const char* runnable);
+    void operator()(const string& runnable);
+    void operator()(const QString& runnable);
+    void operator()(istream& stream, const string& name);
+    void operator()(QFile& file);
 
-	friend class LuaStack;
-	friend class LuaValue;
-	friend class LuaAccessible;
+    friend class LuaStack;
+    friend class LuaValue;
+    friend class LuaAccessible;
 };
 
 #endif

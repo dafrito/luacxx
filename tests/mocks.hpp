@@ -5,48 +5,48 @@
 
 class Square : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	Q_PROPERTY(int x READ getX WRITE setX)
-	Q_PROPERTY(int y READ getY WRITE setY)
+    Q_PROPERTY(int x READ getX WRITE setX)
+    Q_PROPERTY(int y READ getY WRITE setY)
 public:
-	int x, y;
-	void setX(int x)
-	{
-		this->x = x;
-	}
-	int getX()
-	{
-		return x;
-	}
-	void setY(int y)
-	{
-		this->y = y;
-	}
-	int getY()
-	{
-		return y;
-	}
+    int x, y;
+    void setX(int x)
+    {
+        this->x = x;
+    }
+    int getX()
+    {
+        return x;
+    }
+    void setY(int y)
+    {
+        this->y = y;
+    }
+    int getY()
+    {
+        return y;
+    }
 };
 
 class Counter : public QObject
 {
-	Q_OBJECT
-	int value;
+    Q_OBJECT
+    int value;
 
-	Q_PROPERTY(int value READ getValue WRITE setValue);
+    Q_PROPERTY(int value READ getValue WRITE setValue);
 public slots:
-	void setValue(const int value) {
-		if (this->value != value) {
-			this->value = value;
-			emit valueChanged(value);
-		}
-	}
-	int getValue() const { return value; }
+    void setValue(const int value) {
+        if (this->value != value) {
+            this->value = value;
+            emit valueChanged(value);
+        }
+    }
+    int getValue() const { return value; }
 signals:
-	void valueChanged(int value) const;
+    void valueChanged(int value) const;
 public:
-	Counter(int value = 0) : value(value) {}
+    Counter(int value = 0) : value(value) {}
 };
 
 #endif // MOCKS_HPP

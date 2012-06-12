@@ -21,7 +21,7 @@
  */
 class LuaAccessible
 {
-	Lua& _lua;
+    Lua& _lua;
 
 protected:
     Lua& lua() const
@@ -29,13 +29,13 @@ protected:
         return _lua;
     }
 
-	lua_State* luaState() const
-	{
-		return lua().state;
-	}
+    lua_State* luaState() const
+    {
+        return lua().state;
+    }
 public:
 
-	LuaAccessible(Lua& lua) : _lua(lua) {}
+    LuaAccessible(Lua& lua) : _lua(lua) {}
 
     /**
      * Pushes the value held by this accessible on
