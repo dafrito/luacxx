@@ -8,7 +8,7 @@
 #
 # DESCRIPTION
 #
-#   Test for Lua-CXX C++/Lua bindings.
+#   Test for Lua-cxx C++/Lua bindings.
 #
 #   This macro calls:
 #
@@ -43,7 +43,7 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
   )
 
   if test x"$want_luacxx" = "xyes"; then
-    AC_MSG_CHECKING([for Lua-Cxx])
+    AC_MSG_CHECKING([for Lua-cxx])
 
     # Ensure we have a suitable C++ compiler
     AC_REQUIRE([AC_PROG_CC])
@@ -82,12 +82,12 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
 
     AC_MSG_RESULT([$ax_have_luacxx])
     if test x"$ax_have_luacxx" = "xyes"; then
-      AC_DEFINE(HAVE_LUA_CXX,,[define if Lua-Cxx is available])
+      AC_DEFINE(HAVE_LUA_CXX,,[define if Lua-cxx is available])
       LUA_CXX_INCLUDE="$ax_luacxx_INCLUDE"
       dnl This doesn't yet test the location of luacxx
       LUA_CXX_LIBS="$ax_luacxx_LIBS -lluacxx"
     else
-      AC_MSG_ERROR([Could not find Lua-Cxx])
+      AC_MSG_ERROR([Could not find Lua-cxx])
       LUA_CXX_INCLUDE=""
       LUA_CXX_LIBS=""
     fi
