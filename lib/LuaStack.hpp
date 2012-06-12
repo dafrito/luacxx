@@ -134,7 +134,7 @@ public:
 		return (*this);
 	}
 
-	// We need this definition since integers can be 
+	// We need this definition since integers can be
 	// implicitly converted to booleans or numbers, which
 	// is ambiguous.
 	template <typename K>
