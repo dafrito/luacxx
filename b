@@ -1,3 +1,2 @@
 #!/bin/sh
-qmake CONFIG+=debug -recursive
-make -j 8 && ./run-tests $*
+make check -j 8
