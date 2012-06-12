@@ -54,7 +54,8 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
     AC_REQUIRE([AX_LUA_HEADERS])
 
     # Ensure we have Qt
-    AC_REQUIRE([AX_HAVE_QT])
+    AC_REQUIRE([AX_HAVE_QT_CORE])
+    AC_REQUIRE([AX_HAVE_QT_MOC])
 
     ax_luacxx_saved_CPPFLAGS="$CPPFLAGS"
     ax_luacxx_INCLUDE="$LUA_INCLUDE $QT_CXXFLAGS"
