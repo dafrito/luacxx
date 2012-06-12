@@ -16,7 +16,7 @@ class Lua : public QObject
 {
 	Q_OBJECT
 
-	lua_State * state;
+	lua_State* state;
 
 	void handleLoadValue(const int rv);
 public:
