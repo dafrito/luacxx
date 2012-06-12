@@ -4,32 +4,30 @@
 #include <tuple>
 #include "LuaValue.hpp"
 #include "Lua.hpp"
+#include "LuaReferenceAccessible.hpp"
 
 class LuaReference : public LuaValue
 {
-    int ref;
+    LuaReferenceAccessible accessor;
+
 protected:
-    void push(LuaStack&) const
+    void push(LuaStack& s) const
     {
-        lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
-    }
-public:
-    LuaReference(Lua& lua) : LuaValue(lua)
-    {
-        ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
+        accessor.push(s);
     }
 
-    ~LuaReference()
-    {
-        luaL_unref(luaState(), LUA_REGISTRYINDEX, ref);
-    }
+public:
+    LuaReference(Lua& lua) :
+        LuaValue(lua),
+        accessor(lua)
+    {}
 
     template<typename T>
     const LuaReference& operator=(const T& value)
     {
         LuaStack s(lua);
         s.push(value);
-        lua_rawseti(luaState(), LUA_REGISTRYINDEX, ref);
+        accessor.store(s);
         return *this;
     }
 
@@ -37,7 +35,7 @@ public:
     LuaReference operator()(Args... args)
     {
         LuaStack stack(lua);
-        push(stack);
+        accessor.push(stack);
         return callLua(luaState(), stack, args...);
     }
 };
