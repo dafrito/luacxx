@@ -14,6 +14,7 @@ libluacxx_la_SOURCES = \
 	LuaStack.hpp \
 	LuaValue.hpp \
 	LuaGlobal.hpp \
+	LuaGlobalAccessible.hpp \
 	LuaReference.hpp \
 	LuaReferenceAccessible.hpp \
 	types.hpp \
@@ -34,6 +35,7 @@ pkginclude_HEADERS = \
 	LuaAccessible.hpp \
 	LuaValue.hpp \
 	LuaGlobal.hpp \
+	LuaGlobalAccessible.hpp \
 	LuaReference.hpp \
 	LuaReferenceAccessible.hpp \
 	types.hpp \

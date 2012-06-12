@@ -9,6 +9,7 @@
 #include "LuaReference.hpp"
 #include "LuaReferenceAccessible.hpp"
 #include "LuaGlobal.hpp"
+#include "LuaGlobalAccessible.hpp"
 
 using namespace std;
 
@@ -325,4 +326,17 @@ private slots:
         accessor.push(s);
         QVERIFY(s.qstring() == "No Time");
     }
-};
+
+    void testAccessibleCanGetAGlobal()
+    {
+        Lua lua;
+        LuaGlobalAccessible accessor(lua, "foo");
+        LuaStack s(lua);
+        s << "No Time";
+        accessor.store(s);
+        QCOMPARE((const char*)lua["foo"], "No Time");
+        s.clear();
+        accessor.push(s);
+        QVERIFY(s.qstring() == "No Time");
+    }
+};;
