@@ -15,7 +15,7 @@ public:
         ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
     }
 
-    void push(LuaStack&)
+    void push(LuaStack&) const
     {
         lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
     }

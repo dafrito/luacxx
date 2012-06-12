@@ -41,7 +41,7 @@ public:
      * Pushes the value held by this accessible on
      * the specified stack.
      */
-    virtual void push(LuaStack& stack)=0;
+    virtual void push(LuaStack& stack) const=0;
 
     /**
      * Sets this reference to the value on the top
