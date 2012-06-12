@@ -11,9 +11,9 @@ class LuaReference : public LuaValue
     LuaReferenceAccessible accessor;
 
 protected:
-    void push(LuaStack& s) const
+    void push(LuaStack& stack) const
     {
-        accessor.push(s);
+        accessor.push(stack);
     }
 
 public:
