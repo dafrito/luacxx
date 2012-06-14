@@ -299,7 +299,7 @@ LuaStack& LuaStack::global(const QString& name)
     return (*this);
 }
 
-LuaStack& LuaStack::set(int tablePos)
+LuaStack& LuaStack::pushedSet(int tablePos)
 {
     checkPos(tablePos);
     lua_settable(lua.state, tablePos);

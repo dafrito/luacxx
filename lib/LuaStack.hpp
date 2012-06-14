@@ -331,7 +331,7 @@ public:
      * k is just below the top (position -2)
      * and v is at the top (position -1)
      */
-    LuaStack& set(int tablePos = -3);
+    LuaStack& pushedSet(int tablePos);
 
     /**
      * Sets the table value for the specified key to the value on top
@@ -340,7 +340,7 @@ public:
      * The table must be at the stack position specified by tablePos.
      */
     template <typename K>
-    LuaStack& set(K key, int tablePos = -2)
+    LuaStack& pushedSet(K key, int tablePos)
     {
         checkPos(tablePos);
         push(key);
@@ -352,14 +352,14 @@ public:
         // stack.
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
-        set(tablePos);
+        pushedSet(tablePos);
     }
 
     // We need this definition since integers can be
     // implicitly converted to booleans or numbers, which
     // is ambiguous.
     template <typename K>
-    LuaStack& set(K key, int value, int tablePos)
+    LuaStack& set(K key, int value, int tablePos = -1)
     {
         return set<K, double>(key, value, tablePos);
     }
@@ -371,7 +371,7 @@ public:
      * The table must be at the stack position specified.
      */
     template <typename K, typename V>
-    LuaStack& set(K key, const V& value, int tablePos)
+    LuaStack& set(K key, const V& value, int tablePos = -1)
     {
         checkPos(tablePos);
         push(value);
@@ -379,7 +379,7 @@ public:
         // so it still points to the table.
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
-        set(key, tablePos);
+        pushedSet(key, tablePos);
         return (*this);
     }
 
@@ -400,7 +400,7 @@ public:
     template <typename K>
     LuaStack& setGlobal(K key)
     {
-        return set(key, LUA_GLOBALSINDEX);
+        return pushedSet(key, LUA_GLOBALSINDEX);
     }
 
     /**
