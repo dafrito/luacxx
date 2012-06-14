@@ -38,12 +38,14 @@ private:
     /**
      * Assert that the specified position is within
      * bounds of this LuaStack.
+     */
     void checkPos(int pos) const;
 
     /**
      * Returns whether the stack position is special to
      * Lua. The globals table and the references table
      * are examples of two magical stack positions.
+     */
     bool isMagicalPos(const int& pos) const;
 
     /**
@@ -110,6 +112,7 @@ public:
      * that it has pushed. Therefore, it must remember
      * how many stack values were present before it
      * was created. offset() will return that value.
+     */
     int offset() const
     {
         return _offset;
