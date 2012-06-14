@@ -26,7 +26,51 @@ namespace lua
     typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
 }
 
-
+/**
+ * Represents a stack for manipulating a Lua environment.
+ *
+ * If you're familiar with Lua's C API, then this class should seem
+ * very famililar. It has some advantages that I'll enumerate here:
+ *
+ * AUTOMATIC STACK MANANGEMENT
+ *
+ * This class uses the RAII idiom to manage the stack. If you use this
+ * class as a local variable, it will clean up after itself when it goes
+ * out of scope. This makes playing with the Lua stack very easy.
+ *
+ * The stack management does not coordinate between classes. You must
+ * only use one stack at a time, and you must ensure that these objects
+ * go out of scope in the same order they were created.
+ *
+ * TEMPLATE-BASED PUSH/TO METHODS
+ *
+ * I heavily use templates to ensure this code is as flexible as possible.
+ * This means that LuaStack can handle a wide variety of objects without
+ * needing an excessive amount of code.
+ *
+ * VARIADIC FUNCTION CALLS
+ *
+ * Lua and C++ can call each other's functions, with arbitrary complexity.
+ *
+ * QOBJECT SUPPORT
+ *
+ * QObjects can be inserted into a Lua environment, and their methods will
+ * be directly accessible from Lua. QObject properties are accessible via
+ * Lua table access.
+ *
+ * BUGS AND PROBLEMS
+ *
+ * TODO Stack management coordination is something I've put off for a while.
+ * It's pretty complicated, and it's not really that necessary in practice.
+ * However, I'd prefer it if we could offer some guarantees of behavior
+ * in the face of clients using stacks out-of-order.
+ *
+ * FIXME A lot of these methods assume that stack positions are
+ * always going to be negative. This is not the case. The support
+ * for positive indices is extremely spotty, so I recommend using
+ * negative indices until test cases are written to establish
+ * reliability.
+ */
 class LuaStack
 {
 private:
