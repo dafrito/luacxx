@@ -185,23 +185,31 @@ public:
 
 namespace
 {
+
     /**
-     * This implementation was based off of:
-     * http://dvandyk.wordpress.com/2010/08/15/apply-functions-to-stdtuple/
+     * For each type in the specified tuple, convert a Lua argument to that
+     * type, until all types have been converted to fill the tuple.
      */
-    
-    template <unsigned I>
+    template <unsigned NUMARGS>
     struct Filler
     {
         template <typename Tuple>
         static void fill(LuaStack& stack, Tuple& tuple)
         {
-            stack.to(&std::get<I-1>(tuple));
+            // Populate the current C++ object with the value from Lua.
+            stack.to(&std::get<NUMARGS-1>(tuple));
             stack.pop();
-            Filler<I-1>::fill(stack, tuple);
+
+            // Recurse for all remaining Lua arguments.
+            Filler<NUMARGS-1>::fill(stack, tuple);
         }
     };
 
+
+    /**
+     * No arguments need to be converted, so do nothing. This ends the
+     * recursive process.
+     */
     template <>
     struct Filler<0>
     {
@@ -210,16 +218,32 @@ namespace
         {}
     };
 
-    template <typename RV, unsigned I>
+    /**
+     * Unpack the converted Lua arguments from the tuple. This template
+     * will be recursively invoked, unpacking a single argument with
+     * each invocation. The unpacked arguments will be passed back to this
+     * function until no arguments remain in the tuple. When this occurs,
+     * the specified C++ function will be invoked.
+     */
+    template <typename RV, unsigned NUMARGS>
     struct Chain
     {
         template <typename Function, typename Tuple, typename... Args>
         static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
         {
-            Chain<RV, I-1>::apply(stack, f, tuple, std::get<I-1>(tuple), args...);
+            Chain<RV, NUMARGS-1>::apply(
+                stack,
+                f,
+                tuple,
+                std::get<NUMARGS-1>(tuple),
+                args...
+            );
         }
     };
 
+    /**
+     * Invoke the C++ function with all arguments in args.
+     */
     template <typename RV>
     struct Chain <RV, 0>
     {
@@ -230,6 +254,11 @@ namespace
         }
     };
 
+    /**
+     * Invoke the C++ function with all arguments in args.
+     *
+     * This special case ensures we don't attempt to push a void return value.
+     */
     template <>
     struct Chain <void, 0>
     {
@@ -240,20 +269,43 @@ namespace
         }
     };
 
+    /**
+     * LuaWrapper enables C++ functions of arbitrary complexity to be called
+     * from Lua. Conceptually, the template behaves similarly to a varargs
+     * function from C. However, types are preserved using variadic templates.
+     * This allows us to automatically generate correct code for each
+     * argument.
+     *
+     * This implementation was based off of:
+     * http://dvandyk.wordpress.com/2010/08/15/apply-functions-to-stdtuple/
+     */
     template <typename RV, typename... Args>
     class LuaWrapper
     {
+        /**
+         * Argument type tuple. This will be used to construct a tuple
+         * that will collect converted Lua arguments. These arguments will
+         * then be passed to the underlying C++ function.
+         */
         typedef std::tuple<Args...> ArgsTuple;
+
+        /**
+         * The C++ function that will eventually be invoked.
+         */
         std::function<RV(Args...)> func;
 
     public:
         LuaWrapper(RV(*func)(Args...)) : func(func)
         {}
-    
+
         void operator()(Lua&, LuaStack& stack)
         {
             ArgsTuple args;
+
+            // Fill our tuple with arguments passed from Lua
             Filler<sizeof...(Args)>::fill(stack, args);
+
+            // Use the filled type
             Chain<RV, sizeof...(Args)>::apply(stack, func, args);
         }
     };
