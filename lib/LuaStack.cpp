@@ -73,6 +73,22 @@ LuaStack& LuaStack::shift(int count)
     return (*this);
 }
 
+void LuaStack::checkPos(int pos) const
+{
+    if (isMagicalPos(pos))
+        return;
+    const int top=lua_gettop(lua.state);
+    if (pos == 0)
+        throw LuaException(&lua, "Stack position must not be zero");
+    // Convert relative positions to absolute ones.
+    if (pos < 0)
+        pos += top;
+    if (pos < offset())
+        throw LuaException(&lua, "Stack position is not managed by this stack");
+    if (pos > top)
+        throw LuaException(&lua, "Stack position is beyond the top of the lua stack");
+}
+
 LuaStack& LuaStack::replace(int pos)
 {
     checkPos(pos);
@@ -101,22 +117,6 @@ LuaStack& LuaStack::swap(int a, int b)
 bool LuaStack::isMagicalPos(const int& pos) const
 {
     return pos == LUA_GLOBALSINDEX;
-}
-
-void LuaStack::checkPos(int pos) const
-{
-    if (isMagicalPos(pos))
-        return;
-    const int top=lua_gettop(lua.state);
-    if (pos == 0)
-        throw LuaException(&lua, "Stack position must not be zero");
-    // Convert relative positions to absolute ones.
-    if (pos < 0)
-        pos += top;
-    if (pos < offset())
-        throw LuaException(&lua, "Stack position is not managed by this stack");
-    if (pos > top)
-        throw LuaException(&lua, "Stack position is beyond the top of the lua stack");
 }
 
 lua::Type LuaStack::type(int pos) const
@@ -299,21 +299,11 @@ LuaStack& LuaStack::global(const QString& name)
     return (*this);
 }
 
-LuaStack& LuaStack::set(const char* key, int tablePos)
+LuaStack& LuaStack::set(int tablePos)
 {
     checkPos(tablePos);
-    lua_setfield(lua.state, tablePos, key);
+    lua_settable(lua.state, tablePos);
     return (*this);
-}
-
-LuaStack& LuaStack::set(const std::string& key, int tablePos)
-{
-    return set(key.c_str(), tablePos);
-}
-
-LuaStack& LuaStack::set(const QString& key, int tablePos)
-{
-    return set(key.toAscii().constData(), tablePos);
 }
 
 LuaStack& LuaStack::push(const char* value)

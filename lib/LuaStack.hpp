@@ -269,17 +269,6 @@ public:
     LuaStack& global(const QString& name);
 
     /**
-     * Sets the table value with the specified key name
-     * to the value at the top of this stack.
-     *
-     * The table must be found at the specified stack
-     * position.
-     */
-    LuaStack& set(const char* key, int tablePos);
-    LuaStack& set(const std::string& key, int tablePos);
-    LuaStack& set(const QString& key, int tablePos);
-
-    /**
      * Pushes the C++ value onto the top of this stack.
      */
     LuaStack& push(const char* value);
@@ -331,6 +320,39 @@ public:
     {
         this->push(LuaWrapper<RV, Args...>(p), closed);
         return (*this);
+    }
+
+    /**
+     * Sets the table value for the specified table.
+     *
+     * t[k] = v
+     *
+     * Where tablePos specifies the location of t,
+     * k is just below the top (position -2)
+     * and v is at the top (position -1)
+     */
+    LuaStack& set(int tablePos = -3);
+
+    /**
+     * Sets the table value for the specified key to the value on top
+     * of this stack.
+     *
+     * The table must be at the stack position specified by tablePos.
+     */
+    template <typename K>
+    LuaStack& set(K key, int tablePos = -2)
+    {
+        checkPos(tablePos);
+        push(key);
+
+        // Stack is now [..., t, value, key], so we need to swap
+        swap();
+
+        // Adjust tablePos since we pushed a key onto the
+        // stack.
+        if (!isMagicalPos(tablePos) && tablePos < 0)
+            --tablePos;
+        set(tablePos);
     }
 
     // We need this definition since integers can be
