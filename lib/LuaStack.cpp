@@ -299,6 +299,13 @@ LuaStack& LuaStack::global(const QString& name)
     return (*this);
 }
 
+LuaStack& LuaStack::get(int tablePos)
+{
+    checkPos(tablePos);
+    lua_gettable(lua.state, tablePos);
+    return (*this);
+}
+
 LuaStack& LuaStack::pushedSet(int tablePos)
 {
     checkPos(tablePos);

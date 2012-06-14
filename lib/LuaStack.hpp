@@ -384,6 +384,27 @@ public:
     }
 
     /**
+     * Pushes a value from the specified table, using the topmost stack
+     * value as the key.
+     */
+    LuaStack& get(int tablePos = -1);
+
+    /**
+     * Pushes the table value within the specified table onto this stack.
+     *
+     * The table must be at the stack position specified by tablePos.
+     */
+    template <typename K>
+    LuaStack& get(K key, int tablePos = -1)
+    {
+        checkPos(tablePos);
+        push(key);
+        if (!isMagicalPos(tablePos) && tablePos < 0)
+            --tablePos;
+        return get(tablePos);
+    }
+
+    /**
      * Set the global with the specified name to the
      * specified value.
      */

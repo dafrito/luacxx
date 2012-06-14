@@ -16,6 +16,46 @@ class TableTests : public QObject
     Q_OBJECT
 private slots:
 
+    void stackSetsATableValue()
+    {
+        Lua lua;
+        lua("c = {}");
+        LuaStack stack(lua);
+        stack.global("c").set("a", 42);
+
+        // We don't repush global because that table should
+        // already be at the top of the stack; only the key
+        // and value were removed
+        QCOMPARE(42, (int)stack.get("a"));
+    }
+
+    void cRetrievesBasicProperties()
+    {
+        Lua lua;
+        lua("c = {f = 42};");
+        LuaStack stack(lua);
+        bool check = stack.global("c").get("f") == 42;
+        QVERIFY(check);
+        check = 42 == stack.global("c").get("f");
+        QVERIFY(check);
+    }
+
+    void cRetrievesNestedPropertiesWithLuaStack()
+    {
+        Lua lua;
+        lua("d = {e = {f = 42} };");
+        LuaStack stack(lua);
+        QCOMPARE((int)(stack.global("d").get("e").get("f")), 42);
+    }
+
+    void cRetrievesDeeplyNestedPropertiesWithLuaStack()
+    {
+        Lua lua;
+        lua("c = {d = {e = {f = 42} } };");
+        LuaStack stack(lua);
+        QCOMPARE((int)(stack.global("c").get("d").get("e").get("f")), 42);
+    }
+
     void luaRetrievesQObjectProperties()
     {
         Lua lua;
