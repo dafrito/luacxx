@@ -111,6 +111,15 @@ private slots:
         QVERIFY(b == 34);
     }
 
+    void testLuaStackCanBeDirectlyCastToAValue()
+    {
+        Lua lua;
+        LuaStack s(lua);
+        s << 42;
+        int a = s;
+        QVERIFY(a == 42);
+    }
+
     void testLuaCallsACFunction()
     {
         Lua lua;
