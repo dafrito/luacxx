@@ -74,6 +74,21 @@ private slots:
         QCOMPARE(0, LuaStack(lua).size());
     }
 
+    void testLuaStackCanSwapValues()
+    {
+        Lua lua;
+        LuaStack s(lua);
+        s << 1 << 2;
+        // Stack is now [1, 2]
+
+        s.swap();
+        // Stack is now [2, 1]
+        QCOMPARE((int)s, 1);
+        s.pop();
+        QCOMPARE((int)s, 2);
+        s.pop();
+    }
+
     void testLuaStackCanSetGlobalValues()
     {
         Lua lua;

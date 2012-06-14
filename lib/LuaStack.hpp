@@ -139,6 +139,11 @@ public:
     LuaStack& replace(int pos);
 
     /**
+     * Swaps the values at the two specified indices.
+     */
+    LuaStack& swap(int a = -1, int b = -2);
+
+    /**
      * Pops all values that have been pushed onto
      * this stack.
      */

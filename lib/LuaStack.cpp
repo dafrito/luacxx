@@ -82,6 +82,22 @@ LuaStack& LuaStack::replace(int pos)
     return (*this);
 }
 
+LuaStack& LuaStack::swap(int a, int b)
+{
+    checkPos(a);
+    checkPos(b);
+
+    lua_pushvalue(lua.state, b);
+    lua_pushvalue(lua.state, a - 1);
+    // Stack is now [..., b, a]
+
+    // Replace b by popping the copy of a
+    lua_replace(lua.state, b - 2);
+
+    // Replace a by popping the copy of b
+    lua_replace(lua.state, a - 1);
+}
+
 bool LuaStack::isMagicalPos(const int& pos) const
 {
     return pos == LUA_GLOBALSINDEX;
