@@ -6,7 +6,7 @@ QT_LIBS = @QT_LIBS@
 QT_MOC = @QT_MOC@
 
 check_PROGRAMS = runtest
-runtest_CXXFLAGS = $(QT_CXXFLAGS) $(LUA_INCLUDE)
+runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) $(LUA_INCLUDE)
 runtest_LDADD = $(QT_LIBS) $(LUA_LIB) ../lib/libluacxx.la
 
 TESTS = $(check_PROGRAMS)
