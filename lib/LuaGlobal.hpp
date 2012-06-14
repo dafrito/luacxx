@@ -34,14 +34,6 @@ public:
         accessor().store(s);
         return *this;
     }
-
-    template <typename... Args>
-    LuaReference operator()(Args... args)
-    {
-        LuaStack stack(lua);
-        accessor.push(stack);
-        return callLua(luaState(), stack, args...);
-    }
 };
 
 #endif // LUAGLOBAL_HPP

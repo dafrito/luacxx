@@ -62,11 +62,55 @@ public:
     template<typename T>
     bool operator==(const T& other) const
     {
+        // FIXME This does not support comparing to other LuaValues.
         return other == static_cast<T>(*this);
+    }
+
+    template <typename... Args>
+    LuaStack operator()(Args... args)
+    {
+        LuaStack stack(lua);
+        accessor().push(stack);
+        callLua(luaState(), stack, args...);
+        return stack;
     }
 
 private:
     friend class LuaStack;
 };
+
+namespace
+{
+    template <unsigned L, unsigned I>
+    struct Pusher
+    {
+        template <typename Tuple>
+        static void push(LuaStack& stack, Tuple& tuple)
+        {
+            stack.push(std::get<I>(tuple));
+            Pusher<L-1, I+1>::push(stack, tuple);
+        }
+    };
+
+    template <unsigned I>
+    struct Pusher<0, I>
+    {
+        template <typename Tuple>
+        static void push(LuaStack&, Tuple&)
+        {
+        }
+    };
+}
+
+template <typename... Args>
+void callLua(lua_State* s, LuaStack& stack, Args... args)
+{
+    typedef std::tuple<Args...> ArgTuple;
+    ArgTuple argTuple(args...);
+    Pusher<sizeof...(Args), 0>::push(stack, argTuple);
+    // Call Lua function. LUA_MULTRET ensures all arguments
+    // are returned
+    lua_call(s, sizeof...(Args), LUA_MULTRET);
+}
 
 #endif
