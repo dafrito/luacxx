@@ -17,10 +17,21 @@ class BasicTests : public QObject
 {
     Q_OBJECT
 private slots:
+    void testLuaOffersSubscriptSupportForAccessingGlobalValues()
+    {
+        Lua lua;
+        lua("No = 'Time'");
+        LuaGlobal g = lua["No"];
+        QString str;
+        g.to(str);
+        QCOMPARE((const char*)lua["No"], "Time");
+    }
+
     void testLuaOffersSubscriptSupportForGlobalValues()
     {
         Lua lua;
-        lua["No"] = "Time";
+        LuaGlobal g = lua["No"];
+        g = "Time";
         QCOMPARE((const char*)lua["No"], "Time");
     }
 
