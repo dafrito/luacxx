@@ -35,42 +35,131 @@ private:
     Lua& lua;
     int _offset;
 
+    /**
+     * Assert that the specified position is within
+     * bounds of this LuaStack.
     void checkPos(int pos) const;
+
+    /**
+     * Returns whether the stack position is special to
+     * Lua. The globals table and the references table
+     * are examples of two magical stack positions.
     bool isMagicalPos(const int& pos) const;
 
+    /**
+     * Forcibly change the offset value of this instance.
+     * The offset determines how many values at the
+     * front of the underlying stack are skipped.
+     * Changing the offset will result in taking or
+     * abandoning underlying stack values, so this
+     * method should be used with caution.
+     */
     LuaStack& offset(int offset);
+
+    /**
+     * Forcibly take all stack values currently on the
+     * stack. These values will be controlled by this
+     * instance; they will be popped when this instance
+     * is destroyed.
+     */
     LuaStack& grab() {
         return offset(0);
     }
+
+    /**
+     * Forcibly abandon all stack values. This
+     * instance will no longer be responsible for
+     * the values currently on the stack.
+     */
     LuaStack& disown() {
+        // FIXME I think this should be offset(offset() + size());
         return offset(size());
     }
 public:
     LuaStack(Lua& lua);
 
+    /**
+     * Return the number of stack values that are
+     * controlled by this stack.
+     *
+     * A "controlled" value means that LuaStack is
+     * responsible for it. It was pushed using this
+     * instance, and it will be popped once this
+     * instance is destroyed.
+     */
     int size() const;
+
+    /**
+     * Return whether there are any controlled stack
+     * values from this stack.
+     *
+     * This does not necessarily mean the underlying
+     * Lua stack is empty. It only means that LuaStack
+     * is not responsible for any values currently
+     * present on the stack.
+     */
     bool empty() const
     {
         return size() == 0;
     }
 
+    /**
+     * Returns the number of ignored stack values.
+     *
+     * LuaStack is only responsible for stack values
+     * that it has pushed. Therefore, it must remember
+     * how many stack values were present before it
+     * was created. offset() will return that value.
     int offset() const
     {
         return _offset;
     }
 
+    /**
+     * Pops the specified number of stack values from
+     * this stack.
+     */
     LuaStack& pop(int count = 1);
+
+    /**
+     * Shifts the specified number of stack values from
+     * the front of this stack.
+     */
     LuaStack& shift(int count = 1);
+
+    /**
+     * Replaces the stack value at the specified position
+     * with the value from the top of this stack.
+     *
+     * The topmost element will be popped.
+     */
     LuaStack& replace(int pos);
+
+    /**
+     * Pops all values that have been pushed onto
+     * this stack.
+     */
     LuaStack& clear()
     {
         return pop(size());
     }
 
+    /**
+     * Returns the type of the Lua stack value at the
+     * specified stack position.
+     */
     lua::Type type(int pos = -1) const;
 
+    /**
+     * Returns the human-readable type name of the Lua
+     * value at the specified stack position.
+     */
     std::string typestring(int pos = -1) const;
 
+    /**
+     * Assigns to the specified sink value, the Lua value
+     * at the specified stack position.
+     */
     LuaStack& to(bool* sink, int pos = -1);
     LuaStack& to(lua_Number* sink, int pos = -1);
     LuaStack& to(const char** sink, int pos = -1);
@@ -83,27 +172,53 @@ public:
     LuaStack& to(QObject** const sink, int pos = -1);
     LuaStack& to(QVariant* const sink, int pos = -1);
 
+    // A template to ensure that references will always
+    // be converted to pointers.
     template <typename T>
     LuaStack& to(T& sink, int pos = -1)
     {
         return to(&sink, pos);
     }
 
+    /**
+     * Converts and returns the value at the specified
+     * position to a C++ value.
+     */
     const char* cstring(int pos = -1);
     std::string string(int pos = -1);
     QString qstring(int pos = -1);
     lua_Number number(int pos = -1);
     bool boolean(int pos = -1);
     QObject* object(int pos = -1);
+
+    /**
+     * Saves the value at the top of this stack into
+     * a Lua reference.
+     */
     LuaReference save();
+
+    /**
+     * Pushes the global value with the specified
+     * name onto the top of this stack.
+     */
     LuaStack& global(const char* name);
     LuaStack& global(const std::string& name);
     LuaStack& global(const QString& name);
 
+    /**
+     * Sets the table value with the specified key name
+     * to the value at the top of this stack.
+     *
+     * The table must be found at the specified stack
+     * position.
+     */
     LuaStack& set(const char* key, int tablePos);
     LuaStack& set(const std::string& key, int tablePos);
     LuaStack& set(const QString& key, int tablePos);
 
+    /**
+     * Pushes the C++ value onto the top of this stack.
+     */
     LuaStack& push(const char* value);
     LuaStack& push(const char* value, int len);
     LuaStack& push(const QChar& value);
@@ -116,17 +231,38 @@ public:
     LuaStack& push(const long& b);
     LuaStack& push(const float& b);
     LuaStack& push(const short& b);
-    LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
-    LuaStack& push(void (*p)(Lua& lua, LuaStack& stack), const int closed = 0);
     LuaStack& push(QObject* const obj);
     LuaStack& push(const QVariant& variant);
     LuaStack& push(const LuaValue& value);
 
+    /**
+     * Pushes the directly callable C++ function onto
+     * the top of this stack. If closed > 0, then that
+     * number of arguments will be pulled from the stack
+     * and partially applied to the specified function.
+     */
+    LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
+    LuaStack& push(void (*p)(Lua& lua, LuaStack& stack), const int closed = 0);
+
+    /**
+     * Push a nil Lua value onto this stack.
+     */
     LuaStack& pushNil();
+
+    /**
+     * Returns whether the stack value at the specified
+     * position is exactly nil.
+     */
     bool isNil(const int pos = -1);
 
+    /**
+     * Push an empty Lua table onto this stack.
+     */
     LuaStack& pushNewTable();
 
+    /**
+     * Push the specified C++ function onto this stack.
+     */
     template <typename RV, typename... Args>
     LuaStack& push(RV(*p)(Args...), const int closed = 0)
     {
@@ -143,6 +279,12 @@ public:
         return set<K, double>(key, value, tablePos);
     }
 
+    /**
+     * Set the table value with the specified key name
+     * to the specified value.
+     *
+     * The table must be at the stack position specified.
+     */
     template <typename K, typename V>
     LuaStack& set(K key, const V& value, int tablePos)
     {
@@ -154,31 +296,47 @@ public:
         return (*this);
     }
 
+    /**
+     * Set the global with the specified name to the
+     * specified value.
+     */
     template <typename K, typename V>
     LuaStack& setGlobal(K key, const V& value)
     {
         return set(key, value, LUA_GLOBALSINDEX);
     }
 
+    /**
+     * Set the global with the specified name to the value
+     * curently at the top of this stack.
+     */
     template <typename K>
     LuaStack& setGlobal(K key)
     {
         return set(key, LUA_GLOBALSINDEX);
     }
 
-    ~LuaStack();
-
+    /**
+     * Push the specified C++ value onto this stack.
+     */
     template <typename T>
     friend LuaStack& operator<<(LuaStack& stack, const T& value)
     {
         return stack.push(value);
     }
 
+    /**
+     * Assign to the specified C++ value, the topmost
+     * value on this stack.
+     */
     template <typename T>
     friend LuaStack& operator>>(LuaStack& stack, T& value)
     {
         return stack.to(&value);
     }
+
+
+    ~LuaStack();
 
     friend class Lua;
 };
