@@ -54,6 +54,12 @@ public:
         stack.to(value);
     }
 
+    template <typename T>
+    void to(T& sink)
+    {
+        return to(&sink);
+    }
+
     template<typename T>
     operator T() const
     {
