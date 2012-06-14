@@ -304,7 +304,9 @@ public:
     {
         checkPos(tablePos);
         push(value);
-        if (!isMagicalPos(tablePos))
+        // Since we inserted a value, we may need to relocate tablePos
+        // so it still points to the table.
+        if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
         set(key, tablePos);
         return (*this);
