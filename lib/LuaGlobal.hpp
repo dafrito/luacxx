@@ -10,11 +10,6 @@ class LuaGlobal : public LuaValue
     const LuaGlobalAccessible _accessor;
 
 protected:
-    void push(LuaStack& stack) const
-    {
-        accessor().push(stack);
-    }
-
     const LuaAccessible& accessor() const
     {
         return _accessor;
@@ -27,13 +22,12 @@ public:
     {}
 
     template<typename T>
-    const LuaValue& operator=(const T& value)
+    const LuaGlobal& operator=(const T& value)
     {
-        LuaStack s(lua);
-        s.push(value);
-        accessor().store(s);
+        LuaValue::operator=(value);
         return *this;
     }
+
 };
 
 #endif // LUAGLOBAL_HPP

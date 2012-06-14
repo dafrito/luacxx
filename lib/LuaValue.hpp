@@ -16,9 +16,12 @@ class LuaValue
 protected:
     Lua& lua;
 
-    virtual void push(LuaStack& stack) const=0;
-
     virtual const LuaAccessible& accessor() const=0;
+
+    void push(LuaStack& stack) const
+    {
+        accessor().push(stack);
+    }
 
     lua_State* luaState() const
     {
@@ -57,6 +60,15 @@ public:
         T t;
         this->to(&t);
         return t;
+    }
+
+    template<typename T>
+    const LuaValue& operator=(const T& value)
+    {
+        LuaStack s(lua);
+        s.push(value);
+        accessor().store(s);
+        return *this;
     }
 
     template<typename T>
