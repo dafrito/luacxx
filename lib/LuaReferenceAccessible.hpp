@@ -20,7 +20,7 @@ public:
         lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
     }
 
-    void store(LuaStack& stack)
+    void store(LuaStack& stack) const
     {
         lua_rawseti(luaState(), LUA_REGISTRYINDEX, ref);
         // Push it again to leave the stack unaffected by this

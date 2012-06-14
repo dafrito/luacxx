@@ -20,7 +20,7 @@ public:
         stack.global(key);
     }
 
-    void store(LuaStack& stack)
+    void store(LuaStack& stack) const
     {
         stack.setGlobal(key);
         push(stack);

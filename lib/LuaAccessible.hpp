@@ -47,7 +47,7 @@ public:
      * Sets this reference to the value on the top
      * of the specified stack.
      */
-    virtual void store(LuaStack& stack)=0;
+    virtual void store(LuaStack& stack) const=0;
 
     virtual ~LuaAccessible() {}
 };

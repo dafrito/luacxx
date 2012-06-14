@@ -7,18 +7,23 @@
 
 class LuaGlobal : public LuaValue
 {
-    LuaGlobalAccessible accessor;
+    const LuaGlobalAccessible _accessor;
 
 protected:
     void push(LuaStack& stack) const
     {
-        accessor.push(stack);
+        accessor().push(stack);
+    }
+
+    const LuaAccessible& accessor() const
+    {
+        return _accessor;
     }
 
 public:
     LuaGlobal(Lua& lua, const QString& key) :
         LuaValue(lua),
-        accessor(lua, key)
+        _accessor(lua, key)
     {}
 
     template<typename T>
@@ -26,7 +31,7 @@ public:
     {
         LuaStack s(lua);
         s.push(value);
-        accessor.store(s);
+        accessor().store(s);
         return *this;
     }
 

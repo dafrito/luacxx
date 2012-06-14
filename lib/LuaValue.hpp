@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include "LuaStack.hpp"
+#include "LuaAccessible.hpp"
 #include "types.hpp"
 
 using std::string;
@@ -16,6 +17,8 @@ protected:
     Lua& lua;
 
     virtual void push(LuaStack& stack) const=0;
+
+    virtual const LuaAccessible& accessor() const=0;
 
     lua_State* luaState() const
     {

@@ -8,18 +8,23 @@
 
 class LuaReference : public LuaValue
 {
-    LuaReferenceAccessible accessor;
+    const LuaReferenceAccessible _accessor;
 
 protected:
     void push(LuaStack& stack) const
     {
-        accessor.push(stack);
+        accessor().push(stack);
+    }
+
+    const LuaAccessible& accessor() const
+    {
+        return _accessor;
     }
 
 public:
     LuaReference(Lua& lua) :
         LuaValue(lua),
-        accessor(lua)
+        _accessor(lua)
     {}
 
     template<typename T>
@@ -27,7 +32,7 @@ public:
     {
         LuaStack s(lua);
         s.push(value);
-        accessor.store(s);
+        accessor().store(s);
         return *this;
     }
 
