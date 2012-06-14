@@ -22,7 +22,6 @@ libluacxx_la_SOURCES = \
 	loaders.cpp \
 	Lua.cpp \
 	LuaStack.cpp \
-	LuaValue.cpp \
 	types.cpp
 
 nodist_libluacxx_la_SOURCES = \
