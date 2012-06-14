@@ -335,7 +335,6 @@ public:
         return stack.to(&value);
     }
 
-
     ~LuaStack();
 
     friend class Lua;
