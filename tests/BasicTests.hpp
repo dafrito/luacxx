@@ -107,6 +107,26 @@ private slots:
         QCOMPARE((const char*)lua["No"], "Time");
     }
 
+    void luaStackCanBeComparedToValues()
+    {
+        Lua lua;
+        LuaStack s(lua);
+        s << 42;
+        bool equality = false;
+
+        // Truthy tests
+        equality = 42 == s;
+        QVERIFY(equality);
+        equality = s == 42;
+        QVERIFY(equality);
+
+        // Falsy tests
+        equality = 43 != s;
+        QVERIFY(equality);
+        equality = s != 43;
+        QVERIFY(equality);
+    }
+
     static void luaAdd(Lua&, LuaStack& stack)
     {
         int a = stack.number(1);
