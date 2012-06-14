@@ -323,6 +323,27 @@ public:
     }
 
     /**
+     * Pushes a value from the specified table, using the topmost stack
+     * value as the key.
+     */
+    LuaStack& get(int tablePos = -1);
+
+    /**
+     * Pushes the table value within the specified table onto this stack.
+     *
+     * The table must be at the stack position specified by tablePos.
+     */
+    template <typename K>
+    LuaStack& get(K key, int tablePos = -1)
+    {
+        checkPos(tablePos);
+        push(key);
+        if (!isMagicalPos(tablePos) && tablePos < 0)
+            --tablePos;
+        return get(tablePos);
+    }
+
+    /**
      * Sets the table value for the specified table.
      *
      * t[k] = v
@@ -381,27 +402,6 @@ public:
             --tablePos;
         pushedSet(key, tablePos);
         return (*this);
-    }
-
-    /**
-     * Pushes a value from the specified table, using the topmost stack
-     * value as the key.
-     */
-    LuaStack& get(int tablePos = -1);
-
-    /**
-     * Pushes the table value within the specified table onto this stack.
-     *
-     * The table must be at the stack position specified by tablePos.
-     */
-    template <typename K>
-    LuaStack& get(K key, int tablePos = -1)
-    {
-        checkPos(tablePos);
-        push(key);
-        if (!isMagicalPos(tablePos) && tablePos < 0)
-            --tablePos;
-        return get(tablePos);
     }
 
     /**

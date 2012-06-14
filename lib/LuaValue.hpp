@@ -93,6 +93,20 @@ public:
         return stack;
     }
 
+    template <typename T>
+    LuaStack operator[](T key)
+    {
+        LuaStack stack(lua);
+
+        accessor().push(stack);
+        stack.get(key);
+
+        // Shift our table off, so only the value remains.
+        stack.shift();
+
+        return stack;
+    }
+
 private:
     friend class LuaStack;
 };
