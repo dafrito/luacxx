@@ -11,23 +11,38 @@ runtest_LDADD = $(QT_LIBS) $(LUA_LIB) ../lib/libluacxx.la
 
 TESTS = $(check_PROGRAMS)
 
-runtest_SOURCES = \
-	tests.cpp
-	BasicTests.hpp \
-	TableTests.hpp \
-	mocks.hpp
+test_suites =         \
+	LuaTests          \
+	LuaStackTests     \
+	LoaderTests       \
+	LuaReferenceTests
 
-nodist_runtest_SOURCES = \
-	moc_mocks.cpp \
-	moc_BasicTests.cpp \
-	moc_TableTests.cpp
+runtest_SOURCES =         \
+	tests.cpp             \
+	mocks.hpp             \
+	LuaTests.hpp          \
+	LuaStackTests.hpp     \
+	LoaderTests.hpp       \
+	LuaReferenceTests.hpp
 
+nodist_runtest_SOURCES =      \
+	moc_mocks.cpp             \
+	moc_LuaTests.cpp          \
+	moc_LuaStackTests.cpp     \
+	moc_LoaderTests.cpp       \
+	moc_LuaReferenceTests.cpp
 
 check_SCRIPTS = \
 	anim.lua \
 	simple.lua
 
 CLEANFILES = $(check_SCRIPTS)
+
+tests.cpp: $(addsuffix .hpp, $(test_suites))
+	rm -f $@
+	./make_tests.cpp.sh $^ >$@-wip
+	mv $@-wip $@
+	chmod -w $@
 
 anim.lua:
 	echo "function Tick(square, elapsed)" >>$@
@@ -37,11 +52,5 @@ anim.lua:
 simple.lua:
 	echo "assert(_G['No']=='Time');" >$@
 
-moc_mocks.cpp: mocks.hpp
-	$(QT_MOC) -o $@ $<
-
-moc_TableTests.cpp: TableTests.hpp
-	$(QT_MOC) -o $@ $<
-
-moc_BasicTests.cpp: BasicTests.hpp
+moc_%.cpp: %.hpp
 	$(QT_MOC) -o $@ $<
