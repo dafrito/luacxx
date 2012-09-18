@@ -38,4 +38,4 @@ public:
     friend class LuaAccessible;
 };
 
-#endif
+#endif // HEADER_LUA_HPP
