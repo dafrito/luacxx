@@ -40,7 +40,7 @@ CLEANFILES = $(check_SCRIPTS)
 
 tests.cpp: $(addsuffix .hpp, $(test_suites))
 	rm -f $@
-	./make_tests.cpp.sh $^ >$@-wip
+	./make_wrapper.sh $^ >$@-wip
 	mv $@-wip $@
 	chmod -w $@
 
