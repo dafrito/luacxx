@@ -1,0 +1,34 @@
+Name: @PACKAGE_NAME@
+
+# Change all release values back to 1 when bumping to a new version
+Version:	@PACKAGE_VERSION@
+Release:	1%{?dist}
+Summary:	TODO Add one-line summary
+
+Group:		Applications/Internet
+License:	Proprietary
+URL:		@PACKAGE_URL@
+Source0:	@PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz
+BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+BuildArch:	@build_cpu@
+Requires:	qt
+BuildRequires: make automake autoconf libtool gcc-c++ boost-test boost-devel qt-devel
+
+%description
+TODO Add longer description
+
+%prep
+%setup -q
+
+%build
+%configure
+make %{?_smp_mflags}
+
+%install
+make install DESTDIR=%{buildroot}
+
+%files
+%{_bindir}/@PACKAGE_NAME@
+%{_libdir}/*
+%{_includedir}/@PACKAGE_NAME@/*
+%{_datadir}/@PACKAGE_NAME@/@PACKAGE_NAME@.m4

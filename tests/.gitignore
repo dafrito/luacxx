@@ -1,5 +1,0 @@
-.libs/**
-.deps/**
-runtest
-*.lua
-tests.cpp
