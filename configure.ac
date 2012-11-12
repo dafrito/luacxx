@@ -20,23 +20,29 @@ LT_INIT
 AC_PROG_LIBTOOL
 
 # Check for compiler characteristics.
+AC_LANG([C++])
 AC_HEADER_STDBOOL
 AC_TYPE_SIZE_T
+AX_CXX_COMPILE_STDCXX_11(,[AM_CXXFLAGS])
+AC_SUBST([AM_CXXFLAGS])
 
 # Check for Boost
 AX_BOOST_BASE
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
+# Check for Lua
+AX_LUA_LIBS
+AX_LUA_HEADERS
+
 # Check for Qt
 AX_HAVE_QT_CORE
 AX_HAVE_QT_GUI
 AX_HAVE_QT_MOC
+AX_HAVE_QT_TEST
 
 if test x"$have_qt_core" = xno || test x"$have_qt_gui" = xno || test x"$have_qt_moc" = xno; then
     AC_MSG_ERROR([Qt is required to build lua-cxx])
 fi;
-
-AC_LANG([C++])
 
 AC_CONFIG_FILES([lua-cxx.m4 Makefile src/Makefile tests/Makefile rpm.spec])
 AC_OUTPUT
