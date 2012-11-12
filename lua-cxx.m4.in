@@ -61,9 +61,9 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
     AC_LANG_PUSH([C++])
     AC_COMPILE_IFELSE([
       AC_LANG_PROGRAM(
-        [[@%:@include <lua-cxx/Bootstrapper.hpp>]],
+        [[@%:@include <lua-cxx/Lua.hpp>]],
         [[
-          Bootstrapper bs;
+          Lua lua;
           return 0;
         ]]
       )],
