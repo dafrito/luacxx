@@ -3,7 +3,7 @@
 AC_PREREQ([2.68])
 AC_INIT([lua-cxx], [1.0], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
 AM_INIT_AUTOMAKE([-Wall foreign])
-AC_CONFIG_SRCDIR([src/Lua.cpp])
+AC_CONFIG_SRCDIR([src/LuaEnvironment.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_MACRO_DIR([m4])
 

@@ -1,5 +1,5 @@
-#ifndef HEADER_LUA_HPP
-#define HEADER_LUA_HPP
+#ifndef HEADER_LUA_ENVIRONMENT_HPP
+#define HEADER_LUA_ENVIRONMENT_HPP
 
 #include <QObject>
 #include <string>
@@ -38,4 +38,4 @@ public:
     friend class LuaAccessible;
 };
 
-#endif // HEADER_LUA_HPP
+#endif // HEADER_LUA_ENVIRONMENT_HPP

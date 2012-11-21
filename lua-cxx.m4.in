@@ -61,7 +61,7 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
     AC_LANG_PUSH([C++])
     AC_COMPILE_IFELSE([
       AC_LANG_PROGRAM(
-        [[@%:@include <lua-cxx/Lua.hpp>]],
+        [[@%:@include <lua-cxx/LuaEnvironment.hpp>]],
         [[
           Lua lua;
           return 0;

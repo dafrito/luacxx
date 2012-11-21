@@ -4,9 +4,8 @@ liblua_cxx_la_LIBADD = @QT_LIBS@ @LUA_LIB@
 liblua_cxx_la_LDFLAGS = -version-info 0:0:0
 
 pkginclude_HEADERS = \
-	../include/Lua.hpp \
+	../include/LuaEnvironment.hpp \
 	../include/loaders.hpp \
-	../include/Lua.hpp \
 	../include/LuaStack.hpp \
 	../include/LuaValue.hpp \
 	../include/LuaGlobal.hpp \
@@ -19,13 +18,13 @@ pkginclude_HEADERS = \
 
 # moc-generated source files
 liblua_cxx_la_MOC_SOURCES = \
-	moc_Lua.cpp
+	moc_LuaEnvironment.cpp
 
 nodist_liblua_cxx_la_SOURCES = $(liblua_cxx_la_MOC_SOURCES)
 
 liblua_cxx_la_SOURCES = \
 	loaders.cpp \
-	Lua.cpp \
+	LuaEnvironment.cpp \
 	LuaStack.cpp \
 	types.cpp
 

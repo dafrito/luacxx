@@ -1,4 +1,4 @@
-#include "Lua.hpp"
+#include "LuaEnvironment.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <sstream>

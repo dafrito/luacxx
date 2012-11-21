@@ -1,5 +1,5 @@
 #include <QtTest/QtTest>
-#include "Lua.hpp"
+#include "LuaEnvironment.hpp"
 #include "loaders.hpp"
 #include "LuaGlobal.hpp"
 

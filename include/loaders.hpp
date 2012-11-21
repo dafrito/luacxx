@@ -2,7 +2,7 @@
 #define LOADERS_HPP
 
 #include <string>
-#include "Lua.hpp"
+#include "LuaEnvironment.hpp"
 
 namespace lua
 {

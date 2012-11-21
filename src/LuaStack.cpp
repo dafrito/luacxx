@@ -1,4 +1,4 @@
-#include "Lua.hpp"
+#include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 #include "LuaException.hpp"
 #include "LuaReference.hpp"

@@ -3,7 +3,7 @@
 
 #include <tuple>
 #include "LuaValue.hpp"
-#include "Lua.hpp"
+#include "LuaEnvironment.hpp"
 #include "LuaReferenceAccessible.hpp"
 
 class LuaReference : public LuaValue

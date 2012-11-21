@@ -3,7 +3,7 @@
 
 #include <lua.hpp>
 #include "LuaAccessible.hpp"
-#include "Lua.hpp"
+#include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 
 class LuaReferenceAccessible : public LuaAccessible
