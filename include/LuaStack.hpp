@@ -408,20 +408,21 @@ public:
      * Set the global with the specified name to the
      * specified value.
      */
-    template <typename K, typename V>
-    LuaStack& setGlobal(K key, const V& value)
+    template <typename V>
+    LuaStack& setGlobal(const QString& key, const V& value)
     {
-        return set(key, value, LUA_GLOBALSINDEX);
+        push(value);
+        return setGlobal(key);
     }
 
     /**
      * Set the global with the specified name to the value
      * curently at the top of this stack.
      */
-    template <typename K>
-    LuaStack& setGlobal(K key)
+    LuaStack& setGlobal(const QString& key)
     {
-        return pushedSet(key, LUA_GLOBALSINDEX);
+        lua_setglobal(lua.state, key.toAscii().data());
+        return (*this);
     }
 
     /**

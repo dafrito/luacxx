@@ -116,7 +116,7 @@ LuaStack& LuaStack::swap(int a, int b)
 
 bool LuaStack::isMagicalPos(const int& pos) const
 {
-    return pos == LUA_GLOBALSINDEX;
+    return false;
 }
 
 lua::Type LuaStack::type(int pos) const
