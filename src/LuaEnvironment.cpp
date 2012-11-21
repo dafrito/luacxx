@@ -200,7 +200,7 @@ void Lua::handleLoadValue(const int rv)
 void Lua::operator()(istream& stream, const string& name = NULL)
 {
     LuaReadingData d(stream);
-    handleLoadValue(lua_load(state, &read_stream, &d, name.c_str()));
+    handleLoadValue(lua_load(state, &read_stream, &d, name.c_str(), NULL));
     lua_call(state, 0, 0);
 }
 
@@ -213,7 +213,7 @@ void Lua::operator()(QFile& file)
             file.errorString());
     }
     QtReadingData d(file);
-    handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData()));
+    handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData(), NULL));
     lua_call(state, 0, 0);
 }
 
