@@ -47,6 +47,8 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
 
     # Ensure we have a suitable C++ compiler
     AC_REQUIRE([AC_PROG_CC])
+    AC_REQUIRE([AX_HAVE_QT_CORE])
+    AC_REQUIRE([AC_PROG_CXX])
 
     ax_lua_cxx_saved_CPPFLAGS="$CPPFLAGS"
     ax_lua_cxx_INCLUDE=""
