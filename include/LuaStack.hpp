@@ -323,6 +323,16 @@ public:
     }
 
     /**
+     * Push the specified C++ function onto this stack.
+     */
+    template <typename RV, typename... Args>
+    LuaStack& push(std::function<RV(Args...)> p, const int closed = 0)
+    {
+        this->push(LuaWrapper<RV, Args...>(p), closed);
+        return (*this);
+    }
+
+    /**
      * Pushes a value from the specified table, using the topmost stack
      * value as the key.
      */
@@ -589,7 +599,7 @@ namespace
         std::function<RV(Args...)> func;
 
     public:
-        LuaWrapper(RV(*func)(Args...)) : func(func)
+        LuaWrapper(std::function<RV(Args...)> func) : func(func)
         {}
 
         void operator()(Lua&, LuaStack& stack)

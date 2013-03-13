@@ -147,6 +147,20 @@ private slots:
         lua("assert(foo() == 66)");
     }
 
+    void testLuaCanPushLambdas()
+    {
+        Lua lua;
+        LuaStack s(lua);
+        s << 42;
+        s << 24;
+        // In a perfect world, we wouldn't need to wrap the lambda inside a std::function, but
+        // as far as I know, there's no way to get access the argument types of a lambda. This
+        // is required for us to actually forward the function into Lua.
+        s.push(std::function<int(int, int)>([](int a, int b) { return a + b; }), 2);
+        s.setGlobal("foo");
+        lua("assert(foo() == 66)");
+    }
+
     void luaRetrievesQObjectProperties()
     {
         Lua lua;
