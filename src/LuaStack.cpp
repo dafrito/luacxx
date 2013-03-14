@@ -3,6 +3,7 @@
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
 #include "LuaReferenceAccessible.hpp"
+#include "LuaAccessible.hpp"
 
 namespace
 {
@@ -179,6 +180,15 @@ QObject* LuaStack::object(int pos)
     QObject* ptr;
     to(&ptr, pos);
     return ptr;
+}
+
+int LuaStack::length(int pos)
+{
+    checkPos(pos);
+    lua_len(lua.state, pos);
+    const int length = number();
+    lua_pop(lua.state, 1);
+    return length;
 }
 
 LuaValue LuaStack::save()
@@ -433,6 +443,12 @@ LuaStack& LuaStack::push(const QVariant& variant)
 }
 
 LuaStack& LuaStack::push(const LuaValue& value)
+{
+    value.push(*this);
+    return *this;
+}
+
+LuaStack& LuaStack::push(const LuaAccessible& value)
 {
     value.push(*this);
     return *this;

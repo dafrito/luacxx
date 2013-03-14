@@ -12,6 +12,7 @@
 class Lua;
 class LuaStack;
 class LuaValue;
+class LuaAccessible;
 
 namespace
 {
@@ -253,6 +254,8 @@ public:
     bool boolean(int pos = -1);
     QObject* object(int pos = -1);
 
+    int length(int pos = -1);
+
     /**
      * Saves the value at the top of this stack into
      * a Lua reference.
@@ -285,6 +288,7 @@ public:
     LuaStack& push(QObject* const obj);
     LuaStack& push(const QVariant& variant);
     LuaStack& push(const LuaValue& value);
+    LuaStack& push(const LuaAccessible& value);
 
     /**
      * Pushes the directly callable C++ function onto

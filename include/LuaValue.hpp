@@ -9,13 +9,15 @@
 
 #include <memory>
 
+#include <iostream>
+
 using std::string;
 
 class Lua;
 
 class LuaValue
 {
-    Lua& lua;
+    Lua& _lua;
 
     std::shared_ptr<LuaAccessible> accessible;
 
@@ -31,24 +33,29 @@ class LuaValue
 
     lua_State* luaState() const
     {
-        return lua.state;
+        return _lua.state;
     }
 public:
     LuaValue(const std::shared_ptr<LuaAccessible>& accessible) :
-        lua(accessible->lua()),
+        _lua(accessible->lua()),
         accessible(accessible)
     {}
 
+    Lua& lua()
+    {
+        return _lua;
+    }
+
     lua::Type type()
     {
-        LuaStack stack(lua);
+        LuaStack stack(_lua);
         push(stack);
         return stack.type();
     }
 
     string typestring()
     {
-        LuaStack stack(lua);
+        LuaStack stack(_lua);
         push(stack);
         return stack.typestring();
     }
@@ -56,7 +63,7 @@ public:
     template <typename T>
     void to(T* value) const
     {
-        LuaStack stack(lua);
+        LuaStack stack(_lua);
         push(stack);
         stack.to(value);
     }
@@ -78,7 +85,7 @@ public:
     template<typename T>
     const LuaValue& operator=(const T& value)
     {
-        LuaStack s(lua);
+        LuaStack s(_lua);
         s.push(value);
         accessor().store(s);
         return *this;
@@ -94,7 +101,7 @@ public:
     template <typename... Args>
     LuaStack operator()(Args... args)
     {
-        LuaStack stack(lua);
+        LuaStack stack(_lua);
         accessor().push(stack);
         callLua(luaState(), stack, args...);
         return stack;
@@ -103,10 +110,10 @@ public:
     template <typename T>
     LuaStack operator[](T key)
     {
-        LuaStack stack(lua);
+        LuaStack stack(_lua);
 
         accessor().push(stack);
-        stack.get(key);
+        stack.get(key, -1);
 
         // Shift our table off, so only the value remains.
         stack.shift();

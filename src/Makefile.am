@@ -12,6 +12,7 @@ pkginclude_HEADERS = \
 	../include/LuaGlobalAccessible.hpp \
 	../include/LuaReferenceAccessible.hpp \
 	../include/types.hpp \
+	../include/table.hpp \
 	../include/LuaException.hpp
 
 # moc-generated source files
