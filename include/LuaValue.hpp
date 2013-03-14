@@ -104,6 +104,13 @@ public:
         LuaStack stack(_lua);
         accessor().push(stack);
         callLua(luaState(), stack, args...);
+
+        if (stack.empty()) {
+            // The called function didn't return anything, so push a nil
+            // so we can save an empty reference.
+            stack.pushNil();
+        }
+
         return stack.save();
     }
 
