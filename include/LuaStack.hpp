@@ -453,7 +453,7 @@ public:
      * Push the specified C++ value onto this stack.
      */
     template <typename T>
-    friend LuaStack& operator<<(LuaStack& stack, const T& value)
+    friend LuaStack& operator<<(LuaStack& stack, T value)
     {
         return stack.push(value);
     }
