@@ -62,7 +62,7 @@ mostlyclean-local:
 	rm -f $(runtest_MOC_SOURCES)
 .PHONY: mostlyclean-local
 
-tests.cpp: $(addsuffix .hpp, $(test_suites))
+tests.cpp: $(top_srcdir)/tests/make_wrapper.sh $(addsuffix .hpp, $(test_suites))
 	rm -f $@
 	$(top_srcdir)/tests/make_wrapper.sh $^ >$@-wip
 	mv $@-wip $@
@@ -70,3 +70,4 @@ tests.cpp: $(addsuffix .hpp, $(test_suites))
 
 moc_%.cpp: %.hpp
 	@QT_MOC@ -o $@ $<
+
