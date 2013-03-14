@@ -99,16 +99,16 @@ public:
     }
 
     template <typename... Args>
-    LuaStack operator()(Args... args)
+    LuaValue operator()(Args... args)
     {
         LuaStack stack(_lua);
         accessor().push(stack);
         callLua(luaState(), stack, args...);
-        return stack;
+        return stack.save();
     }
 
     template <typename T>
-    LuaStack operator[](T key)
+    LuaValue operator[](T key)
     {
         LuaStack stack(_lua);
 
@@ -118,7 +118,7 @@ public:
         // Shift our table off, so only the value remains.
         stack.shift();
 
-        return stack;
+        return stack.save();
     }
 
 private:

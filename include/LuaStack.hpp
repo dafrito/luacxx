@@ -244,17 +244,6 @@ public:
     }
 
     /**
-     * Convert the topmost value to the specified type.
-     */
-    template<typename T>
-    operator T()
-    {
-        T t;
-        this->to(&t);
-        return t;
-    }
-
-    /**
      * Converts and returns the value at the specified
      * position to a C++ value.
      */
@@ -472,34 +461,6 @@ public:
 
     friend class Lua;
 };
-
-template <typename T>
-const bool operator==(LuaStack& stack, const T& b)
-{
-    T a;
-    stack.to(a);
-    return a == b;
-}
-
-template <typename T>
-const bool operator==(const T& b, LuaStack& stack)
-{
-    T a;
-    stack.to(a);
-    return a == b;
-}
-
-template <typename T>
-const bool operator!=(LuaStack& stack, const T& b)
-{
-    return !(stack == b);
-}
-
-template <typename T>
-const bool operator!=(const T& b, LuaStack& stack)
-{
-    return !(stack == b);
-}
 
 namespace
 {
