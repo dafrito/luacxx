@@ -256,6 +256,11 @@ LuaValue Lua::operator[](const string& key)
     return (*this)[str];
 }
 
+int Lua::internalStackSize() const
+{
+    return lua_gettop(state);
+}
+
 Lua::~Lua()
 {
     lua_close(state);
