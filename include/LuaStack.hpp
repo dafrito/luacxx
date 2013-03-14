@@ -76,7 +76,13 @@ class LuaStack
 private:
     static int invokeWrappedFunction(lua_State* state);
 
-    Lua& lua;
+    Lua& _lua;
+
+    lua_State* luaState() const
+    {
+        return lua().state;
+    }
+
     int _offset;
 
     /**
@@ -123,6 +129,11 @@ private:
     }
 public:
     LuaStack(Lua& lua);
+
+    Lua& lua() const
+    {
+        return _lua;
+    }
 
     /**
      * Return the number of stack values that are
@@ -434,7 +445,7 @@ public:
      */
     LuaStack& setGlobal(const QString& key)
     {
-        lua_setglobal(lua.state, key.toAscii().data());
+        lua_setglobal(luaState(), key.toAscii().data());
         return (*this);
     }
 
