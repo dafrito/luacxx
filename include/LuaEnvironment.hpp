@@ -27,11 +27,13 @@ public:
     LuaValue operator[](const QString& key);
     LuaValue operator[](const string& key);
 
-    void operator()(const char* runnable);
-    void operator()(const string& runnable);
-    void operator()(const QString& runnable);
-    void operator()(istream& stream, const string& name);
-    void operator()(QFile& file);
+    LuaValue operator()(const char* runnable);
+    LuaValue operator()(const string& runnable);
+    LuaValue operator()(const QString& runnable);
+    LuaValue operator()(istream& stream, const string& name);
+    LuaValue operator()(QFile& file);
+
+    int internalStackSize() const;
 
     friend class LuaStack;
     friend class LuaValue;

@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "LuaValue.hpp"
+
 using namespace std;
 
 namespace lua

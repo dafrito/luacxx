@@ -11,6 +11,7 @@
 
 #include "LuaAccessible.hpp"
 #include "LuaGlobalAccessible.hpp"
+#include "LuaReferenceAccessible.hpp"
 
 using std::runtime_error;
 using std::istream;
@@ -173,21 +174,26 @@ Lua::Lua()
     }
 }
 
-void Lua::operator()(const char* runnable)
+LuaValue Lua::operator()(const char* runnable)
 {
     luaL_loadstring(state, runnable);
-    lua_call(state, 0, 0);
+    lua_call(state, 0, 1);
+    return LuaValue(
+        std::shared_ptr<LuaAccessible>(
+            new LuaReferenceAccessible(*this)
+        )
+    );
 }
 
-void Lua::operator()(const QString& runnable)
+LuaValue Lua::operator()(const QString& runnable)
 {
-    (*this)(runnable.toUtf8().constData());
+    return (*this)(runnable.toUtf8().constData());
 }
 
-void Lua::operator()(const string& runnable)
+LuaValue Lua::operator()(const string& runnable)
 {
     std::istringstream stream(runnable);
-    (*this)(stream, "string input");
+    return (*this)(stream, "string input");
 }
 
 void Lua::handleLoadValue(const int rv)
@@ -200,14 +206,19 @@ void Lua::handleLoadValue(const int rv)
     }
 }
 
-void Lua::operator()(istream& stream, const string& name = NULL)
+LuaValue Lua::operator()(istream& stream, const string& name = NULL)
 {
     LuaReadingData d(stream);
     handleLoadValue(lua_load(state, &read_stream, &d, name.c_str(), NULL));
-    lua_call(state, 0, 0);
+    lua_call(state, 0, 1);
+    return LuaValue(
+        std::shared_ptr<LuaAccessible>(
+            new LuaReferenceAccessible(*this)
+        )
+    );
 }
 
-void Lua::operator()(QFile& file)
+LuaValue Lua::operator()(QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {
         throw LuaException(this,
@@ -217,7 +228,12 @@ void Lua::operator()(QFile& file)
     }
     QtReadingData d(file);
     handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData(), NULL));
-    lua_call(state, 0, 0);
+    lua_call(state, 0, 1);
+    return LuaValue(
+        std::shared_ptr<LuaAccessible>(
+            new LuaReferenceAccessible(*this)
+        )
+    );
 }
 
 LuaValue Lua::operator[](const char* key)

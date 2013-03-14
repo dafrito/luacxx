@@ -220,4 +220,10 @@ private slots:
         lua["Tick"](&square, M_PI);
         QVERIFY(square.getX() != old);
     }
+
+    void luaCanReturnValuesFromEvaluatedStrings()
+    {
+        Lua lua;
+        QCOMPARE((int)lua("return 42"), 42);
+    }
 };
