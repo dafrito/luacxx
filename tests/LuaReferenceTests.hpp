@@ -1,10 +1,9 @@
 #include <QtTest/QtTest>
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
-#include "LuaGlobal.hpp"
-#include "LuaReference.hpp"
 #include "LuaReferenceAccessible.hpp"
 #include "LuaGlobalAccessible.hpp"
+#include "LuaValue.hpp"
 
 using namespace std;
 
@@ -18,7 +17,7 @@ private slots:
         Lua lua;
         LuaStack s(lua);
         s << "No Time";
-        LuaReference r = s.save();
+        LuaValue r = s.save();
         QVERIFY(s.size() == 0);
         s << r;
         QVERIFY(s.qstring() == "No Time");

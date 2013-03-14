@@ -8,10 +8,8 @@ pkginclude_HEADERS = \
 	../include/loaders.hpp \
 	../include/LuaStack.hpp \
 	../include/LuaValue.hpp \
-	../include/LuaGlobal.hpp \
 	../include/LuaAccessible.hpp \
 	../include/LuaGlobalAccessible.hpp \
-	../include/LuaReference.hpp \
 	../include/LuaReferenceAccessible.hpp \
 	../include/types.hpp \
 	../include/LuaException.hpp

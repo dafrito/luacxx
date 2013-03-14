@@ -2,7 +2,7 @@
 #include "LuaEnvironment.hpp"
 #include "loaders.hpp"
 #include "LuaStack.hpp"
-#include "LuaGlobal.hpp"
+#include "LuaValue.hpp"
 #include "mocks.hpp"
 
 using namespace std;
@@ -16,7 +16,7 @@ private slots:
     {
         Lua lua;
         lua("No = 'Time'");
-        LuaGlobal g = lua["No"];
+        LuaValue g = lua["No"];
         QString str;
         g.to(str);
         QCOMPARE((const char*)lua["No"], "Time");
@@ -25,7 +25,7 @@ private slots:
     void testLuaOffersSubscriptSupportForGlobalValues()
     {
         Lua lua;
-        LuaGlobal g = lua["No"];
+        LuaValue g = lua["No"];
         g = "Time";
         QCOMPARE((const char*)lua["No"], "Time");
     }
@@ -40,7 +40,7 @@ private slots:
     void testLuaValueIsAProxyForTheGlobalTable()
     {
         Lua lua;
-        LuaGlobal v = lua["No"];
+        LuaValue v = lua["No"];
         v = "Time";
         QCOMPARE((const char*)lua["No"], "Time");
     }

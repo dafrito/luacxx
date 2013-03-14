@@ -7,16 +7,22 @@
 #include "LuaAccessible.hpp"
 #include "types.hpp"
 
+#include <memory>
+
 using std::string;
 
 class Lua;
 
 class LuaValue
 {
-protected:
     Lua& lua;
 
-    virtual const LuaAccessible& accessor() const=0;
+    std::shared_ptr<LuaAccessible> accessible;
+
+    const LuaAccessible& accessor() const
+    {
+        return (*accessible);
+    }
 
     void push(LuaStack& stack) const
     {
@@ -28,8 +34,9 @@ protected:
         return lua.state;
     }
 public:
-    LuaValue(Lua& lua) :
-        lua(lua)
+    LuaValue(const std::shared_ptr<LuaAccessible>& accessible) :
+        lua(accessible->lua()),
+        accessible(accessible)
     {}
 
     lua::Type type()

@@ -1,7 +1,8 @@
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 #include "LuaException.hpp"
-#include "LuaReference.hpp"
+#include "LuaValue.hpp"
+#include "LuaReferenceAccessible.hpp"
 
 namespace
 {
@@ -180,10 +181,14 @@ QObject* LuaStack::object(int pos)
     return ptr;
 }
 
-LuaReference LuaStack::save()
+LuaValue LuaStack::save()
 {
     checkPos(-1);
-    return LuaReference(lua);
+    return LuaValue(
+        std::shared_ptr<LuaAccessible>(
+            new LuaReferenceAccessible(lua)
+        )
+    );
 }
 
 LuaStack& LuaStack::to(bool* sink, int pos)

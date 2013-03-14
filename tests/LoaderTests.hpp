@@ -1,7 +1,7 @@
 #include <QtTest/QtTest>
 #include "LuaEnvironment.hpp"
+#include "LuaValue.hpp"
 #include "loaders.hpp"
-#include "LuaGlobal.hpp"
 
 using namespace std;
 

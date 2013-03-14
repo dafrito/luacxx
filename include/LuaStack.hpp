@@ -12,7 +12,6 @@
 class Lua;
 class LuaStack;
 class LuaValue;
-class LuaReference;
 
 namespace
 {
@@ -258,7 +257,7 @@ public:
      * Saves the value at the top of this stack into
      * a Lua reference.
      */
-    LuaReference save();
+    LuaValue save();
 
     /**
      * Pushes the global value with the specified

@@ -7,10 +7,10 @@
 #include <lua.hpp>
 #include <QFile>
 
-class LuaGlobal;
-
 using std::istream;
 using std::string;
+
+class LuaValue;
 
 class Lua : public QObject
 {
@@ -23,9 +23,9 @@ public:
     Lua();
     ~Lua();
 
-    LuaGlobal operator[](const char* key);
-    LuaGlobal operator[](const QString& key);
-    LuaGlobal operator[](const string& key);
+    LuaValue operator[](const char* key);
+    LuaValue operator[](const QString& key);
+    LuaValue operator[](const string& key);
 
     void operator()(const char* runnable);
     void operator()(const string& runnable);

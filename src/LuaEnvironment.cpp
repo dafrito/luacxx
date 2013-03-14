@@ -3,11 +3,14 @@
 #include <stdexcept>
 #include <sstream>
 #include "LuaStack.hpp"
-#include "LuaGlobal.hpp"
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <QTextStream>
 #include "LuaException.hpp"
+#include "LuaValue.hpp"
+
+#include "LuaAccessible.hpp"
+#include "LuaGlobalAccessible.hpp"
 
 using std::runtime_error;
 using std::istream;
@@ -217,17 +220,21 @@ void Lua::operator()(QFile& file)
     lua_call(state, 0, 0);
 }
 
-LuaGlobal Lua::operator[](const char* key)
+LuaValue Lua::operator[](const char* key)
 {
-    return LuaGlobal(*this, QString(key));
+    return (*this)[QString(key)];
 }
 
-LuaGlobal Lua::operator[](const QString& key)
+LuaValue Lua::operator[](const QString& key)
 {
-    return LuaGlobal(*this, key);
+    return LuaValue(
+        std::shared_ptr<LuaAccessible>(
+            new LuaGlobalAccessible(*this, key)
+        )
+    );
 }
 
-LuaGlobal Lua::operator[](const string& key)
+LuaValue Lua::operator[](const string& key)
 {
     QString str(key.c_str());
     return (*this)[str];

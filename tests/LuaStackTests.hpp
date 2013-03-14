@@ -5,7 +5,7 @@
 #include "loaders.hpp"
 #include "LuaException.hpp"
 #include "LuaStack.hpp"
-#include "LuaGlobal.hpp"
+#include "LuaValue.hpp"
 #include "mocks.hpp"
 
 using namespace std;
