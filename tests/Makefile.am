@@ -49,7 +49,9 @@ nodist_runtest_SOURCES =      \
 
 check_SCRIPTS = \
 	anim.lua \
-	simple.lua
+	simple.lua \
+	dummy/a.lua \
+	dummy/b.lua
 
 CLEANFILES = tests.cpp $(check_SCRIPTS)
 
@@ -60,6 +62,16 @@ anim.lua:
 
 simple.lua:
 	echo "assert(_G['No']=='Time');" >$@
+
+dummy/a.lua: | dummy
+	echo "print('loaded a')" >$@
+	echo "a = 42;" >$@
+
+dummy/b.lua: | dummy
+	echo "b = 'foo'" >$@
+
+dummy:
+	mkdir $@
 
 mostlyclean-local:
 	rm -f $(runtest_MOC_SOURCES)

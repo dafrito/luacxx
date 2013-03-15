@@ -24,4 +24,12 @@ private slots:
         QFile file("simple.lua");
         lua(file);
     }
+
+    void luaSupportsDirectories()
+    {
+        Lua lua;
+        lua::load_dir(lua, QDir("dummy"), true);
+        QCOMPARE((int)lua["a"], 42);
+        QCOMPARE((const char*)lua["b"], "foo");
+    }
 };
