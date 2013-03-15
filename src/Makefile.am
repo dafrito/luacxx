@@ -11,6 +11,8 @@ pkginclude_HEADERS = \
 	../include/LuaAccessible.hpp \
 	../include/LuaGlobalAccessible.hpp \
 	../include/LuaReferenceAccessible.hpp \
+	../include/ModuleLoader.hpp \
+	../include/DirectoryModuleLoader.hpp \
 	../include/types.hpp \
 	../include/table.hpp \
 	../include/LuaException.hpp
@@ -25,6 +27,7 @@ liblua_cxx_la_SOURCES = \
 	loaders.cpp \
 	LuaEnvironment.cpp \
 	LuaStack.cpp \
+	DirectoryModuleLoader.cpp \
 	types.cpp
 
 mostlyclean-local:

@@ -8,6 +8,8 @@
 #include <QTextStream>
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
+#include "ModuleLoader.hpp"
+#include "table.hpp"
 
 #include "LuaAccessible.hpp"
 #include "LuaGlobalAccessible.hpp"
@@ -172,6 +174,8 @@ Lua::Lua()
         lua_setmetatable(state, -2);
         stack.grab();
     }
+
+    table::push((*this)["package"]["searchers"], Lua::loadModule);
 }
 
 LuaValue Lua::operator()(const char* runnable)
@@ -255,6 +259,39 @@ LuaValue Lua::operator[](const string& key)
     QString str(key.c_str());
     return (*this)[str];
 }
+
+void Lua::addModuleLoader(ModuleLoader* const loader)
+{
+    _moduleLoaders.push_back(loader);
+}
+
+void Lua::removeModuleLoader(ModuleLoader* const loader)
+{
+    _moduleLoaders.erase(
+        std::remove(begin(_moduleLoaders), end(_moduleLoaders), loader),
+        end(_moduleLoaders)
+    );
+}
+
+void Lua::loadModule(Lua& lua, LuaStack& stack)
+{
+    // Use a std::string here since QString doesn't seem to work well with
+    // lambdas.
+    std::string moduleName(stack.string());
+    stack.clear();
+
+    for (auto loader : lua._moduleLoaders) {
+        if (loader->search(QString(moduleName.c_str()))) {
+            stack << std::function<void()>([&]() {
+                loader->load(lua, QString(moduleName.c_str()));
+            });
+            return;
+        }
+    }
+
+    stack << "Unable to find module: " << moduleName;
+}
+
 
 int Lua::internalStackSize() const
 {
