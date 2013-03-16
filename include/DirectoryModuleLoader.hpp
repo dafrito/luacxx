@@ -13,7 +13,7 @@ class DirectoryModuleLoader : public ModuleLoader
 
 public:
 
-    DirectoryModuleLoader(const QDir& root) :
+    DirectoryModuleLoader(const QDir&& root) :
         _root(root)
     {
     }
