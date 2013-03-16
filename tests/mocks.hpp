@@ -2,6 +2,8 @@
 #define MOCKS_HPP
 
 #include <QObject>
+#include "LuaEnvironment.hpp"
+#include "LuaStack.hpp"
 
 class Square : public QObject
 {
@@ -43,13 +45,20 @@ public slots:
         }
     }
 
-
     void setAddedValue(const int x, const int y)
     {
         setValue(x + y);
     }
 
     int getValue() const { return value; }
+
+    void addAll(Lua& lua, LuaStack& stack)
+    {
+        while (!stack.empty()) {
+            value += stack.number(1);
+            stack.shift();
+        }
+    }
 signals:
     void valueChanged(int value) const;
 public:

@@ -56,22 +56,8 @@ namespace {
     }
 }
 
-void callMethod(Lua&, LuaStack& stack)
+void metaInvokeDirectMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
-    const char* name = stack.cstring(1);
-    QObject* const obj = stack.object(2);
-    stack.shift(2);
-    const QMetaObject* const metaObject = obj->metaObject();
-    QMetaMethod method;
-    for(int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
-        method = metaObject->method(i);
-        QString sig = QString::fromLatin1(method.signature());
-        if (sig.startsWith(QString(name) + "(")) {
-            goto convert_params;
-        }
-    }
-    throw LuaException(string("No method found with name: ") + name);
-convert_params:
     QList<QVariant> variants;
     variants << QVariant(QMetaType::type(method.typeName()), (void*)0);
     QList<QByteArray> params = method.parameterTypes();
@@ -94,6 +80,49 @@ convert_params:
     if (variants.at(0).isValid()) {
         stack.push(variants.at(0));
     }
+}
+
+void metaInvokeLuaCallableMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method)
+{
+    void* vvargs[3];
+    vvargs[1] = &lua;
+    vvargs[2] = &stack;
+    QMetaObject::metacall(
+        obj,
+        QMetaObject::InvokeMetaMethod,
+        method.methodIndex(),
+        vvargs);
+}
+
+void callMethod(Lua& lua, LuaStack& stack)
+{
+    const char* name = stack.cstring(1);
+    QObject* const obj = stack.object(2);
+    stack.shift(2);
+    const QMetaObject* const metaObject = obj->metaObject();
+
+    // Prefer methods that handle the stack directly.
+    for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+        QMetaMethod method(metaObject->method(i));
+        QString sig = QString::fromLatin1(method.signature());
+        if (sig == QString(name) + "(Lua&,LuaStack&)") {
+            // The method is capable of handling the Lua stack directly, so invoke it
+            metaInvokeLuaCallableMethod(lua, stack, obj, method);
+            return;
+        }
+    }
+
+    // Look for any method that matches the requested name
+    for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+        QMetaMethod method(metaObject->method(i));
+        QString sig = QString::fromLatin1(method.signature());
+        if (sig.startsWith(QString(name) + "(")) {
+            metaInvokeDirectMethod(lua, stack, obj, method);
+            return;
+        }
+    }
+
+    throw LuaException(string("No method found with name: ") + name);
 }
 
 /**

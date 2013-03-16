@@ -208,6 +208,15 @@ private slots:
         QCOMPARE(counter.getValue(), 9);
     }
 
+    void methodsCanUseTheStackDirectly()
+    {
+        Lua lua;
+        Counter counter(2);
+        lua["c"] = &counter;
+        lua::load_string(lua, "c:addAll(1, 2, 3)");
+        QCOMPARE(counter.getValue(), 8);
+    }
+
     void luaFunctionsCanBeCalledFromC()
     {
         Lua lua;
