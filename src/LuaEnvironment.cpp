@@ -175,7 +175,12 @@ Lua::Lua()
         stack.grab();
     }
 
-    table::push((*this)["package"]["searchers"], Lua::loadModule);
+    const char* searchersName = "searchers";
+    #if LUA_VERSION_NUM < 502
+        searchersName = "loaders";
+    #endif
+
+    table::push((*this)["package"][searchersName], Lua::loadModule);
 }
 
 LuaValue Lua::operator()(const char* runnable)
@@ -213,7 +218,13 @@ void Lua::handleLoadValue(const int rv)
 LuaValue Lua::operator()(istream& stream, const string& name = NULL)
 {
     LuaReadingData d(stream);
-    handleLoadValue(lua_load(state, &read_stream, &d, name.c_str(), NULL));
+
+    handleLoadValue(lua_load(state, &read_stream, &d, name.c_str()
+        #if LUA_VERSION_NUM >= 502
+            // Account for the extra mode parameter introduced in 5.2
+            , NULL
+        #endif
+    ));
     lua_call(state, 0, 1);
     return LuaValue(
         std::shared_ptr<LuaAccessible>(
@@ -231,7 +242,12 @@ LuaValue Lua::operator()(QFile& file)
             file.errorString());
     }
     QtReadingData d(file);
-    handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData(), NULL));
+    handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData()
+        #if LUA_VERSION_NUM >= 502
+            // Account for the extra mode parameter introduced in 5.2
+            , NULL
+        #endif
+    ));
     lua_call(state, 0, 1);
     return LuaValue(
         std::shared_ptr<LuaAccessible>(

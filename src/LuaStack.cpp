@@ -185,9 +185,12 @@ QObject* LuaStack::object(int pos)
 int LuaStack::length(int pos)
 {
     checkPos(pos);
-    lua_len(luaState(), pos);
-    const int length = number();
-    lua_pop(luaState(), 1);
+    int length;
+    #if LUA_VERSION_NUM >= 502
+        length = lua_rawlen(luaState(), pos);
+    #else
+        length = lua_objlen(luaState(), pos);
+    #endif
     return length;
 }
 
