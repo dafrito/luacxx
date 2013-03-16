@@ -291,15 +291,13 @@ void Lua::removeModuleLoader(ModuleLoader* const loader)
 
 void Lua::loadModule(Lua& lua, LuaStack& stack)
 {
-    // Use a std::string here since QString doesn't seem to work well with
-    // lambdas.
-    std::string moduleName(stack.string());
+    QString moduleName(stack.qstring());
     stack.clear();
 
     for (auto loader : lua._moduleLoaders) {
-        if (loader->search(QString(moduleName.c_str()))) {
-            stack << std::function<void()>([&]() {
-                loader->load(lua, QString(moduleName.c_str()));
+        if (loader->search(moduleName)) {
+            stack << std::function<void()>([=, &lua]() {
+                loader->load(lua, moduleName);
             });
             return;
         }
