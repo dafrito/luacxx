@@ -3,7 +3,14 @@
 
 void DirectoryModuleLoader::resolve(QFile& file, const QString& module)
 {
-    file.setFileName(_root.filePath(module + ".lua"));
+    QString modulePath(module);
+    if (!_prefix.isEmpty()) {
+        if (!modulePath.startsWith(_prefix)) {
+            return;
+        }
+        modulePath = modulePath.mid(_prefix.length());
+    }
+    file.setFileName(_root.filePath(modulePath + ".lua"));
 }
 
 bool DirectoryModuleLoader::search(const QString& module)

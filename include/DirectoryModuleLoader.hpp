@@ -9,13 +9,20 @@ class DirectoryModuleLoader : public ModuleLoader
 {
     QDir _root;
 
+    QString _prefix;
+
     void resolve(QFile& file, const QString& module);
 
 public:
 
-    DirectoryModuleLoader(const QDir&& root) :
-        _root(root)
+    void setRoot(const QDir&& root)
     {
+        _root = root;
+    }
+
+    void setPrefix(const QString& prefix)
+    {
+        _prefix = prefix;
     }
 
     bool search(const QString& module);
