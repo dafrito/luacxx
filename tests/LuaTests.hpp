@@ -199,6 +199,15 @@ private slots:
         QCOMPARE(counter.getValue(), 24);
     }
 
+    void luaCanPassTwoValuesToQObjectMethods()
+    {
+        Lua lua;
+        Counter counter(2);
+        lua["c"] = &counter;
+        lua::load_string(lua, "c:setAddedValue(3, 6)");
+        QCOMPARE(counter.getValue(), 9);
+    }
+
     void luaFunctionsCanBeCalledFromC()
     {
         Lua lua;

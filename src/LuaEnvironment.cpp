@@ -73,10 +73,7 @@ void callMethod(Lua&, LuaStack& stack)
     throw LuaException(string("No method found with name: ") + name);
 convert_params:
     QList<QVariant> variants;
-    void* vvargs[11];
-    QVariant rvar(QMetaType::type(method.typeName()), (void*)0);
-    variants << rvar;
-    vvargs[0] = rvar.data();
+    variants << QVariant(QMetaType::type(method.typeName()), (void*)0);
     QList<QByteArray> params = method.parameterTypes();
     for (int i = 0; i < params.count(); ++i) {
         int type = QMetaType::type(params.at(i));
@@ -84,15 +81,18 @@ convert_params:
         stack.to(p, i + 1);
         p.convert((QVariant::Type)type);
         variants << p;
-        vvargs[i + 1] = p.data();
+    }
+    void* vvargs[11];
+    for (int i = 0; i < variants.size(); ++i) {
+        vvargs[i] = const_cast<void*>(variants.at(i).data());
     }
     QMetaObject::metacall(
         obj,
         QMetaObject::InvokeMetaMethod,
         method.methodIndex(),
         vvargs);
-    if (rvar.isValid()) {
-        stack.push(rvar);
+    if (variants.at(0).isValid()) {
+        stack.push(variants.at(0));
     }
 }
 

@@ -42,6 +42,13 @@ public slots:
             emit valueChanged(value);
         }
     }
+
+
+    void setAddedValue(const int x, const int y)
+    {
+        setValue(x + y);
+    }
+
     int getValue() const { return value; }
 signals:
     void valueChanged(int value) const;
