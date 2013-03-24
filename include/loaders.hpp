@@ -9,7 +9,12 @@ class QDir;
 namespace lua
 {
     void load_file(Lua& lua, const std::string& file);
+    void load_file(Lua& lua, const QString& file);
+    void load_file(Lua& lua, const char* file);
+
     void load_string(Lua& lua, const std::string& input);
+    void load_string(Lua& lua, const QString& input);
+    void load_string(Lua& lua, const char* input);
 
     /**
      * Load every file in the directory, with optional recursion. If
