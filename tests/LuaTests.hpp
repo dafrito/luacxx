@@ -244,4 +244,13 @@ private slots:
         Lua lua;
         QCOMPARE((int)lua("return 42"), 42);
     }
+
+    void luaCollectsGarbage()
+    {
+        Lua lua;
+        QObject obj;
+        lua["foo"] = &obj;
+        lua("foo = nil");
+        lua.collectGarbage();
+    }
 };

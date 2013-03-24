@@ -43,6 +43,8 @@ public:
     void addModuleLoader(ModuleLoader* const loader);
     void removeModuleLoader(ModuleLoader* const loader);
 
+    void collectGarbage();
+
     int internalStackSize() const;
 
     friend class LuaStack;

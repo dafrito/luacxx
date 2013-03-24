@@ -341,6 +341,11 @@ int Lua::internalStackSize() const
     return lua_gettop(state);
 }
 
+void Lua::collectGarbage()
+{
+    lua_gc(state, LUA_GCCOLLECT, 0);
+}
+
 Lua::~Lua()
 {
     lua_close(state);
