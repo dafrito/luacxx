@@ -128,6 +128,14 @@ public:
         return stack.save();
     }
 
+    int length()
+    {
+        LuaStack stack(_lua);
+
+        accessor().push(stack);
+        return stack.length();
+    }
+
 private:
     friend class LuaStack;
 };

@@ -49,4 +49,12 @@ private slots:
         QVERIFY(s.qstring() == "No Time");
     }
 
+    void testLuaValueGetsALength()
+    {
+        Lua lua;
+        lua("foo = {42, 42, 42}");
+
+        QCOMPARE(lua["foo"].length(), 3);
+    }
+
 };
