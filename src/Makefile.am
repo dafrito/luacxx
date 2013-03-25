@@ -15,6 +15,7 @@ pkginclude_HEADERS = \
 	../include/DirectoryModuleLoader.hpp \
 	../include/types.hpp \
 	../include/table.hpp \
+	../include/LuaUserdata.hpp \
 	../include/LuaException.hpp
 
 # moc-generated source files
@@ -27,6 +28,7 @@ liblua_cxx_la_SOURCES = \
 	loaders.cpp \
 	LuaEnvironment.cpp \
 	LuaStack.cpp \
+	LuaUserdata.cpp \
 	DirectoryModuleLoader.cpp \
 	types.cpp
 
