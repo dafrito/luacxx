@@ -24,7 +24,7 @@ namespace
 
 namespace lua
 {
-    typedef std::function<void (Lua& lua, LuaStack& stack)> LuaCallable;
+    typedef std::function<void (LuaStack& stack)> LuaCallable;
 }
 
 /**
@@ -302,7 +302,7 @@ public:
      * and partially applied to the specified function.
      */
     LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
-    LuaStack& push(void (*p)(Lua& lua, LuaStack& stack), const int closed = 0);
+    LuaStack& push(void (*p)(LuaStack& stack), const int closed = 0);
 
     /**
      * Push a nil Lua value onto this stack.
@@ -586,7 +586,7 @@ namespace
         LuaWrapper(std::function<RV(Args...)> func) : func(func)
         {}
 
-        void operator()(Lua&, LuaStack& stack)
+        void operator()(LuaStack& stack)
         {
             ArgsTuple args;
 

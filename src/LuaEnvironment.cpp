@@ -180,10 +180,12 @@ void Lua::removeModuleLoader(ModuleLoader* const loader)
     );
 }
 
-void Lua::loadModule(Lua& lua, LuaStack& stack)
+void Lua::loadModule(LuaStack& stack)
 {
     QString moduleName(stack.qstring());
     stack.clear();
+
+    Lua& lua = stack.lua();
 
     for (auto loader : lua._moduleLoaders) {
         if (loader->search(moduleName)) {

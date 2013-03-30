@@ -186,7 +186,7 @@ private slots:
         QVERIFY(lua["foo"] == 42);
     }
 
-    static void receive(Lua&, LuaStack& stack)
+    static void receive(LuaStack& stack)
     {
         QVERIFY(QString("getValue") == stack.qstring(1));
         QVERIFY(2 == stack.number(2));

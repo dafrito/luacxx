@@ -11,12 +11,12 @@
 #include <functional>
 
 namespace {
-    void __index(Lua&, LuaStack& stack);
-    void __newindex(Lua&, LuaStack& stack);
+    void __index(LuaStack& stack);
+    void __newindex(LuaStack& stack);
 
-    void metaInvokeDirectMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method);
-    void metaInvokeLuaCallableMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method);
-    void callMethod(Lua& lua, LuaStack& stack);
+    void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
+    void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
+    void callMethod(LuaStack& stack);
 } // namespace anonymous
 
 LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
@@ -87,7 +87,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
     return true;
 }
 
-void __index(Lua&, LuaStack& stack)
+void __index(LuaStack& stack)
 {
     QObject* obj;
     const char* name;
@@ -114,7 +114,7 @@ void __index(Lua&, LuaStack& stack)
     stack.pushNil();
 }
 
-void __newindex(Lua&, LuaStack& stack)
+void __newindex(LuaStack& stack)
 {
     QObject* obj;
     const char* name;
@@ -126,7 +126,7 @@ void __newindex(Lua&, LuaStack& stack)
     obj->setProperty(name, v);
 }
 
-void metaInvokeDirectMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method)
+void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
     QList<QVariant> variants;
     variants << QVariant(QMetaType::type(method.typeName()), (void*)0);
@@ -152,11 +152,10 @@ void metaInvokeDirectMethod(Lua& lua, LuaStack& stack, QObject* const obj, const
     }
 }
 
-void metaInvokeLuaCallableMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method)
+void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
-    void* vvargs[3];
-    vvargs[1] = &lua;
-    vvargs[2] = &stack;
+    void* vvargs[2];
+    vvargs[1] = &stack;
     QMetaObject::metacall(
         obj,
         QMetaObject::InvokeMetaMethod,
@@ -164,7 +163,7 @@ void metaInvokeLuaCallableMethod(Lua& lua, LuaStack& stack, QObject* const obj, 
         vvargs);
 }
 
-void callMethod(Lua& lua, LuaStack& stack)
+void callMethod(LuaStack& stack)
 {
     const char* name = stack.cstring(1);
     QObject* const obj = static_cast<QObject*>(stack.object(2)->rawData());
@@ -176,9 +175,9 @@ void callMethod(Lua& lua, LuaStack& stack)
     for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
         QMetaMethod method(metaObject->method(i));
         QString sig = QString::fromLatin1(method.signature());
-        if (sig == QString(name) + "(Lua&,LuaStack&)") {
+        if (sig == QString(name) + "(LuaStack&)") {
             // The method is capable of handling the Lua stack directly, so invoke it
-            metaInvokeLuaCallableMethod(lua, stack, obj, method);
+            metaInvokeLuaCallableMethod(stack, obj, method);
             return;
         }
     }
@@ -188,7 +187,7 @@ void callMethod(Lua& lua, LuaStack& stack)
         QMetaMethod method(metaObject->method(i));
         QString sig = QString::fromLatin1(method.signature());
         if (sig.startsWith(QString(name) + "(")) {
-            metaInvokeDirectMethod(lua, stack, obj, method);
+            metaInvokeDirectMethod(stack, obj, method);
             return;
         }
     }

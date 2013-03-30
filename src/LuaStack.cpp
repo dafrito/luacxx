@@ -33,7 +33,7 @@ int LuaStack::invokeWrappedFunction(lua_State* state)
     }
     LuaStack stack(*lua);
     stack.grab();
-    (*func)(*lua, stack);
+    (*func)(stack);
     stack.disown();
     return lua_gettop(state);
 }
@@ -394,7 +394,7 @@ LuaStack& LuaStack::push(const bool& b)
     return (*this);
 }
 
-void collectUserdata(Lua&, LuaStack& stack)
+void collectUserdata(LuaStack& stack)
 {
     LuaUserdata* userdata = stack.object(1);
     userdata->~LuaUserdata();
@@ -423,7 +423,7 @@ LuaStack& LuaStack::pushPointer(void* const p)
     return (*this);
 }
 
-LuaStack& LuaStack::push(void(*p)(Lua& lua, LuaStack& stack), const int closed)
+LuaStack& LuaStack::push(void(*p)(LuaStack& stack), const int closed)
 {
     return this->push(lua::LuaCallable(p), closed);
 }

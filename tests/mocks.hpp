@@ -52,7 +52,7 @@ public slots:
 
     int getValue() const { return value; }
 
-    void addAll(Lua& lua, LuaStack& stack)
+    void addAll(LuaStack& stack)
     {
         while (!stack.empty()) {
             value += stack.number(1);

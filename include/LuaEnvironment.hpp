@@ -25,7 +25,7 @@ class Lua : public QObject
 
     void handleLoadValue(const int rv);
 
-    static void loadModule(Lua& lua, LuaStack& stack);
+    static void loadModule(LuaStack& stack);
 public:
     Lua();
     ~Lua();
