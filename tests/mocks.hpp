@@ -13,6 +13,13 @@ class Square : public QObject
     Q_PROPERTY(int y READ getY WRITE setY)
 public:
     int x, y;
+
+    Square() :
+        x(),
+        y()
+    {
+    }
+
     void setX(int x)
     {
         this->x = x;
