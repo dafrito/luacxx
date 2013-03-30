@@ -161,62 +161,6 @@ private slots:
         lua("assert(foo() == 66)");
     }
 
-    void luaRetrievesQObjectProperties()
-    {
-        Lua lua;
-        Counter counter(42);
-        lua["foo"] = &counter;
-        QVERIFY("userdata" == lua["foo"].typestring());
-        lua::load_string(lua, "bar = foo.value");
-        QVERIFY(lua["bar"] == 42);
-    }
-
-    void luaCanSetQObjectProperties()
-    {
-        Lua lua;
-        Counter counter(42);
-        lua["c"] = &counter;
-
-        lua::load_string(lua, "c.value = 24");
-        QCOMPARE(counter.getValue(), 24);
-    }
-
-    void luaCanCallQObjectMethods()
-    {
-        Lua lua;
-        Counter counter(42);
-        lua["c"] = &counter;
-        lua::load_string(lua, "foo = c:getValue()");
-        QVERIFY(lua["foo"] == 42);
-    }
-
-    void luaCanPassValuesToQObjectMethods()
-    {
-        Lua lua;
-        Counter counter(42);
-        lua["c"] = &counter;
-        lua::load_string(lua, "c:setValue(24)");
-        QCOMPARE(counter.getValue(), 24);
-    }
-
-    void luaCanPassTwoValuesToQObjectMethods()
-    {
-        Lua lua;
-        Counter counter(2);
-        lua["c"] = &counter;
-        lua::load_string(lua, "c:setAddedValue(3, 6)");
-        QCOMPARE(counter.getValue(), 9);
-    }
-
-    void methodsCanUseTheStackDirectly()
-    {
-        Lua lua;
-        Counter counter(2);
-        lua["c"] = &counter;
-        lua::load_string(lua, "c:addAll(1, 2, 3)");
-        QCOMPARE(counter.getValue(), 8);
-    }
-
     void luaFunctionsCanBeCalledFromC()
     {
         Lua lua;
@@ -228,29 +172,9 @@ private slots:
         QVERIFY(result == 66);
     }
 
-    void luaSetsPropertiesDirectly()
-    {
-        Lua lua;
-        QFile file("anim.lua");
-        lua(file);
-        Square square;
-        int old = square.getX();
-        lua["Tick"](&square, M_PI);
-        QVERIFY(square.getX() != old);
-    }
-
     void luaCanReturnValuesFromEvaluatedStrings()
     {
         Lua lua;
         QCOMPARE((int)lua("return 42"), 42);
-    }
-
-    void luaCollectsGarbage()
-    {
-        Lua lua;
-        QObject obj;
-        lua["foo"] = &obj;
-        lua("foo = nil");
-        lua.collectGarbage();
     }
 };

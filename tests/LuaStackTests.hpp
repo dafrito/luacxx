@@ -179,20 +179,6 @@ private slots:
         QVERIFY(o == "c");
     }
 
-    void testLuaHandleQObjects()
-    {
-        Lua lua;
-        LuaStack s(lua);
-        QObject c;
-
-        s.push(&c);
-
-        QObject* p;
-        s >> p;
-
-        QVERIFY(p == &c);
-    }
-
     void testLuaHandlesQVariants()
     {
         Lua lua;

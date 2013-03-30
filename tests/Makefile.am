@@ -25,7 +25,8 @@ test_suites =         \
 	LuaStackTests     \
 	LoaderTests       \
 	LuaTableTests     \
-	LuaReferenceTests
+	LuaReferenceTests \
+	UserdataTests
 
 runtest_SOURCES =         \
 	tests.cpp             \
@@ -34,7 +35,8 @@ runtest_SOURCES =         \
 	LuaStackTests.hpp     \
 	LoaderTests.hpp       \
 	LuaTableTests.hpp     \
-	LuaReferenceTests.hpp
+	LuaReferenceTests.hpp \
+	UserdataTests.hpp
 
 runtest_MOC_SOURCES = \
 	moc_mocks.cpp             \
@@ -42,7 +44,8 @@ runtest_MOC_SOURCES = \
 	moc_LuaStackTests.cpp     \
 	moc_LoaderTests.cpp       \
 	moc_LuaTableTests.cpp     \
-	moc_LuaReferenceTests.cpp
+	moc_LuaReferenceTests.cpp \
+	moc_UserdataTests.cpp
 
 nodist_runtest_SOURCES =      \
 	$(runtest_MOC_SOURCES)
