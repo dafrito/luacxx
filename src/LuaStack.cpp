@@ -283,7 +283,7 @@ LuaStack& LuaStack::to(LuaUserdata** sink, int pos)
 {
     checkPos(pos);
 
-    if (lua_isuserdata(luaState(), pos)) {
+    if (lua_isuserdata(luaState(), pos) == 1) {
         *sink = static_cast<LuaUserdata*>(lua_touserdata(luaState(), pos));
     } else {
         *sink = 0;
