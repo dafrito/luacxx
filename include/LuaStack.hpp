@@ -324,6 +324,13 @@ public:
      */
     LuaStack& pushNewTable();
 
+    template <class Message>
+    void error(const Message& message)
+    {
+        *this << message;
+        lua_error(luaState());
+    }
+
     bool hasMetatable(const int pos = -1);
     LuaStack& pushMetatable(const int pos = -1);
     LuaStack& setMetatable(const int pos = -2);
