@@ -60,25 +60,19 @@ public:
         return stack.typestring();
     }
 
-    template <typename T>
-    void to(T* value) const
+    template <typename Sink>
+    void to(Sink& sink) const
     {
         LuaStack stack(_lua);
         push(stack);
-        stack.to(value);
-    }
-
-    template <typename T>
-    void to(T& sink)
-    {
-        return to(&sink);
+        stack >> sink;
     }
 
     template<typename T>
     operator T() const
     {
         T t;
-        this->to(&t);
+        to(t);
         return t;
     }
 

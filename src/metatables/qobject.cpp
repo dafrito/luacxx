@@ -150,7 +150,7 @@ void __newindex(LuaStack& stack)
         return;
     }
     QVariant v;
-    stack.to(&v, 1);
+    stack.begin() >> v;
     obj->setProperty(name, v);
 }
 
@@ -213,7 +213,7 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
     for (int i = 0; i < params.count(); ++i) {
         int type = QMetaType::type(params.at(i));
         QVariant p(type, (void*)0);
-        stack.to(p, i + 1);
+        stack.at(i + 1) >> p;
         p.convert((QVariant::Type)type);
         variants << p;
     }

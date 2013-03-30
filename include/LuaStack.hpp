@@ -14,6 +14,7 @@ class LuaStack;
 class LuaValue;
 class LuaAccessible;
 class LuaUserdata;
+class LuaIndex;
 
 namespace
 {
@@ -170,6 +171,13 @@ public:
         return _offset;
     }
 
+    LuaIndex begin();
+    LuaIndex end();
+    LuaIndex rbegin();
+    LuaIndex rend();
+
+    LuaIndex at(const int pos, const int direction = 1);
+
     /**
      * Pops the specified number of stack values from
      * this stack.
@@ -220,25 +228,16 @@ public:
      * Assigns to the specified sink value, the Lua value
      * at the specified stack position.
      */
-    LuaStack& to(bool* sink, int pos = -1);
-    LuaStack& to(lua_Number* sink, int pos = -1);
-    LuaStack& to(const char** sink, int pos = -1);
-    LuaStack& to(int* sink, int pos = -1);
-    LuaStack& to(long* sink, int pos = -1);
-    LuaStack& to(float* sink, int pos = -1);
-    LuaStack& to(short* sink, int pos = -1);
-    LuaStack& to(LuaUserdata** sink, int pos = -1);
-    LuaStack& to(std::string* const sink, int pos = -1);
-    LuaStack& to(QString* const sink, int pos = -1);
-    LuaStack& to(QVariant* const sink, int pos = -1);
-
-    // A template to ensure that references will always
-    // be converted to pointers.
-    template <typename T>
-    LuaStack& to(T& sink, int pos = -1)
-    {
-        return to(&sink, pos);
-    }
+    LuaStack& to(bool& sink, int pos = -1);
+    LuaStack& to(lua_Number& sink, int pos = -1);
+    LuaStack& to(const char*& sink, int pos = -1);
+    LuaStack& to(std::string& sink, int pos = -1);
+    LuaStack& to(QString& sink, int pos = -1);
+    LuaStack& to(int& sink, int pos = -1);
+    LuaStack& to(long& sink, int pos = -1);
+    LuaStack& to(float& sink, int pos = -1);
+    LuaStack& to(short& sink, int pos = -1);
+    LuaStack& to(LuaUserdata*& sink, int pos = -1);
 
     /**
      * Converts and returns the value at the specified
@@ -472,20 +471,24 @@ public:
         return stack.push(value);
     }
 
-    /**
-     * Assign to the specified C++ value, the topmost
-     * value on this stack.
-     */
-    template <typename T>
-    friend LuaStack& operator>>(LuaStack& stack, T& value)
-    {
-        return stack.to(&value);
-    }
-
     ~LuaStack();
 
     friend class Lua;
 };
+
+LuaIndex begin(LuaStack& stack);
+LuaIndex end(LuaStack& stack);
+
+/**
+ * Assign the topmost value on the specified stack to the
+ * specified C++ value.
+ */
+template <typename Sink>
+LuaStack& operator>>(LuaStack& stack, Sink& sink)
+{
+    stack.rbegin() >> sink;
+    return stack;
+}
 
 class LuaIndex
 {
@@ -494,10 +497,10 @@ class LuaIndex
     int _pos;
     int _direction;
 public:
-    explicit LuaIndex(LuaStack& stack, int pos, bool reversed = false) :
+    explicit LuaIndex(LuaStack& stack, const int pos, const int direction = 1) :
         _stack(stack),
         _pos(pos),
-        _direction(reversed ? -1 : 1)
+        _direction(direction)
     {
     }
 
@@ -535,15 +538,23 @@ public:
 };
 
 template <class Sink>
-LuaIndex& operator >>(LuaIndex& index, Sink& sink)
+LuaIndex& operator>>(LuaIndex& index, Sink& sink)
 {
     index.stack().to(sink, index.pos());
-    return index++;
+    return ++index;
 }
 
-LuaIndex begin(LuaStack& stack);
+template <class Sink>
+LuaIndex operator>>(LuaIndex&& index, Sink& sink)
+{
+    LuaIndex realIndex(index);
+    realIndex >> sink;
+    return realIndex;
+}
 
-LuaIndex end(LuaStack& stack);
+LuaIndex& operator>>(LuaIndex& index, std::string& sink);
+LuaIndex& operator>>(LuaIndex& index, QString& sink);
+LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 
 namespace
 {

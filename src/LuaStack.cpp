@@ -27,6 +27,31 @@ int LuaStack::size() const
     return lua_gettop(luaState()) - offset();
 }
 
+LuaIndex LuaStack::begin()
+{
+    return LuaIndex(*this, 1);
+}
+
+LuaIndex LuaStack::end()
+{
+    return LuaIndex(*this, size() + 1);
+}
+
+LuaIndex LuaStack::rbegin()
+{
+    return LuaIndex(*this, size(), -1);
+}
+
+LuaIndex LuaStack::rend()
+{
+    return LuaIndex(*this, 0, -1);
+}
+
+LuaIndex LuaStack::at(const int pos, const int direction)
+{
+    return LuaIndex(*this, pos, direction);
+}
+
 LuaStack& LuaStack::pop(int count)
 {
     if(count > size())
@@ -102,10 +127,10 @@ std::string LuaStack::typestring(int pos) const
     return std::string(lua_typename(luaState(), lua_type(luaState(), pos)));
 }
 
-LuaStack& LuaStack::to(const char** sink, int pos)
+LuaStack& LuaStack::to(const char*& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tostring(luaState(), pos);
+    sink = lua_tostring(luaState(), pos);
     return (*this);
 }
 
@@ -123,23 +148,22 @@ std::string LuaStack::string(int pos)
 
 QString LuaStack::qstring(int pos)
 {
-    checkPos(pos);
-    QString str;
-    to(&str, pos);
-    return str;
+    QString sink;
+    at(pos) >> sink;
+    return sink;
 }
 
-LuaStack& LuaStack::to(std::string* const sink, int pos)
+LuaStack& LuaStack::to(std::string& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tostring(luaState(), pos);
+    sink = lua_tostring(luaState(), pos);
     return (*this);
 }
 
-LuaStack& LuaStack::to(QString* const sink, int pos)
+LuaStack& LuaStack::to(QString& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tostring(luaState(), pos);
+    sink = lua_tostring(luaState(), pos);
     return (*this);
 }
 
@@ -147,7 +171,7 @@ LuaUserdata* LuaStack::object(int pos)
 {
     checkPos(pos);
     LuaUserdata* ptr;
-    to(&ptr, pos);
+    to(ptr, pos);
     return ptr;
 }
 
@@ -182,88 +206,63 @@ LuaValue LuaStack::save()
     );
 }
 
-LuaStack& LuaStack::to(bool* sink, int pos)
+LuaStack& LuaStack::to(bool& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_toboolean(luaState(), pos);
-    return (*this);
-}
-
-LuaStack& LuaStack::to(QVariant* const sink, int pos)
-{
-    checkPos(pos);
-    switch(type(pos)) {
-    case lua::NIL:
-        sink->clear();
-        break;
-    case lua::BOOLEAN:
-        sink->setValue(boolean(pos));
-        break;
-    case lua::NUMBER:
-        sink->setValue(number(pos));
-        break;
-    case lua::STRING:
-        sink->setValue(qstring(pos));
-        break;
-    case lua::TABLE:
-    case lua::FUNCTION:
-    case lua::THREAD:
-    default:
-        throw LuaException(&lua(), std::string("Type not supported: ") + typestring(pos));
-    }
+    sink = lua_toboolean(luaState(), pos);
     return (*this);
 }
 
 bool LuaStack::boolean(int pos)
 {
     bool b;
-    to(&b, pos);
+    to(b, pos);
     return b;
 }
 
-LuaStack& LuaStack::to(lua_Number* sink, int pos)
+LuaStack& LuaStack::to(lua_Number& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tonumber(luaState(), pos);
+    sink = lua_tonumber(luaState(), pos);
     return (*this);
 }
 
-LuaStack& LuaStack::to(short* sink, int pos)
+LuaStack& LuaStack::to(short& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tointeger(luaState(), pos);
+    sink = lua_tointeger(luaState(), pos);
     return (*this);
 }
 
-LuaStack& LuaStack::to(int* sink, int pos)
+LuaStack& LuaStack::to(int& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tointeger(luaState(), pos);
+    sink = lua_tointeger(luaState(), pos);
     return (*this);
 }
 
-LuaStack& LuaStack::to(long* sink, int pos)
+LuaStack& LuaStack::to(long& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tonumber(luaState(), pos);
+    sink = lua_tonumber(luaState(), pos);
     return (*this);
 }
 
-LuaStack& LuaStack::to(float* sink, int pos)
+LuaStack& LuaStack::to(float& sink, int pos)
 {
     checkPos(pos);
-    *sink = lua_tonumber(luaState(), pos);
+    sink = lua_tonumber(luaState(), pos);
     return (*this);
 }
 
-LuaStack& LuaStack::to(LuaUserdata** sink, int pos)
+LuaStack& LuaStack::to(LuaUserdata*& sink, int pos)
 {
     checkPos(pos);
 
     if (lua_isuserdata(luaState(), pos) == 1 && lua_islightuserdata(luaState(), pos) == 0) {
-        *sink = static_cast<LuaUserdata*>(lua_touserdata(luaState(), pos));
+        sink = static_cast<LuaUserdata*>(lua_touserdata(luaState(), pos));
     } else {
-        *sink = 0;
+        sink = 0;
     }
     return *this;
 }
@@ -271,14 +270,14 @@ LuaStack& LuaStack::to(LuaUserdata** sink, int pos)
 double LuaStack::number(int pos)
 {
     double b;
-    to(&b, pos);
+    to(b, pos);
     return b;
 }
 
 int LuaStack::integer(int pos)
 {
     int sink;
-    to(&sink, pos);
+    to(sink, pos);
     return sink;
 }
 
@@ -581,12 +580,50 @@ int LuaStack::invokeLuaCallable(lua_State* state)
 
 LuaIndex begin(LuaStack& stack)
 {
-    return LuaIndex(stack, 1);
+    return stack.begin();
 }
 
 LuaIndex end(LuaStack& stack)
 {
-    return LuaIndex(stack, stack.size() + 1);
+    return stack.end();
+}
+
+LuaIndex& operator>>(LuaIndex& index, std::string& sink)
+{
+    sink = index.stack().cstring(index.pos());
+    return ++index;
+}
+
+LuaIndex& operator>>(LuaIndex& index, QString& sink)
+{
+    sink = index.stack().cstring(index.pos());
+    return ++index;
+}
+
+LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
+{
+    LuaStack& stack = index.stack();
+    const int pos(index.pos());
+    switch(stack.type(pos)) {
+    case lua::NIL:
+        sink.clear();
+        break;
+    case lua::BOOLEAN:
+        sink.setValue(stack.boolean(pos));
+        break;
+    case lua::NUMBER:
+        sink.setValue(stack.number(pos));
+        break;
+    case lua::STRING:
+        sink.setValue(QString(stack.cstring(pos)));
+        break;
+    case lua::TABLE:
+    case lua::FUNCTION:
+    case lua::THREAD:
+    default:
+        throw LuaException(&stack.lua(), std::string("Type not supported: ") + stack.typestring(pos));
+    }
+    return ++index;
 }
 
 LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
