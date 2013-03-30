@@ -16,6 +16,7 @@ pkginclude_HEADERS = \
 	../include/types.hpp \
 	../include/table.hpp \
 	../include/LuaUserdata.hpp \
+	../include/metatables.hpp \
 	../include/LuaException.hpp
 
 # moc-generated source files
@@ -28,8 +29,8 @@ liblua_cxx_la_SOURCES = \
 	loaders.cpp \
 	LuaEnvironment.cpp \
 	LuaStack.cpp \
-	LuaUserdata.cpp \
 	DirectoryModuleLoader.cpp \
+	metatables/qobject.cpp \
 	types.cpp
 
 mostlyclean-local:
