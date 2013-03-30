@@ -9,7 +9,7 @@ class QObject;
 namespace lua {
 namespace metatable {
 
-void qobject(LuaStack& stack, std::shared_ptr<QObject> obj);
+void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj);
 
 } // namespace metatable
 } // namespace lua

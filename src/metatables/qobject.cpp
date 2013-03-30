@@ -51,10 +51,15 @@ LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
 namespace lua {
 namespace metatable {
 
-void qobject(LuaStack& stack, std::shared_ptr<QObject> obj)
+void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj)
 {
-    stack.set("__index", __index);
-    stack.set("__newindex", __newindex);
+    stack.pushPointer(obj.get());
+    stack.push(__index, 1);
+    stack.pushedSet("__index", -2);
+
+    stack.pushPointer(obj.get());
+    stack.push(__newindex, 1);
+    stack.pushedSet("__newindex", -2);
 }
 
 } // namespace metatable
@@ -64,27 +69,39 @@ namespace {
 
 bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
 {
+    void* validatingUserdata = stack.pointer(1);
+    stack.shift();
+
     LuaUserdata* userdata = stack.object(1);
     if (!userdata) {
-        stack.clear();
-        stack.pushNil();
-        return false;
+        goto fail;
     }
+
+    if (!userdata->data()) {
+        goto fail;
+    }
+
     *obj = static_cast<QObject*>(userdata->rawData());
-    if (!obj) {
-        // No object, so just return nil.
-        stack.clear();
-        stack.pushNil();
-        return false;
+
+    if (validatingUserdata != *obj) {
+        // The metamethod was not called with the expected userdata object.
+        goto fail;
     }
+
     *name = stack.cstring(2);
     if (!name) {
+        goto fail;
+    }
+    stack.shift(2);
+
+    return true;
+
+    fail:
+        *obj = nullptr;
+        *name = nullptr;
         stack.clear();
         stack.pushNil();
         return false;
-    }
-    stack.shift(2);
-    return true;
 }
 
 void __index(LuaStack& stack)
@@ -106,8 +123,9 @@ void __index(LuaStack& stack)
     for(int i = 0; i < metaObject->methodCount(); ++i) {
         QString sig = QString::fromLatin1(metaObject->method(i).signature());
         if (sig.startsWith(QString(name) + "(")) {
+            stack.pushPointer(obj);
             stack << name;
-            stack.push(callMethod, 1);
+            stack.push(callMethod, 2);
             return;
         }
     }
@@ -128,8 +146,31 @@ void __newindex(LuaStack& stack)
 
 void callMethod(LuaStack& stack)
 {
+    QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
+    stack.shift();
+
     const char* name = stack.cstring(1);
-    QObject* const obj = static_cast<QObject*>(stack.object(2)->rawData());
+
+    LuaUserdata* userdata = stack.object(2);
+    if (!userdata) {
+        throw LuaException(&stack.lua(), "Method must be invoked with a valid userdata");
+    }
+    if (userdata->rawData() != validatingUserdata) {
+        if (!userdata->data()) {
+            throw LuaException(&stack.lua(), "Userdata must have an associated internal object");
+        }
+        if (userdata->dataType() != "QObject") {
+            throw LuaException(
+                &stack.lua(),
+                QString("Userdata must be of type QObject, but was given: '%1'").arg(userdata->dataType())
+            );
+        }
+        throw LuaException(
+            &stack.lua(),
+            QString("Userdata provided with method call must match the userdata used to access that method")
+        );
+    }
+    QObject* const obj = validatingUserdata;
     stack.shift(2);
 
     const QMetaObject* const metaObject = obj->metaObject();
