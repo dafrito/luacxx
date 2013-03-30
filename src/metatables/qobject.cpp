@@ -19,6 +19,35 @@ namespace {
     void callMethod(Lua& lua, LuaStack& stack);
 } // namespace anonymous
 
+LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
+{
+    stack << LuaUserdata(ptr, "QObject");
+
+    stack.pushMetatable();
+    lua::metatable::qobject(stack, ptr);
+    stack.setMetatable();
+    return stack;
+}
+
+LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
+{
+    ptr.reset();
+    LuaUserdata* userdata;
+    stack >> userdata;
+    if (!userdata) {
+        return stack;
+    }
+    if (userdata->dataType() != "QObject") {
+        return stack;
+    }
+    ptr = std::shared_ptr<QObject>(
+        userdata->data(),
+        static_cast<QObject*>(userdata->rawData())
+    );
+    return stack;
+}
+
+
 namespace lua {
 namespace metatable {
 
