@@ -26,11 +26,6 @@ class LuaValue
         return (*accessible);
     }
 
-    void push(LuaStack& stack) const
-    {
-        accessor().push(stack);
-    }
-
     lua_State* luaState() const
     {
         return _lua.state;
@@ -44,6 +39,11 @@ public:
     Lua& lua()
     {
         return _lua;
+    }
+
+    void push(LuaStack& stack) const
+    {
+        accessor().push(stack);
     }
 
     lua::Type type()
