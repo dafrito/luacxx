@@ -86,7 +86,7 @@ public:
     const LuaValue& operator=(const T& value)
     {
         LuaStack s(_lua);
-        s.push(value);
+        s << value;
         accessor().store(s);
         return *this;
     }
@@ -148,7 +148,7 @@ namespace
         template <typename Tuple>
         static void push(LuaStack& stack, Tuple& tuple)
         {
-            stack.push(std::get<I>(tuple));
+            stack << std::get<I>(tuple);
             Pusher<L-1, I+1>::push(stack, tuple);
         }
     };
