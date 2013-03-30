@@ -47,6 +47,16 @@ LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
     return stack;
 }
 
+LuaStack& operator >>(LuaStack& stack, QObject*& sink)
+{
+    std::shared_ptr<QObject> ptr;
+    stack >> ptr;
+
+    if (ptr) {
+        sink = ptr.get();
+    }
+    return stack;
+}
 
 namespace lua {
 namespace metatable {

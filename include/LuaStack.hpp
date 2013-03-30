@@ -498,7 +498,7 @@ namespace
         static void fill(LuaStack& stack, Tuple& tuple)
         {
             // Populate the current C++ object with the value from Lua.
-            stack.to(&std::get<NUMARGS-1>(tuple));
+            stack >> std::get<NUMARGS-1>(tuple);
             stack.pop();
 
             // Recurse for all remaining Lua arguments.

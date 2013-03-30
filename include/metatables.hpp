@@ -16,5 +16,6 @@ void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj);
 
 LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr);
 LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr);
+LuaStack& operator >>(LuaStack& stack, QObject*& sink);
 
 #endif

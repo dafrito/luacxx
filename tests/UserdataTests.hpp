@@ -68,6 +68,27 @@ private slots:
         QCOMPARE(static_cast<Counter*>(obj.get())->getValue(), 24);
     }
 
+    static void receive(QObject* const ptr)
+    {
+        if (!ptr)  {
+            throw LuaException("Pointer must not be null");
+        }
+        static_cast<Counter*>(ptr)->setValue(24);
+    }
+
+    void luaCanPassBackCxxValues()
+    {
+        Lua lua;
+        auto obj = std::shared_ptr<QObject>(new Counter(42));
+        lua["obj"] = obj;
+
+        lua["receive"] = receive;
+
+        lua("receive(obj)");
+
+        QCOMPARE(static_cast<Counter*>(obj.get())->getValue(), 24);
+    }
+
     void qobjectDynamicallyAddsPropertiesWhenNonexistent()
     {
         Lua lua;
