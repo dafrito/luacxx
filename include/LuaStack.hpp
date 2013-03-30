@@ -359,7 +359,7 @@ public:
     LuaStack& get(K key, int tablePos = -1)
     {
         checkPos(tablePos);
-        push(key);
+        *this << key;
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
         return get(tablePos);
@@ -386,7 +386,7 @@ public:
     LuaStack& pushedSet(K key, int tablePos)
     {
         checkPos(tablePos);
-        push(key);
+        *this << key;
 
         // Stack is now [..., t, value, key], so we need to swap
         swap();
@@ -417,7 +417,7 @@ public:
     LuaStack& set(K key, const V& value, int tablePos = -1)
     {
         checkPos(tablePos);
-        push(value);
+        *this << value;
         // Since we inserted a value, we may need to relocate tablePos
         // so it still points to the table.
         if (!isMagicalPos(tablePos) && tablePos < 0)
@@ -433,7 +433,7 @@ public:
     template <typename V>
     LuaStack& setGlobal(const QString& key, const V& value)
     {
-        push(value);
+        *this << value;
         return setGlobal(key);
     }
 
@@ -538,7 +538,7 @@ namespace
         template <typename Function, typename Tuple, typename... Args>
         static void apply(LuaStack& stack, const Function& f, const Tuple&, Args... args)
         {
-            stack.push(f(args...));
+            stack << f(args...);
         }
     };
 
