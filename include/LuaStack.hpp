@@ -252,6 +252,10 @@ public:
     LuaUserdata* object(int pos = -1);
     void* pointer(int pos = -1);
 
+    /**
+     * Returns the length of the table at the specified index, or
+     * 0 if the value at the index is not a table.
+     */
     int length(int pos = -1);
 
     /**
