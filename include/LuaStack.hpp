@@ -69,7 +69,9 @@ namespace lua
 class LuaStack
 {
 private:
-    static int invokeWrappedFunction(lua_State* state);
+    static int invokeLuaCallable(lua_State* state);
+    static int invokeRawCallable(lua_State* state);
+    static int invokeCallable(lua_State* state, const lua::LuaCallable* const func);
 
     Lua& _lua;
 
@@ -303,6 +305,7 @@ public:
      */
     LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
     LuaStack& push(void (*p)(LuaStack& stack), const int closed = 0);
+    LuaStack& push(lua_CFunction func, const int closed = 0);
 
     /**
      * Push a nil Lua value onto this stack.
@@ -470,6 +473,8 @@ public:
 
     friend class Lua;
 };
+
+LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable);
 
 namespace
 {

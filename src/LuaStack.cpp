@@ -6,38 +6,6 @@
 #include "LuaAccessible.hpp"
 #include "LuaUserdata.hpp"
 
-namespace
-{
-    class QLuaCallable : public QObject, public lua::LuaCallable
-    {
-    public:
-        QLuaCallable(QObject* const parent, const lua::LuaCallable& func) :
-            QObject(parent),
-            lua::LuaCallable(func)
-        {}
-    };
-}
-
-int LuaStack::invokeWrappedFunction(lua_State* state)
-{
-    void* p = lua_touserdata(state, lua_upvalueindex(1));
-    Lua* lua = static_cast<Lua*>(p);
-    p = lua_touserdata(state, lua_upvalueindex(2));
-    QLuaCallable* func = static_cast<QLuaCallable*>(p);
-    // Push all upvalues unto the stack.
-    int i = 3;
-    while (!lua_isnone(state, lua_upvalueindex(i))) {
-        lua_pushvalue(state, lua_upvalueindex(i));
-        lua_insert(state, 1);
-        i++;
-    }
-    LuaStack stack(*lua);
-    stack.grab();
-    (*func)(stack);
-    stack.disown();
-    return lua_gettop(state);
-}
-
 LuaStack::LuaStack(Lua& lua) :
     _lua(lua),
     _offset(lua_gettop(luaState()))
@@ -423,9 +391,42 @@ LuaStack& LuaStack::pushPointer(void* const p)
     return (*this);
 }
 
-LuaStack& LuaStack::push(void(*p)(LuaStack& stack), const int closed)
+LuaStack& LuaStack::push(lua_CFunction func, const int closed)
 {
-    return this->push(lua::LuaCallable(p), closed);
+    lua_pushcclosure(luaState(), func, closed);
+}
+
+int collectRawCallable(lua_State* state)
+{
+    void* userdata = lua_touserdata(state, -1);
+    lua::LuaCallable* callable = static_cast<lua::LuaCallable*>(userdata);
+    callable->lua::LuaCallable::~LuaCallable();
+    return 0;
+}
+
+LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
+{
+    if (closed > 0) {
+        checkPos(-closed);
+    }
+
+    void* ptr = lua_newuserdata(luaState(), sizeof(lua::LuaCallable));
+    new (ptr) lua::LuaCallable(func);
+
+    // Ensure the LuaCallable gets destructed when necessary.
+    //
+    pushNewTable();
+    set("__gc", collectRawCallable);
+    setMetatable();
+
+    pushPointer(&lua());
+
+    // Invoke this twice to move both the Lua environment and the callable pointer to the top of the stack.
+    lua_insert(luaState(), -2-closed);
+    lua_insert(luaState(), -2-closed);
+
+    push(invokeRawCallable, 2 + closed);
+    return (*this);
 }
 
 LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
@@ -433,12 +434,15 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
     if (closed > 0) {
         checkPos(-closed);
     }
+
+    push(LuaUserdata(std::make_shared<lua::LuaCallable>(f), "lua::LuaCallable"));
     pushPointer(&lua());
-    // TOOD Use a userdata here to ensure this callable is actually deleted
-    pushPointer(new QLuaCallable(&lua(), f));
+
+    // Invoke this twice to move both the Lua environment and the callable pointer to the top of the stack.
     lua_insert(luaState(), -2-closed);
     lua_insert(luaState(), -2-closed);
-    lua_pushcclosure(luaState(), invokeWrappedFunction, 2 + closed);
+
+    push(invokeLuaCallable, 2 + closed);
     return (*this);
 }
 
@@ -524,4 +528,59 @@ LuaStack::~LuaStack()
 {
     if (size() > 0)
         lua_pop(luaState(), size());
+}
+
+int LuaStack::invokeCallable(lua_State* state, const lua::LuaCallable* const func)
+{
+    void* p = lua_touserdata(state, lua_upvalueindex(2));
+    Lua* lua = static_cast<Lua*>(p);
+
+    // Push all upvalues unto the stack.
+    int i = 3;
+    while (!lua_isnone(state, lua_upvalueindex(i))) {
+        lua_pushvalue(state, lua_upvalueindex(i));
+        lua_insert(state, 1);
+        i++;
+    }
+    LuaStack stack(*lua);
+    stack.grab();
+    (*func)(stack);
+    stack.disown();
+    return lua_gettop(state);
+}
+
+int LuaStack::invokeRawCallable(lua_State* state)
+{
+    void* funcPtr = lua_touserdata(state, lua_upvalueindex(1));
+    return invokeCallable(state, static_cast<lua::LuaCallable*>(funcPtr));
+}
+
+int LuaStack::invokeLuaCallable(lua_State* state)
+{
+    void* userdata = lua_touserdata(state, lua_upvalueindex(1));
+    LuaUserdata* funcPtr = static_cast<LuaUserdata*>(userdata);
+    return invokeCallable(state, static_cast<lua::LuaCallable*>(funcPtr->rawData()));
+}
+
+LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
+{
+    stack.push(LuaUserdata(callable, "lua::LuaCallable"));
+}
+
+LuaStack& operator >>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
+{
+    callable.reset();
+    LuaUserdata* userdata;
+    stack >> userdata;
+    if (!userdata) {
+        return stack;
+    }
+    if (userdata->dataType() != "lua::LuaCallable") {
+        return stack;
+    }
+    callable = std::shared_ptr<lua::LuaCallable>(
+        userdata->data(),
+        static_cast<lua::LuaCallable*>(userdata->rawData())
+    );
+    return stack;
 }
