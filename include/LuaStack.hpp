@@ -315,6 +315,10 @@ public:
      */
     LuaStack& pushNewTable();
 
+    bool hasMetatable(const int pos = -1);
+    LuaStack& pushMetatable(const int pos = -1);
+    LuaStack& setMetatable(const int pos = -2);
+
     /**
      * Push the specified C++ function onto this stack.
      */

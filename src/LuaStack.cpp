@@ -463,6 +463,34 @@ LuaStack& LuaStack::pushNewTable()
     return (*this);
 }
 
+bool LuaStack::hasMetatable(const int pos)
+{
+    checkPos(pos);
+    bool hasMeta = lua_getmetatable(luaState(), pos) != 0;
+    if (hasMeta) {
+        pop();
+    }
+    return hasMeta;
+}
+
+LuaStack& LuaStack::pushMetatable(const int pos)
+{
+    checkPos(pos);
+    bool hasMeta = lua_getmetatable(luaState(), pos) != 0;
+    if (!hasMeta) {
+        pushNewTable();
+        // Offset to ensure the position is set correctly
+        setMetatable(pos > 0 ? pos : pos - 1);
+    }
+}
+
+LuaStack& LuaStack::setMetatable(const int pos)
+{
+    checkPos(pos);
+    lua_setmetatable(luaState(), pos);
+}
+
+
 LuaStack& LuaStack::pushNil()
 {
     lua_pushnil(luaState());
