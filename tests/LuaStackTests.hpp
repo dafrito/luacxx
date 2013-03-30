@@ -118,6 +118,22 @@ private slots:
         QVERIFY(a == 42);
     }
 
+    void testStackSupportsIndexing()
+    {
+        Lua lua;
+        LuaStack s(lua);
+        s << 5 << 6 << 7;
+
+        int a;
+        int b;
+        int c;
+        LuaIndex iter = begin(s);
+        iter >> a >> b >> c;
+        QCOMPARE(a, 5);
+        QCOMPARE(b, 6);
+        QCOMPARE(c, 7);
+    }
+
     void testLuaStackPushesABoolean()
     {
         Lua lua;

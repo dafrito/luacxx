@@ -486,7 +486,63 @@ public:
     friend class Lua;
 };
 
-LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable);
+class LuaIndex
+{
+    LuaStack& _stack;
+
+    int _pos;
+    int _direction;
+public:
+    explicit LuaIndex(LuaStack& stack, int pos, bool reversed = false) :
+        _stack(stack),
+        _pos(pos),
+        _direction(reversed ? -1 : 1)
+    {
+    }
+
+    LuaStack& stack() const
+    {
+        return _stack;
+    }
+
+    int pos() const
+    {
+        return _pos;
+    }
+
+    LuaIndex& operator++(int)
+    {
+        return operator++();
+    }
+
+    LuaIndex& operator++()
+    {
+        _pos += _direction;
+        return *this;
+    }
+
+    LuaIndex& operator--(int)
+    {
+        return operator--();
+    }
+
+    LuaIndex& operator--()
+    {
+        _pos -= _direction;
+        return *this;
+    }
+};
+
+template <class Sink>
+LuaIndex& operator >>(LuaIndex& index, Sink& sink)
+{
+    index.stack().to(sink, index.pos());
+    return index++;
+}
+
+LuaIndex begin(LuaStack& stack);
+
+LuaIndex end(LuaStack& stack);
 
 namespace
 {

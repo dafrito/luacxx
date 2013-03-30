@@ -572,6 +572,16 @@ int LuaStack::invokeLuaCallable(lua_State* state)
     return invokeCallable(state, static_cast<lua::LuaCallable*>(funcPtr->rawData()));
 }
 
+LuaIndex begin(LuaStack& stack)
+{
+    return LuaIndex(stack, 1);
+}
+
+LuaIndex end(LuaStack& stack)
+{
+    return LuaIndex(stack, stack.size() + 1);
+}
+
 LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
 {
     stack.push(LuaUserdata(callable, "lua::LuaCallable"));
