@@ -151,6 +151,15 @@ LuaUserdata* LuaStack::object(int pos)
     return ptr;
 }
 
+void* LuaStack::pointer(int pos)
+{
+    checkPos(pos);
+    if (lua_islightuserdata(luaState(), pos) == 1) {
+        return lua_touserdata(luaState(), pos);
+    }
+    return nullptr;
+}
+
 int LuaStack::length(int pos)
 {
     checkPos(pos);

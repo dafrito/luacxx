@@ -250,6 +250,7 @@ public:
     lua_Number number(int pos = -1);
     bool boolean(int pos = -1);
     LuaUserdata* object(int pos = -1);
+    void* pointer(int pos = -1);
 
     int length(int pos = -1);
 
