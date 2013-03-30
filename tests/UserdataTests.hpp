@@ -64,7 +64,19 @@ private slots:
         lua["c"] = obj;
 
         lua("c.value = 24");
+
         QCOMPARE(static_cast<Counter*>(obj.get())->getValue(), 24);
+    }
+
+    void qobjectDynamicallyAddsPropertiesWhenNonexistent()
+    {
+        Lua lua;
+        auto obj = std::shared_ptr<QObject>(new Counter(42));
+        lua["c"] = obj;
+
+        lua("c.someValue = 24");
+
+        QCOMPARE((int)lua("return c.someValue"), 24);
     }
 
     void luaCanCallQObjectMethods()
