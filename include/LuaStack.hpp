@@ -1,8 +1,8 @@
 #ifndef HEADER_LUASTACK_HPP
 #define HEADER_LUASTACK_HPP
 
-#include <QObject>
 #include <QVariant>
+#include <memory>
 #include <string>
 #include <functional>
 #include <tuple>
@@ -13,6 +13,7 @@ class Lua;
 class LuaStack;
 class LuaValue;
 class LuaAccessible;
+class LuaUserdata;
 
 namespace
 {
@@ -51,12 +52,6 @@ namespace lua
  * VARIADIC FUNCTION CALLS
  *
  * Lua and C++ can call each other's functions, with arbitrary complexity.
- *
- * QOBJECT SUPPORT
- *
- * QObjects can be inserted into a Lua environment, and their methods will
- * be directly accessible from Lua. QObject properties are accessible via
- * Lua table access.
  *
  * BUGS AND PROBLEMS
  *
@@ -232,7 +227,7 @@ public:
     LuaStack& to(short* sink, int pos = -1);
     LuaStack& to(std::string* const sink, int pos = -1);
     LuaStack& to(QString* const sink, int pos = -1);
-    LuaStack& to(QObject** const sink, int pos = -1);
+    LuaStack& to(LuaUserdata** sink, int pos = -1);
     LuaStack& to(QVariant* const sink, int pos = -1);
 
     // A template to ensure that references will always
@@ -252,7 +247,7 @@ public:
     QString qstring(int pos = -1);
     lua_Number number(int pos = -1);
     bool boolean(int pos = -1);
-    QObject* object(int pos = -1);
+    LuaUserdata* object(int pos = -1);
 
     int length(int pos = -1);
 
@@ -279,16 +274,25 @@ public:
     LuaStack& push(const QString& value);
     LuaStack& push(const std::string& value);
     LuaStack& push(const lua_Number& value);
-    LuaStack& push(void* const p);
     LuaStack& push(const bool& b);
     LuaStack& push(const int& b);
     LuaStack& push(const long& b);
     LuaStack& push(const float& b);
     LuaStack& push(const short& b);
-    LuaStack& push(QObject* const obj);
+    LuaStack& push(const std::shared_ptr<void>& obj, QString type);
     LuaStack& push(const QVariant& variant);
     LuaStack& push(const LuaValue& value);
     LuaStack& push(const LuaAccessible& value);
+
+    /**
+     * Push an unmanaged pointer onto the stack. The pointer must outlive the
+     * Lua environment, otherwise subsequent access may cause segfaults.
+     *
+     * Since this method has potentially dangerous consequences, it is named
+     * unusually.
+     */
+    LuaStack& pushPointer(void* const p);
+    LuaStack& push(void* const p) = delete;
 
     /**
      * Pushes the directly callable C++ function onto

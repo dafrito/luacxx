@@ -4,6 +4,7 @@
 #include "LuaValue.hpp"
 #include "LuaReferenceAccessible.hpp"
 #include "LuaAccessible.hpp"
+#include "LuaUserdata.hpp"
 
 namespace
 {
@@ -174,10 +175,10 @@ LuaStack& LuaStack::to(QString* const sink, int pos)
     return (*this);
 }
 
-QObject* LuaStack::object(int pos)
+LuaUserdata* LuaStack::object(int pos)
 {
     checkPos(pos);
-    QObject* ptr;
+    LuaUserdata* ptr;
     to(&ptr, pos);
     return ptr;
 }
@@ -226,9 +227,6 @@ LuaStack& LuaStack::to(QVariant* const sink, int pos)
         break;
     case lua::STRING:
         sink->setValue(qstring(pos));
-        break;
-    case lua::LIGHTUSERDATA:
-        sink->setValue(object());
         break;
     case lua::TABLE:
     case lua::FUNCTION:
@@ -281,11 +279,12 @@ LuaStack& LuaStack::to(float* sink, int pos)
     return (*this);
 }
 
-LuaStack& LuaStack::to(QObject** const sink, int pos)
+LuaStack& LuaStack::to(LuaUserdata** sink, int pos)
 {
     checkPos(pos);
-    if (lua_islightuserdata(luaState(), pos)) {
-        *sink = static_cast<QObject*>(lua_touserdata(luaState(), pos));
+
+    if (lua_isuserdata(luaState(), pos)) {
+        *sink = static_cast<LuaUserdata*>(lua_touserdata(luaState(), pos));
     } else {
         *sink = 0;
     }
@@ -389,15 +388,33 @@ LuaStack& LuaStack::push(const float& value)
     return (*this);
 }
 
-LuaStack& LuaStack::push(void* const p)
-{
-    lua_pushlightuserdata(luaState(), p);
-    return (*this);
-}
-
 LuaStack& LuaStack::push(const bool& b)
 {
     lua_pushboolean(luaState(), b);
+    return (*this);
+}
+
+void collectUserdata(Lua&, LuaStack& stack)
+{
+    LuaUserdata* userdata = stack.object(1);
+    userdata->~LuaUserdata();
+}
+
+LuaStack& LuaStack::push(const std::shared_ptr<void>& obj, QString type)
+{
+    void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
+    new (luaUserdata) LuaUserdata(obj, type);
+
+    pushNewTable();
+    set("__gc", collectUserdata);
+    setMetatable();
+
+    return (*this);
+}
+
+LuaStack& LuaStack::pushPointer(void* const p)
+{
+    lua_pushlightuserdata(luaState(), p);
     return (*this);
 }
 
@@ -411,17 +428,12 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
     if (closed > 0) {
         checkPos(-closed);
     }
-    push(&lua());
-    push(new QLuaCallable(&lua(), f));
+    pushPointer(&lua());
+    // TOOD Use a userdata here to ensure this callable is actually deleted
+    pushPointer(new QLuaCallable(&lua(), f));
     lua_insert(luaState(), -2-closed);
     lua_insert(luaState(), -2-closed);
     lua_pushcclosure(luaState(), invokeWrappedFunction, 2 + closed);
-    return (*this);
-}
-
-LuaStack& LuaStack::push(QObject* const obj)
-{
-    lua_pushlightuserdata(luaState(), obj);
     return (*this);
 }
 

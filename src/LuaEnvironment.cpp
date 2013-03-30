@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <sstream>
 #include "LuaStack.hpp"
-#include <QMetaObject>
-#include <QMetaMethod>
 #include <QTextStream>
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
@@ -56,133 +54,6 @@ namespace {
     }
 }
 
-void metaInvokeDirectMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method)
-{
-    QList<QVariant> variants;
-    variants << QVariant(QMetaType::type(method.typeName()), (void*)0);
-    QList<QByteArray> params = method.parameterTypes();
-    for (int i = 0; i < params.count(); ++i) {
-        int type = QMetaType::type(params.at(i));
-        QVariant p(type, (void*)0);
-        stack.to(p, i + 1);
-        p.convert((QVariant::Type)type);
-        variants << p;
-    }
-    void* vvargs[11];
-    for (int i = 0; i < variants.size(); ++i) {
-        vvargs[i] = const_cast<void*>(variants.at(i).data());
-    }
-    QMetaObject::metacall(
-        obj,
-        QMetaObject::InvokeMetaMethod,
-        method.methodIndex(),
-        vvargs);
-    if (variants.at(0).isValid()) {
-        stack.push(variants.at(0));
-    }
-}
-
-void metaInvokeLuaCallableMethod(Lua& lua, LuaStack& stack, QObject* const obj, const QMetaMethod& method)
-{
-    void* vvargs[3];
-    vvargs[1] = &lua;
-    vvargs[2] = &stack;
-    QMetaObject::metacall(
-        obj,
-        QMetaObject::InvokeMetaMethod,
-        method.methodIndex(),
-        vvargs);
-}
-
-void callMethod(Lua& lua, LuaStack& stack)
-{
-    const char* name = stack.cstring(1);
-    QObject* const obj = stack.object(2);
-    stack.shift(2);
-    const QMetaObject* const metaObject = obj->metaObject();
-
-    // Prefer methods that handle the stack directly.
-    for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
-        QMetaMethod method(metaObject->method(i));
-        QString sig = QString::fromLatin1(method.signature());
-        if (sig == QString(name) + "(Lua&,LuaStack&)") {
-            // The method is capable of handling the Lua stack directly, so invoke it
-            metaInvokeLuaCallableMethod(lua, stack, obj, method);
-            return;
-        }
-    }
-
-    // Look for any method that matches the requested name
-    for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
-        QMetaMethod method(metaObject->method(i));
-        QString sig = QString::fromLatin1(method.signature());
-        if (sig.startsWith(QString(name) + "(")) {
-            metaInvokeDirectMethod(lua, stack, obj, method);
-            return;
-        }
-    }
-
-    throw LuaException(string("No method found with name: ") + name);
-}
-
-/**
- * Handles Lua's __index metamethod for all light userdata.
- */
-void __index(Lua&, LuaStack& stack)
-{
-    QObject* const obj = stack.object(1);
-    if (obj == 0) {
-        // No object, so just return nil.
-        stack.clear();
-        stack.pushNil();
-        return;
-    }
-    const char* name = stack.cstring(2);
-    if (name == 0) {
-        stack.clear();
-        stack.pushNil();
-        return;
-    }
-    stack.clear();
-    // First, check for properties
-    QVariant propValue = obj->property(name);
-    if (propValue.isValid()) {
-        stack << propValue;
-        return;
-    }
-    // Not a property, so look for a method for the given the name.
-    const QMetaObject* const metaObject = obj->metaObject();
-    for(int i = 0; i < metaObject->methodCount(); ++i) {
-        QString sig = QString::fromLatin1(metaObject->method(i).signature());
-        if (sig.startsWith(QString(name) + "(")) {
-            stack << name;
-            stack.push(callMethod, 1);
-            return;
-        }
-    }
-    stack.pushNil();
-}
-
-void __newindex(Lua&, LuaStack& stack)
-{
-    QObject* const obj = stack.object(1);
-    if (obj == 0) {
-        // No object, so just return nil.
-        stack.clear();
-        stack.pushNil();
-        return;
-    }
-    const char* name = stack.cstring(2);
-    if (name == 0) {
-        stack.clear();
-        stack.pushNil();
-        return;
-    }
-    QVariant v;
-    stack.to(&v, 3);
-    obj->setProperty(name, v);
-}
-
 int throwFromPanic(lua_State* state)
 {
     const char* msg = lua_tostring(state, -1);
@@ -194,15 +65,6 @@ Lua::Lua()
     state = luaL_newstate();
     luaL_openlibs(state);
     lua_atpanic(state, throwFromPanic);
-    {
-        LuaStack stack(*this);
-        lua_pushlightuserdata(state, 0);
-        stack.pushNewTable();
-        stack.set("__index", __index, -1);
-        stack.set("__newindex", __newindex, -1);
-        lua_setmetatable(state, -2);
-        stack.grab();
-    }
 
     const char* searchersName = "searchers";
     #if LUA_VERSION_NUM < 502
