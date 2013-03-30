@@ -402,8 +402,13 @@ void collectUserdata(Lua&, LuaStack& stack)
 
 LuaStack& LuaStack::push(const std::shared_ptr<void>& obj, QString type)
 {
+    return push(LuaUserdata(obj, type));
+}
+
+LuaStack& LuaStack::push(const LuaUserdata& userdata)
+{
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
-    new (luaUserdata) LuaUserdata(obj, type);
+    new (luaUserdata) LuaUserdata(userdata);
 
     pushNewTable();
     set("__gc", collectUserdata);

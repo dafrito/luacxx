@@ -279,6 +279,7 @@ public:
     LuaStack& push(const long& b);
     LuaStack& push(const float& b);
     LuaStack& push(const short& b);
+    LuaStack& push(const LuaUserdata& userdata);
     LuaStack& push(const std::shared_ptr<void>& obj, QString type);
     LuaStack& push(const QVariant& variant);
     LuaStack& push(const LuaValue& value);
