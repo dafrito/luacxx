@@ -536,10 +536,11 @@ int LuaStack::invokeCallable(lua_State* state, const lua::LuaCallable* const fun
     Lua* lua = static_cast<Lua*>(p);
 
     // Push all upvalues unto the stack.
+    int upvalueIndex = 1;
     int i = 3;
     while (!lua_isnone(state, lua_upvalueindex(i))) {
         lua_pushvalue(state, lua_upvalueindex(i));
-        lua_insert(state, 1);
+        lua_insert(state, upvalueIndex++);
         i++;
     }
     LuaStack stack(*lua);

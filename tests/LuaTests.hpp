@@ -147,6 +147,22 @@ private slots:
         lua("assert(foo() == 66)");
     }
 
+    static int subtract(int a, int b)
+    {
+        return a - b;
+    }
+
+    void testLuaCanPushClosuresWithMultipleArguments()
+    {
+        Lua lua;
+        LuaStack s(lua);
+        s << 42;
+        s << 20;
+        s.push(subtract, 2);
+        s.setGlobal("foo");
+        QCOMPARE((int)lua("return foo()"), 22);
+    }
+
     void testLuaCanPushLambdas()
     {
         Lua lua;
