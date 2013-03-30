@@ -227,9 +227,9 @@ public:
     LuaStack& to(long* sink, int pos = -1);
     LuaStack& to(float* sink, int pos = -1);
     LuaStack& to(short* sink, int pos = -1);
+    LuaStack& to(LuaUserdata** sink, int pos = -1);
     LuaStack& to(std::string* const sink, int pos = -1);
     LuaStack& to(QString* const sink, int pos = -1);
-    LuaStack& to(LuaUserdata** sink, int pos = -1);
     LuaStack& to(QVariant* const sink, int pos = -1);
 
     // A template to ensure that references will always
