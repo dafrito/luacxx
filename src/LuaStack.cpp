@@ -275,6 +275,13 @@ double LuaStack::number(int pos)
     return b;
 }
 
+int LuaStack::integer(int pos)
+{
+    int sink;
+    to(&sink, pos);
+    return sink;
+}
+
 LuaStack& LuaStack::global(const char* name)
 {
     lua_getglobal(luaState(), name);

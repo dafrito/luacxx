@@ -247,6 +247,7 @@ public:
     const char* cstring(int pos = -1);
     std::string string(int pos = -1);
     QString qstring(int pos = -1);
+    int integer(int pos = -1);
     lua_Number number(int pos = -1);
     bool boolean(int pos = -1);
     LuaUserdata* object(int pos = -1);
