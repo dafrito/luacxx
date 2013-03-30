@@ -6,13 +6,14 @@
 #include "LuaException.hpp"
 #include "LuaStack.hpp"
 #include "LuaValue.hpp"
+#include "LuaUserdata.hpp"
 #include "mocks.hpp"
 
-#include "QObjectUserdata.hpp"
+#include "metatables.hpp"
 
 using namespace std;
 
-class QObjectTests : public QObject
+class UserdataTests : public QObject
 {
     Q_OBJECT
 private slots:
@@ -22,80 +23,86 @@ private slots:
         Lua lua;
         LuaStack s(lua);
 
-        auto ptr = lua::qobjectUserdata(new QObject, "QObject");
-        s.push(ptr);
+        auto ptr = std::shared_ptr<QObject>(new QObject);
+        s.push(ptr, "QObject");
 
-        std::shared_ptr<LuaUserdata> returned;
+        LuaUserdata* returned;
         s >> returned;
 
-        QVERIFY(returned.get() == ptr.get());
+        QVERIFY(returned->rawData() == ptr.get());
+    }
+
+    void testLuaHandleQObjectsWithMinimalSemantics()
+    {
+        Lua lua;
+        LuaStack stack(lua);
+
+        auto orig = std::shared_ptr<QObject>(new QObject);
+        stack << orig;
+
+        std::shared_ptr<QObject> other;
+        stack >> other;
+
+        QVERIFY(other.get() == orig.get());
     }
 
     void luaRetrievesQObjectProperties()
     {
         Lua lua;
-        Counter counter(42);
-        lua["foo"] = lua::qobjectUserdata(new Counter(42), "Counter");
+
+        lua["foo"] = std::shared_ptr<QObject>(new Counter(42));
+
         QVERIFY("userdata" == lua["foo"].typestring());
-        lua::load_string(lua, "bar = foo.value");
+        lua("bar = foo.value");
         QVERIFY(lua["bar"] == 42);
     }
 
     void luaCanSetQObjectProperties()
     {
         Lua lua;
-        auto obj = lua::qobjectUserdata(new Counter(42), "Counter");
+        auto obj = std::shared_ptr<QObject>(new Counter(42));
         lua["c"] = obj;
 
-        lua::load_string(lua, "c.value = 24");
-        QCOMPARE(static_cast<Counter*>(obj.get()->rawData())->getValue(), 24);
+        lua("c.value = 24");
+        QCOMPARE(static_cast<Counter*>(obj.get())->getValue(), 24);
     }
 
     void luaCanCallQObjectMethods()
     {
         Lua lua;
-        lua["c"] = lua::qobjectUserdata(new Counter(42), "Counter");
-        lua::load_string(lua, "foo = c:getValue()");
+        lua["c"] = std::shared_ptr<QObject>(new Counter(42));
+        lua("foo = c:getValue()");
         QVERIFY(lua["foo"] == 42);
     }
 
     void luaCanPassValuesToQObjectMethods()
     {
         Lua lua;
-        auto obj = lua::qobjectUserdata(new Counter(42), "Counter");
-        lua["c"] = obj;
+        Counter* counter = new Counter;
+        lua["c"] = std::shared_ptr<QObject>(counter);
 
-        Counter* counter = static_cast<Counter>(obj.get()->rawData());
-
-        lua::load_string(lua, "c:setValue(24)");
+        lua("c:setValue(24)");
         QCOMPARE(counter->getValue(), 24);
     }
-/*
+
     void luaCanPassTwoValuesToQObjectMethods()
     {
         Lua lua;
-        Counter counter(2);
-        lua["c"] = &counter;
-        lua::load_string(lua, "c:setAddedValue(3, 6)");
-        QCOMPARE(counter.getValue(), 9);
-    }
+        Counter* counter = new Counter;
+        lua["c"] = std::shared_ptr<QObject>(counter);
 
-    void luaCollectsGarbage()
-    {
-        Lua lua;
-        QObject obj;
-        lua["foo"] = &obj;
-        lua("foo = nil");
-        lua.collectGarbage();
+        lua("c:setAddedValue(3, 6)");
+        QCOMPARE(counter->getValue(), 9);
     }
 
     void methodsCanUseTheStackDirectly()
     {
         Lua lua;
-        Counter counter(2);
-        lua["c"] = &counter;
-        lua::load_string(lua, "c:addAll(1, 2, 3)");
-        QCOMPARE(counter.getValue(), 8);
+        Counter* counter = new Counter(2);
+        lua["c"] = std::shared_ptr<QObject>(counter);
+
+        lua("c:addAll(1, 2, 3)");
+        QCOMPARE(counter->getValue(), 8);
     }
 
     void luaSetsPropertiesDirectly()
@@ -103,10 +110,11 @@ private slots:
         Lua lua;
         QFile file("anim.lua");
         lua(file);
-        Square square;
-        int old = square.getX();
-        lua["Tick"](&square, M_PI);
-        QVERIFY(square.getX() != old);
+
+        auto square = new Square;
+
+        int old = square->getX();
+        lua["Tick"](std::shared_ptr<QObject>(square), M_PI);
+        QVERIFY(square->getX() != old);
     }
-*/
 };
