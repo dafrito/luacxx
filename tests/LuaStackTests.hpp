@@ -127,8 +127,7 @@ private slots:
         int a;
         int b;
         int c;
-        LuaIndex iter = begin(s);
-        iter >> a >> b >> c;
+        s.begin() >> a >> b >> c;
         QCOMPARE(a, 5);
         QCOMPARE(b, 6);
         QCOMPARE(c, 7);
