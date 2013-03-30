@@ -20,8 +20,7 @@ pkginclude_HEADERS = \
 	../include/LuaException.hpp
 
 # moc-generated source files
-liblua_cxx_la_MOC_SOURCES = \
-	moc_LuaEnvironment.cpp
+liblua_cxx_la_MOC_SOURCES =
 
 nodist_liblua_cxx_la_SOURCES = $(liblua_cxx_la_MOC_SOURCES)
 

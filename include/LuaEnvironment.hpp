@@ -1,7 +1,6 @@
 #ifndef HEADER_LUA_ENVIRONMENT_HPP
 #define HEADER_LUA_ENVIRONMENT_HPP
 
-#include <QObject>
 #include <string>
 #include <istream>
 #include <lua.hpp>
@@ -15,10 +14,8 @@ class LuaValue;
 class ModuleLoader;
 class LuaStack;
 
-class Lua : public QObject
+class Lua
 {
-    Q_OBJECT
-
     lua_State* state;
 
     std::vector<ModuleLoader*> _moduleLoaders;
