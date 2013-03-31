@@ -32,8 +32,8 @@ LuaStack& convertUserdata(LuaStack& stack, std::shared_ptr<Target>& callable, co
 } // namespace userdata
 } // namespace lua
 
-LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr);
-LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr);
+LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr);
+LuaStack& operator>>(LuaStack& stack, std::shared_ptr<QObject>& ptr);
 
 LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable);
 LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable);
