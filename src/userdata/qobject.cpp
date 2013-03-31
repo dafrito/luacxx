@@ -102,7 +102,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
         *obj = nullptr;
         *name = nullptr;
         stack.clear();
-        stack.pushNil();
+        stack << lua::value::nil;
         return false;
 }
 
@@ -132,7 +132,7 @@ void __index(LuaStack& stack)
             return;
         }
     }
-    stack.pushNil();
+    stack << lua::value::nil;
 }
 
 void __newindex(LuaStack& stack)

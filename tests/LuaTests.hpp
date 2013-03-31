@@ -193,4 +193,15 @@ private slots:
         Lua lua;
         QCOMPARE((int)lua("return 42"), 42);
     }
+
+    void luaValuesCanBeSetToRawValues()
+    {
+        Lua lua;
+        lua["foo"] = 42;
+        lua("assert(foo == 42)");
+        lua["foo"] = lua::value::table;
+        lua("assert(type(foo) == 'table')");
+        lua["foo"] = lua::value::nil;
+        lua("assert(foo == nil)");
+    }
 };

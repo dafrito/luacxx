@@ -27,6 +27,11 @@ namespace
 namespace lua
 {
     typedef std::function<void (LuaStack& stack)> LuaCallable;
+
+    enum value {
+        table,
+        nil
+    };
 }
 
 /**
@@ -292,6 +297,8 @@ public:
     LuaStack& operator<<(const LuaValue& value);
     LuaStack& operator<<(const LuaAccessible& value);
 
+    LuaStack& operator<<(const lua::value& value);
+
     /**
      * Push an unmanaged pointer onto the stack. The pointer must outlive the
      * Lua environment, otherwise subsequent access may cause segfaults.
@@ -315,22 +322,11 @@ public:
     LuaStack& operator<<(void (*p)(LuaStack& stack));
     LuaStack& operator<<(lua_CFunction func);
 
-
-    /**
-     * Push a nil Lua value onto this stack.
-     */
-    LuaStack& pushNil();
-
     /**
      * Returns whether the stack value at the specified
      * position is exactly nil.
      */
     bool isNil(const int pos = -1);
-
-    /**
-     * Push an empty Lua table onto this stack.
-     */
-    LuaStack& pushNewTable();
 
     template <class Message>
     void error(const Message& message)

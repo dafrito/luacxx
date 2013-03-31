@@ -363,7 +363,7 @@ LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
         _rawUserdata.push_back(static_cast<LuaUserdata*>(luaUserdata));
     }
 
-    pushNewTable();
+    *this << lua::value::table;
     set("__gc", collectUserdata);
     setMetatable();
 
@@ -418,7 +418,7 @@ LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
 
     // Ensure the LuaCallable gets destructed when necessary.
     //
-    pushNewTable();
+    *this << lua::value::table;
     set("__gc", collectRawCallable);
     setMetatable();
 
@@ -466,10 +466,17 @@ LuaStack& LuaStack::operator<<(const LuaAccessible& value)
     return *this;
 }
 
-LuaStack& LuaStack::pushNewTable()
+LuaStack& LuaStack::operator<<(const lua::value& value)
 {
-    lua_newtable(luaState());
-    return (*this);
+    switch (value) {
+        case lua::value::table:
+            lua_newtable(luaState());
+            break;
+        case lua::value::nil:
+            lua_pushnil(luaState());
+            break;
+    }
+    return *this;
 }
 
 bool LuaStack::hasMetatable(const int pos)
@@ -487,7 +494,7 @@ LuaStack& LuaStack::pushMetatable(const int pos)
     checkPos(pos);
     bool hasMeta = lua_getmetatable(luaState(), pos) != 0;
     if (!hasMeta) {
-        pushNewTable();
+        *this << lua::value::table;
         // Offset to ensure the position is set correctly
         setMetatable(pos > 0 ? pos : pos - 1);
     }
@@ -502,12 +509,6 @@ LuaStack& LuaStack::setMetatable(const int pos)
     return (*this);
 }
 
-
-LuaStack& LuaStack::pushNil()
-{
-    lua_pushnil(luaState());
-    return (*this);
-}
 
 bool LuaStack::isNil(const int pos)
 {
@@ -631,7 +632,7 @@ LuaStack& operator<<(LuaStack& stack, const QVariant& variant)
 {
     switch (variant.type()) {
     case QVariant::Invalid:
-        return stack.pushNil();
+        return stack << lua::value::nil;
     case QVariant::Bool:
         return stack << variant.toBool();
     case QVariant::Char:

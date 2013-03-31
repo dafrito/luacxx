@@ -86,7 +86,7 @@ private slots:
         Lua lua;
         LuaStack s(lua);
 
-        s.pushNil();
+        s << lua::value::nil;
         QVERIFY(s.isNil());
     }
 
@@ -149,7 +149,7 @@ private slots:
     {
         Lua lua;
         LuaStack s(lua);
-        s.pushNewTable();
+        s << lua::value::table;
         QVERIFY("table" == s.typestring());
     }
 

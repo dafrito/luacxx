@@ -100,7 +100,7 @@ public:
         if (stack.empty()) {
             // The called function didn't return anything, so push a nil
             // so we can save an empty reference.
-            stack.pushNil();
+            stack << lua::value::nil;
         }
 
         return stack.save();
