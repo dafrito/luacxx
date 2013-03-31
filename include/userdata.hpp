@@ -1,5 +1,5 @@
-#ifndef LUA_METATABLES_HPP
-#define LUA_METATABLES_HPP
+#ifndef LUA_USERDATA_HPP
+#define LUA_USERDATA_HPP
 
 #include <memory>
 #include "LuaUserdata.hpp"
@@ -10,12 +10,12 @@ class LuaStack;
 class QObject;
 
 namespace lua {
-namespace metatable {
+namespace userdata {
 
 void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj);
 
 template <class Target>
-LuaStack& convertFromUserdata(LuaStack& stack, std::shared_ptr<Target>& callable, const char* expectedType)
+LuaStack& convertUserdata(LuaStack& stack, std::shared_ptr<Target>& callable, const char* expectedType)
 {
     callable.reset();
     LuaUserdata* userdata;
@@ -29,7 +29,7 @@ LuaStack& convertFromUserdata(LuaStack& stack, std::shared_ptr<Target>& callable
     return stack;
 }
 
-} // namespace metatable
+} // namespace userdata
 } // namespace lua
 
 LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr);

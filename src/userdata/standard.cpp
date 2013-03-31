@@ -1,4 +1,4 @@
-#include "metatables.hpp"
+#include "userdata.hpp"
 
 LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
 {
@@ -7,5 +7,5 @@ LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& c
 
 LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
 {
-    return lua::metatable::convertFromUserdata(stack, callable, "lua::LuaCallable");
+    return lua::userdata::convertUserdata(stack, callable, "lua::LuaCallable");
 }

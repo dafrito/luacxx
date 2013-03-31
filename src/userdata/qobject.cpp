@@ -1,4 +1,4 @@
-#include "metatables.hpp"
+#include "userdata.hpp"
 
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
@@ -24,7 +24,7 @@ LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
     stack << LuaUserdata(ptr, "QObject");
 
     stack.pushMetatable();
-    lua::metatable::qobject(stack, ptr);
+    lua::userdata::qobject(stack, ptr);
     stack.setMetatable();
     return stack;
 }
@@ -48,7 +48,7 @@ LuaStack& operator>>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
 }
 
 namespace lua {
-namespace metatable {
+namespace userdata {
 
 void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj)
 {
@@ -61,7 +61,7 @@ void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj)
     stack.pushedSet("__newindex", -2);
 }
 
-} // namespace metatable
+} // namespace userdata
 } // namespace lua
 
 namespace {

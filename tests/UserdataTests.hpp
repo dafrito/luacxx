@@ -9,7 +9,7 @@
 #include "LuaUserdata.hpp"
 #include "mocks.hpp"
 
-#include "metatables.hpp"
+#include "userdata.hpp"
 
 using namespace std;
 
