@@ -116,6 +116,7 @@ void __index(LuaStack& stack)
 
     // First, check for properties
     QVariant propValue = obj->property(name);
+
     if (propValue.isValid()) {
         stack << propValue;
         return;
