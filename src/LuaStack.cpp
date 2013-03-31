@@ -12,6 +12,11 @@ LuaStack::LuaStack(Lua& lua) :
 {
 }
 
+lua_State* LuaStack::luaState() const
+{
+    return _lua.state;
+}
+
 LuaStack& LuaStack::offset(int offset)
 {
     if(offset < 0)

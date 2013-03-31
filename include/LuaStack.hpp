@@ -76,10 +76,7 @@ private:
 
     Lua& _lua;
 
-    lua_State* luaState() const
-    {
-        return lua().state;
-    }
+    lua_State* luaState() const;
 
     int _offset;
 
