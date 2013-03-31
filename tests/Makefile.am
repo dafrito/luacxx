@@ -14,7 +14,7 @@ newtest_SOURCES = \
 	basic.cpp \
 	main.cpp
 
-runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ -I$(top_srcdir)/include
+runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ -I$(top_srcdir)/include -DLUA_DIR=\"$(srcdir)/lua/\"
 
 # Don't try changing "../src" to use "top_srcdir" - this is referring to the
 # built artifact, not something in the source directory
@@ -51,30 +51,13 @@ nodist_runtest_SOURCES =      \
 	$(runtest_MOC_SOURCES)
 
 check_SCRIPTS = \
-	anim.lua \
-	simple.lua \
-	dummy/a.lua \
-	dummy/b.lua
+	lua/bin/a.lua \
+	lua/bin/b.lua \
+	lua/anim.lua \
+	lua/simple.lua \
+	lua/testlib/Library.lua
 
 CLEANFILES = tests.cpp $(check_SCRIPTS)
-
-anim.lua:
-	echo "function Tick(square, elapsed)" >>$@
-	echo "	square.x = 250 * math.cos(elapsed);" >>$@
-	echo "end" >>$@
-
-simple.lua:
-	echo "assert(_G['No']=='Time');" >$@
-
-dummy/a.lua: | dummy
-	echo "print('loaded a')" >$@
-	echo "a = 42;" >$@
-
-dummy/b.lua: | dummy
-	echo "b = 'foo'" >$@
-
-dummy:
-	mkdir $@
 
 mostlyclean-local:
 	rm -f $(runtest_MOC_SOURCES)

@@ -141,7 +141,7 @@ private slots:
     void luaSetsPropertiesDirectly()
     {
         Lua lua;
-        QFile file("anim.lua");
+        QFile file(LUA_DIR "anim.lua");
         lua(file);
 
         auto square = new Square;
