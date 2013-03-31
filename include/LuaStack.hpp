@@ -239,18 +239,15 @@ public:
     LuaStack& to(QString& sink, int pos = -1);
     LuaStack& to(LuaUserdata*& sink, int pos = -1);
 
-    /**
-     * Converts and returns the value at the specified
-     * position to a C++ value.
-     */
-    const char* cstring(int pos = -1);
-    std::string string(int pos = -1);
-    QString qstring(int pos = -1);
-    int integer(int pos = -1);
-    lua_Number number(int pos = -1);
-    bool boolean(int pos = -1);
-    LuaUserdata* object(int pos = -1);
-    void* pointer(int pos = -1);
+    template <class Sink>
+    Sink as(int pos = -1)
+    {
+        Sink sink;
+        at(pos) >> sink;
+        return sink;
+    }
+
+    void* pointer(int pos);
 
     /**
      * Returns the length of the table at the specified index, or

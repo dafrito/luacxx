@@ -42,7 +42,7 @@ private slots:
         s << 42 << 24;
         s.replace(-2);
         QCOMPARE(1, s.size());
-        QVERIFY(24 == (int)s.number());
+        QCOMPARE(s.as<int>(), 24);
     }
 
     void testLuaStackCanSwapValues()
@@ -54,9 +54,9 @@ private slots:
 
         s.swap();
         // Stack is now [2, 1]
-        QCOMPARE((int)s.number(), 1);
+        QCOMPARE(s.as<int>(), 1);
         s.pop();
-        QCOMPARE((int)s.number(), 2);
+        QCOMPARE(s.as<int>(), 2);
         s.pop();
     }
 
@@ -76,16 +76,10 @@ private slots:
         bool equality = false;
 
         // Truthy tests
-        equality = 42 == s.number();
-        QVERIFY(equality);
-        equality = s.number() == 42;
-        QVERIFY(equality);
+        QCOMPARE(s.as<int>(), 42);
 
         // Falsy tests
-        equality = 43 != s.number();
-        QVERIFY(equality);
-        equality = s.number() != 43;
-        QVERIFY(equality);
+        QVERIFY(43 != s.as<int>());
     }
 
     void testLuaStackHandlesNilValuesProperly()
@@ -114,8 +108,7 @@ private slots:
         Lua lua;
         LuaStack s(lua);
         s << 42;
-        int a = s.number();
-        QVERIFY(a == 42);
+        QVERIFY(s.as<int>() == 42);
     }
 
     void testStackSupportsIndexing()
@@ -150,7 +143,7 @@ private slots:
         // number() returns a double, instead of the integer
         // that we originally passed.
         s.setGlobal("No", 42);
-        QCOMPARE((int)s.global("No").number(), 42);
+        QCOMPARE(s.global("No").as<int>(), 42);
     }
 
     void testYouCanPushTables()
@@ -191,7 +184,7 @@ private slots:
         s << i;
         QString o;
         s >> o;
-        QVERIFY(o == "c");
+        QCOMPARE(o, QString("c"));
     }
 
     void testLuaHandlesQVariants()
@@ -203,8 +196,8 @@ private slots:
 
     static void receive(LuaStack& stack)
     {
-        QVERIFY(QString("getValue") == stack.qstring(1));
-        QVERIFY(2 == stack.number(2));
+        QCOMPARE(stack.as<const char*>(1), "getValue");
+        QCOMPARE(stack.as<int>(2), 2);
     }
 
     void testLuaHandlesStringsProperly()
@@ -227,7 +220,7 @@ private slots:
         // We don't repush global because that table should
         // already be at the top of the stack; only the key
         // and value were removed
-        QCOMPARE(42, (int)stack.get("a").number());
+        QCOMPARE(42, stack.get("a").as<int>());
     }
 
     void cRetrievesBasicProperties()
@@ -235,10 +228,7 @@ private slots:
         Lua lua;
         lua("c = {f = 42};");
         LuaStack stack(lua);
-        bool check = stack.global("c").get("f").number() == 42;
-        QVERIFY(check);
-        check = 42 == stack.global("c").get("f").number();
-        QVERIFY(check);
+        QCOMPARE(stack.global("c").get("f").as<int>(), 42);
     }
 
     void cRetrievesNestedPropertiesWithLuaStack()
@@ -246,7 +236,7 @@ private slots:
         Lua lua;
         lua("d = {e = {f = 42} };");
         LuaStack stack(lua);
-        QCOMPARE((int)(stack.global("d").get("e").get("f").number()), 42);
+        QCOMPARE(stack.global("d").get("e").get("f").as<int>(), 42);
     }
 
     void cRetrievesDeeplyNestedPropertiesWithLuaStack()
@@ -254,6 +244,6 @@ private slots:
         Lua lua;
         lua("c = {d = {e = {f = 42} } };");
         LuaStack stack(lua);
-        QCOMPARE((int)(stack.global("c").get("d").get("e").get("f").number()), 42);
+        QCOMPARE(stack.global("c").get("d").get("e").get("f").as<int>(), 42);
     }
 };

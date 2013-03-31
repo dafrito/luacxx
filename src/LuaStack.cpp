@@ -134,25 +134,6 @@ LuaStack& LuaStack::to(const char*& sink, int pos)
     return (*this);
 }
 
-const char* LuaStack::cstring(int pos)
-{
-    checkPos(pos);
-    return lua_tostring(luaState(), pos);
-}
-
-std::string LuaStack::string(int pos)
-{
-    checkPos(pos);
-    return std::string(cstring(pos));
-}
-
-QString LuaStack::qstring(int pos)
-{
-    QString sink;
-    at(pos) >> sink;
-    return sink;
-}
-
 LuaStack& LuaStack::to(std::string& sink, int pos)
 {
     checkPos(pos);
@@ -165,14 +146,6 @@ LuaStack& LuaStack::to(QString& sink, int pos)
     checkPos(pos);
     sink = lua_tostring(luaState(), pos);
     return (*this);
-}
-
-LuaUserdata* LuaStack::object(int pos)
-{
-    checkPos(pos);
-    LuaUserdata* ptr;
-    to(ptr, pos);
-    return ptr;
 }
 
 void* LuaStack::pointer(int pos)
@@ -211,13 +184,6 @@ LuaStack& LuaStack::to(bool& sink, int pos)
     checkPos(pos);
     sink = lua_toboolean(luaState(), pos);
     return (*this);
-}
-
-bool LuaStack::boolean(int pos)
-{
-    bool b;
-    to(b, pos);
-    return b;
 }
 
 LuaStack& LuaStack::to(lua_Number& sink, int pos)
@@ -265,20 +231,6 @@ LuaStack& LuaStack::to(LuaUserdata*& sink, int pos)
         sink = 0;
     }
     return *this;
-}
-
-double LuaStack::number(int pos)
-{
-    double b;
-    to(b, pos);
-    return b;
-}
-
-int LuaStack::integer(int pos)
-{
-    int sink;
-    to(sink, pos);
-    return sink;
 }
 
 LuaStack& LuaStack::global(const char* name)
@@ -368,7 +320,7 @@ LuaStack& LuaStack::push(const bool& b)
 
 void collectUserdata(LuaStack& stack)
 {
-    LuaUserdata* userdata = stack.object(1);
+    LuaUserdata* userdata = stack.as<LuaUserdata*>(1);
     userdata->~LuaUserdata();
 }
 
@@ -559,13 +511,13 @@ LuaIndex end(LuaStack& stack)
 
 LuaIndex& operator>>(LuaIndex& index, std::string& sink)
 {
-    sink = index.stack().cstring(index.pos());
+    sink = index.stack().as<const char*>(index.pos());
     return ++index;
 }
 
 LuaIndex& operator>>(LuaIndex& index, QString& sink)
 {
-    sink = index.stack().cstring(index.pos());
+    sink = index.stack().as<const char*>(index.pos());
     return ++index;
 }
 
@@ -578,13 +530,13 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
         sink.clear();
         break;
     case lua::BOOLEAN:
-        sink.setValue(stack.boolean(pos));
+        sink.setValue(stack.as<bool>(pos));
         break;
     case lua::NUMBER:
-        sink.setValue(stack.number(pos));
+        sink.setValue(stack.as<double>(pos));
         break;
     case lua::STRING:
-        sink.setValue(QString(stack.cstring(pos)));
+        sink.setValue(stack.as<QString>(pos));
         break;
     case lua::TABLE:
     case lua::FUNCTION:

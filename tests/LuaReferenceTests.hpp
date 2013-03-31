@@ -20,7 +20,7 @@ private slots:
         LuaValue r = s.save();
         QVERIFY(s.size() == 0);
         s << r;
-        QVERIFY(s.qstring() == "No Time");
+        QCOMPARE(s.as<const char*>(), "No Time");
     }
 
     void testAccessibleCanGetAReference()
@@ -30,10 +30,10 @@ private slots:
         LuaStack s(lua);
         s << "No Time";
         accessor.store(s);
-        QVERIFY(s.qstring() == "No Time");
+        QCOMPARE(s.as<const char*>(), "No Time");
         s.clear();
         accessor.push(s);
-        QVERIFY(s.qstring() == "No Time");
+        QCOMPARE(s.as<const char*>(), "No Time");
     }
 
     void testAccessibleCanGetAGlobal()
@@ -46,7 +46,7 @@ private slots:
         QCOMPARE((const char*)lua["foo"], "No Time");
         s.clear();
         accessor.push(s);
-        QVERIFY(s.qstring() == "No Time");
+        QCOMPARE(s.as<const char*>(), "No Time");
     }
 
     void testLuaValueGetsALength()

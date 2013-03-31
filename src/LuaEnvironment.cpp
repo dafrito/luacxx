@@ -182,7 +182,7 @@ void Lua::removeModuleLoader(ModuleLoader* const loader)
 
 void Lua::loadModule(LuaStack& stack)
 {
-    QString moduleName(stack.qstring());
+    auto moduleName = stack.as<QString>();
     stack.clear();
 
     Lua& lua = stack.lua();

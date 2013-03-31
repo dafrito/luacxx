@@ -62,7 +62,7 @@ public slots:
     void addAll(LuaStack& stack)
     {
         while (!stack.empty()) {
-            value += stack.number(1);
+            value += stack.as<decltype(value)>(1);
             stack.shift();
         }
     }

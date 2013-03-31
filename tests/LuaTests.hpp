@@ -47,8 +47,8 @@ private slots:
 
     static void luaAdd(LuaStack& stack)
     {
-        int a = stack.number(1);
-        int b = stack.number(2);
+        auto a = stack.as<int>(1);
+        auto b = stack.as<int>(2);
         stack.clear();
         stack.push(a + b);
     }

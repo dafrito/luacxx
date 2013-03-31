@@ -82,7 +82,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
     void* validatingUserdata = stack.pointer(1);
     stack.shift();
 
-    LuaUserdata* userdata = stack.object(1);
+    auto userdata = stack.as<LuaUserdata*>(1);
     if (!userdata) {
         goto fail;
     }
@@ -98,7 +98,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
         goto fail;
     }
 
-    *name = stack.cstring(2);
+    stack.at(2) >> *name;
     if (!name) {
         goto fail;
     }
@@ -159,9 +159,8 @@ void callMethod(LuaStack& stack)
     QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
     stack.shift();
 
-    const char* name = stack.cstring(1);
-
-    LuaUserdata* userdata = stack.object(2);
+    auto name = stack.as<const char*>(1);
+    auto userdata = stack.as<LuaUserdata*>(2);
     if (!userdata) {
         stack.error("Method must be invoked with a valid userdata");
     }
@@ -227,7 +226,7 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
         method.methodIndex(),
         vvargs);
     if (variants.at(0).isValid()) {
-        stack.push(variants.at(0));
+        stack << variants.at(0);
     }
 }
 
