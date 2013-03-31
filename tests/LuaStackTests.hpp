@@ -73,7 +73,6 @@ private slots:
         Lua lua;
         LuaStack s(lua);
         s << 42;
-        bool equality = false;
 
         // Truthy tests
         QCOMPARE(s.as<int>(), 42);
