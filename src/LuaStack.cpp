@@ -611,7 +611,7 @@ LuaStack& operator<<(LuaStack& stack, const QVariant& variant)
     throw LuaException(&stack.lua(), std::string("Type not supported: ") + variant.typeName());
 }
 
-LuaStack& operator >>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
+LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
 {
     callable.reset();
     LuaUserdata* userdata;
