@@ -4,8 +4,6 @@
 #include "LuaAccessible.hpp"
 #include "LuaStack.hpp"
 
-#include <iostream>
-
 namespace table {
 
 template <typename Table, typename Value>

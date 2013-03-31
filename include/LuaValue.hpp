@@ -9,8 +9,6 @@
 
 #include <memory>
 
-#include <iostream>
-
 using std::string;
 
 class Lua;

@@ -8,8 +8,6 @@
 #include "LuaValue.hpp"
 #include "mocks.hpp"
 #include "table.hpp"
-#include <iostream>
-
 
 using namespace std;
 
