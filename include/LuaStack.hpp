@@ -229,14 +229,14 @@ public:
      * at the specified stack position.
      */
     LuaStack& to(bool& sink, int pos = -1);
+    LuaStack& to(short& sink, int pos = -1);
+    LuaStack& to(int& sink, int pos = -1);
+    LuaStack& to(long& sink, int pos = -1);
+    LuaStack& to(float& sink, int pos = -1);
     LuaStack& to(lua_Number& sink, int pos = -1);
     LuaStack& to(const char*& sink, int pos = -1);
     LuaStack& to(std::string& sink, int pos = -1);
     LuaStack& to(QString& sink, int pos = -1);
-    LuaStack& to(int& sink, int pos = -1);
-    LuaStack& to(long& sink, int pos = -1);
-    LuaStack& to(float& sink, int pos = -1);
-    LuaStack& to(short& sink, int pos = -1);
     LuaStack& to(LuaUserdata*& sink, int pos = -1);
 
     /**
