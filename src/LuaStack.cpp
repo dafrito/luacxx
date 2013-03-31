@@ -581,11 +581,6 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
     return ++index;
 }
 
-LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
-{
-    stack.push(LuaUserdata(callable, "lua::LuaCallable"));
-}
-
 LuaStack& operator<<(LuaStack& stack, const QChar& value)
 {
     return stack << value.toAscii();
@@ -614,22 +609,4 @@ LuaStack& operator<<(LuaStack& stack, const QVariant& variant)
         break;
     }
     throw LuaException(&stack.lua(), std::string("Type not supported: ") + variant.typeName());
-}
-
-LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
-{
-    callable.reset();
-    LuaUserdata* userdata;
-    stack >> userdata;
-    if (!userdata) {
-        return stack;
-    }
-    if (userdata->dataType() != "lua::LuaCallable") {
-        return stack;
-    }
-    callable = std::shared_ptr<lua::LuaCallable>(
-        userdata->data(),
-        static_cast<lua::LuaCallable*>(userdata->rawData())
-    );
-    return stack;
 }

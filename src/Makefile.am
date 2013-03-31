@@ -29,6 +29,7 @@ liblua_cxx_la_SOURCES = \
 	LuaEnvironment.cpp \
 	LuaStack.cpp \
 	DirectoryModuleLoader.cpp \
+	metatables/standard.cpp \
 	metatables/qobject.cpp \
 	types.cpp
 
