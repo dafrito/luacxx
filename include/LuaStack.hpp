@@ -544,6 +544,8 @@ LuaIndex& operator>>(LuaIndex& index, std::string& sink);
 LuaIndex& operator>>(LuaIndex& index, QString& sink);
 LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 
+LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable);
+
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 
@@ -571,6 +573,7 @@ LuaStack& operator<<(LuaStack& stack, const T& value)
 LuaStack& operator<<(LuaStack& stack, const QChar& value);
 LuaStack& operator<<(LuaStack& stack, const QString& value);
 LuaStack& operator<<(LuaStack& stack, const QVariant& variant);
+LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable);
 
 namespace
 {
