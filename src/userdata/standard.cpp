@@ -2,7 +2,7 @@
 
 LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
 {
-    stack << LuaUserdata(callable, "lua::LuaCallable");
+    return stack << LuaUserdata(callable, "lua::LuaCallable");
 }
 
 LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
