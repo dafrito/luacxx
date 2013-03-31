@@ -280,7 +280,7 @@ LuaStack& LuaStack::global(const QString& name)
     return (*this);
 }
 
-LuaStack& LuaStack::get(int tablePos)
+LuaStack& LuaStack::pushedGet(int tablePos)
 {
     checkPos(tablePos);
     lua_gettable(luaState(), tablePos);

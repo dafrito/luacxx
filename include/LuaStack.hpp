@@ -376,7 +376,7 @@ public:
      * Pushes a value from the specified table, using the topmost stack
      * value as the key.
      */
-    LuaStack& get(int tablePos = -1);
+    LuaStack& pushedGet(int tablePos = -1);
 
     /**
      * Pushes the table value within the specified table onto this stack.
@@ -390,7 +390,7 @@ public:
         *this << key;
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
-        return get(tablePos);
+        return pushedGet(tablePos);
     }
 
     /**
