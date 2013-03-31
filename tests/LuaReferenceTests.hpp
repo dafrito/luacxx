@@ -53,7 +53,6 @@ private slots:
     {
         Lua lua;
         lua("foo = {42, 42, 42}");
-
         QCOMPARE(lua["foo"].length(), 3);
     }
 
