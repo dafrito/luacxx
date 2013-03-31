@@ -225,13 +225,19 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
 
 void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
+    QVariant rv(QMetaType::type(method.typeName()), nullptr);
     void* vvargs[2];
+    vvargs[0] = const_cast<void*>(rv.data());
     vvargs[1] = &stack;
     QMetaObject::metacall(
         obj,
         QMetaObject::InvokeMetaMethod,
         method.methodIndex(),
         vvargs);
+    if (rv.isValid()) {
+        stack.clear();
+        stack << rv;
+    }
 }
 
 } // namespace anonymous

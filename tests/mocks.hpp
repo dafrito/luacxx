@@ -66,6 +66,17 @@ public slots:
             stack.shift();
         }
     }
+
+    int summed(LuaStack& stack)
+    {
+        // Be sure not to touch the stack here, so we can ensure
+        // our caller cleans everything up for us.
+        auto total = getValue();
+        for (int i = 0; i < stack.size(); ++i) {
+            total += stack.as<int>(i + 1);
+        }
+        return total;
+    }
 signals:
     void valueChanged(int value) const;
 public:

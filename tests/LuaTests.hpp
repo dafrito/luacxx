@@ -205,4 +205,18 @@ private slots:
         lua("assert(foo == nil)");
         QVERIFY(lua["foo"].isNil());
     }
+
+    static int semiManaged(LuaStack& stack)
+    {
+        return stack.as<int>(1) + stack.as<int>(2);
+    }
+
+    void someLuaFunctionsCanReturnValues()
+    {
+        Lua lua;
+        lua["foo"] = semiManaged;
+        QCOMPARE((int)lua["foo"](1, 2), 3);
+        lua["bar"] = std::function<int(LuaStack&)>(semiManaged);
+        QCOMPARE((int)lua["bar"](3, 4), 7);
+    }
 };

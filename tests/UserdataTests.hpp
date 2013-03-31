@@ -138,6 +138,14 @@ private slots:
         QCOMPARE(counter->getValue(), 8);
     }
 
+    void methodsCanStillReturnValues()
+    {
+        Lua lua;
+        lua["c"] = std::shared_ptr<QObject>(new Counter(0));
+
+        QCOMPARE((int)lua("return c:summed(1, 2, 3)"), 6);
+    }
+
     void luaSetsPropertiesDirectly()
     {
         Lua lua;

@@ -326,6 +326,26 @@ public:
     LuaStack& operator<<(void (*p)(LuaStack& stack));
     LuaStack& operator<<(lua_CFunction func);
 
+    template <class RV>
+    LuaStack& operator<<(RV (*p)(LuaStack&))
+    {
+        return *this << std::function<void(LuaStack&)>([=](LuaStack& stack) {
+            RV sink(p(stack));
+            stack.clear();
+            stack << sink;
+        });
+    }
+
+    template <class RV>
+    LuaStack& operator<<(std::function<RV(LuaStack&)> func)
+    {
+        return *this << std::function<void(LuaStack&)>([=](LuaStack& stack) {
+            RV sink(func(stack));
+            stack.clear();
+            stack << sink;
+        });
+    }
+
     /**
      * Returns whether the stack value at the specified
      * position is exactly nil.
