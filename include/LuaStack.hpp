@@ -275,20 +275,18 @@ public:
     /**
      * Pushes the C++ value onto the top of this stack.
      */
-    LuaStack& push(const char* value);
-    LuaStack& push(const char* value, int len);
-    LuaStack& push(const QChar& value);
-    LuaStack& push(const QString& value);
-    LuaStack& push(const std::string& value);
-    LuaStack& push(const lua_Number& value);
     LuaStack& push(const bool& b);
+    LuaStack& push(const short& b);
     LuaStack& push(const int& b);
     LuaStack& push(const long& b);
     LuaStack& push(const float& b);
-    LuaStack& push(const short& b);
+    LuaStack& push(const lua_Number& value);
+    LuaStack& push(const char* value);
+    LuaStack& push(const char* value, int len);
+    LuaStack& push(const std::string& value);
     LuaStack& push(const LuaUserdata& userdata);
+
     LuaStack& push(const std::shared_ptr<void>& obj, QString type);
-    LuaStack& push(const QVariant& variant);
     LuaStack& push(const LuaValue& value);
     LuaStack& push(const LuaAccessible& value);
 
@@ -462,15 +460,6 @@ public:
         return (*this);
     }
 
-    /**
-     * Push the specified C++ value onto this stack.
-     */
-    template <typename T>
-    friend LuaStack& operator<<(LuaStack& stack, T value)
-    {
-        return stack.push(value);
-    }
-
     ~LuaStack();
 
     friend class Lua;
@@ -555,6 +544,19 @@ LuaIndex operator>>(LuaIndex&& index, Sink& sink)
 LuaIndex& operator>>(LuaIndex& index, std::string& sink);
 LuaIndex& operator>>(LuaIndex& index, QString& sink);
 LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
+
+/**
+ * Push the specified C++ value onto this stack.
+ */
+template <typename T>
+LuaStack& operator<<(LuaStack& stack, const T& value)
+{
+    return stack.push(value);
+}
+
+LuaStack& operator<<(LuaStack& stack, const QChar& value);
+LuaStack& operator<<(LuaStack& stack, const QString& value);
+LuaStack& operator<<(LuaStack& stack, const QVariant& variant);
 
 namespace
 {

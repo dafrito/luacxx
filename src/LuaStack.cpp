@@ -325,17 +325,6 @@ LuaStack& LuaStack::push(const char* value, int len)
     return (*this);
 }
 
-LuaStack& LuaStack::push(const QChar& value)
-{
-    char v = value.toAscii();
-    return push(&v, 1);
-}
-
-LuaStack& LuaStack::push(const QString& value)
-{
-    return push(value.toAscii().data());
-}
-
 LuaStack& LuaStack::push(const std::string& value)
 {
     return push(value.c_str());
@@ -458,26 +447,6 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
     lua_insert(luaState(), -2-closed);
 
     push(invokeLuaCallable, 2 + closed);
-    return (*this);
-}
-
-LuaStack& LuaStack::push(const QVariant& variant)
-{
-    switch (variant.type()) {
-    case QVariant::Invalid:
-        return pushNil();
-    case QVariant::Bool:
-        return push(variant.toBool());
-    case QVariant::Char:
-        return push(variant.toChar());
-    case QVariant::Int:
-        return push(variant.toInt());
-    case QVariant::Double:
-    case QVariant::UInt:
-        return push(variant.toDouble());
-    default:
-        throw LuaException(&lua(), std::string("Type not supported: ") + variant.typeName());
-    }
     return (*this);
 }
 
@@ -629,6 +598,36 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
 LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable)
 {
     stack.push(LuaUserdata(callable, "lua::LuaCallable"));
+}
+
+LuaStack& operator<<(LuaStack& stack, const QChar& value)
+{
+    return stack << value.toAscii();
+}
+
+LuaStack& operator<<(LuaStack& stack, const QString& value)
+{
+    return stack << value.toStdString();
+}
+
+LuaStack& operator<<(LuaStack& stack, const QVariant& variant)
+{
+    switch (variant.type()) {
+    case QVariant::Invalid:
+        return stack.pushNil();
+    case QVariant::Bool:
+        return stack << variant.toBool();
+    case QVariant::Char:
+        return stack << variant.toChar();
+    case QVariant::Int:
+        return stack << variant.toInt();
+    case QVariant::Double:
+    case QVariant::UInt:
+        return stack << variant.toDouble();
+    default:
+        break;
+    }
+    throw LuaException(&stack.lua(), std::string("Type not supported: ") + variant.typeName());
 }
 
 LuaStack& operator >>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
