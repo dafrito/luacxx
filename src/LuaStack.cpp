@@ -99,6 +99,13 @@ LuaStack& LuaStack::replace(int pos)
     return (*this);
 }
 
+LuaStack& LuaStack::remove(int pos)
+{
+    checkPos(pos);
+    lua_remove(luaState(), pos);
+    return *this;
+}
+
 LuaStack& LuaStack::swap(int a, int b)
 {
     checkPos(a);
@@ -114,6 +121,13 @@ LuaStack& LuaStack::swap(int a, int b)
     // Replace a by popping the copy of b
     lua_replace(luaState(), a - 1);
 
+    return *this;
+}
+
+LuaStack& LuaStack::pushCopy(int pos)
+{
+    checkPos(pos);
+    lua_pushvalue(luaState(), pos);
     return *this;
 }
 

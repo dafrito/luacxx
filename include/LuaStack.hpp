@@ -203,10 +203,14 @@ public:
      */
     LuaStack& replace(int pos);
 
+    LuaStack& remove(int pos);
+
     /**
      * Swaps the values at the two specified indices.
      */
     LuaStack& swap(int a = -1, int b = -2);
+
+    LuaStack& pushCopy(int pos = -1);
 
     /**
      * Pops all values that have been pushed onto
