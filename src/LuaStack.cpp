@@ -113,6 +113,8 @@ LuaStack& LuaStack::swap(int a, int b)
 
     // Replace a by popping the copy of b
     lua_replace(luaState(), a - 1);
+
+    return *this;
 }
 
 bool LuaStack::isMagicalPos(const int& pos) const
@@ -372,6 +374,8 @@ LuaStack& LuaStack::push(lua_CFunction func, const int closed)
     }
 
     lua_pushcclosure(luaState(), func, closed);
+
+    return *this;
 }
 
 int collectRawCallable(lua_State* state)
@@ -462,12 +466,15 @@ LuaStack& LuaStack::pushMetatable(const int pos)
         // Offset to ensure the position is set correctly
         setMetatable(pos > 0 ? pos : pos - 1);
     }
+
+    return *this;
 }
 
 LuaStack& LuaStack::setMetatable(const int pos)
 {
     checkPos(pos);
     lua_setmetatable(luaState(), pos);
+    return (*this);
 }
 
 

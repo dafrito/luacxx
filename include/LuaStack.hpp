@@ -405,7 +405,7 @@ public:
         // stack.
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
-        pushedSet(tablePos);
+        return pushedSet(tablePos);
     }
 
     // We need this definition since integers can be
