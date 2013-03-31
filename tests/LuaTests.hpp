@@ -50,7 +50,7 @@ private slots:
         auto a = stack.as<int>(1);
         auto b = stack.as<int>(2);
         stack.clear();
-        stack.push(a + b);
+        stack << a + b;
     }
 
     void testLuaCallsACFunction()

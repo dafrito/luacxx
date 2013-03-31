@@ -271,21 +271,24 @@ public:
     /**
      * Pushes the C++ value onto the top of this stack.
      */
-    LuaStack& push(const bool& b);
-    LuaStack& push(const char& b);
-    LuaStack& push(const short& b);
-    LuaStack& push(const int& b);
-    LuaStack& push(const long& b);
-    LuaStack& push(const float& b);
-    LuaStack& push(const lua_Number& value);
-    LuaStack& push(const char* value);
+    LuaStack& operator<<(const bool& b);
+    LuaStack& operator<<(const char& b);
+    LuaStack& operator<<(const short& b);
+    LuaStack& operator<<(const int& b);
+    LuaStack& operator<<(const long& b);
+    LuaStack& operator<<(const float& b);
+    LuaStack& operator<<(const lua_Number& value);
+    LuaStack& operator<<(const char* value);
     LuaStack& push(const char* value, int len);
-    LuaStack& push(const std::string& value);
-    LuaStack& push(const LuaUserdata& userdata);
+    LuaStack& operator<<(const std::string& value);
 
     LuaStack& push(const std::shared_ptr<void>& obj, QString type);
-    LuaStack& push(const LuaValue& value);
-    LuaStack& push(const LuaAccessible& value);
+    LuaStack& push(void* const p, QString type);
+    LuaStack& operator<<(const LuaUserdata& userdata);
+    LuaStack& operator<<(void* p)=delete;
+
+    LuaStack& operator<<(const LuaValue& value);
+    LuaStack& operator<<(const LuaAccessible& value);
 
     /**
      * Push an unmanaged pointer onto the stack. The pointer must outlive the
@@ -295,7 +298,6 @@ public:
      * unusually.
      */
     LuaStack& pushPointer(void* const p);
-    LuaStack& push(void* const p) = delete;
 
     /**
      * Pushes the directly callable C++ function onto
@@ -303,9 +305,14 @@ public:
      * number of arguments will be pulled from the stack
      * and partially applied to the specified function.
      */
-    LuaStack& push(const lua::LuaCallable& f, const int closed = 0);
-    LuaStack& push(void (*p)(LuaStack& stack), const int closed = 0);
-    LuaStack& push(lua_CFunction func, const int closed = 0);
+    LuaStack& push(const lua::LuaCallable& f, const int closed);
+    LuaStack& push(void (*p)(LuaStack& stack), const int closed);
+    LuaStack& push(lua_CFunction func, const int closed);
+
+    LuaStack& operator<<(const lua::LuaCallable& f);
+    LuaStack& operator<<(void (*p)(LuaStack& stack));
+    LuaStack& operator<<(lua_CFunction func);
+
 
     /**
      * Push a nil Lua value onto this stack.
@@ -338,15 +345,24 @@ public:
      * Push the specified C++ function onto this stack.
      */
     template <typename RV, typename... Args>
-    LuaStack& push(RV(*p)(Args...), const int closed = 0)
+    LuaStack& operator<<(RV(*p)(Args...))
+    {
+        return push(p, 0);
+    }
+
+    template <typename RV, typename... Args>
+    LuaStack& push(RV(*p)(Args...), const int closed)
     {
         this->push(LuaWrapper<RV, Args...>(p), closed);
         return (*this);
     }
 
-    /**
-     * Push the specified C++ function onto this stack.
-     */
+    template <typename RV, typename... Args>
+    LuaStack& operator<<(std::function<RV(Args...)> p)
+    {
+        return push(p, 0);
+    }
+
     template <typename RV, typename... Args>
     LuaStack& push(std::function<RV(Args...)> p, const int closed = 0)
     {
@@ -510,15 +526,6 @@ LuaIndex& operator>>(LuaIndex& index, Sink*& sink)
         sink = ptr.get();
     }
     return ++index;
-}
-
-/**
- * Push the specified C++ value onto this stack.
- */
-template <typename T>
-LuaStack& operator<<(LuaStack& stack, const T& value)
-{
-    return stack.push(value);
 }
 
 LuaStack& operator<<(LuaStack& stack, const QChar& value);

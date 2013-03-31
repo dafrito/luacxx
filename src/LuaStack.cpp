@@ -280,12 +280,12 @@ LuaStack& LuaStack::pushedSet(int tablePos)
     return (*this);
 }
 
-LuaStack& LuaStack::push(const char& value)
+LuaStack& LuaStack::operator<<(const char& value)
 {
     return push(&value, 1);
 }
 
-LuaStack& LuaStack::push(const char* value)
+LuaStack& LuaStack::operator<<(const char* value)
 {
     lua_pushstring(luaState(), value);
     return (*this);
@@ -297,42 +297,42 @@ LuaStack& LuaStack::push(const char* value, int len)
     return (*this);
 }
 
-LuaStack& LuaStack::push(const std::string& value)
+LuaStack& LuaStack::operator<<(const std::string& value)
 {
-    return push(value.c_str());
+    return *this << value.c_str();
 }
 
-LuaStack& LuaStack::push(const lua_Number& value)
+LuaStack& LuaStack::operator<<(const lua_Number& value)
 {
     lua_pushnumber(luaState(), value);
     return (*this);
 }
 
-LuaStack& LuaStack::push(const short& value)
+LuaStack& LuaStack::operator<<(const short& value)
 {
     lua_pushinteger(luaState(), value);
     return (*this);
 }
 
-LuaStack& LuaStack::push(const int& value)
+LuaStack& LuaStack::operator<<(const int& value)
 {
     lua_pushinteger(luaState(), value);
     return (*this);
 }
 
-LuaStack& LuaStack::push(const long& value)
+LuaStack& LuaStack::operator<<(const long& value)
 {
     lua_pushnumber(luaState(), value);
     return (*this);
 }
 
-LuaStack& LuaStack::push(const float& value)
+LuaStack& LuaStack::operator<<(const float& value)
 {
     lua_pushnumber(luaState(), value);
     return (*this);
 }
 
-LuaStack& LuaStack::push(const bool& b)
+LuaStack& LuaStack::operator<<(const bool& b)
 {
     lua_pushboolean(luaState(), b);
     return (*this);
@@ -346,7 +346,7 @@ void collectUserdata(LuaStack& stack)
 
 LuaStack& LuaStack::push(const std::shared_ptr<void>& obj, QString type)
 {
-    return push(LuaUserdata(obj, type));
+    return *this << LuaUserdata(obj, type);
 }
 
 LuaStack& LuaStack::push(const LuaUserdata& userdata)
@@ -367,6 +367,11 @@ LuaStack& LuaStack::pushPointer(void* const p)
     return (*this);
 }
 
+LuaStack& LuaStack::operator<<(lua_CFunction func)
+{
+    return push(func, 0);
+}
+
 LuaStack& LuaStack::push(lua_CFunction func, const int closed)
 {
     if (closed > 0) {
@@ -385,6 +390,11 @@ int collectRawCallable(lua_State* state)
     using std::function;
     callable->~function();
     return 0;
+}
+
+LuaStack& LuaStack::operator<<(void(*func)(LuaStack& stack))
+{
+    return push(func, 0);
 }
 
 LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
@@ -412,13 +422,18 @@ LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
     return (*this);
 }
 
+LuaStack& LuaStack::operator<<(const lua::LuaCallable& f)
+{
+    return push(f, 0);
+}
+
 LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
 {
     if (closed > 0) {
         checkPos(-closed);
     }
 
-    push(LuaUserdata(std::make_shared<lua::LuaCallable>(f), "lua::LuaCallable"));
+    *this << std::make_shared<lua::LuaCallable>(f);
     pushPointer(&lua());
 
     // Invoke this twice to move both the Lua environment and the callable pointer to the top of the stack.
@@ -429,13 +444,13 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
     return (*this);
 }
 
-LuaStack& LuaStack::push(const LuaValue& value)
+LuaStack& LuaStack::operator<<(const LuaValue& value)
 {
     value.push(*this);
     return *this;
 }
 
-LuaStack& LuaStack::push(const LuaAccessible& value)
+LuaStack& LuaStack::operator<<(const LuaAccessible& value)
 {
     value.push(*this);
     return *this;
