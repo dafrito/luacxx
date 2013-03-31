@@ -2,7 +2,7 @@ Name: @PACKAGE_NAME@
 
 # Change all release values back to 1 when bumping to a new version
 Version:	@PACKAGE_VERSION@
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	TODO Add one-line summary
 
 Group:		Applications/Internet
