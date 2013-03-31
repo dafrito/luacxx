@@ -44,6 +44,13 @@ public:
         accessor().push(stack);
     }
 
+    bool isNil()
+    {
+        LuaStack stack(_lua);
+        push(stack);
+        return stack.isNil();
+    }
+
     lua::Type type()
     {
         LuaStack stack(_lua);

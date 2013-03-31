@@ -203,5 +203,6 @@ private slots:
         lua("assert(type(foo) == 'table')");
         lua["foo"] = lua::value::nil;
         lua("assert(foo == nil)");
+        QVERIFY(lua["foo"].isNil());
     }
 };
