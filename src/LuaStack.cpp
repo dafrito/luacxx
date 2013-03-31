@@ -378,7 +378,8 @@ int collectRawCallable(lua_State* state)
 {
     void* userdata = lua_touserdata(state, -1);
     lua::LuaCallable* callable = static_cast<lua::LuaCallable*>(userdata);
-    callable->lua::LuaCallable::~LuaCallable();
+    using std::function;
+    callable->~function();
     return 0;
 }
 
