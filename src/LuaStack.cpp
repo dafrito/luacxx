@@ -362,6 +362,10 @@ LuaStack& LuaStack::pushPointer(void* const p)
 
 LuaStack& LuaStack::push(lua_CFunction func, const int closed)
 {
+    if (closed > 0) {
+        checkPos(-closed);
+    }
+
     lua_pushcclosure(luaState(), func, closed);
 }
 
