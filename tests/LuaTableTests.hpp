@@ -49,4 +49,19 @@ private slots:
         QCOMPARE((int)lua("return foo[1](2, 2)"), 4);
     }
 
+    static int returnMagic()
+    {
+        return 42;
+    }
+
+    void tablesCanBeSetWhileNested()
+    {
+        Lua lua;
+
+        lua["Rainback"] = lua::value::table;
+        lua["Rainback"]["Font"] = returnMagic;
+
+        lua("assert(Rainback.Font)");
+    }
+
 };

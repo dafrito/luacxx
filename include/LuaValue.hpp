@@ -5,6 +5,7 @@
 #include <cstring>
 #include "LuaStack.hpp"
 #include "LuaAccessible.hpp"
+#include "LuaTableAccessible.hpp"
 #include "types.hpp"
 
 #include <memory>
@@ -116,15 +117,11 @@ public:
     template <typename T>
     LuaValue operator[](T key)
     {
-        LuaStack stack(_lua);
-
-        accessor().push(stack);
-        stack.get(key, -1);
-
-        // Shift our table off, so only the value remains.
-        stack.shift();
-
-        return stack.save();
+        return LuaValue(
+            std::shared_ptr<LuaAccessible>(
+                new LuaTableAccessible<T>(lua(), accessible, key)
+            )
+        );
     }
 
     int length()

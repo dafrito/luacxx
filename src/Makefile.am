@@ -11,6 +11,7 @@ pkginclude_HEADERS = \
 	../include/LuaAccessible.hpp \
 	../include/LuaGlobalAccessible.hpp \
 	../include/LuaReferenceAccessible.hpp \
+	../include/LuaTableAccessible.hpp \
 	../include/ModuleLoader.hpp \
 	../include/DirectoryModuleLoader.hpp \
 	../include/types.hpp \
