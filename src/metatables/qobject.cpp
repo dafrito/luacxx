@@ -19,7 +19,7 @@ namespace {
     void callMethod(LuaStack& stack);
 } // namespace anonymous
 
-LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
+LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
 {
     stack << LuaUserdata(ptr, "QObject");
 
@@ -29,7 +29,7 @@ LuaStack& operator <<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
     return stack;
 }
 
-LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
+LuaStack& operator>>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
 {
     ptr.reset();
     LuaUserdata* userdata;
@@ -47,7 +47,7 @@ LuaStack& operator >>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
     return stack;
 }
 
-LuaStack& operator >>(LuaStack& stack, QObject*& sink)
+LuaStack& operator>>(LuaStack& stack, QObject*& sink)
 {
     std::shared_ptr<QObject> ptr;
     stack >> ptr;
