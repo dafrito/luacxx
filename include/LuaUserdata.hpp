@@ -9,14 +9,36 @@ class LuaStack;
 
 class LuaUserdata
 {
+    bool _isRaw;
     std::shared_ptr<void> _data;
+    void* _rawData;
     QString _dataType;
 public:
 
-    LuaUserdata(const std::shared_ptr<void> data, const QString& dataType) :
-        _data(data),
+    LuaUserdata(void* const rawData, const QString& dataType) :
+        _isRaw(true),
+        _data(),
+        _rawData(rawData),
         _dataType(dataType)
     {
+    }
+
+    LuaUserdata(const std::shared_ptr<void>& data, const QString& dataType) :
+        _isRaw(false),
+        _data(data),
+        _rawData(nullptr),
+        _dataType(dataType)
+    {
+    }
+
+    bool isShared() const
+    {
+        return !_isRaw;
+    }
+
+    bool isRaw() const
+    {
+        return _isRaw;
     }
 
     /**
@@ -31,7 +53,13 @@ public:
 
     void* rawData()
     {
-        return data().get();
+        return isShared() ? data().get() : _rawData;
+    }
+
+    void reset()
+    {
+        _rawData = nullptr;
+        _data.reset();
     }
 
     /**

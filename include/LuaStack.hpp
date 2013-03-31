@@ -81,6 +81,8 @@ private:
 
     int _offset;
 
+    std::vector<LuaUserdata*> _rawUserdata;
+
     /**
      * Assert that the specified position is within
      * bounds of this LuaStack.

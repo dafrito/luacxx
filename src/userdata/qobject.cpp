@@ -17,46 +17,49 @@ namespace {
     void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
     void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
     void callMethod(LuaStack& stack);
+
 } // namespace anonymous
+
+LuaStack& operator<<(LuaStack& stack, QObject* const& ptr)
+{
+    return stack << *ptr;
+}
+
+LuaStack& operator<<(LuaStack& stack, QObject& ptr)
+{
+    stack << LuaUserdata(&ptr, "QObject");
+
+    stack.pushMetatable();
+    lua::userdata::qobject(stack, &ptr);
+    stack.setMetatable();
+    return stack;
+}
 
 LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
 {
     stack << LuaUserdata(ptr, "QObject");
 
     stack.pushMetatable();
-    lua::userdata::qobject(stack, ptr);
+    lua::userdata::qobject(stack, ptr.get());
     stack.setMetatable();
     return stack;
 }
 
 LuaStack& operator>>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
 {
-    ptr.reset();
-    LuaUserdata* userdata;
-    stack >> userdata;
-    if (!userdata) {
-        return stack;
-    }
-    if (userdata->dataType() != "QObject") {
-        return stack;
-    }
-    ptr = std::shared_ptr<QObject>(
-        userdata->data(),
-        static_cast<QObject*>(userdata->rawData())
-    );
-    return stack;
+    return lua::userdata::convertUserdata(stack, ptr, "QObject");
 }
 
 namespace lua {
 namespace userdata {
 
-void qobject(LuaStack& stack, const std::shared_ptr<QObject>& obj)
+void qobject(LuaStack& stack, QObject* const obj)
 {
-    stack.pushPointer(obj.get());
+    stack.pushPointer(obj);
     stack.push(__index, 1);
     stack.pushedSet("__index", -2);
 
-    stack.pushPointer(obj.get());
+    stack.pushPointer(obj);
     stack.push(__newindex, 1);
     stack.pushedSet("__newindex", -2);
 }
@@ -76,7 +79,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
         goto fail;
     }
 
-    if (!userdata->data()) {
+    if (!userdata->rawData()) {
         goto fail;
     }
 

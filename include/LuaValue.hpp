@@ -91,10 +91,10 @@ public:
     }
 
     template <typename... Args>
-    LuaValue operator()(Args... args)
+    LuaValue operator()(Args&&... args)
     {
         LuaStack stack(_lua);
-        accessor().push(stack);
+        push(stack);
         callLua(luaState(), stack, args...);
 
         if (stack.empty()) {
@@ -128,42 +128,23 @@ public:
         return stack.length();
     }
 
+    static void callLua(lua_State* s, LuaStack& stack)
+    {
+        // Call Lua function. LUA_MULTRET ensures all arguments are returned
+        // Subtract one from the size to ignore the function itself and pass
+        // the correct number of arguments
+        lua_call(s, stack.size() - 1, LUA_MULTRET);
+    }
+
+    template <typename Arg, typename... Rest>
+    static void callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest)
+    {
+        stack << arg;
+        callLua(s, stack, rest...);
+    }
+
 private:
     friend class LuaStack;
 };
-
-namespace
-{
-    template <unsigned L, unsigned I>
-    struct Pusher
-    {
-        template <typename Tuple>
-        static void push(LuaStack& stack, Tuple& tuple)
-        {
-            stack << std::get<I>(tuple);
-            Pusher<L-1, I+1>::push(stack, tuple);
-        }
-    };
-
-    template <unsigned I>
-    struct Pusher<0, I>
-    {
-        template <typename Tuple>
-        static void push(LuaStack&, Tuple&)
-        {
-        }
-    };
-}
-
-template <typename... Args>
-void callLua(lua_State* s, LuaStack& stack, Args... args)
-{
-    typedef std::tuple<Args...> ArgTuple;
-    ArgTuple argTuple(args...);
-    Pusher<sizeof...(Args), 0>::push(stack, argTuple);
-    // Call Lua function. LUA_MULTRET ensures all arguments
-    // are returned
-    lua_call(s, sizeof...(Args), LUA_MULTRET);
-}
 
 #endif

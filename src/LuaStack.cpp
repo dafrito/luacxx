@@ -349,10 +349,19 @@ LuaStack& LuaStack::push(const std::shared_ptr<void>& obj, QString type)
     return *this << LuaUserdata(obj, type);
 }
 
-LuaStack& LuaStack::push(const LuaUserdata& userdata)
+LuaStack& LuaStack::push(void* const p, QString type)
+{
+    return *this << LuaUserdata(p, type);
+}
+
+LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
 {
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
     new (luaUserdata) LuaUserdata(userdata);
+
+    if (userdata.isRaw()) {
+        _rawUserdata.push_back(static_cast<LuaUserdata*>(luaUserdata));
+    }
 
     pushNewTable();
     set("__gc", collectUserdata);
@@ -360,6 +369,7 @@ LuaStack& LuaStack::push(const LuaUserdata& userdata)
 
     return (*this);
 }
+
 
 LuaStack& LuaStack::pushPointer(void* const p)
 {
@@ -507,6 +517,9 @@ bool LuaStack::isNil(const int pos)
 
 LuaStack::~LuaStack()
 {
+    for (auto userdata : _rawUserdata) {
+        userdata->reset();
+    }
     if (size() > 0)
         lua_pop(luaState(), size());
 }

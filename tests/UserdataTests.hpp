@@ -150,4 +150,36 @@ private slots:
         lua["Tick"](std::shared_ptr<QObject>(square), M_PI);
         QVERIFY(square->getX() != old);
     }
+
+    void stackAcceptsRawPointers()
+    {
+        Lua lua;
+
+        Counter counter;
+        LuaStack stack(lua);
+        stack << counter;
+        QCOMPARE(stack.typestring().c_str(), "userdata");
+    }
+
+    void stackAllocatedObjectsAreAccepted()
+    {
+        Lua lua;
+
+        lua(
+        "function work(a, b)"
+        "   a.value = 50;"
+        "   if b then b.value = 42; end;"
+        "end;");
+
+        Counter a(42);
+        lua["work"](a, Counter(53));
+        lua["work"](a, a);
+        lua["work"](Counter(53), a);
+        lua["work"](Counter(53), Counter(42));
+        lua["work"](&a, Counter(42));
+        lua["work"](&a, a);
+        lua["work"](a, &a);
+
+        //QCOMPARE(counter.getValue(), 50);
+    }
 };
