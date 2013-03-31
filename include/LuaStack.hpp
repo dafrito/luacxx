@@ -544,6 +544,21 @@ LuaIndex& operator>>(LuaIndex& index, std::string& sink);
 LuaIndex& operator>>(LuaIndex& index, QString& sink);
 LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 
+LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
+LuaIndex& operator>>(LuaIndex& index, const char*& sink);
+
+template<class Sink>
+LuaIndex& operator>>(LuaIndex& index, Sink*& sink)
+{
+    std::shared_ptr<Sink> ptr;
+    index.stack() >> ptr;
+
+    if (ptr) {
+        sink = ptr.get();
+    }
+    return ++index;
+}
+
 /**
  * Push the specified C++ value onto this stack.
  */

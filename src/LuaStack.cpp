@@ -526,6 +526,18 @@ LuaIndex end(LuaStack& stack)
     return stack.end();
 }
 
+LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink)
+{
+    index.stack().to(sink, index.pos());
+    return ++index;
+}
+
+LuaIndex& operator>>(LuaIndex& index, const char*& sink)
+{
+    index.stack().to(sink, index.pos());
+    return ++index;
+}
+
 LuaIndex& operator>>(LuaIndex& index, std::string& sink)
 {
     sink = index.stack().as<const char*>(index.pos());
