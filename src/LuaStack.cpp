@@ -193,6 +193,14 @@ LuaStack& LuaStack::to(lua_Number& sink, int pos)
     return (*this);
 }
 
+LuaStack& LuaStack::to(char& sink, int pos)
+{
+    checkPos(pos);
+    size_t len = 1;
+    sink = *lua_tolstring(luaState(), pos, &len);
+    return (*this);
+}
+
 LuaStack& LuaStack::to(short& sink, int pos)
 {
     checkPos(pos);
@@ -263,6 +271,11 @@ LuaStack& LuaStack::pushedSet(int tablePos)
     checkPos(tablePos);
     lua_settable(luaState(), tablePos);
     return (*this);
+}
+
+LuaStack& LuaStack::push(const char& value)
+{
+    return push(&value, 1);
 }
 
 LuaStack& LuaStack::push(const char* value)

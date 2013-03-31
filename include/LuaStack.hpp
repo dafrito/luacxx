@@ -229,6 +229,7 @@ public:
      * at the specified stack position.
      */
     LuaStack& to(bool& sink, int pos = -1);
+    LuaStack& to(char& sink, int pos = -1);
     LuaStack& to(short& sink, int pos = -1);
     LuaStack& to(int& sink, int pos = -1);
     LuaStack& to(long& sink, int pos = -1);
@@ -273,6 +274,7 @@ public:
      * Pushes the C++ value onto the top of this stack.
      */
     LuaStack& push(const bool& b);
+    LuaStack& push(const char& b);
     LuaStack& push(const short& b);
     LuaStack& push(const int& b);
     LuaStack& push(const long& b);
