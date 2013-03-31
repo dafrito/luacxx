@@ -9,12 +9,13 @@
 #include <lua.hpp>
 #include "types.hpp"
 
+#include "LuaIndex.hpp"
+
 class Lua;
 class LuaStack;
 class LuaValue;
 class LuaAccessible;
 class LuaUserdata;
-class LuaIndex;
 
 namespace
 {
@@ -474,53 +475,6 @@ LuaStack& operator>>(LuaStack& stack, Sink& sink)
     stack.rbegin() >> sink;
     return stack;
 }
-
-class LuaIndex
-{
-    LuaStack& _stack;
-
-    int _pos;
-    int _direction;
-public:
-    explicit LuaIndex(LuaStack& stack, const int pos, const int direction = 1) :
-        _stack(stack),
-        _pos(pos),
-        _direction(direction)
-    {
-    }
-
-    LuaStack& stack() const
-    {
-        return _stack;
-    }
-
-    int pos() const
-    {
-        return _pos;
-    }
-
-    LuaIndex& operator++(int)
-    {
-        return operator++();
-    }
-
-    LuaIndex& operator++()
-    {
-        _pos += _direction;
-        return *this;
-    }
-
-    LuaIndex& operator--(int)
-    {
-        return operator--();
-    }
-
-    LuaIndex& operator--()
-    {
-        _pos -= _direction;
-        return *this;
-    }
-};
 
 template <class Sink>
 LuaIndex& operator>>(LuaIndex& index, Sink& sink)
