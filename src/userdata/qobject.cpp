@@ -209,6 +209,7 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
         p.convert((QVariant::Type)type);
         variants << p;
     }
+    stack.clear();
     void* vvargs[11];
     for (int i = 0; i < variants.size(); ++i) {
         vvargs[i] = const_cast<void*>(variants.at(i).data());
