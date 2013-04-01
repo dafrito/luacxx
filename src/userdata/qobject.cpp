@@ -200,7 +200,7 @@ void callMethod(LuaStack& stack)
 void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
     QList<QVariant> variants;
-    variants << QVariant(QMetaType::type(method.typeName()), (void*)0);
+    variants << QVariant(QMetaType::type(method.typeName()), nullptr);
     QList<QByteArray> params = method.parameterTypes();
     for (int i = 0; i < params.count(); ++i) {
         int type = QMetaType::type(params.at(i));
