@@ -148,6 +148,19 @@ std::string LuaStack::typestring(int pos) const
     return std::string(lua_typename(luaState(), lua_type(luaState(), pos)));
 }
 
+std::string LuaStack::traceback()
+{
+    #if LUA_VERSION_NUM >= 502
+        std::string rv;
+        luaL_traceback(luaState(), luaState(), 0, 1);
+        rv << as<std::string>();
+        pop();
+        return rv;
+    #else
+        return _lua("return debug.traceback()").as<std::string>();
+    #endif
+}
+
 LuaStack& LuaStack::to(const char*& sink, int pos)
 {
     checkPos(pos);

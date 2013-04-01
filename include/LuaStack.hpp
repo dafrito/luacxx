@@ -221,6 +221,8 @@ public:
         return pop(size());
     }
 
+    std::string traceback();
+
     /**
      * Returns the type of the Lua stack value at the
      * specified stack position.
