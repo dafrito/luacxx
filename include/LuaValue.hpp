@@ -138,6 +138,8 @@ public:
         return stack.length();
     }
 
+private:
+
     static void callLua(lua_State* s, LuaStack& stack)
     {
         // Call Lua function. LUA_MULTRET ensures all arguments are returned
@@ -153,7 +155,6 @@ public:
         callLua(s, stack, rest...);
     }
 
-private:
     friend class LuaStack;
 };
 
