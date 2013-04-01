@@ -77,9 +77,15 @@ public:
     template<typename T>
     operator T() const
     {
-        T t;
-        to(t);
-        return t;
+        return as<T>();
+    }
+
+    template<typename Sink>
+    Sink as() const
+    {
+        Sink sink;
+        to(sink);
+        return sink;
     }
 
     template<typename T>
