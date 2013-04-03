@@ -88,6 +88,17 @@ public:
         return sink;
     }
 
+    const LuaValue& operator=(const LuaValue& other)
+    {
+        if (&other == this) {
+            return *this;
+        }
+        LuaStack s(_lua);
+        s << other;
+        s >> *this;
+        return *this;
+    }
+
     template<typename T>
     const LuaValue& operator=(const T& value)
     {
