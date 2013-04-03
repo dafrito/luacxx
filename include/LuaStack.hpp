@@ -331,7 +331,7 @@ public:
     template <class RV>
     LuaStack& operator<<(RV (*p)(LuaStack&))
     {
-        return *this << std::function<void(LuaStack&)>([=](LuaStack& stack) {
+        return *this << lua::LuaCallable([=](LuaStack& stack) {
             RV sink(p(stack));
             stack.clear();
             stack << sink;
@@ -341,7 +341,7 @@ public:
     template <class RV>
     LuaStack& operator<<(std::function<RV(LuaStack&)> func)
     {
-        return *this << std::function<void(LuaStack&)>([=](LuaStack& stack) {
+        return *this << lua::LuaCallable([=](LuaStack& stack) {
             RV sink(func(stack));
             stack.clear();
             stack << sink;
