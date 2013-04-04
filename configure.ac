@@ -38,7 +38,6 @@ AX_LUA_HEADERS
 AX_HAVE_QT_CORE
 AX_HAVE_QT_GUI
 AX_HAVE_QT_MOC
-AX_HAVE_QT_TEST
 
 if test x"$have_qt_core" = xno || test x"$have_qt_gui" = xno || test x"$have_qt_moc" = xno; then
     AC_MSG_ERROR([Qt is required to build lua-cxx])
