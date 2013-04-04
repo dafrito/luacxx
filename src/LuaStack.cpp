@@ -585,16 +585,6 @@ int LuaStack::invokeLuaCallable(lua_State* state)
     return invokeCallable(state, static_cast<lua::LuaCallable*>(funcPtr->rawData()));
 }
 
-LuaIndex begin(LuaStack& stack)
-{
-    return stack.begin();
-}
-
-LuaIndex end(LuaStack& stack)
-{
-    return stack.end();
-}
-
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink)
 {
     index.stack().to(sink, index.pos());

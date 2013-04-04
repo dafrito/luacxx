@@ -502,9 +502,6 @@ public:
     friend class Lua;
 };
 
-LuaIndex begin(LuaStack& stack);
-LuaIndex end(LuaStack& stack);
-
 /**
  * Assign the topmost value on the specified stack to the
  * specified C++ value.
