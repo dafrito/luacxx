@@ -555,7 +555,7 @@ LuaStack::~LuaStack()
 int LuaStack::invokeCallable(lua_State* state, const lua::LuaCallable* const func)
 {
     void* p = lua_touserdata(state, lua_upvalueindex(2));
-    Lua* lua = static_cast<Lua*>(p);
+    Lua* const lua = static_cast<Lua*>(p);
 
     // Push all upvalues unto the stack.
     int upvalueIndex = 1;
