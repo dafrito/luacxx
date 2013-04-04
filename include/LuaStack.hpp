@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include <tuple>
+#include <type_traits>
 #include <lua.hpp>
 #include "types.hpp"
 
@@ -524,7 +524,7 @@ LuaIndex& operator>>(LuaIndex& index, Sink& sink)
 }
 
 template <class Sink>
-LuaIndex operator>>(LuaIndex&& index, Sink& sink)
+LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
 {
     LuaIndex realIndex(index);
     realIndex >> sink;
@@ -559,87 +559,41 @@ LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& c
 
 namespace
 {
+    struct ArgStop {};
 
-    /**
-     * For each type in the specified tuple, convert a Lua argument to that
-     * type, until all types have been converted to fill the tuple.
-     */
-    template <unsigned NUMARGS>
-    struct Filler
+    template <typename Callee, typename RV, typename Arg, typename... Remaining>
+    struct Invocator
     {
-        template <typename Tuple>
-        static void fill(LuaStack& stack, Tuple& tuple)
+        template <typename... Rest>
+        static void apply(LuaStack& stack, const Callee& func, Rest&... rest)
         {
-            // Populate the current C++ object with the value from Lua.
-            stack >> std::get<NUMARGS-1>(tuple);
-            stack.pop();
-
-            // Recurse for all remaining Lua arguments.
-            Filler<NUMARGS-1>::fill(stack, tuple);
+            // Strip any const T& down to a T
+            typename std::remove_const<typename std::remove_reference<Arg>::type>::type arg;
+            stack.begin() >> arg;
+            stack.shift();
+            Invocator<Callee, RV, Remaining...>::template apply<Rest..., Arg>(stack, func, rest..., arg);
         }
     };
 
-
-    /**
-     * No arguments need to be converted, so do nothing. This ends the
-     * recursive process.
-     */
-    template <>
-    struct Filler<0>
+    template <typename Callee, typename RV>
+    struct Invocator<Callee, RV, ArgStop>
     {
-        template <typename Tuple>
-        static void fill(LuaStack&, Tuple&)
-        {}
-    };
-
-    /**
-     * Unpack the converted Lua arguments from the tuple. This template
-     * will be recursively invoked, unpacking a single argument with
-     * each invocation. The unpacked arguments will be passed back to this
-     * function until no arguments remain in the tuple. When this occurs,
-     * the specified C++ function will be invoked.
-     */
-    template <typename RV, unsigned NUMARGS>
-    struct Chain
-    {
-        template <typename Function, typename Tuple, typename... Args>
-        static void apply(LuaStack& stack, const Function& f, const Tuple& tuple, Args... args)
+        template <typename... FullArgs>
+        static void apply(LuaStack& stack, const Callee& func, FullArgs&... args)
         {
-            Chain<RV, NUMARGS-1>::apply(
-                stack,
-                f,
-                tuple,
-                std::get<NUMARGS-1>(tuple),
-                args...
-            );
+            stack.clear();
+            stack << func(args...);
         }
     };
 
-    /**
-     * Invoke the C++ function with all arguments in args.
-     */
-    template <typename RV>
-    struct Chain <RV, 0>
+    template <typename Callee>
+    struct Invocator<Callee, void, ArgStop>
     {
-        template <typename Function, typename Tuple, typename... Args>
-        static void apply(LuaStack& stack, const Function& f, const Tuple&, Args... args)
+        template <typename... FullArgs>
+        static void apply(LuaStack& stack, const Callee& func, FullArgs&... args)
         {
-            stack << f(args...);
-        }
-    };
-
-    /**
-     * Invoke the C++ function with all arguments in args.
-     *
-     * This special case ensures we don't attempt to push a void return value.
-     */
-    template <>
-    struct Chain <void, 0>
-    {
-        template <typename Function, typename Tuple, typename... Args>
-        static void apply(LuaStack&, const Function& f, const Tuple&, Args... args)
-        {
-            f(args...);
+            stack.clear();
+            func(args...);
         }
     };
 
@@ -657,13 +611,6 @@ namespace
     class LuaWrapper
     {
         /**
-         * Argument type tuple. This will be used to construct a tuple
-         * that will collect converted Lua arguments. These arguments will
-         * then be passed to the underlying C++ function.
-         */
-        typedef std::tuple<Args...> ArgsTuple;
-
-        /**
          * The C++ function that will eventually be invoked.
          */
         std::function<RV(Args...)> func;
@@ -674,13 +621,7 @@ namespace
 
         void operator()(LuaStack& stack)
         {
-            ArgsTuple args;
-
-            // Fill our tuple with arguments passed from Lua
-            Filler<sizeof...(Args)>::fill(stack, args);
-
-            // Use the filled type
-            Chain<RV, sizeof...(Args)>::apply(stack, func, args);
+            Invocator<decltype(func), RV, Args..., ArgStop>::template apply<>(stack, func);
         }
     };
 }
