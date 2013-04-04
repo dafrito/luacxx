@@ -3,7 +3,7 @@ Name: @PACKAGE_NAME@
 # Change all release values back to 1 when bumping to a new version
 Version:	@PACKAGE_VERSION@
 Release:	1%{?dist}
-Summary:	TODO Add one-line summary
+Summary:	Bridge between Lua and C++
 
 Group:		Applications/Internet
 License:	Proprietary
