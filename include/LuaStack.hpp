@@ -82,11 +82,15 @@ private:
 
     Lua& _lua;
 
-    lua_State* luaState() const;
+    LuaStack* _parent;
+    bool _locked;
 
     int _offset;
+    int _top;
 
     std::vector<LuaUserdata*> _rawUserdata;
+
+    lua_State* luaState() const;
 
     /**
      * Assert that the specified position is within
@@ -117,48 +121,24 @@ private:
      * instance; they will be popped when this instance
      * is destroyed.
      */
-    LuaStack& grab() {
-        return offset(0);
-    }
+    LuaStack& grab();
 
     /**
      * Forcibly abandon all stack values. This
      * instance will no longer be responsible for
      * the values currently on the stack.
      */
-    LuaStack& disown() {
-        // FIXME I think this should be offset(offset() + size());
-        return offset(size());
-    }
+    LuaStack& disown();
 
-    LuaStack* _parent;
-    bool _locked;
-
-    void lock()
-    {
-        if (isLocked()) {
-            throw "Refusing to lock a currently locked stack";
-        }
-    }
-
-    bool isLocked()
-    {
-        return _locked;
-    }
-
-    void unlock()
-    {
-        _locked = false;
-    }
+    void lock();
+    bool isLocked() const;
+    void unlock();
 
 public:
     LuaStack(Lua& lua);
     LuaStack(LuaStack& stack);
 
-    Lua& lua() const
-    {
-        return _lua;
-    }
+    Lua& lua() const;
 
     /**
      * Return the number of stack values that are

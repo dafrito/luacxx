@@ -8,24 +8,42 @@
 
 LuaStack::LuaStack(Lua& lua) :
     _lua(lua),
-    _offset(lua_gettop(luaState())),
     _parent(0),
-    _locked(false)
+    _locked(false),
+    _offset(lua_gettop(luaState()))
 {
 }
 
 LuaStack::LuaStack(LuaStack& parent) :
     _lua(parent.lua()),
-    _offset(parent.top()),
     _parent(&parent),
-    _locked(false)
+    _locked(false),
+    _offset(parent.top())
 {
     _parent->lock();
+}
+
+Lua& LuaStack::lua() const
+{
+    return _lua;
 }
 
 lua_State* LuaStack::luaState() const
 {
     return _lua.state;
+}
+
+LuaStack& LuaStack::grab()
+{
+    if (_parent) {
+        throw "Refusing to grab values when the stack has a parent";
+    }
+    return offset(0);
+}
+
+LuaStack& LuaStack::disown()
+{
+    return offset(top());
 }
 
 LuaStack& LuaStack::offset(const int offset)
@@ -46,6 +64,26 @@ int LuaStack::size() const
 int LuaStack::top() const
 {
     return lua_gettop(luaState());
+}
+
+void LuaStack::lock()
+{
+    if (isLocked()) {
+        throw "Refusing to lock a currently locked stack";
+    }
+}
+
+bool LuaStack::isLocked() const
+{
+    return _locked;
+}
+
+void LuaStack::unlock()
+{
+    if (_top != lua_gettop(luaState())) {
+        throw "Stack was not properly reset when stack is unlocked";
+    }
+    _locked = false;
 }
 
 LuaIndex LuaStack::begin()
