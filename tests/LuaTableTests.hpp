@@ -64,4 +64,12 @@ private slots:
         lua("assert(Rainback.Font)");
     }
 
+    void tableReferences()
+    {
+        Lua lua;
+
+        lua("foo = {bar = 42}");
+
+        QCOMPARE(lua["foo"]["bar"].typestring(), std::string("number"));
+    }
 };
