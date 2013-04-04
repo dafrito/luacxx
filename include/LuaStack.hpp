@@ -358,7 +358,7 @@ public:
      * Returns whether the stack value at the specified
      * position is exactly nil.
      */
-    bool isNil(const int pos = -1);
+    bool isNil(const int pos = -1) const;
 
     template <class Message>
     void error(const Message& message)

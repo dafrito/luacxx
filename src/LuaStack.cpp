@@ -628,7 +628,7 @@ LuaStack& LuaStack::setMetatable(const int pos)
 }
 
 
-bool LuaStack::isNil(const int pos)
+bool LuaStack::isNil(const int pos) const
 {
     checkPos(pos);
     return lua_isnil(luaState(), pos) == 1;
