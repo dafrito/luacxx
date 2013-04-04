@@ -21,13 +21,16 @@ done
 echo
 
 echo "int main(int argc, char *argv[])"
-echo -n "{"
+echo "{"
+echo "    bool passed = true;"
 
 for f in $*; do
 	className=`basename $f .hpp`
 	echo
 	echo "    $className test_$className;"
-	echo "    QTest::qExec(&test_$className, argc, argv);"
+	echo "    passed = QTest::qExec(&test_$className, argc, argv) == 0 && passed;"
 done
 
+echo
+echo "    return passed ? 0 : 1;"
 echo "}"
