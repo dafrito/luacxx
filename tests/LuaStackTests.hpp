@@ -245,4 +245,38 @@ private slots:
         LuaStack stack(lua);
         QCOMPARE(stack.global("c").get("d").get("e").get("f").as<int>(), 42);
     }
+
+    void nestedInvocations()
+    {
+        Lua lua;
+
+        lua["bar"] = std::function<const char*()>([&]() {
+            return "bar";
+        });
+
+        lua["foo"] = std::function<QString(const QString&)>([&](const QString& internal) {
+            return internal + QString("foo") + lua["bar"]().as<QString>();
+        });
+
+        QCOMPARE(lua("return foo('lua')").as<const char*>(), "luafoobar");
+    }
+
+    void throwAnError()
+    {
+        Lua lua;
+
+        bool errored = false;
+
+        try {
+            lua("function foo()"
+            "   bar();"
+            "end");
+
+            lua["foo"]();
+        } catch(LuaException& ex) {
+            errored = true;
+        }
+
+        QVERIFY(errored);
+    }
 };
