@@ -22,8 +22,13 @@ valgrind:
 cehck: check
 .PHONY: cehck
 
+SRCRPM=lua-cxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
+
 RPMFLAGS ?= --ba
-rpm: rpm.spec dist-gzip | $(RPMDIR)
+rpm: $(SRCRPM)
+
+$(SRCRPM): rpm.spec $(DISTFILES)
+	$(MAKE) dist-gzip $(RPMDIR)
 	cp -u $(PACKAGE_NAME)-$(PACKAGE_VERSION).tar.gz $(RPMDIR)/SOURCES
 	cp -u rpm.spec $(RPMDIR)/SPECS/$(PACKAGE_NAME).spec
 	rpmbuild $(RPMFLAGS) $(RPMDIR)/SPECS/$(PACKAGE_NAME).spec
@@ -31,7 +36,9 @@ rpm: rpm.spec dist-gzip | $(RPMDIR)
 		arch=`echo $$package | grep -E -o '[^.]+$$'`; \
 		filename="$(RPMDIR)/RPMS/$$arch/$$package.rpm"; \
 		[ -e `basename $$filename` ] || ln -s $$filename; \
-done
+	done
+	rm -f $@
+	ln -s $(RPMDIR)/SRPMS/lua-cxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $@
 .PHONY: rpm
 
 $(RPMDIR):
