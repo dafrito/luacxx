@@ -149,6 +149,8 @@ public:
      */
     int size() const;
 
+    int top() const;
+
     /**
      * Return whether there are any controlled stack
      * values from this stack.

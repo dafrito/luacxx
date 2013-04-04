@@ -8,8 +8,19 @@
 
 LuaStack::LuaStack(Lua& lua) :
     _lua(lua),
-    _offset(lua_gettop(luaState()))
+    _offset(lua_gettop(luaState())),
+    _parent(0),
+    _locked(false)
 {
+}
+
+LuaStack::LuaStack(LuaStack& parent) :
+    _lua(parent.lua()),
+    _offset(parent.top()),
+    _parent(&parent),
+    _locked(false)
+{
+    _parent->lock();
 }
 
 lua_State* LuaStack::luaState() const
@@ -21,7 +32,7 @@ LuaStack& LuaStack::offset(int offset)
 {
     if(offset < 0)
         throw LuaException(&lua(), "Offset must be non-negative");
-    if(offset > lua_gettop(luaState()))
+    if(offset > top())
         throw LuaException(&lua(), "Offset must be less than the top of lua's stack");
     _offset = offset;
     return (*this);
@@ -29,7 +40,12 @@ LuaStack& LuaStack::offset(int offset)
 
 int LuaStack::size() const
 {
-    return lua_gettop(luaState()) - offset();
+    return top() - offset();
+}
+
+int LuaStack::top() const
+{
+    return lua_gettop(luaState());
 }
 
 LuaIndex LuaStack::begin()
@@ -44,7 +60,7 @@ LuaIndex LuaStack::end()
 
 LuaIndex LuaStack::rbegin()
 {
-    return LuaIndex(*this, -1, -1);
+    return LuaIndex(*this, top(), -1);
 }
 
 LuaIndex LuaStack::rend()
@@ -78,15 +94,14 @@ void LuaStack::checkPos(int pos) const
 {
     if (isMagicalPos(pos))
         return;
-    const int top=lua_gettop(luaState());
     if (pos == 0)
         throw LuaException(&lua(), "Stack position must not be zero");
     // Convert relative positions to absolute ones.
     if (pos < 0)
-        pos += top;
+        pos += top();
     if (pos < offset())
         throw LuaException(&lua(), "Stack position is not managed by this stack");
-    if (pos > top)
+    if (pos > top())
         throw LuaException(&lua(), "Stack position is beyond the top of the lua stack");
 }
 
