@@ -134,6 +134,8 @@ private:
     bool locked() const;
     void unlock();
 
+    void assertUnlocked() const;
+
 public:
     LuaStack(Lua& lua);
     LuaStack(LuaStack& stack);
@@ -497,6 +499,7 @@ public:
      */
     LuaStack& setGlobal(const QString& key)
     {
+        assertUnlocked();
         lua_setglobal(luaState(), key.toAscii().data());
         return (*this);
     }

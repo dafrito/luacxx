@@ -81,6 +81,13 @@ bool LuaStack::locked() const
     return _locked;
 }
 
+void LuaStack::assertUnlocked() const
+{
+    if (locked()) {
+        throw "Refusing to mutate stack while stack is locked";
+    }
+}
+
 void LuaStack::unlock()
 {
     if (_top != lua_gettop(luaState())) {
@@ -116,6 +123,7 @@ LuaIndex LuaStack::at(const int pos, const int direction)
 
 LuaStack& LuaStack::pop(int count)
 {
+    assertUnlocked();
     if(count > size())
         throw LuaException(&lua(), "Refusing to pop elements not managed by this stack");
     lua_pop(luaState(), count);
@@ -124,6 +132,7 @@ LuaStack& LuaStack::pop(int count)
 
 LuaStack& LuaStack::shift(int count)
 {
+    assertUnlocked();
     while(count-- > 0) {
         // TODO We need to check if the offset is being moved here.
         lua_remove(luaState(), 1);
@@ -148,6 +157,7 @@ void LuaStack::checkPos(int pos) const
 
 LuaStack& LuaStack::replace(int pos)
 {
+    assertUnlocked();
     checkPos(pos);
     if (empty())
         throw LuaException(&lua(), "Stack must not be empty when replacing elements");
@@ -157,6 +167,7 @@ LuaStack& LuaStack::replace(int pos)
 
 LuaStack& LuaStack::remove(int pos)
 {
+    assertUnlocked();
     checkPos(pos);
     lua_remove(luaState(), pos);
     return *this;
@@ -182,6 +193,7 @@ LuaStack& LuaStack::swap(int a, int b)
 
 LuaStack& LuaStack::pushCopy(int pos)
 {
+    assertUnlocked();
     checkPos(pos);
     lua_pushvalue(luaState(), pos);
     return *this;
@@ -333,6 +345,7 @@ LuaStack& LuaStack::to(LuaUserdata*& sink, int pos)
 
 LuaStack& LuaStack::global(const char* name)
 {
+    assertUnlocked();
     lua_getglobal(luaState(), name);
     return (*this);
 }
@@ -351,6 +364,7 @@ LuaStack& LuaStack::global(const QString& name)
 
 LuaStack& LuaStack::pushedGet(int tablePos)
 {
+    assertUnlocked();
     checkPos(tablePos);
     lua_gettable(luaState(), tablePos);
     return (*this);
@@ -358,6 +372,7 @@ LuaStack& LuaStack::pushedGet(int tablePos)
 
 LuaStack& LuaStack::pushedSet(int tablePos)
 {
+    assertUnlocked();
     checkPos(tablePos);
     lua_settable(luaState(), tablePos);
     return (*this);
@@ -370,12 +385,14 @@ LuaStack& LuaStack::operator<<(const char& value)
 
 LuaStack& LuaStack::operator<<(const char* value)
 {
+    assertUnlocked();
     lua_pushstring(luaState(), value);
     return (*this);
 }
 
 LuaStack& LuaStack::push(const char* value, int len)
 {
+    assertUnlocked();
     lua_pushlstring(luaState(), value, len);
     return (*this);
 }
@@ -387,36 +404,42 @@ LuaStack& LuaStack::operator<<(const std::string& value)
 
 LuaStack& LuaStack::operator<<(const lua_Number& value)
 {
+    assertUnlocked();
     lua_pushnumber(luaState(), value);
     return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const short& value)
 {
+    assertUnlocked();
     lua_pushinteger(luaState(), value);
     return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const int& value)
 {
+    assertUnlocked();
     lua_pushinteger(luaState(), value);
     return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const long& value)
 {
+    assertUnlocked();
     lua_pushnumber(luaState(), value);
     return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const float& value)
 {
+    assertUnlocked();
     lua_pushnumber(luaState(), value);
     return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const bool& b)
 {
+    assertUnlocked();
     lua_pushboolean(luaState(), b);
     return (*this);
 }
@@ -439,6 +462,8 @@ LuaStack& LuaStack::push(void* const p, QString type)
 
 LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
 {
+    assertUnlocked();
+
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
     new (luaUserdata) LuaUserdata(userdata);
 
@@ -456,6 +481,7 @@ LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
 
 LuaStack& LuaStack::pushPointer(void* const p)
 {
+    assertUnlocked();
     lua_pushlightuserdata(luaState(), p);
     return (*this);
 }
@@ -467,6 +493,8 @@ LuaStack& LuaStack::operator<<(lua_CFunction func)
 
 LuaStack& LuaStack::push(lua_CFunction func, const int closed)
 {
+    assertUnlocked();
+
     if (closed > 0) {
         checkPos(-closed);
     }
@@ -492,6 +520,8 @@ LuaStack& LuaStack::operator<<(void(*func)(LuaStack& stack))
 
 LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
 {
+    assertUnlocked();
+
     if (closed > 0) {
         checkPos(-closed);
     }
@@ -522,6 +552,8 @@ LuaStack& LuaStack::operator<<(const lua::LuaCallable& f)
 
 LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
 {
+    assertUnlocked();
+
     if (closed > 0) {
         checkPos(-closed);
     }
@@ -551,6 +583,7 @@ LuaStack& LuaStack::operator<<(const LuaAccessible& value)
 
 LuaStack& LuaStack::operator<<(const lua::value& value)
 {
+    assertUnlocked();
     switch (value) {
         case lua::value::table:
             lua_newtable(luaState());
@@ -574,6 +607,7 @@ bool LuaStack::hasMetatable(const int pos)
 
 LuaStack& LuaStack::pushMetatable(const int pos)
 {
+    assertUnlocked();
     checkPos(pos);
     bool hasMeta = lua_getmetatable(luaState(), pos) != 0;
     if (!hasMeta) {
@@ -587,6 +621,7 @@ LuaStack& LuaStack::pushMetatable(const int pos)
 
 LuaStack& LuaStack::setMetatable(const int pos)
 {
+    assertUnlocked();
     checkPos(pos);
     lua_setmetatable(luaState(), pos);
     return (*this);
