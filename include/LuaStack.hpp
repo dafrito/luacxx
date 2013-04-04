@@ -505,8 +505,6 @@ public:
     }
 
     ~LuaStack();
-
-    friend class Lua;
 };
 
 /**
