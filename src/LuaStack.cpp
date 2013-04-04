@@ -44,7 +44,7 @@ LuaIndex LuaStack::end()
 
 LuaIndex LuaStack::rbegin()
 {
-    return LuaIndex(*this, size(), -1);
+    return LuaIndex(*this, -1, -1);
 }
 
 LuaIndex LuaStack::rend()
