@@ -131,7 +131,7 @@ private:
     LuaStack& disown();
 
     void lock();
-    bool isLocked() const;
+    bool locked() const;
     void unlock();
 
 public:

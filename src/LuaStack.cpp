@@ -63,17 +63,20 @@ int LuaStack::size() const
 
 int LuaStack::top() const
 {
+    if (locked()) {
+        return _top;
+    }
     return lua_gettop(luaState());
 }
 
 void LuaStack::lock()
 {
-    if (isLocked()) {
+    if (locked()) {
         throw "Refusing to lock a currently locked stack";
     }
 }
 
-bool LuaStack::isLocked() const
+bool LuaStack::locked() const
 {
     return _locked;
 }
