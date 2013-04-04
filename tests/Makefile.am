@@ -27,14 +27,12 @@ runtest_MOC_SOURCES = \
 
 nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
 
-check_SCRIPTS = \
+EXTRA_DIST = \
 	lua/bin/a.lua \
 	lua/bin/b.lua \
 	lua/anim.lua \
 	lua/simple.lua \
 	lua/testlib/Library.lua
-
-CLEANFILES = $(check_SCRIPTS)
 
 mostlyclean-local:
 	rm -f $(runtest_MOC_SOURCES)
