@@ -118,6 +118,7 @@ LuaIndex LuaStack::rend()
 
 LuaIndex LuaStack::at(const int pos, const int direction)
 {
+    checkPos(pos);
     return LuaIndex(*this, pos, direction);
 }
 
