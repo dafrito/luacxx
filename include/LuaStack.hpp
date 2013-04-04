@@ -130,8 +130,30 @@ private:
         // FIXME I think this should be offset(offset() + size());
         return offset(size());
     }
+
+    LuaStack* _parent;
+    bool _locked;
+
+    void lock()
+    {
+        if (isLocked()) {
+            throw "Refusing to lock a currently locked stack";
+        }
+    }
+
+    bool isLocked()
+    {
+        return _locked;
+    }
+
+    void unlock()
+    {
+        _locked = false;
+    }
+
 public:
     LuaStack(Lua& lua);
+    LuaStack(LuaStack& stack);
 
     Lua& lua() const
     {

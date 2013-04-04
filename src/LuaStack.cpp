@@ -565,6 +565,9 @@ LuaStack::~LuaStack()
     }
     if (size() > 0)
         lua_pop(luaState(), size());
+    if (_parent) {
+        _parent->unlock();
+    }
 }
 
 int LuaStack::invokeCallable(lua_State* state, const lua::LuaCallable* const func)
