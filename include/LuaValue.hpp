@@ -6,6 +6,7 @@
 #include "LuaStack.hpp"
 #include "LuaAccessible.hpp"
 #include "LuaTableAccessible.hpp"
+#include "LuaException.hpp"
 #include "types.hpp"
 
 #include <memory>
@@ -119,6 +120,7 @@ public:
     LuaValue operator()(Args&&... args)
     {
         LuaStack stack(_lua);
+        stack << onError;
         push(stack);
         callLua(luaState(), stack, args...);
 
@@ -151,12 +153,29 @@ public:
 
 private:
 
+    static std::string onError(LuaStack& stack)
+    {
+        std::string error("Error while invoking Lua function: ");
+        error += stack.traceback();
+        return error;
+    }
+
     static void callLua(lua_State* s, LuaStack& stack)
     {
         // Call Lua function. LUA_MULTRET ensures all arguments are returned
         // Subtract one from the size to ignore the function itself and pass
         // the correct number of arguments
-        lua_call(s, stack.size() - 1, LUA_MULTRET);
+        int result = lua_pcall(s, stack.size() - 2, LUA_MULTRET, stack.offset() + 1);
+        switch (result) {
+            case 0:
+                return;
+            case LUA_ERRRUN:
+                throw LuaException(&stack.lua(), stack.as<std::string>());
+            case LUA_ERRMEM:
+                throw LuaException(&stack.lua(), "Lua memory error");
+            case LUA_ERRERR:
+                throw LuaException(&stack.lua(), "Lua error within error handler");
+        }
     }
 
     template <typename Arg, typename... Rest>
