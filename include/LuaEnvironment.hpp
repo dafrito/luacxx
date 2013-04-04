@@ -44,8 +44,13 @@ public:
 
     int internalStackSize() const;
 
+    // Friend to allow access to lua_State* for stack modification
     friend class LuaStack;
+
+    // Friend to allow access to lua_State* for function invocation
     friend class LuaValue;
+
+    // Friend to allow access to lua_State* for registry access
     friend class LuaAccessible;
 };
 
