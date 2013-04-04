@@ -167,6 +167,21 @@ private:
     }
 
     friend class LuaStack;
+
+    friend LuaStack& operator<<(LuaStack& stack, LuaValue& value)
+    {
+        value.push(stack);
+        return stack;
+    }
+
+    friend LuaIndex& operator>>(LuaIndex& index, LuaValue& sink)
+    {
+        LuaStack& stack = index.stack();
+        stack.pushCopy(index.pos());
+        sink.accessor().store(stack);
+        stack.pop();
+        return index;
+    }
 };
 
 #endif
