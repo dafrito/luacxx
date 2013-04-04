@@ -2,7 +2,7 @@ Name: @PACKAGE_NAME@
 
 # Change all release values back to 1 when bumping to a new version
 Version:	@PACKAGE_VERSION@
-Release:	1%{?dist}
+Release:	@PACKAGE_RELEASE@%{?dist}
 Summary:	Bridge between Lua and C++
 
 Group:		Applications/Internet
