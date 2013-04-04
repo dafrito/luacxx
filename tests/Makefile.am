@@ -21,8 +21,8 @@ runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ -I$(top_srcdir)/include -DLUA_DI
 runtest_LDADD = ../src/liblua-cxx.la @QT_LIBS@
 
 test_suites =         \
-	LuaTests          \
 	LuaStackTests     \
+	LuaTests          \
 	LoaderTests       \
 	LuaTableTests     \
 	LuaReferenceTests \
