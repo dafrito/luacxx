@@ -109,7 +109,7 @@ private:
      * abandoning underlying stack values, so this
      * method should be used with caution.
      */
-    LuaStack& offset(int offset);
+    LuaStack& offset(const int offset);
 
     /**
      * Forcibly take all stack values currently on the

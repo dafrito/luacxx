@@ -28,7 +28,7 @@ lua_State* LuaStack::luaState() const
     return _lua.state;
 }
 
-LuaStack& LuaStack::offset(int offset)
+LuaStack& LuaStack::offset(const int offset)
 {
     if(offset < 0)
         throw LuaException(&lua(), "Offset must be non-negative");
