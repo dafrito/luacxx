@@ -234,20 +234,23 @@ LuaStack& LuaStack::to(const char*& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tostring(luaState(), pos);
+    if (!sink) {
+        sink = "";
+    }
     return (*this);
 }
 
 LuaStack& LuaStack::to(std::string& sink, int pos)
 {
-    checkPos(pos);
-    sink = lua_tostring(luaState(), pos);
+    const char* str = as<const char*>(pos);
+    sink = str;
     return (*this);
 }
 
 LuaStack& LuaStack::to(QString& sink, int pos)
 {
-    checkPos(pos);
-    sink = lua_tostring(luaState(), pos);
+    const char* str = as<const char*>(pos);
+    sink = str;
     return (*this);
 }
 
