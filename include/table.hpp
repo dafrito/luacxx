@@ -1,7 +1,6 @@
 #ifndef TABLE_HEADER
 #define TABLE_HEADER
 
-#include "LuaAccessible.hpp"
 #include "LuaStack.hpp"
 
 namespace table {

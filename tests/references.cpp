@@ -1,6 +1,5 @@
 #include "init.hpp"
 
-#include "LuaReferenceAccessible.hpp"
 #include "LuaGlobalAccessible.hpp"
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
@@ -8,7 +7,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
     Lua lua;
     LuaStack s(lua);
     s << "No Time";
-    LuaValue r = s.save();
+    LuaReference r = s.save();
     BOOST_REQUIRE(s.size() == 0);
     s << r;
     BOOST_REQUIRE_EQUAL(s.as<const char*>(), "No Time");
@@ -17,7 +16,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
 BOOST_AUTO_TEST_CASE(testAccessibleCanGetAReference)
 {
     Lua lua;
-    LuaReferenceAccessible accessor(lua);
+    LuaReferenceAccessible accessor(lua.luaState());
     LuaStack s(lua);
     s << "No Time";
     accessor.store(s);
@@ -30,7 +29,7 @@ BOOST_AUTO_TEST_CASE(testAccessibleCanGetAReference)
 BOOST_AUTO_TEST_CASE(testAccessibleCanGetAGlobal)
 {
     Lua lua;
-    LuaGlobalAccessible accessor(lua, "foo");
+    LuaGlobalAccessible accessor("foo");
     LuaStack s(lua);
     s << "No Time";
     accessor.store(s);

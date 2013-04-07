@@ -7,21 +7,24 @@
 #include <functional>
 #include <type_traits>
 #include <lua.hpp>
-#include "types.hpp"
 
+#include "types.hpp"
 #include "LuaIndex.hpp"
 
 class Lua;
 class LuaStack;
-class LuaValue;
-class LuaAccessible;
 class LuaUserdata;
+
+class LuaAccessible;
+class LuaReferenceAccessible;
+
+template <class Accessible>
+class LuaValue;
 
 namespace
 {
     template <typename RV, typename... Args>
     class LuaWrapper;
-
 }
 
 namespace lua
@@ -32,7 +35,96 @@ namespace lua
         table,
         nil
     };
-}
+
+    const LuaAccessible& retrieveAccessor(const LuaAccessible& accessible);
+    LuaAccessible& retrieveAccessor(LuaAccessible& accessible);
+    const LuaAccessible& retrieveAccessor(const std::shared_ptr<LuaAccessible>& accessible);
+
+} // namespace lua
+
+/**
+ * Represents a method to access a value from Lua.
+ *
+ * There's currently three methods to reliably access
+ * some value in Lua:
+ *
+ * 1. Global access
+ * 2. Reference table access
+ * 3. Indexed access
+ *
+ * Referenced access (through luaL_ref) is the safest
+ * way to store and retrieve a value; the other methods
+ * are publicly accessible, so the underlying value may
+ * be changed between accesses.
+ */
+class LuaAccessible
+{
+public:
+
+    /**
+     * Pushes the value held by this accessible on
+     * the specified stack.
+     */
+    virtual void push(LuaStack& stack) const=0;
+
+    /**
+     * Sets this reference to the value on the top
+     * of the specified stack.
+     */
+    virtual void store(LuaStack& stack) const=0;
+
+    virtual ~LuaAccessible() {}
+};
+
+class LuaReferenceAccessible : public LuaAccessible
+{
+
+    class RawLuaReference
+    {
+        int ref;
+        lua_State* const _state;
+
+        lua_State* luaState() const
+        {
+            return _state;
+        }
+
+    public:
+        RawLuaReference(lua_State* state) :
+            _state(state)
+        {
+            ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
+        }
+
+        void push() const
+        {
+            lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
+        }
+
+        void store() const
+        {
+            lua_rawseti(luaState(), LUA_REGISTRYINDEX, ref);
+        }
+
+        ~RawLuaReference()
+        {
+            luaL_unref(luaState(), LUA_REGISTRYINDEX, ref);
+        }
+    };
+
+    std::shared_ptr<RawLuaReference> _reference;
+
+public:
+    LuaReferenceAccessible(lua_State* state) :
+        _reference(std::shared_ptr<RawLuaReference>(new RawLuaReference(state)))
+    {
+    }
+
+    void push(LuaStack&) const;
+    void store(LuaStack& stack) const;
+};
+
+typedef LuaValue<LuaReferenceAccessible> LuaReference;
 
 /**
  * Represents a stack for manipulating a Lua environment.
@@ -115,21 +207,6 @@ private:
      */
     LuaStack& offset(const int offset);
 
-    /**
-     * Forcibly take all stack values currently on the
-     * stack. These values will be controlled by this
-     * instance; they will be popped when this instance
-     * is destroyed.
-     */
-    LuaStack& grab();
-
-    /**
-     * Forcibly abandon all stack values. This
-     * instance will no longer be responsible for
-     * the values currently on the stack.
-     */
-    LuaStack& disown();
-
     void lock();
     bool locked() const;
     void unlock();
@@ -181,6 +258,23 @@ public:
     {
         return _offset;
     }
+
+    /**
+     * Forcibly take all stack values currently on the
+     * stack. These values will be controlled by this
+     * instance; they will be popped when this instance
+     * is destroyed.
+     */
+    LuaStack& grab();
+
+    LuaStack& grab(const int count);
+
+    /**
+     * Forcibly abandon all stack values. This
+     * instance will no longer be responsible for
+     * the values currently on the stack.
+     */
+    LuaStack& disown();
 
     LuaIndex begin();
     LuaIndex end();
@@ -277,7 +371,7 @@ public:
      * Saves the value at the top of this stack into
      * a Lua reference.
      */
-    LuaValue save();
+    LuaReference save();
 
     /**
      * Pushes the global value with the specified
@@ -306,7 +400,6 @@ public:
     LuaStack& operator<<(const LuaUserdata& userdata);
     LuaStack& operator<<(void* p)=delete;
 
-    LuaStack& operator<<(const LuaValue& value);
     LuaStack& operator<<(const LuaAccessible& value);
 
     LuaStack& operator<<(const lua::value& value);

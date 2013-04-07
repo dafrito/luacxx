@@ -8,9 +8,8 @@ pkginclude_HEADERS = \
 	../include/loaders.hpp \
 	../include/LuaStack.hpp \
 	../include/LuaValue.hpp \
-	../include/LuaAccessible.hpp \
 	../include/LuaGlobalAccessible.hpp \
-	../include/LuaReferenceAccessible.hpp \
+	../include/LuaStackAccessible.hpp \
 	../include/LuaTableAccessible.hpp \
 	../include/ModuleLoader.hpp \
 	../include/DirectoryModuleLoader.hpp \
@@ -34,6 +33,9 @@ liblua_cxx_la_SOURCES = \
 	DirectoryModuleLoader.cpp \
 	userdata/standard.cpp \
 	userdata/qobject.cpp \
+	LuaAccessible.cpp \
+	LuaReferenceAccessible.cpp \
+	LuaGlobalAccessible.cpp \
 	types.cpp
 
 mostlyclean-local:

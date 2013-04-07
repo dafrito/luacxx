@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesInterestingCharValues)
     LuaStack s(lua);
     char c = 'c';
     s.push(&c, 1);
-    string sink;
+    std::string sink;
     s >> sink;
     BOOST_REQUIRE(sink == "c");
 }

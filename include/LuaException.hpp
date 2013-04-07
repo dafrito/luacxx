@@ -12,12 +12,12 @@ class LuaException : public std::runtime_error
     const Lua* const _lua;
 
 public:
-    LuaException(const string& reason) :
+    LuaException(const std::string& reason) :
         std::runtime_error(reason),
         _lua(0)
     {}
 
-    LuaException(const Lua* const lua, const string& reason) :
+    LuaException(const Lua* const lua, const std::string& reason) :
         std::runtime_error(reason),
         _lua(lua)
     {}

@@ -7,12 +7,10 @@
 #include <QFile>
 #include <vector>
 
-using std::istream;
-using std::string;
+#include "LuaStack.hpp"
+#include "LuaGlobalAccessible.hpp"
 
-class LuaValue;
 class ModuleLoader;
-class LuaStack;
 
 class Lua
 {
@@ -27,31 +25,27 @@ public:
     Lua();
     ~Lua();
 
-    LuaValue operator[](const char* key);
-    LuaValue operator[](const QString& key);
-    LuaValue operator[](const string& key);
+    LuaGlobal operator[](const char* key);
+    LuaGlobal operator[](const QString& key);
+    LuaGlobal operator[](const std::string& key);
 
-    LuaValue operator()(const char* runnable);
-    LuaValue operator()(const string& runnable);
-    LuaValue operator()(const QString& runnable);
-    LuaValue operator()(istream& stream, const string& name);
-    LuaValue operator()(QFile& file);
+    LuaReference operator()(const char* runnable);
+    LuaReference operator()(const std::string& runnable);
+    LuaReference operator()(const QString& runnable);
+    LuaReference operator()(std::istream& stream, const std::string& name);
+    LuaReference operator()(QFile& file);
 
     void addModuleLoader(ModuleLoader* const loader);
     void removeModuleLoader(ModuleLoader* const loader);
 
     void collectGarbage();
 
+    lua_State* luaState() const
+    {
+        return state;
+    }
+
     int internalStackSize() const;
-
-    // Friend to allow access to lua_State* for stack modification
-    friend class LuaStack;
-
-    // Friend to allow access to lua_State* for function invocation
-    friend class LuaValue;
-
-    // Friend to allow access to lua_State* for registry access
-    friend class LuaAccessible;
 };
 
 #endif // HEADER_LUA_ENVIRONMENT_HPP

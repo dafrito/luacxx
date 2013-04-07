@@ -3,37 +3,39 @@
 
 #include <string>
 #include <cstring>
-#include "LuaStack.hpp"
-#include "LuaAccessible.hpp"
-#include "LuaTableAccessible.hpp"
-#include "LuaException.hpp"
+
 #include "types.hpp"
+#include "LuaStack.hpp"
+#include "LuaException.hpp"
+#include "LuaTableAccessible.hpp"
 
-#include <memory>
-
-using std::string;
-
-class Lua;
-
+// LuaValue has a default template parameter, defined in LuaStack.hpp
+template <class Accessible>
 class LuaValue
 {
     Lua& _lua;
 
-    std::shared_ptr<LuaAccessible> accessible;
+    lua_State* luaState() const
+    {
+        return _lua.luaState();
+    }
+
+    Accessible _accessible;
+
+    LuaAccessible& accessor()
+    {
+        return lua::retrieveAccessor(_accessible);
+    }
 
     const LuaAccessible& accessor() const
     {
-        return (*accessible);
+        return lua::retrieveAccessor(_accessible);
     }
 
-    lua_State* luaState() const
-    {
-        return _lua.state;
-    }
 public:
-    LuaValue(const std::shared_ptr<LuaAccessible>& accessible) :
-        _lua(accessible->lua()),
-        accessible(accessible)
+    LuaValue(Lua& lua, const Accessible& accessible) :
+        _lua(lua),
+        _accessible(accessible)
     {}
 
     Lua& lua()
@@ -60,7 +62,7 @@ public:
         return stack.type();
     }
 
-    string typestring()
+    std::string typestring()
     {
         LuaStack stack(_lua);
         push(stack);
@@ -117,7 +119,7 @@ public:
     }
 
     template <typename... Args>
-    LuaValue operator()(Args&&... args)
+    LuaReference operator()(Args&&... args)
     {
         LuaStack stack(_lua);
         stack << onError;
@@ -133,14 +135,11 @@ public:
         return stack.save();
     }
 
-    template <typename T>
-    LuaValue operator[](T key)
+    template <typename Key>
+    LuaTableValue<Key, Accessible> operator[](Key key)
     {
-        return LuaValue(
-            std::shared_ptr<LuaAccessible>(
-                new LuaTableAccessible<T>(lua(), accessible, key)
-            )
-        );
+        LuaTableAccessible<Key, Accessible> tableAccessor(_accessible, key);
+        return LuaValue<decltype(tableAccessor)>(lua(), tableAccessor);
     }
 
     int length()
@@ -185,22 +184,25 @@ private:
         callLua(s, stack, rest...);
     }
 
+    // TODO Why is this a friend?
     friend class LuaStack;
-
-    friend LuaStack& operator<<(LuaStack& stack, LuaValue& value)
-    {
-        value.push(stack);
-        return stack;
-    }
-
-    friend LuaIndex& operator>>(LuaIndex& index, LuaValue& sink)
-    {
-        LuaStack& stack = index.stack();
-        stack.pushCopy(index.pos());
-        sink.accessor().store(stack);
-        stack.pop();
-        return index;
-    }
 };
+
+template<class Accessible>
+LuaStack& operator<<(LuaStack& stack, LuaValue<Accessible>& value)
+{
+    value.push(stack);
+    return stack;
+}
+
+template<class Accessible>
+LuaIndex& operator>>(LuaIndex& index, LuaValue<Accessible>& sink)
+{
+    LuaStack& stack = index.stack();
+    stack.pushCopy(index.pos());
+    sink.accessor().store(stack);
+    stack.pop();
+    return index;
+}
 
 #endif

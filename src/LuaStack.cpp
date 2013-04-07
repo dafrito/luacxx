@@ -2,8 +2,6 @@
 #include "LuaStack.hpp"
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
-#include "LuaReferenceAccessible.hpp"
-#include "LuaAccessible.hpp"
 #include "LuaUserdata.hpp"
 
 LuaStack::LuaStack(Lua& lua) :
@@ -30,7 +28,7 @@ Lua& LuaStack::lua() const
 
 lua_State* LuaStack::luaState() const
 {
-    return _lua.state;
+    return _lua.luaState();
 }
 
 LuaStack& LuaStack::grab()
@@ -38,7 +36,17 @@ LuaStack& LuaStack::grab()
     if (_parent) {
         throw "Refusing to grab values when the stack has a parent";
     }
+
     return offset(0);
+}
+
+LuaStack& LuaStack::grab(const int count)
+{
+    if (_parent) {
+        throw "Refusing to grab values when the stack has a parent";
+    }
+
+    return offset(offset() - count);
 }
 
 LuaStack& LuaStack::disown()
@@ -275,13 +283,11 @@ int LuaStack::length(int pos)
     return length;
 }
 
-LuaValue LuaStack::save()
+LuaValue<LuaReferenceAccessible> LuaStack::save()
 {
     checkPos(-1);
-    return LuaValue(
-        std::shared_ptr<LuaAccessible>(
-            new LuaReferenceAccessible(lua())
-        )
+    return LuaValue<LuaReferenceAccessible>(
+        lua(), LuaReferenceAccessible(luaState())
     );
 }
 
@@ -571,12 +577,6 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
 
     push(invokeLuaCallable, 2 + closed);
     return (*this);
-}
-
-LuaStack& LuaStack::operator<<(const LuaValue& value)
-{
-    value.push(*this);
-    return *this;
 }
 
 LuaStack& LuaStack::operator<<(const LuaAccessible& value)

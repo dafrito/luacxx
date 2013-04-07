@@ -9,19 +9,14 @@
 #include "ModuleLoader.hpp"
 #include "table.hpp"
 
-#include "LuaAccessible.hpp"
 #include "LuaGlobalAccessible.hpp"
-#include "LuaReferenceAccessible.hpp"
-
-using std::runtime_error;
-using std::istream;
 
 namespace {
     struct LuaReadingData
     {
-        istream& stream;
+        std::istream& stream;
         char buffer[4096];
-        LuaReadingData(istream& stream) : stream(stream) {}
+        LuaReadingData(std::istream& stream) : stream(stream) {}
     };
 
     struct QtReadingData
@@ -57,7 +52,7 @@ namespace {
 int throwFromPanic(lua_State* state)
 {
     const char* msg = lua_tostring(state, -1);
-    throw LuaException(string("Fatal exception from Lua: ") + msg);
+    throw LuaException(std::string("Fatal exception from Lua: ") + msg);
 }
 
 Lua::Lua()
@@ -74,23 +69,24 @@ Lua::Lua()
     table::push((*this)["package"][searchersName], Lua::loadModule);
 }
 
-LuaValue Lua::operator()(const char* runnable)
+LuaReference newReferenceValue(Lua& lua, lua_State* state)
+{
+    return LuaStack(lua).grab(1).save();
+}
+
+LuaReference Lua::operator()(const char* runnable)
 {
     luaL_loadstring(state, runnable);
     lua_call(state, 0, 1);
-    return LuaValue(
-        std::shared_ptr<LuaAccessible>(
-            new LuaReferenceAccessible(*this)
-        )
-    );
+    return newReferenceValue(*this, state);
 }
 
-LuaValue Lua::operator()(const QString& runnable)
+LuaReference Lua::operator()(const QString& runnable)
 {
     return (*this)(runnable.toUtf8().constData());
 }
 
-LuaValue Lua::operator()(const string& runnable)
+LuaReference Lua::operator()(const std::string& runnable)
 {
     std::istringstream stream(runnable);
     return (*this)(stream, "string input");
@@ -100,13 +96,13 @@ void Lua::handleLoadValue(const int rv)
 {
     switch (rv) {
         case LUA_ERRSYNTAX:
-            throw LuaException(this, string("Syntax error during compilation: ") + lua_tostring(state, -1));
+            throw LuaException(this, std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
         case LUA_ERRMEM:
-            throw LuaException(this, string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
+            throw LuaException(this, std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
     }
 }
 
-LuaValue Lua::operator()(istream& stream, const string& name = NULL)
+LuaReference Lua::operator()(std::istream& stream, const std::string& name = NULL)
 {
     LuaReadingData d(stream);
 
@@ -117,14 +113,10 @@ LuaValue Lua::operator()(istream& stream, const string& name = NULL)
         #endif
     ));
     lua_call(state, 0, 1);
-    return LuaValue(
-        std::shared_ptr<LuaAccessible>(
-            new LuaReferenceAccessible(*this)
-        )
-    );
+    return newReferenceValue(*this, state);
 }
 
-LuaValue Lua::operator()(QFile& file)
+LuaReference Lua::operator()(QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {
         throw LuaException(this,
@@ -140,28 +132,20 @@ LuaValue Lua::operator()(QFile& file)
         #endif
     ));
     lua_call(state, 0, 1);
-    return LuaValue(
-        std::shared_ptr<LuaAccessible>(
-            new LuaReferenceAccessible(*this)
-        )
-    );
+    return newReferenceValue(*this, state);
 }
 
-LuaValue Lua::operator[](const char* key)
+LuaGlobal Lua::operator[](const char* key)
 {
     return (*this)[QString(key)];
 }
 
-LuaValue Lua::operator[](const QString& key)
+LuaGlobal Lua::operator[](const QString& key)
 {
-    return LuaValue(
-        std::shared_ptr<LuaAccessible>(
-            new LuaGlobalAccessible(*this, key)
-        )
-    );
+    return LuaGlobal(*this, LuaGlobalAccessible(key));
 }
 
-LuaValue Lua::operator[](const string& key)
+LuaGlobal Lua::operator[](const std::string& key)
 {
     QString str(key.c_str());
     return (*this)[str];
@@ -198,7 +182,6 @@ void Lua::loadModule(LuaStack& stack)
 
     stack << "Unable to find module: " << moduleName;
 }
-
 
 int Lua::internalStackSize() const
 {
