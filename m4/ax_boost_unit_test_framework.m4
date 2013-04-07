@@ -66,7 +66,7 @@ AC_DEFUN([AX_BOOST_UNIT_TEST_FRAMEWORK],
         [AC_LANG_PUSH([C++])
 			 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[@%:@include <boost/test/unit_test.hpp>]],
                                     [[using boost::unit_test::test_suite;
-							 test_suite* test= BOOST_TEST_SUITE( "Unit test example 1" ); return 0;]])],
+							 BOOST_TEST_SUITE( "Unit test example 1" ); return 0;]])],
                    ax_cv_boost_unit_test_framework=yes, ax_cv_boost_unit_test_framework=no)
          AC_LANG_POP([C++])
 		])
