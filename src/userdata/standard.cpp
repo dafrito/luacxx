@@ -5,7 +5,7 @@ LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& c
     return stack << LuaUserdata(callable, "lua::LuaCallable");
 }
 
-LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable)
+LuaIndex& operator>>(LuaIndex& index, std::shared_ptr<lua::LuaCallable>& callable)
 {
-    return lua::userdata::convertUserdata(stack, callable, "lua::LuaCallable");
+    return lua::userdata::convertUserdata(index, callable, "lua::LuaCallable");
 }

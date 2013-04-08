@@ -45,9 +45,9 @@ LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
     return stack;
 }
 
-LuaStack& operator>>(LuaStack& stack, std::shared_ptr<QObject>& ptr)
+LuaIndex& operator>>(LuaIndex& index, std::shared_ptr<QObject>& ptr)
 {
-    return lua::userdata::convertUserdata(stack, ptr, "QObject");
+    return lua::userdata::convertUserdata(index, ptr, "QObject");
 }
 
 namespace lua {

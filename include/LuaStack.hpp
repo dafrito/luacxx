@@ -634,7 +634,7 @@ LuaIndex& operator>>(LuaIndex& index, std::string& sink);
 LuaIndex& operator>>(LuaIndex& index, QString& sink);
 LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 
-LuaStack& operator>>(LuaStack& stack, std::shared_ptr<lua::LuaCallable>& callable);
+LuaIndex& operator>>(LuaIndex& index, std::shared_ptr<lua::LuaCallable>& callable);
 
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);
