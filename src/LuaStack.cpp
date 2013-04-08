@@ -171,18 +171,21 @@ void LuaStack::checkPos(int pos) const
     if (pos == 0) {
         throw LuaException(&lua(), "Stack position must not be zero");
     }
+    if (empty()) {
+        throw LuaException(&lua(), "Stack position must not refer to an empty stack");
+    }
     // Convert relative positions to absolute ones.
     if (pos < 0) {
         pos += top();
     }
     if (pos < offset()) {
         std::stringstream str;
-        str << "Stack position (" << pos << ") must not be below this stack: [" << offset() << ", " << top() << ']';
+        str << "Stack position must not be below this stack. Position was " << pos << " but valid indices are [" << bottom() << ", " << top() << "]";
         throw LuaException(&lua(), str.str());
     }
     if (pos > top()) {
         std::stringstream str;
-        str << "Stack position (" << pos << ") must not be above this stack: [" << offset() << ", " << top() << ']';
+        str << "Stack position must not be above this stack. Position was " << pos << " but valid indices are [" << bottom() << ", " << top() << "]";
         throw LuaException(&lua(), str.str());
     }
 }
