@@ -1,5 +1,6 @@
-#include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
+
+#include "LuaEnvironment.hpp"
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
 #include "LuaUserdata.hpp"
