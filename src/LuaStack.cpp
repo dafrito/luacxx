@@ -157,17 +157,22 @@ LuaStack& LuaStack::shift(int count)
 
 void LuaStack::checkPos(int pos) const
 {
-    if (isMagicalPos(pos))
+    if (isMagicalPos(pos)) {
         return;
-    if (pos == 0)
+    }
+    if (pos == 0) {
         throw LuaException(&lua(), "Stack position must not be zero");
+    }
     // Convert relative positions to absolute ones.
-    if (pos < 0)
+    if (pos < 0) {
         pos += top();
-    if (pos < offset())
-        throw LuaException(&lua(), "Stack position is not managed by this stack");
-    if (pos > top())
+    }
+    if (pos < offset()) {
+        throw LuaException(&lua(), std::str"Stack position is not managed by this stack");
+    }
+    if (pos > top()) {
         throw LuaException(&lua(), "Stack position is beyond the top of the lua stack");
+    }
 }
 
 LuaStack& LuaStack::replace(int pos)
