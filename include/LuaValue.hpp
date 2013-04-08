@@ -106,6 +106,17 @@ public:
     const LuaValue& operator=(const T& value)
     {
         LuaStack s(_lua);
+        s.setAcceptsStackUserdata(false);
+        s << value;
+        accessor().store(s);
+        return *this;
+    }
+
+    template<typename T>
+    const LuaValue& operator=(T& value)
+    {
+        LuaStack s(_lua);
+        s.setAcceptsStackUserdata(false);
         s << value;
         accessor().store(s);
         return *this;

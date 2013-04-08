@@ -7,13 +7,13 @@ BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
     Lua lua;
     LuaStack s(lua);
 
-    auto ptr = std::shared_ptr<QObject>(new QObject);
-    s.push(ptr, "QObject");
+    QObject obj;
+    s.push(&obj, "QObject");
 
     LuaUserdata* returned;
     s >> returned;
 
-    BOOST_REQUIRE(returned->rawData() == ptr.get());
+    BOOST_REQUIRE(returned->rawData() == &obj);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjectsWithMinimalSemantics)
@@ -30,26 +30,40 @@ BOOST_AUTO_TEST_CASE(testLuaHandleQObjectsWithMinimalSemantics)
     BOOST_REQUIRE(other.get() == orig.get());
 }
 
+LuaStack& operator<<(LuaStack& stack, Counter& ptr)
+{
+    stack << LuaUserdata(&ptr, "QObject");
+
+    stack.pushMetatable();
+    lua::userdata::qobject(stack, &ptr);
+    stack.setMetatable();
+    return stack;
+}
+
 BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
 {
     Lua lua;
 
-    lua["foo"] = std::shared_ptr<QObject>(new Counter(42));
+    Counter counter(42);
 
-    BOOST_REQUIRE("userdata" == lua["foo"].typestring());
-    lua("bar = foo.value");
-    BOOST_REQUIRE(lua["bar"] == 42);
+    lua("function add(counter)\n"
+    "    bar = counter.value;\n"
+    "end");
+    lua["add"](counter);
+
+    BOOST_REQUIRE_EQUAL(lua["bar"].as<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
 {
     Lua lua;
-    auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["c"] = obj;
+    Counter counter(42);
+    lua("function work(counter)\n"
+    "    counter.value = 24;\n"
+    "end");
+    lua["work"](counter);
 
-    lua("c.value = 24");
-
-    BOOST_REQUIRE_EQUAL(static_cast<Counter*>(obj.get())->getValue(), 24);
+    BOOST_REQUIRE_EQUAL(counter.getValue(), 24);
 }
 
 static void receive(QObject* const ptr)

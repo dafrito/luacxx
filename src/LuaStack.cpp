@@ -8,7 +8,10 @@ LuaStack::LuaStack(Lua& lua) :
     _lua(lua),
     _parent(0),
     _locked(false),
-    _offset(lua_gettop(luaState()))
+    _offset(lua_gettop(luaState())),
+    _top(0),
+    _rawUserdata(0),
+    _acceptsStackUserdata(true)
 {
 }
 
@@ -16,7 +19,10 @@ LuaStack::LuaStack(LuaStack& parent) :
     _lua(parent.lua()),
     _parent(&parent),
     _locked(false),
-    _offset(parent.top())
+    _offset(parent.top()),
+    _top(0),
+    _rawUserdata(0),
+    _acceptsStackUserdata(true)
 {
     _parent->lock();
 }
@@ -454,6 +460,16 @@ LuaStack& LuaStack::operator<<(const bool& b)
     return (*this);
 }
 
+bool LuaStack::acceptsStackUserdata() const
+{
+    return _acceptsStackUserdata;
+}
+
+void LuaStack::setAcceptsStackUserdata(const bool accepts)
+{
+    _acceptsStackUserdata = accepts;
+}
+
 void collectUserdata(LuaStack& stack)
 {
     LuaUserdata* userdata = stack.as<LuaUserdata*>(1);
@@ -473,6 +489,10 @@ LuaStack& LuaStack::push(void* const p, QString type)
 LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
 {
     assertUnlocked();
+
+    if (userdata.isRaw() && !acceptsStackUserdata()) {
+        throw LuaException("Stack does not accept raw userdata");
+    }
 
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
     new (luaUserdata) LuaUserdata(userdata);

@@ -181,6 +181,7 @@ private:
     int _top;
 
     std::vector<LuaUserdata*> _rawUserdata;
+    bool _acceptsStackUserdata;
 
     lua_State* luaState() const;
 
@@ -397,6 +398,9 @@ public:
 
     LuaStack& push(const std::shared_ptr<void>& obj, QString type);
     LuaStack& push(void* const p, QString type);
+
+    bool acceptsStackUserdata() const;
+    void setAcceptsStackUserdata(const bool accepts);
     LuaStack& operator<<(const LuaUserdata& userdata);
     LuaStack& operator<<(void* p)=delete;
 
