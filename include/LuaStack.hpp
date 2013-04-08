@@ -584,7 +584,7 @@ public:
      * specified value.
      */
     template <typename V>
-    LuaStack& setGlobal(const QString& key, const V& value)
+    LuaStack& setGlobal(const std::string& key, const V& value)
     {
         *this << value;
         return setGlobal(key);
@@ -594,10 +594,10 @@ public:
      * Set the global with the specified name to the value
      * curently at the top of this stack.
      */
-    LuaStack& setGlobal(const QString& key)
+    LuaStack& setGlobal(const std::string& key)
     {
         assertUnlocked();
-        lua_setglobal(luaState(), key.toAscii().data());
+        lua_setglobal(luaState(), key.c_str());
         return (*this);
     }
 

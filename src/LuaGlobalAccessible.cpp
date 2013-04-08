@@ -1,6 +1,6 @@
 #include "LuaGlobalAccessible.hpp"
 
-LuaGlobalAccessible::LuaGlobalAccessible(const QString& key) :
+LuaGlobalAccessible::LuaGlobalAccessible(const std::string& key) :
     key(key)
 {}
 

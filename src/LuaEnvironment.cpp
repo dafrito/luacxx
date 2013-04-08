@@ -142,13 +142,12 @@ LuaGlobal Lua::operator[](const char* key)
 
 LuaGlobal Lua::operator[](const QString& key)
 {
-    return LuaGlobal(*this, LuaGlobalAccessible(key));
+    return (*this)[key.toStdString()];
 }
 
 LuaGlobal Lua::operator[](const std::string& key)
 {
-    QString str(key.c_str());
-    return (*this)[str];
+    return LuaGlobal(*this, LuaGlobalAccessible(key));
 }
 
 void Lua::addModuleLoader(ModuleLoader* const loader)

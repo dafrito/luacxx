@@ -1,14 +1,14 @@
 #ifndef LUA_GLOBAL_ACCESSIBLE_HPP
 #define LUA_GLOBAL_ACCESSIBLE_HPP
 
-#include <QString>
+#include <string>
 #include "LuaStack.hpp"
 
 class LuaGlobalAccessible : public LuaAccessible
 {
-    const QString key;
+    const std::string key;
 public:
-    LuaGlobalAccessible(const QString& key);
+    LuaGlobalAccessible(const std::string& key);
     void push(LuaStack& stack) const;
     void store(LuaStack& stack) const;
 };
