@@ -5,6 +5,8 @@
 #include "LuaValue.hpp"
 #include "LuaUserdata.hpp"
 
+#include <sstream>
+
 LuaStack::LuaStack(Lua& lua) :
     _lua(lua),
     _parent(0),
@@ -169,10 +171,14 @@ void LuaStack::checkPos(int pos) const
         pos += top();
     }
     if (pos < offset()) {
-        throw LuaException(&lua(), std::str"Stack position is not managed by this stack");
+        std::stringstream str;
+        str << "Stack position (" << pos << ") must not be below this stack: [" << offset() << ", " << top() << ']';
+        throw LuaException(&lua(), str.str());
     }
     if (pos > top()) {
-        throw LuaException(&lua(), "Stack position is beyond the top of the lua stack");
+        std::stringstream str;
+        str << "Stack position (" << pos << ") must not be above this stack: [" << offset() << ", " << top() << ']';
+        throw LuaException(&lua(), str.str());
     }
 }
 
