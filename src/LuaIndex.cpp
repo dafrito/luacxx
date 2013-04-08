@@ -18,9 +18,12 @@ int LuaIndex::pos() const
     return _pos;
 }
 
-LuaIndex& LuaIndex::operator++(int)
+// Postfix
+LuaIndex LuaIndex::operator++(int)
 {
-    return operator++();
+    LuaIndex rv(*this);
+    ++(*this);
+    return rv;
 }
 
 LuaIndex& LuaIndex::operator++()
@@ -29,9 +32,12 @@ LuaIndex& LuaIndex::operator++()
     return *this;
 }
 
-LuaIndex& LuaIndex::operator--(int)
+// Postfix
+LuaIndex LuaIndex::operator--(int)
 {
-    return operator--();
+    LuaIndex rv(*this);
+    --(*this);
+    return rv;
 }
 
 LuaIndex& LuaIndex::operator--()

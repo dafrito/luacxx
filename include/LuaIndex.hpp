@@ -14,9 +14,9 @@ public:
 
     LuaStack& stack() const;
     int pos() const;
-    LuaIndex& operator++(int);
+    LuaIndex operator++(int);
     LuaIndex& operator++();
-    LuaIndex& operator--(int);
+    LuaIndex operator--(int);
     LuaIndex& operator--();
 };
 
