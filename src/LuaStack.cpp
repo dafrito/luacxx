@@ -571,7 +571,7 @@ LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
     lua_insert(luaState(), -2-closed);
     lua_insert(luaState(), -2-closed);
 
-    push(invokeRawCallable, 2 + closed);
+    push(invokeRawFromLua, 2 + closed);
     return (*this);
 }
 
@@ -595,7 +595,7 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
     lua_insert(luaState(), -2-closed);
     lua_insert(luaState(), -2-closed);
 
-    push(invokeLuaCallable, 2 + closed);
+    push(invokeFromLua, 2 + closed);
     return (*this);
 }
 
@@ -670,7 +670,7 @@ LuaStack::~LuaStack()
     }
 }
 
-int LuaStack::invokeCallable(lua_State* state, const lua::LuaCallable* const func)
+int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func)
 {
     void* p = lua_touserdata(state, lua_upvalueindex(2));
     Lua* const lua = static_cast<Lua*>(p);
@@ -690,17 +690,17 @@ int LuaStack::invokeCallable(lua_State* state, const lua::LuaCallable* const fun
     return lua_gettop(state);
 }
 
-int LuaStack::invokeRawCallable(lua_State* state)
+int LuaStack::invokeRawFromLua(lua_State* state)
 {
     void* funcPtr = lua_touserdata(state, lua_upvalueindex(1));
-    return invokeCallable(state, static_cast<lua::LuaCallable*>(funcPtr));
+    return invokeFromLua(state, static_cast<lua::LuaCallable*>(funcPtr));
 }
 
-int LuaStack::invokeLuaCallable(lua_State* state)
+int LuaStack::invokeFromLua(lua_State* state)
 {
     void* userdata = lua_touserdata(state, lua_upvalueindex(1));
     LuaUserdata* funcPtr = static_cast<LuaUserdata*>(userdata);
-    return invokeCallable(state, static_cast<lua::LuaCallable*>(funcPtr->rawData()));
+    return invokeFromLua(state, static_cast<lua::LuaCallable*>(funcPtr->rawData()));
 }
 
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink)

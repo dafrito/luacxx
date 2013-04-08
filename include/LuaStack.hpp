@@ -171,9 +171,9 @@ typedef LuaValue<LuaReferenceAccessible> LuaReference;
 class LuaStack
 {
 private:
-    static int invokeLuaCallable(lua_State* state);
-    static int invokeRawCallable(lua_State* state);
-    static int invokeCallable(lua_State* state, const lua::LuaCallable* const func);
+    static int invokeFromLua(lua_State* state);
+    static int invokeRawFromLua(lua_State* state);
+    static int invokeFromLua(lua_State* state, const lua::LuaCallable* const func);
 
     Lua& _lua;
 
