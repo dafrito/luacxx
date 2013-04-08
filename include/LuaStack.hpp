@@ -40,6 +40,9 @@ namespace lua
     LuaAccessible& retrieveAccessor(LuaAccessible& accessible);
     const LuaAccessible& retrieveAccessor(const std::shared_ptr<LuaAccessible>& accessible);
 
+template<typename Sink>
+Sink as(const LuaIndex& index);
+
 } // namespace lua
 
 /**
@@ -355,9 +358,7 @@ public:
     template <class Sink>
     Sink as(int pos = -1)
     {
-        Sink sink;
-        at(pos) >> sink;
-        return sink;
+        return lua::as<Sink>(LuaIndex(*this, pos));
     }
 
     void* pointer(int pos);
@@ -618,7 +619,7 @@ LuaStack& operator>>(LuaStack& stack, Sink& sink)
 template <class Sink>
 LuaIndex& operator>>(LuaIndex& index, Sink& sink)
 {
-    index.stack().to(sink, index.pos());
+    sink = lua::as<Sink>(index);
     return ++index;
 }
 
@@ -650,6 +651,19 @@ LuaIndex& operator>>(LuaIndex& index, Sink*& sink)
     }
     return ++index;
 }
+
+namespace lua {
+
+    template<typename Sink>
+    Sink as(const LuaIndex& index)
+    {
+        Sink sink;
+        index.stack().to(sink, index.pos());
+        return sink;
+    }
+
+} // namespace lua
+
 
 LuaStack& operator<<(LuaStack& stack, const QChar& value);
 LuaStack& operator<<(LuaStack& stack, const QString& value);
