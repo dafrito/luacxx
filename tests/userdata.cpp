@@ -5,6 +5,7 @@
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 {
     Lua lua;
+    lua.setAcceptsStackUserdata(true);
     LuaStack s(lua);
 
     QObject obj;
@@ -43,13 +44,11 @@ LuaStack& operator<<(LuaStack& stack, Counter& ptr)
 BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
 {
     Lua lua;
+    lua.setAcceptsStackUserdata(true);
 
     Counter counter(42);
-
-    lua("function add(counter)\n"
-    "    bar = counter.value;\n"
-    "end");
-    lua["add"](counter);
+    lua["counter"] = counter;
+    lua("bar = counter.value");
 
     BOOST_REQUIRE_EQUAL(lua["bar"].as<int>(), 42);
 }
@@ -57,11 +56,11 @@ BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
 BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
 {
     Lua lua;
+    lua.setAcceptsStackUserdata(true);
+
     Counter counter(42);
-    lua("function work(counter)\n"
-    "    counter.value = 24;\n"
-    "end");
-    lua["work"](counter);
+    lua["counter"] = counter;
+    lua("counter.value = 24");
 
     BOOST_REQUIRE_EQUAL(counter.getValue(), 24);
 }
@@ -163,6 +162,7 @@ BOOST_AUTO_TEST_CASE(stackAcceptsRawPointers)
 
     Counter counter;
     LuaStack stack(lua);
+    stack.setAcceptsStackUserdata(true);
     stack << counter;
     BOOST_REQUIRE_EQUAL(stack.typestring().c_str(), "userdata");
 }

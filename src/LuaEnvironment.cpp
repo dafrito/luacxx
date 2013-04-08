@@ -55,7 +55,8 @@ int throwFromPanic(lua_State* state)
     throw LuaException(std::string("Fatal exception from Lua: ") + msg);
 }
 
-Lua::Lua()
+Lua::Lua() :
+    _acceptsStackUserdata(false)
 {
     state = luaL_newstate();
     luaL_openlibs(state);

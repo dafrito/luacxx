@@ -16,6 +16,8 @@ class Lua
 {
     lua_State* state;
 
+    bool _acceptsStackUserdata;
+
     std::vector<ModuleLoader*> _moduleLoaders;
 
     void handleLoadValue(const int rv);
@@ -34,6 +36,16 @@ public:
     LuaReference operator()(const QString& runnable);
     LuaReference operator()(std::istream& stream, const std::string& name);
     LuaReference operator()(QFile& file);
+
+    bool acceptsStackUserdata() const
+    {
+        return _acceptsStackUserdata;
+    }
+
+    void setAcceptsStackUserdata(const bool accepts)
+    {
+        _acceptsStackUserdata = accepts;
+    }
 
     void addModuleLoader(ModuleLoader* const loader);
     void removeModuleLoader(ModuleLoader* const loader);

@@ -106,7 +106,6 @@ public:
     const LuaValue& operator=(const T& value)
     {
         LuaStack s(_lua);
-        s.setAcceptsStackUserdata(false);
         s << value;
         accessor().store(s);
         return *this;
@@ -116,7 +115,6 @@ public:
     const LuaValue& operator=(T& value)
     {
         LuaStack s(_lua);
-        s.setAcceptsStackUserdata(false);
         s << value;
         accessor().store(s);
         return *this;
@@ -133,6 +131,7 @@ public:
     LuaReference operator()(Args&&... args)
     {
         LuaStack stack(_lua);
+        stack.setAcceptsStackUserdata(true);
         stack << onError;
         push(stack);
         callLua(luaState(), stack, args...);
