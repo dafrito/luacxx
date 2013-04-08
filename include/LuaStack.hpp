@@ -623,6 +623,8 @@ LuaIndex& operator>>(LuaIndex& index, Sink& sink)
     return ++index;
 }
 
+// This is necessary for idioms like "stack.rbegin() >> sink" where the
+// index itself is never an lvalue.
 template <class Sink>
 LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
 {
