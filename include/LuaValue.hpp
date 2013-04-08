@@ -193,9 +193,6 @@ private:
         stack << arg;
         callLua(s, stack, rest...);
     }
-
-    // TODO Why is this a friend?
-    friend class LuaStack;
 };
 
 template<class Accessible>
