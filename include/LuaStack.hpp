@@ -234,6 +234,7 @@ public:
      */
     int size() const;
 
+    int bottom() const;
     int top() const;
 
     /**

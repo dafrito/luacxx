@@ -78,6 +78,11 @@ int LuaStack::size() const
     return top() - offset();
 }
 
+int LuaStack::bottom() const
+{
+    return offset() + 1;
+}
+
 int LuaStack::top() const
 {
     if (locked()) {
@@ -115,7 +120,7 @@ void LuaStack::unlock()
 
 LuaIndex LuaStack::begin()
 {
-    return LuaIndex(*this, 1);
+    return LuaIndex(*this, bottom());
 }
 
 LuaIndex LuaStack::end()
