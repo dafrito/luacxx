@@ -19,15 +19,15 @@ void qobject(LuaStack& stack, QObject* obj);
 } // namespace userdata
 
 template<>
-struct UserdataName<QObject>
+struct UserdataType<QObject>
 {
-    constexpr static const char* value = "QObject";
+    constexpr static const char* name = "QObject";
 };
 
 template<>
-struct UserdataName<lua::LuaCallable>
+struct UserdataType<lua::LuaCallable>
 {
-    constexpr static const char* value = "lua::LuaCallable";
+    constexpr static const char* name = "lua::LuaCallable";
 };
 
 } // namespace lua

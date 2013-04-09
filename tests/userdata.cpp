@@ -34,15 +34,15 @@ BOOST_AUTO_TEST_CASE(testLuaHandleQObjectsWithMinimalSemantics)
 namespace lua {
 
 template<>
-struct UserdataName<Counter>
+struct UserdataType<Counter>
 {
-    constexpr static const char* value = "Counter";
+    constexpr static const char* name = "Counter";
 };
 
 template<>
-struct UserdataName<Blank>
+struct UserdataType<Blank>
 {
-    constexpr static const char* value = "Blank";
+    constexpr static const char* name = "Blank";
 };
 
 } // namespace lua

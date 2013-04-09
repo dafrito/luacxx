@@ -669,9 +669,9 @@ namespace {
 namespace lua {
 
     template <typename T>
-    struct UserdataName
+    struct UserdataType
     {
-        constexpr static const char* value = 0;
+        constexpr static const char* name = 0;
     };
 
     template <typename T>
@@ -686,7 +686,7 @@ namespace lua {
                 >::type
                 >::type type;
 
-        constexpr static const bool value = UserdataName<isUserdataType::type>::value != 0;
+        constexpr static const bool value = UserdataType<isUserdataType::type>::name != 0;
     };
 
     // Handle primitive types
@@ -707,8 +707,8 @@ namespace lua {
     {
         static const char* expectedName()
         {
-            static_assert(UserdataName<Target>::value != 0, "Userdata name must be non-zero");
-            return UserdataName<Target>::value;
+            static_assert(UserdataType<Target>::name != 0, "Userdata name must be non-zero");
+            return UserdataType<Target>::name;
         }
 
         static LuaUserdata* getUserdataObject(const LuaIndex& index)
@@ -721,7 +721,7 @@ namespace lua {
                     << "'";
                 throw LuaException(msg.str());
              }
-            if (userdata->dataType() != UserdataName<Target>::value) {
+            if (userdata->dataType() != UserdataType<Target>::name) {
                 std::stringstream msg;
                 msg << "Userdata at position " << index.pos()
                     << " must be of type '" << expectedName() << "', but provided userdata type was '"
