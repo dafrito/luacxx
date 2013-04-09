@@ -805,7 +805,7 @@ namespace lua {
 
     template <typename Sink>
     typename std::enable_if<
-        std::is_reference<Sink>::value && !isUserdataType<Sink>::value,
+        std::is_reference<Sink>::value && !isUserdataType<Sink>::value && std::is_const<typename std::remove_reference<Sink>::type>::value,
         typename remove_qualifiers<Sink>::type
     >::type
     as(const LuaIndex& index)
