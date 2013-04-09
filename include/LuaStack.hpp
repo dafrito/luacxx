@@ -689,6 +689,7 @@ namespace lua {
         constexpr static const bool value = UserdataName<isUserdataType::type>::value != 0;
     };
 
+    // Handle primitive types
     template <typename Sink>
     typename std::enable_if<
         !std::is_reference<Sink>::value && !isUserdataType<Sink>::value,
@@ -803,6 +804,7 @@ namespace lua {
         return UserdataConverter<typename isUserdataType<Sink>::type>::template as<Sink>(index);
     }
 
+    // Handle const references by returning a value
     template <typename Sink>
     typename std::enable_if<
         std::is_reference<Sink>::value && !isUserdataType<Sink>::value && std::is_const<typename std::remove_reference<Sink>::type>::value,
