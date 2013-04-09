@@ -478,8 +478,7 @@ public:
     template <typename RV, typename... Args>
     LuaStack& push(RV(*p)(Args...), const int closed)
     {
-        this->push(LuaWrapper<RV, Args...>(p), closed);
-        return (*this);
+        return push(LuaWrapper<RV, Args...>(p), closed);
     }
 
     template <typename RV, typename... Args>
