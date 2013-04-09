@@ -143,6 +143,25 @@ BOOST_AUTO_TEST_CASE(luaCanPassBackCxxValues)
     BOOST_CHECK_EQUAL(lua("return receiveConstRef(counter)").as<int>(), 24);
 }
 
+BOOST_AUTO_TEST_CASE(throwLuaExceptionOnLuaProblems)
+{
+    Lua lua;
+    lua["receiveRef"] = receiveRef;
+    lua.setAcceptsStackUserdata(true);
+
+    Counter counter(42);
+    lua["counter"] = counter;
+
+    // Syntax error
+    BOOST_CHECK_THROW(lua("foo.bar.baz = 42"), LuaException);
+
+    // Underflow
+    BOOST_CHECK_THROW(lua("receiveRef()"), LuaException);
+
+    // Allow extra args
+    BOOST_CHECK_NO_THROW(lua("receiveRef(counter, 3)"));
+}
+
 BOOST_AUTO_TEST_CASE(luaCanPassUserdataByValue)
 {
     Lua lua;
