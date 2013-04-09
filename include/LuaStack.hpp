@@ -892,6 +892,10 @@ namespace
         {
             LuaIndex index(stack.begin());
 
+            // We could ensure the stack.size() matches the Arg size exactly, but most
+            // native Lua methods don't check for that condition, so for us to fit in,
+            // we won't either.
+
             if (stack.size() < sizeof...(Args)) {
                 std::stringstream msg;
                 msg << "Function expects at least "
