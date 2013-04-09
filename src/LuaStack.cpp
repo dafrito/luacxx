@@ -42,19 +42,11 @@ lua_State* LuaStack::luaState() const
 
 LuaStack& LuaStack::grab()
 {
-    if (_parent) {
-        throw std::logic_error("Refusing to grab values when the stack has a parent");
-    }
-
     return offset(0);
 }
 
 LuaStack& LuaStack::grab(const int count)
 {
-    if (_parent) {
-        throw std::logic_error("Refusing to grab values when the stack has a parent");
-    }
-
     return offset(offset() - count);
 }
 
@@ -114,9 +106,6 @@ void LuaStack::assertUnlocked() const
 
 void LuaStack::unlock()
 {
-    if (_top != lua_gettop(luaState())) {
-        throw std::logic_error("Stack was not properly reset when stack is unlocked");
-    }
     _locked = false;
 }
 
