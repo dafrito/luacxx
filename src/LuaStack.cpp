@@ -43,7 +43,7 @@ lua_State* LuaStack::luaState() const
 LuaStack& LuaStack::grab()
 {
     if (_parent) {
-        throw "Refusing to grab values when the stack has a parent";
+        throw std::logic_error("Refusing to grab values when the stack has a parent");
     }
 
     return offset(0);
@@ -52,7 +52,7 @@ LuaStack& LuaStack::grab()
 LuaStack& LuaStack::grab(const int count)
 {
     if (_parent) {
-        throw "Refusing to grab values when the stack has a parent";
+        throw std::logic_error("Refusing to grab values when the stack has a parent");
     }
 
     return offset(offset() - count);
@@ -65,10 +65,12 @@ LuaStack& LuaStack::disown()
 
 LuaStack& LuaStack::offset(const int offset)
 {
-    if(offset < 0)
-        throw LuaException(&lua(), "Offset must be non-negative");
-    if(offset > top())
-        throw LuaException(&lua(), "Offset must be less than the top of lua's stack");
+    if(offset < 0) {
+        throw std::out_of_range("Offset must be non-negative");
+    }
+    if(offset > top()) {
+        throw std::out_of_range("Offset must be less than the top of lua's stack");
+    }
     _offset = offset;
     return (*this);
 }
@@ -94,7 +96,7 @@ int LuaStack::top() const
 void LuaStack::lock()
 {
     if (locked()) {
-        throw "Refusing to lock a currently locked stack";
+        throw std::logic_error("Refusing to lock a currently locked stack");
     }
 }
 
@@ -106,14 +108,14 @@ bool LuaStack::locked() const
 void LuaStack::assertUnlocked() const
 {
     if (locked()) {
-        throw "Refusing to mutate stack while stack is locked";
+        throw std::logic_error("Refusing to mutate stack while stack is locked");
     }
 }
 
 void LuaStack::unlock()
 {
     if (_top != lua_gettop(luaState())) {
-        throw "Stack was not properly reset when stack is unlocked";
+        throw std::logic_error("Stack was not properly reset when stack is unlocked");
     }
     _locked = false;
 }
@@ -148,7 +150,7 @@ LuaStack& LuaStack::pop(int count)
 {
     assertUnlocked();
     if(count > size())
-        throw LuaException(&lua(), "Refusing to pop elements not managed by this stack");
+        throw std::out_of_range("Refusing to pop elements not managed by this stack");
     lua_pop(luaState(), count);
     return (*this);
 }
@@ -169,10 +171,10 @@ void LuaStack::checkPos(int pos) const
         return;
     }
     if (pos == 0) {
-        throw LuaException(&lua(), "Stack position must not be zero");
+        throw std::out_of_range("Stack position must not be zero");
     }
     if (empty()) {
-        throw LuaException(&lua(), "Stack position must not refer to an empty stack");
+        throw std::out_of_range("Stack position must not refer to an empty stack");
     }
     // Convert relative positions to absolute ones.
     if (pos < 0) {
@@ -181,12 +183,12 @@ void LuaStack::checkPos(int pos) const
     if (pos < offset()) {
         std::stringstream str;
         str << "Stack position must not be below this stack. Position was " << pos << " but valid indices are [" << bottom() << ", " << top() << "]";
-        throw LuaException(&lua(), str.str());
+        throw std::out_of_range(str.str());
     }
     if (pos > top()) {
         std::stringstream str;
         str << "Stack position must not be above this stack. Position was " << pos << " but valid indices are [" << bottom() << ", " << top() << "]";
-        throw LuaException(&lua(), str.str());
+        throw std::out_of_range(str.str());
     }
 }
 
@@ -195,7 +197,7 @@ LuaStack& LuaStack::replace(int pos)
     assertUnlocked();
     checkPos(pos);
     if (empty())
-        throw LuaException(&lua(), "Stack must not be empty when replacing elements");
+        throw std::out_of_range("Stack must not be empty when replacing elements");
     lua_replace(luaState(), pos);
     return (*this);
 }
@@ -511,7 +513,7 @@ LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
     assertUnlocked();
 
     if (userdata.isRaw() && !acceptsStackUserdata() && !lua().acceptsStackUserdata()) {
-        throw LuaException("Stack does not accept raw pointers");
+        throw std::logic_error("Stack does not accept raw pointers");
     }
 
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
@@ -768,7 +770,7 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
     case lua::FUNCTION:
     case lua::THREAD:
     default:
-        throw LuaException(&stack.lua(), std::string("Type not supported: ") + stack.typestring(pos));
+        throw std::logic_error(std::string("Type not supported: ") + stack.typestring(pos));
     }
     return ++index;
 }
@@ -800,5 +802,5 @@ LuaStack& operator<<(LuaStack& stack, const QVariant& variant)
     default:
         break;
     }
-    throw LuaException(&stack.lua(), std::string("Type not supported: ") + variant.typeName());
+    throw std::logic_error(std::string("Type not supported: ") + variant.typeName());
 }

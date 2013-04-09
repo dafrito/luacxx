@@ -52,7 +52,7 @@ namespace {
 int throwFromPanic(lua_State* state)
 {
     const char* msg = lua_tostring(state, -1);
-    throw LuaException(std::string("Fatal exception from Lua: ") + msg);
+    throw std::runtime_error(std::string("Fatal exception from Lua: ") + msg);
 }
 
 Lua::Lua() :
@@ -97,9 +97,9 @@ void Lua::handleLoadValue(const int rv)
 {
     switch (rv) {
         case LUA_ERRSYNTAX:
-            throw LuaException(this, std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
+            throw std::runtime_error(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
         case LUA_ERRMEM:
-            throw LuaException(this, std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
+            throw std::runtime_error(std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
     }
 }
 
@@ -120,10 +120,10 @@ LuaReference Lua::operator()(std::istream& stream, const std::string& name = NUL
 LuaReference Lua::operator()(QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {
-        throw LuaException(this,
-            QString("Cannot open file ") +
+        throw std::runtime_error(
+            (QString("Cannot open file ") +
             file.fileName() + ": " +
-            file.errorString());
+            file.errorString()).toStdString());
     }
     QtReadingData d(file);
     handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData()

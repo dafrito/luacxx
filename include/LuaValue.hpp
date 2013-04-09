@@ -181,9 +181,9 @@ private:
             case LUA_ERRRUN:
                 throw LuaException(&stack.lua(), stack.as<std::string>());
             case LUA_ERRMEM:
-                throw LuaException(&stack.lua(), "Lua memory error");
+                throw std::runtime_error("Lua memory error");
             case LUA_ERRERR:
-                throw LuaException(&stack.lua(), "Lua error within error handler");
+                throw std::runtime_error("Lua error within error handler");
         }
     }
 

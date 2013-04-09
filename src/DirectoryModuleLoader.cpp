@@ -25,7 +25,9 @@ void DirectoryModuleLoader::load(Lua& lua, const QString& module)
     QFile moduleFile;
     resolve(moduleFile, module);
     if (!moduleFile.exists()) {
-        throw QString("Module does not exist: ") + module;
+        throw std::runtime_error(
+            (QString("Module name '") + module + "' must resolve to an existing file").toStdString()
+        );
     }
     lua(moduleFile);
 }
