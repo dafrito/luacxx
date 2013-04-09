@@ -52,7 +52,7 @@ namespace {
 int throwFromPanic(lua_State* state)
 {
     const char* msg = lua_tostring(state, -1);
-    throw std::runtime_error(std::string("Fatal exception from Lua: ") + msg);
+    throw LuaException(std::string("Fatal exception from Lua: ") + msg);
 }
 
 Lua::Lua() :
