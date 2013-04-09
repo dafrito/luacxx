@@ -5,47 +5,21 @@
 #include <string>
 #include <QString>
 
-class Lua;
-
 class LuaException : public std::runtime_error
 {
-    const Lua* const _lua;
+    const std::string _what;
 
 public:
     LuaException(const std::string& reason) :
-        std::runtime_error(reason),
-        _lua(0)
+        std::runtime_error("LuaException"),
+        _what(std::string("LuaException: ") + reason)
     {}
 
-    LuaException(const Lua* const lua, const std::string& reason) :
-        std::runtime_error(reason),
-        _lua(lua)
-    {}
-
-    LuaException(const char* reason) :
-        std::runtime_error(reason),
-        _lua(0)
-    {}
-
-    LuaException(const Lua* const lua, const char* reason) :
-        std::runtime_error(reason),
-        _lua(lua)
-    {}
-
-    explicit LuaException(const QString& reason) :
-        std::runtime_error(reason.toStdString()),
-        _lua(0)
-    {}
-
-    explicit LuaException(const Lua* const lua, const QString& reason) :
-        std::runtime_error(reason.toStdString()),
-        _lua(lua)
-    {}
-
-    const Lua* lua()
+    const char* what() const noexcept
     {
-        return _lua;
+        return _what.c_str();
     }
+
 };
 
 #endif // LUAEXCEPTION_HPP

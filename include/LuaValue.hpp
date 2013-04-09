@@ -179,7 +179,7 @@ private:
             case 0:
                 return;
             case LUA_ERRRUN:
-                throw LuaException(&stack.lua(), stack.as<std::string>());
+                throw LuaException(stack.as<std::string>());
             case LUA_ERRMEM:
                 throw std::runtime_error("Lua memory error");
             case LUA_ERRERR:
