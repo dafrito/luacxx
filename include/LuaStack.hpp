@@ -4,12 +4,15 @@
 #include <QVariant>
 #include <memory>
 #include <string>
+#include <sstream>
 #include <functional>
 #include <type_traits>
 #include <lua.hpp>
 
 #include "types.hpp"
 #include "LuaIndex.hpp"
+#include "LuaUserdata.hpp"
+#include "LuaException.hpp"
 
 class Lua;
 class LuaStack;
@@ -39,10 +42,6 @@ namespace lua
     const LuaAccessible& retrieveAccessor(const LuaAccessible& accessible);
     LuaAccessible& retrieveAccessor(LuaAccessible& accessible);
     const LuaAccessible& retrieveAccessor(const std::shared_ptr<LuaAccessible>& accessible);
-
-template<typename Sink>
-Sink as(const LuaIndex& index);
-
 } // namespace lua
 
 /**
@@ -357,10 +356,7 @@ public:
     LuaStack& to(LuaUserdata*& sink, int pos = -1);
 
     template <class Sink>
-    Sink as(int pos = -1)
-    {
-        return lua::as<Sink>(LuaIndex(*this, pos));
-    }
+    Sink as(int pos = -1);
 
     void* pointer(int pos);
 
@@ -606,6 +602,182 @@ public:
     ~LuaStack();
 };
 
+namespace {
+    template <typename T>
+    struct remove_qualifiers
+    {
+        typedef typename std::remove_const<typename std::remove_reference<T>::type>::type type;
+    };
+
+    template <typename T>
+    struct remove_shared_ptr
+    {
+        typedef T type;
+    };
+
+    template <typename T>
+    struct remove_shared_ptr<std::shared_ptr<T>>
+    {
+        typedef T type;
+    };
+}
+
+namespace lua {
+
+    template <typename T>
+    struct UserdataName
+    {
+        constexpr static const char* value = 0;
+    };
+
+    template <typename T>
+    struct isUserdataType
+    {
+        typedef typename std::remove_const<
+                typename remove_shared_ptr<
+                typename std::remove_pointer<
+                typename std::remove_reference<T
+                >::type
+                >::type
+                >::type
+                >::type type;
+
+        constexpr static const bool value = UserdataName<isUserdataType::type>::value != 0;
+    };
+
+    template <typename Sink>
+    typename std::enable_if<
+        !std::is_reference<Sink>::value && !isUserdataType<Sink>::value,
+        Sink
+    >::type
+    as(const LuaIndex& index)
+    {
+        typename std::remove_const<Sink>::type sink;
+        index.stack().to(sink, index.pos());
+        return sink;
+    }
+
+    template <typename Target>
+    struct UserdataConverter
+    {
+        static const char* expectedName()
+        {
+            static_assert(UserdataName<Target>::value != 0, "Userdata name must be non-zero");
+            return UserdataName<Target>::value;
+        }
+
+        static LuaUserdata* getUserdataObject(const LuaIndex& index)
+        {
+            LuaUserdata* const userdata(index.stack().as<LuaUserdata*>(index.pos()));
+            if (!userdata) {
+                std::stringstream msg;
+                msg << "Userdata of type '" << expectedName() << "' must be provided at position "
+                    << index.pos() << ", but provided Lua type was '" << index.stack().typestring(index.pos())
+                    << "'";
+                throw LuaException(msg.str());
+             }
+            if (userdata->dataType() != UserdataName<Target>::value) {
+                std::stringstream msg;
+                msg << "Userdata at position " << index.pos()
+                    << " must be of type '" << expectedName() << "', but provided userdata type was '"
+                    << userdata->dataType().toStdString() << "'";
+                throw LuaException(msg.str());
+            }
+            return userdata;
+        }
+
+        template <typename Sink>
+        static typename std::enable_if<
+                std::is_pointer<Sink>::value,
+                Target*>::type
+        as(const LuaIndex& index)
+        {
+            return static_cast<Target*>(getUserdataObject(index)->rawData());
+        }
+
+        template <typename Sink>
+        static typename std::enable_if<
+                std::is_same<Sink, Target>::value,
+                Target>::type
+        as(const LuaIndex& index)
+        {
+            return Sink(as<Target&>(index));
+        }
+
+        template <typename Sink>
+        static typename std::enable_if<
+                !std::is_pointer<Sink>::value && std::is_constructible<Sink, std::shared_ptr<Target>>::value,
+                std::shared_ptr<Target>
+        >::type
+        as(const LuaIndex& index)
+        {
+            LuaUserdata* userdata = getUserdataObject(index);
+            return std::shared_ptr<Target>(
+                userdata->data(),
+                static_cast<Target*>(userdata->rawData())
+            );
+        }
+
+        template <typename Sink>
+        static typename std::enable_if<
+            std::is_reference<Sink>::value,
+            Target&>::type
+        as(const LuaIndex& index)
+        {
+            LuaUserdata* userdata = getUserdataObject(index);
+            if (!userdata->rawData()) {
+                std::stringstream msg;
+                msg << "Userdata of type '" << expectedName() << "' at position "
+                    << index.pos() << " must have valid data";
+                throw LuaException(msg.str());
+            }
+            return *static_cast<Target*>(userdata->rawData());
+        }
+    };
+
+    // Handle userdata references, values, and pointers
+    template <typename Sink>
+    typename std::enable_if<
+        isUserdataType<Sink>::value
+            && !std::is_constructible<typename std::remove_reference<Sink>::type, std::shared_ptr<typename isUserdataType<Sink>::type>>::value,
+        Sink
+    >::type
+    as(const LuaIndex& index)
+    {
+        return UserdataConverter<typename isUserdataType<Sink>::type>::template as<Sink>(index);
+    }
+
+    // Handle userdata shared_ptr's
+    template <typename Sink>
+    typename std::enable_if<
+        isUserdataType<Sink>::value
+            && std::is_constructible<typename std::remove_reference<Sink>::type, std::shared_ptr<typename isUserdataType<Sink>::type>>::value,
+        std::shared_ptr<typename isUserdataType<Sink>::type>
+    >::type
+    as(const LuaIndex& index)
+    {
+        return UserdataConverter<typename isUserdataType<Sink>::type>::template as<Sink>(index);
+    }
+
+    template <typename Sink>
+    typename std::enable_if<
+        std::is_reference<Sink>::value && !isUserdataType<Sink>::value,
+        typename remove_qualifiers<Sink>::type
+    >::type
+    as(const LuaIndex& index)
+    {
+        return as<typename remove_qualifiers<Sink>::type>(index);
+    }
+
+} // namespace lua
+
+template <class Sink>
+Sink LuaStack::as(int pos)
+{
+    return lua::as<Sink>(LuaIndex(*this, pos));
+}
+
+
 /**
  * Assign the topmost value on the specified stack to the
  * specified C++ value.
@@ -643,31 +815,6 @@ LuaIndex& operator>>(LuaIndex& index, std::shared_ptr<lua::LuaCallable>& callabl
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 
-template<class Sink>
-LuaIndex& operator>>(LuaIndex& index, Sink*& sink)
-{
-    std::shared_ptr<Sink> ptr;
-    index.stack() >> ptr;
-
-    if (ptr) {
-        sink = ptr.get();
-    }
-    return ++index;
-}
-
-namespace lua {
-
-    template<typename Sink>
-    Sink as(const LuaIndex& index)
-    {
-        Sink sink;
-        index.stack().to(sink, index.pos());
-        return sink;
-    }
-
-} // namespace lua
-
-
 LuaStack& operator<<(LuaStack& stack, const QChar& value);
 LuaStack& operator<<(LuaStack& stack, const QString& value);
 LuaStack& operator<<(LuaStack& stack, const QVariant& variant);
@@ -681,13 +828,19 @@ namespace
     struct Invocator
     {
         template <typename... Rest>
-        static void apply(LuaStack& stack, const Callee& func, Rest&... rest)
+        static void apply(LuaIndex& index, const Callee& func, Rest... rest)
         {
-            // Strip any const T& down to a T
-            typename std::remove_const<typename std::remove_reference<Arg>::type>::type arg;
-            stack.begin() >> arg;
-            stack.shift();
-            Invocator<Callee, RV, Remaining...>::template apply<Rest..., Arg>(stack, func, rest..., arg);
+            static_assert(
+                        // Non-references are fine
+                        !std::is_reference<Arg>::value ||
+                        // References to references are fine
+                        std::is_reference<decltype(lua::as<Arg>(index++))>::value ||
+                        // References to const are fine
+                        std::is_const<typename std::remove_reference<Arg>::type>::value,
+                "Provided function must not use non-const lvalue references to refer to temporary objects");
+            Invocator<Callee, RV, Remaining...>::template apply<Rest..., Arg>(
+                index, func, rest..., lua::as<Arg>(index++)
+            );
         }
     };
 
@@ -695,10 +848,10 @@ namespace
     struct Invocator<Callee, RV, ArgStop>
     {
         template <typename... FullArgs>
-        static void apply(LuaStack& stack, const Callee& func, FullArgs&... args)
+        static void apply(LuaIndex& index, const Callee& func, FullArgs... args)
         {
-            stack.clear();
-            stack << func(args...);
+            index.stack().clear();
+            index.stack() << func(args...);
         }
     };
 
@@ -706,9 +859,9 @@ namespace
     struct Invocator<Callee, void, ArgStop>
     {
         template <typename... FullArgs>
-        static void apply(LuaStack& stack, const Callee& func, FullArgs&... args)
+        static void apply(LuaIndex& index, const Callee& func, FullArgs... args)
         {
-            stack.clear();
+            index.stack().clear();
             func(args...);
         }
     };
@@ -737,7 +890,8 @@ namespace
 
         void operator()(LuaStack& stack)
         {
-            Invocator<decltype(func), RV, Args..., ArgStop>::template apply<>(stack, func);
+            LuaIndex index(stack.begin());
+            Invocator<decltype(func), RV, Args..., ArgStop>::template apply<>(index, func);
         }
     };
 }

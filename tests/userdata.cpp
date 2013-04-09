@@ -31,9 +31,31 @@ BOOST_AUTO_TEST_CASE(testLuaHandleQObjectsWithMinimalSemantics)
     BOOST_REQUIRE(other.get() == orig.get());
 }
 
+namespace lua {
+
+template<>
+struct UserdataName<Counter>
+{
+    constexpr static const char* value = "Counter";
+};
+
+template<>
+struct UserdataName<Blank>
+{
+    constexpr static const char* value = "Blank";
+};
+
+} // namespace lua
+
+LuaStack& operator<<(LuaStack& stack, Blank& ptr)
+{
+    stack << LuaUserdata(&ptr, "Blank");
+    return stack;
+}
+
 LuaStack& operator<<(LuaStack& stack, Counter& ptr)
 {
-    stack << LuaUserdata(&ptr, "QObject");
+    stack << LuaUserdata(&ptr, "Counter");
 
     stack.pushMetatable();
     lua::userdata::qobject(stack, &ptr);
@@ -65,25 +87,93 @@ BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
     BOOST_REQUIRE_EQUAL(counter.getValue(), 24);
 }
 
-static void receive(QObject* const ptr)
+static void receiveValue(Blank blank)
 {
-    if (!ptr)  {
-        throw LuaException("Pointer must not be null");
-    }
-    static_cast<Counter*>(ptr)->setValue(24);
+    BOOST_CHECK_EQUAL(blank.count(), 42);
+}
+
+static void receiveConstValue(const Blank blank)
+{
+    BOOST_CHECK_EQUAL(blank.count(), 42);
+}
+
+static void receivePtr(Counter* const counter)
+{
+    counter->setValue(24);
+}
+
+static int receiveConstPtr(const Counter* counter)
+{
+    return counter->getValue();
+}
+
+static void receiveRef(Counter& counter)
+{
+    counter.setValue(24);
+}
+
+static int receiveConstRef(const Counter& counter)
+{
+    return counter.getValue();
 }
 
 BOOST_AUTO_TEST_CASE(luaCanPassBackCxxValues)
 {
     Lua lua;
+    lua.setAcceptsStackUserdata(true);
+
+    Counter counter(42);
+    lua["counter"] = counter;
+    lua["receiveValue"] = receiveValue;
+    lua["receivePtr"] = receivePtr;
+    lua["receiveRef"] = receiveRef;
+    lua["receiveConstRef"] = receiveConstRef;
+    lua["receiveConstPtr"] = receiveConstPtr;
+
+    BOOST_CHECK_EQUAL(counter.getValue(), 42);
+    lua("receivePtr(counter)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 24);
+    BOOST_CHECK_EQUAL(lua("return receiveConstPtr(counter)").as<int>(), 24);
+
+    counter.setValue(42);
+
+    BOOST_CHECK_EQUAL(counter.getValue(), 42);
+    lua("receiveRef(counter)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 24);
+    BOOST_CHECK_EQUAL(lua("return receiveConstRef(counter)").as<int>(), 24);
+}
+
+BOOST_AUTO_TEST_CASE(luaCanPassUserdataByValue)
+{
+    Lua lua;
+    lua.setAcceptsStackUserdata(true);
+
+    Blank blank(42);
+    lua["blank"] = blank;
+
+    lua["receiveValue"] = receiveValue;
+    lua["receiveConstValue"] = receiveConstValue;
+
+    lua("receiveValue(blank)");
+    lua("receiveConstValue(blank)");
+}
+
+void acceptShared(std::shared_ptr<Counter> ptr)
+{
+}
+
+void acceptSharedRef(const std::shared_ptr<Counter>& ptr)
+{
+}
+
+BOOST_AUTO_TEST_CASE(sharedPtrsCanBePassedToCxxFunctions)
+{
+    Lua lua;
     auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["obj"] = obj;
+    lua["c"] = obj;
 
-    lua["receive"] = receive;
-
-    lua("receive(obj)");
-
-    BOOST_REQUIRE_EQUAL(static_cast<Counter*>(obj.get())->getValue(), 24);
+    lua["acceptShared"] = acceptShared;
+    lua["acceptSharedRef"] = acceptSharedRef;
 }
 
 BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)

@@ -5,6 +5,21 @@
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 
+class Blank
+{
+    int _count;
+
+public:
+    Blank(const int count) :
+        _count(count)
+    {}
+
+    int count() const
+    {
+        return _count;
+    }
+};
+
 class Square : public QObject
 {
     Q_OBJECT
