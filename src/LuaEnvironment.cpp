@@ -70,16 +70,12 @@ Lua::Lua() :
     table::push((*this)["package"][searchersName], Lua::loadModule);
 }
 
-LuaReference newReferenceValue(Lua& lua, lua_State* state)
-{
-    return LuaStack(lua).grab(1).save();
-}
-
 LuaReference Lua::operator()(const char* runnable)
 {
+    LuaStack stack(*this);
     luaL_loadstring(state, runnable);
-    lua_call(state, 0, 1);
-    return newReferenceValue(*this, state);
+    stack.invoke();
+    return stack.save();
 }
 
 LuaReference Lua::operator()(const QString& runnable)
@@ -107,14 +103,15 @@ LuaReference Lua::operator()(std::istream& stream, const std::string& name = NUL
 {
     LuaReadingData d(stream);
 
+    LuaStack stack(*this);
     handleLoadValue(lua_load(state, &read_stream, &d, name.c_str()
         #if LUA_VERSION_NUM >= 502
             // Account for the extra mode parameter introduced in 5.2
             , NULL
         #endif
     ));
-    lua_call(state, 0, 1);
-    return newReferenceValue(*this, state);
+    stack.invoke();
+    return stack.save();
 }
 
 LuaReference Lua::operator()(QFile& file)
@@ -126,14 +123,15 @@ LuaReference Lua::operator()(QFile& file)
             file.errorString()).toStdString());
     }
     QtReadingData d(file);
+    LuaStack stack(*this);
     handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData()
         #if LUA_VERSION_NUM >= 502
             // Account for the extra mode parameter introduced in 5.2
             , NULL
         #endif
     ));
-    lua_call(state, 0, 1);
-    return newReferenceValue(*this, state);
+    stack.invoke();
+    return stack.save();
 }
 
 LuaGlobal Lua::operator[](const char* key)

@@ -131,10 +131,8 @@ public:
     LuaReference operator()(Args&&... args)
     {
         LuaStack stack(_lua);
-        stack.setAcceptsStackUserdata(true);
-        stack << onError;
         push(stack);
-        callLua(luaState(), stack, args...);
+        stack.invoke(args...);
 
         if (stack.empty()) {
             // The called function didn't return anything, so push a nil
@@ -158,40 +156,6 @@ public:
 
         accessor().push(stack);
         return stack.length();
-    }
-
-private:
-
-    static std::string onError(LuaStack& stack)
-    {
-        std::string error("Error while invoking Lua function: ");
-        error += stack.traceback();
-        return error;
-    }
-
-    static void callLua(lua_State* s, LuaStack& stack)
-    {
-        // Call Lua function. LUA_MULTRET ensures all arguments are returned
-        // Subtract one from the size to ignore the function itself and pass
-        // the correct number of arguments
-        int result = lua_pcall(s, stack.size() - 2, LUA_MULTRET, stack.offset() + 1);
-        switch (result) {
-            case 0:
-                return;
-            case LUA_ERRRUN:
-                throw LuaException(stack.as<std::string>());
-            case LUA_ERRMEM:
-                throw std::runtime_error("Lua memory error");
-            case LUA_ERRERR:
-                throw std::runtime_error("Lua error within error handler");
-        }
-    }
-
-    template <typename Arg, typename... Rest>
-    static void callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest)
-    {
-        stack << arg;
-        callLua(s, stack, rest...);
     }
 };
 
