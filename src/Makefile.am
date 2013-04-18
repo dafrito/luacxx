@@ -7,6 +7,10 @@ pkginclude_HEADERS = \
 	../include/LuaEnvironment.hpp \
 	../include/loaders.hpp \
 	../include/LuaStack.hpp \
+	../include/stack/accessible.cpp \
+	../include/stack/invocation.cpp \
+	../include/stack/reference.cpp \
+	../include/stack/userdata.cpp \
 	../include/LuaValue.hpp \
 	../include/LuaGlobalAccessible.hpp \
 	../include/LuaStackAccessible.hpp \
