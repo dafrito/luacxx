@@ -34,6 +34,17 @@ namespace lua {
         return sink;
     }
 
+    template <typename Sink, typename std::enable_if<
+        std::is_same<typename std::remove_reference<Sink>::type, LuaStack>::value, int>::type = 0>
+    LuaStack& as(const LuaIndex& index)
+    {
+        // This bug typically crops up when we mistakenly try to treat a void(LuaStack&) function as an
+        // arbitrary function.
+        static_assert(!std::is_same<Sink, LuaStack&>::value,
+            "Refusing to try to retrieve a LuaStack value from a stack, as this is almost certainly a bug."
+        );
+    }
+
     template <typename Target>
     struct UserdataConverter
     {
