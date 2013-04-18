@@ -11,6 +11,7 @@ pkginclude_HEADERS = \
 	../include/stack/invocation.cpp \
 	../include/stack/reference.cpp \
 	../include/stack/userdata.cpp \
+	../include/insertion.cpp \
 	../include/LuaValue.hpp \
 	../include/LuaGlobalAccessible.hpp \
 	../include/LuaStackAccessible.hpp \
