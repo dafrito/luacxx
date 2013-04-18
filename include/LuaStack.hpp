@@ -421,7 +421,10 @@ public:
 
     static std::string onError(LuaStack& stack)
     {
-        std::string error("Error while invoking Lua function: ");
+        std::string error("Error occurred while invoking Lua function from C++");
+        error += '\n';
+        error += stack.as<const char*>(1);
+        error += '\n';
         error += stack.traceback();
         return error;
     }
