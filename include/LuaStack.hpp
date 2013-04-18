@@ -208,7 +208,7 @@ private:
      * abandoning underlying stack values, so this
      * method should be used with caution.
      */
-    LuaStack& offset(const int offset);
+    void offset(const int offset);
 
     void lock();
     bool locked() const;
@@ -269,16 +269,16 @@ public:
      * instance; they will be popped when this instance
      * is destroyed.
      */
-    LuaStack& grab();
+    void grab();
 
-    LuaStack& grab(const int count);
+    void grab(const int count);
 
     /**
      * Forcibly abandon all stack values. This
      * instance will no longer be responsible for
      * the values currently on the stack.
      */
-    LuaStack& disown();
+    void disown();
 
     LuaIndex begin();
     LuaIndex end();
@@ -291,13 +291,13 @@ public:
      * Pops the specified number of stack values from
      * this stack.
      */
-    LuaStack& pop(int count = 1);
+    void pop(int count = 1);
 
     /**
      * Shifts the specified number of stack values from
      * the front of this stack.
      */
-    LuaStack& shift(int count = 1);
+    void shift(int count = 1);
 
     /**
      * Replaces the stack value at the specified position
@@ -305,24 +305,24 @@ public:
      *
      * The topmost element will be popped.
      */
-    LuaStack& replace(int pos);
+    void replace(int pos);
 
-    LuaStack& remove(int pos);
+    void remove(int pos);
 
     /**
      * Swaps the values at the two specified indices.
      */
-    LuaStack& swap(int a = -1, int b = -2);
+    void swap(int a = -1, int b = -2);
 
-    LuaStack& pushCopy(int pos = -1);
+    void pushCopy(int pos = -1);
 
     /**
      * Pops all values that have been pushed onto
      * this stack.
      */
-    LuaStack& clear()
+    void clear()
     {
-        return pop(size());
+        pop(size());
     }
 
     std::string traceback();
@@ -343,17 +343,17 @@ public:
      * Assigns to the specified sink value, the Lua value
      * at the specified stack position.
      */
-    LuaStack& to(bool& sink, int pos = -1);
-    LuaStack& to(char& sink, int pos = -1);
-    LuaStack& to(short& sink, int pos = -1);
-    LuaStack& to(int& sink, int pos = -1);
-    LuaStack& to(long& sink, int pos = -1);
-    LuaStack& to(float& sink, int pos = -1);
-    LuaStack& to(lua_Number& sink, int pos = -1);
-    LuaStack& to(const char*& sink, int pos = -1);
-    LuaStack& to(std::string& sink, int pos = -1);
-    LuaStack& to(QString& sink, int pos = -1);
-    LuaStack& to(LuaUserdata*& sink, int pos = -1);
+    void to(bool& sink, int pos = -1);
+    void to(char& sink, int pos = -1);
+    void to(short& sink, int pos = -1);
+    void to(int& sink, int pos = -1);
+    void to(long& sink, int pos = -1);
+    void to(float& sink, int pos = -1);
+    void to(lua_Number& sink, int pos = -1);
+    void to(const char*& sink, int pos = -1);
+    void to(std::string& sink, int pos = -1);
+    void to(QString& sink, int pos = -1);
+    void to(LuaUserdata*& sink, int pos = -1);
 
     template <class Sink>
     Sink as(int pos = -1);
@@ -391,11 +391,11 @@ public:
     LuaStack& operator<<(const float& b);
     LuaStack& operator<<(const lua_Number& value);
     LuaStack& operator<<(const char* value);
-    LuaStack& push(const char* value, int len);
+    void push(const char* value, int len);
     LuaStack& operator<<(const std::string& value);
 
-    LuaStack& push(const std::shared_ptr<void>& obj, QString type);
-    LuaStack& push(void* const p, QString type);
+    void push(const std::shared_ptr<void>& obj, QString type);
+    void push(void* const p, QString type);
 
     bool acceptsStackUserdata() const;
     void setAcceptsStackUserdata(const bool accepts);
@@ -413,7 +413,7 @@ public:
      * Since this method has potentially dangerous consequences, it is named
      * unusually.
      */
-    LuaStack& pushPointer(void* const p);
+    void pushPointer(void* const p);
 
     /**
      * Pushes the directly callable C++ function onto
@@ -421,9 +421,9 @@ public:
      * number of arguments will be pulled from the stack
      * and partially applied to the specified function.
      */
-    LuaStack& push(const lua::LuaCallable& f, const int closed);
-    LuaStack& push(void (*p)(LuaStack& stack), const int closed);
-    LuaStack& push(lua_CFunction func, const int closed);
+    void push(const lua::LuaCallable& f, const int closed);
+    void push(void (*p)(LuaStack& stack), const int closed);
+    void push(lua_CFunction func, const int closed);
 
     LuaStack& operator<<(const lua::LuaCallable& f);
     LuaStack& operator<<(void (*p)(LuaStack& stack));
@@ -463,8 +463,8 @@ public:
     }
 
     bool hasMetatable(const int pos = -1);
-    LuaStack& pushMetatable(const int pos = -1);
-    LuaStack& setMetatable(const int pos = -2);
+    void pushMetatable(const int pos = -1);
+    void setMetatable(const int pos = -2);
 
     /**
      * Push the specified C++ function onto this stack.
@@ -472,26 +472,27 @@ public:
     template <typename RV, typename... Args>
     LuaStack& operator<<(RV(*p)(Args...))
     {
-        return push(p, 0);
+        push(p, 0);
+        return *this;
     }
 
     template <typename RV, typename... Args>
-    LuaStack& push(RV(*p)(Args...), const int closed)
+    void push(RV(*p)(Args...), const int closed)
     {
-        return push(LuaWrapper<RV, Args...>(p), closed);
+        push(LuaWrapper<RV, Args...>(p), closed);
     }
 
     template <typename RV, typename... Args>
     LuaStack& operator<<(std::function<RV(Args...)> p)
     {
-        return push(p, 0);
+        push(p, 0);
+        return *this;
     }
 
     template <typename RV, typename... Args>
-    LuaStack& push(std::function<RV(Args...)> p, const int closed = 0)
+    void push(std::function<RV(Args...)> p, const int closed = 0)
     {
         this->push(LuaWrapper<RV, Args...>(p), closed);
-        return (*this);
     }
 
     template <typename... Args>
@@ -542,7 +543,7 @@ public:
      * Pushes a value from the specified table, using the topmost stack
      * value as the key.
      */
-    LuaStack& pushedGet(int tablePos = -1);
+    void pushedGet(int tablePos = -1);
 
     /**
      * Pushes the table value within the specified table onto this stack.
@@ -556,7 +557,8 @@ public:
         *this << key;
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
-        return pushedGet(tablePos);
+        pushedGet(tablePos);
+        return *this;
     }
 
     /**
@@ -568,7 +570,7 @@ public:
      * k is just below the top (position -2)
      * and v is at the top (position -1)
      */
-    LuaStack& pushedSet(int tablePos);
+    void pushedSet(int tablePos);
 
     /**
      * Sets the table value for the specified key to the value on top
@@ -577,7 +579,7 @@ public:
      * The table must be at the stack position specified by tablePos.
      */
     template <typename K>
-    LuaStack& pushedSet(K key, int tablePos)
+    void pushedSet(K key, int tablePos)
     {
         checkPos(tablePos);
         *this << key;
@@ -589,16 +591,16 @@ public:
         // stack.
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
-        return pushedSet(tablePos);
+        pushedSet(tablePos);
     }
 
     // We need this definition since integers can be
     // implicitly converted to booleans or numbers, which
     // is ambiguous.
     template <typename K>
-    LuaStack& set(K key, int value, int tablePos = -1)
+    void set(K key, int value, int tablePos = -1)
     {
-        return set<K, double>(key, value, tablePos);
+        set<K, double>(key, value, tablePos);
     }
 
     /**
@@ -608,7 +610,7 @@ public:
      * The table must be at the stack position specified.
      */
     template <typename K, typename V>
-    LuaStack& set(K key, const V& value, int tablePos = -1)
+    void set(K key, const V& value, int tablePos = -1)
     {
         checkPos(tablePos);
         *this << value;
@@ -617,7 +619,6 @@ public:
         if (!isMagicalPos(tablePos) && tablePos < 0)
             --tablePos;
         pushedSet(key, tablePos);
-        return (*this);
     }
 
     /**
@@ -625,21 +626,20 @@ public:
      * specified value.
      */
     template <typename V>
-    LuaStack& setGlobal(const std::string& key, const V& value)
+    void setGlobal(const std::string& key, const V& value)
     {
         *this << value;
-        return setGlobal(key);
+        setGlobal(key);
     }
 
     /**
      * Set the global with the specified name to the value
      * curently at the top of this stack.
      */
-    LuaStack& setGlobal(const std::string& key)
+    void setGlobal(const std::string& key)
     {
         assertUnlocked();
         lua_setglobal(luaState(), key.c_str());
-        return (*this);
     }
 
     ~LuaStack();

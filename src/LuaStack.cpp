@@ -40,22 +40,22 @@ lua_State* LuaStack::luaState() const
     return _lua.luaState();
 }
 
-LuaStack& LuaStack::grab()
+void LuaStack::grab()
 {
-    return offset(0);
+    offset(0);
 }
 
-LuaStack& LuaStack::grab(const int count)
+void LuaStack::grab(const int count)
 {
-    return offset(offset() - count);
+    offset(offset() - count);
 }
 
-LuaStack& LuaStack::disown()
+void LuaStack::disown()
 {
-    return offset(top());
+    offset(top());
 }
 
-LuaStack& LuaStack::offset(const int offset)
+void LuaStack::offset(const int offset)
 {
     if(offset < 0) {
         throw std::out_of_range("Offset must be non-negative");
@@ -64,7 +64,6 @@ LuaStack& LuaStack::offset(const int offset)
         throw std::out_of_range("Offset must be less than the top of lua's stack");
     }
     _offset = offset;
-    return (*this);
 }
 
 int LuaStack::size() const
@@ -135,23 +134,21 @@ LuaIndex LuaStack::at(const int pos, const int direction)
     return LuaIndex(*this, pos, direction);
 }
 
-LuaStack& LuaStack::pop(int count)
+void LuaStack::pop(int count)
 {
     assertUnlocked();
     if(count > size())
         throw std::out_of_range("Refusing to pop elements not managed by this stack");
     lua_pop(luaState(), count);
-    return (*this);
 }
 
-LuaStack& LuaStack::shift(int count)
+void LuaStack::shift(int count)
 {
     assertUnlocked();
     while(count-- > 0) {
         // TODO We need to check if the offset is being moved here.
         lua_remove(luaState(), 1);
     }
-    return (*this);
 }
 
 void LuaStack::checkPos(int pos) const
@@ -181,25 +178,23 @@ void LuaStack::checkPos(int pos) const
     }
 }
 
-LuaStack& LuaStack::replace(int pos)
+void LuaStack::replace(int pos)
 {
     assertUnlocked();
     checkPos(pos);
     if (empty())
         throw std::out_of_range("Stack must not be empty when replacing elements");
     lua_replace(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::remove(int pos)
+void LuaStack::remove(int pos)
 {
     assertUnlocked();
     checkPos(pos);
     lua_remove(luaState(), pos);
-    return *this;
 }
 
-LuaStack& LuaStack::swap(int a, int b)
+void LuaStack::swap(int a, int b)
 {
     checkPos(a);
     checkPos(b);
@@ -213,16 +208,13 @@ LuaStack& LuaStack::swap(int a, int b)
 
     // Replace a by popping the copy of b
     lua_replace(luaState(), a - 1);
-
-    return *this;
 }
 
-LuaStack& LuaStack::pushCopy(int pos)
+void LuaStack::pushCopy(int pos)
 {
     assertUnlocked();
     checkPos(pos);
     lua_pushvalue(luaState(), pos);
-    return *this;
 }
 
 bool LuaStack::isMagicalPos(const int& pos) const
@@ -255,28 +247,25 @@ std::string LuaStack::traceback()
     #endif
 }
 
-LuaStack& LuaStack::to(const char*& sink, int pos)
+void LuaStack::to(const char*& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tostring(luaState(), pos);
     if (!sink) {
         sink = "";
     }
-    return (*this);
 }
 
-LuaStack& LuaStack::to(std::string& sink, int pos)
+void LuaStack::to(std::string& sink, int pos)
 {
     const char* str = as<const char*>(pos);
     sink = str;
-    return (*this);
 }
 
-LuaStack& LuaStack::to(QString& sink, int pos)
+void LuaStack::to(QString& sink, int pos)
 {
     const char* str = as<const char*>(pos);
     sink = str;
-    return (*this);
 }
 
 void* LuaStack::pointer(int pos)
@@ -308,57 +297,50 @@ LuaValue<LuaReferenceAccessible> LuaStack::save()
     );
 }
 
-LuaStack& LuaStack::to(bool& sink, int pos)
+void LuaStack::to(bool& sink, int pos)
 {
     checkPos(pos);
     sink = lua_toboolean(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(lua_Number& sink, int pos)
+void LuaStack::to(lua_Number& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tonumber(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(char& sink, int pos)
+void LuaStack::to(char& sink, int pos)
 {
     checkPos(pos);
     size_t len = 1;
     sink = *lua_tolstring(luaState(), pos, &len);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(short& sink, int pos)
+void LuaStack::to(short& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tointeger(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(int& sink, int pos)
+void LuaStack::to(int& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tointeger(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(long& sink, int pos)
+void LuaStack::to(long& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tonumber(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(float& sink, int pos)
+void LuaStack::to(float& sink, int pos)
 {
     checkPos(pos);
     sink = lua_tonumber(luaState(), pos);
-    return (*this);
 }
 
-LuaStack& LuaStack::to(LuaUserdata*& sink, int pos)
+void LuaStack::to(LuaUserdata*& sink, int pos)
 {
     checkPos(pos);
 
@@ -367,47 +349,43 @@ LuaStack& LuaStack::to(LuaUserdata*& sink, int pos)
     } else {
         sink = 0;
     }
-    return *this;
 }
 
 LuaStack& LuaStack::global(const char* name)
 {
     assertUnlocked();
     lua_getglobal(luaState(), name);
-    return (*this);
+    return *this;
 }
 
 LuaStack& LuaStack::global(const std::string& name)
 {
-    global(name.c_str());
-    return (*this);
+    return global(name.c_str());
 }
 
 LuaStack& LuaStack::global(const QString& name)
 {
-    global(name.toAscii().data());
-    return (*this);
+    return global(name.toAscii().data());
 }
 
-LuaStack& LuaStack::pushedGet(int tablePos)
+void LuaStack::pushedGet(int tablePos)
 {
     assertUnlocked();
     checkPos(tablePos);
     lua_gettable(luaState(), tablePos);
-    return (*this);
 }
 
-LuaStack& LuaStack::pushedSet(int tablePos)
+void LuaStack::pushedSet(int tablePos)
 {
     assertUnlocked();
     checkPos(tablePos);
     lua_settable(luaState(), tablePos);
-    return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const char& value)
 {
-    return push(&value, 1);
+    push(&value, 1);
+    return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const char* value)
@@ -417,11 +395,10 @@ LuaStack& LuaStack::operator<<(const char* value)
     return (*this);
 }
 
-LuaStack& LuaStack::push(const char* value, int len)
+void LuaStack::push(const char* value, int len)
 {
     assertUnlocked();
     lua_pushlstring(luaState(), value, len);
-    return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const std::string& value)
@@ -487,14 +464,14 @@ void collectUserdata(LuaStack& stack)
     userdata->~LuaUserdata();
 }
 
-LuaStack& LuaStack::push(const std::shared_ptr<void>& obj, QString type)
+void LuaStack::push(const std::shared_ptr<void>& obj, QString type)
 {
-    return *this << LuaUserdata(obj, type);
+    *this << LuaUserdata(obj, type);
 }
 
-LuaStack& LuaStack::push(void* const p, QString type)
+void LuaStack::push(void* const p, QString type)
 {
-    return *this << LuaUserdata(p, type);
+    *this << LuaUserdata(p, type);
 }
 
 LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
@@ -520,19 +497,19 @@ LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
 }
 
 
-LuaStack& LuaStack::pushPointer(void* const p)
+void LuaStack::pushPointer(void* const p)
 {
     assertUnlocked();
     lua_pushlightuserdata(luaState(), p);
-    return (*this);
 }
 
 LuaStack& LuaStack::operator<<(lua_CFunction func)
 {
-    return push(func, 0);
+    push(func, 0);
+    return *this;
 }
 
-LuaStack& LuaStack::push(lua_CFunction func, const int closed)
+void LuaStack::push(lua_CFunction func, const int closed)
 {
     assertUnlocked();
 
@@ -541,8 +518,6 @@ LuaStack& LuaStack::push(lua_CFunction func, const int closed)
     }
 
     lua_pushcclosure(luaState(), func, closed);
-
-    return *this;
 }
 
 int collectRawCallable(lua_State* state)
@@ -556,10 +531,11 @@ int collectRawCallable(lua_State* state)
 
 LuaStack& LuaStack::operator<<(void(*func)(LuaStack& stack))
 {
-    return push(func, 0);
+    push(func, 0);
+    return *this;
 }
 
-LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
+void LuaStack::push(void(*func)(LuaStack& stack), const int closed)
 {
     assertUnlocked();
 
@@ -583,15 +559,15 @@ LuaStack& LuaStack::push(void(*func)(LuaStack& stack), const int closed)
     lua_insert(luaState(), -2-closed);
 
     push(invokeRawFromLua, 2 + closed);
-    return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const lua::LuaCallable& f)
 {
-    return push(f, 0);
+    push(f, 0);
+    return (*this);
 }
 
-LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
+void LuaStack::push(const lua::LuaCallable& f, const int closed)
 {
     assertUnlocked();
 
@@ -607,7 +583,6 @@ LuaStack& LuaStack::push(const lua::LuaCallable& f, const int closed)
     lua_insert(luaState(), -2-closed);
 
     push(invokeFromLua, 2 + closed);
-    return (*this);
 }
 
 LuaStack& LuaStack::operator<<(const LuaAccessible& value)
@@ -640,7 +615,7 @@ bool LuaStack::hasMetatable(const int pos)
     return hasMeta;
 }
 
-LuaStack& LuaStack::pushMetatable(const int pos)
+void LuaStack::pushMetatable(const int pos)
 {
     assertUnlocked();
     checkPos(pos);
@@ -650,16 +625,13 @@ LuaStack& LuaStack::pushMetatable(const int pos)
         // Offset to ensure the position is set correctly
         setMetatable(pos > 0 ? pos : pos - 1);
     }
-
-    return *this;
 }
 
-LuaStack& LuaStack::setMetatable(const int pos)
+void LuaStack::setMetatable(const int pos)
 {
     assertUnlocked();
     checkPos(pos);
     lua_setmetatable(luaState(), pos);
-    return (*this);
 }
 
 
