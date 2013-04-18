@@ -2,7 +2,7 @@
 #define LUAUSERDATA_HEADER
 
 #include <memory>
-#include <QString>
+#include <string>
 
 class Lua;
 class LuaStack;
@@ -12,10 +12,10 @@ class LuaUserdata
     bool _isRaw;
     std::shared_ptr<void> _data;
     void* _rawData;
-    QString _dataType;
+    std::string _dataType;
 public:
 
-    LuaUserdata(void* const rawData, const QString& dataType) :
+    LuaUserdata(void* const rawData, const std::string& dataType) :
         _isRaw(true),
         _data(),
         _rawData(rawData),
@@ -23,7 +23,7 @@ public:
     {
     }
 
-    LuaUserdata(const std::shared_ptr<void>& data, const QString& dataType) :
+    LuaUserdata(const std::shared_ptr<void>& data, const std::string& dataType) :
         _isRaw(false),
         _data(data),
         _rawData(nullptr),
@@ -69,7 +69,7 @@ public:
      * If this userdata does not have any raw data, then this should return an empty
      * string.
      */
-    const QString& dataType() const
+    const std::string& dataType() const
     {
         return _dataType;
     }

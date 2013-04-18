@@ -28,12 +28,10 @@ public:
     ~Lua();
 
     LuaGlobal operator[](const char* key);
-    LuaGlobal operator[](const QString& key);
     LuaGlobal operator[](const std::string& key);
 
     LuaReference operator()(const char* runnable);
     LuaReference operator()(const std::string& runnable);
-    LuaReference operator()(const QString& runnable);
     LuaReference operator()(std::istream& stream, const std::string& name);
     LuaReference operator()(QFile& file);
 

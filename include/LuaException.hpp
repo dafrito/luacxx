@@ -3,7 +3,6 @@
 
 #include <stdexcept>
 #include <string>
-#include <QString>
 
 class LuaException : public std::runtime_error
 {

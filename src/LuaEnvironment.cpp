@@ -78,11 +78,6 @@ LuaReference Lua::operator()(const char* runnable)
     return stack.save();
 }
 
-LuaReference Lua::operator()(const QString& runnable)
-{
-    return (*this)(runnable.toUtf8().constData());
-}
-
 LuaReference Lua::operator()(const std::string& runnable)
 {
     std::istringstream stream(runnable);
@@ -118,9 +113,8 @@ LuaReference Lua::operator()(QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {
         throw std::runtime_error(
-            (QString("Cannot open file ") +
-            file.fileName() + ": " +
-            file.errorString()).toStdString());
+            (QString("Cannot open file ") + file.fileName() + ": " + file.errorString()).toStdString()
+        );
     }
     QtReadingData d(file);
     LuaStack stack(*this);
@@ -136,12 +130,7 @@ LuaReference Lua::operator()(QFile& file)
 
 LuaGlobal Lua::operator[](const char* key)
 {
-    return (*this)[QString(key)];
-}
-
-LuaGlobal Lua::operator[](const QString& key)
-{
-    return (*this)[key.toStdString()];
+    return (*this)[std::string(key)];
 }
 
 LuaGlobal Lua::operator[](const std::string& key)
@@ -164,7 +153,7 @@ void Lua::removeModuleLoader(ModuleLoader* const loader)
 
 void Lua::loadModule(LuaStack& stack)
 {
-    auto moduleName = stack.as<QString>();
+    auto moduleName = stack.as<std::string>();
     stack.clear();
 
     Lua& lua = stack.lua();

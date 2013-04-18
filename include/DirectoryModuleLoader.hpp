@@ -3,15 +3,16 @@
 
 #include "ModuleLoader.hpp"
 #include <QDir>
-#include <QString>
+#include <QFile>
+#include <string>
 
 class DirectoryModuleLoader : public ModuleLoader
 {
     QDir _root;
 
-    QString _prefix;
+    std::string _prefix;
 
-    void resolve(QFile& file, const QString& module);
+    void resolve(QFile& file, const std::string& module);
 
 public:
 
@@ -20,13 +21,13 @@ public:
         _root = root;
     }
 
-    void setPrefix(const QString& prefix)
+    void setPrefix(const std::string& prefix)
     {
         _prefix = prefix;
     }
 
-    bool search(const QString& module);
-    void load(Lua& lua, const QString& module);
+    bool search(const std::string& module);
+    void load(Lua& lua, const std::string& module);
 };
 
 #endif // DIRECTORYMODULELOADER_HEADER

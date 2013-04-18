@@ -39,10 +39,10 @@ BOOST_AUTO_TEST_CASE(testDirectoryModuleLoader)
         searchersName = "loaders";
     #endif
 
-    QString module;
+    std::string module;
     table::push(lua["package"][searchersName],
-        std::function< std::function<void()>(const QString) >(
-            [&](const QString arg) {
+        std::function< std::function<void()>(const std::string&) >(
+            [&](const std::string& arg) {
                 module = arg;
                 return [&]() {
                     loader.load(lua, module);

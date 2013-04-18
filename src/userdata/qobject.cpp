@@ -158,7 +158,7 @@ void callMethod(LuaStack& stack)
         }
         if (userdata->dataType() != "QObject") {
             stack.error(
-                QString("Userdata must be of type QObject, but was given: '%1'").arg(userdata->dataType())
+                QString("Userdata must be of type QObject, but was given: '%1'").arg(userdata->dataType().c_str())
             );
         }
         stack.error("Userdata provided with method call must match the userdata used to access that method");

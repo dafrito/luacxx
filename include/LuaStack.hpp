@@ -378,7 +378,6 @@ public:
      */
     LuaStack& global(const char* name);
     LuaStack& global(const std::string& name);
-    LuaStack& global(const QString& name);
 
     /**
      * Pushes the C++ value onto the top of this stack.
@@ -394,8 +393,8 @@ public:
     void push(const char* value, int len);
     LuaStack& operator<<(const std::string& value);
 
-    void push(const std::shared_ptr<void>& obj, QString type);
-    void push(void* const p, QString type);
+    void push(const std::shared_ptr<void>& obj, const std::string& type);
+    void push(void* const p, const std::string& type);
 
     bool acceptsStackUserdata() const;
     void setAcceptsStackUserdata(const bool accepts);
@@ -724,7 +723,7 @@ namespace lua {
                 std::stringstream msg;
                 msg << "Userdata at position " << index.pos()
                     << " must be of type '" << expectedName() << "', but provided userdata type was '"
-                    << userdata->dataType().toStdString() << "'";
+                    << userdata->dataType() << "'";
                 throw LuaException(msg.str());
             }
             return userdata;

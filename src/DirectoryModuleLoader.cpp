@@ -1,11 +1,11 @@
 #include "DirectoryModuleLoader.hpp"
 #include "LuaValue.hpp"
 
-void DirectoryModuleLoader::resolve(QFile& file, const QString& module)
+void DirectoryModuleLoader::resolve(QFile& file, const std::string& module)
 {
-    QString modulePath(module);
-    if (!_prefix.isEmpty()) {
-        if (!modulePath.startsWith(_prefix)) {
+    QString modulePath(module.c_str());
+    if (!_prefix.empty()) {
+        if (!modulePath.startsWith(_prefix.c_str())) {
             return;
         }
         modulePath = modulePath.mid(_prefix.length());
@@ -13,20 +13,20 @@ void DirectoryModuleLoader::resolve(QFile& file, const QString& module)
     file.setFileName(_root.filePath(modulePath + ".lua"));
 }
 
-bool DirectoryModuleLoader::search(const QString& module)
+bool DirectoryModuleLoader::search(const std::string& module)
 {
     QFile moduleFile;
     resolve(moduleFile, module);
     return moduleFile.exists();
 }
 
-void DirectoryModuleLoader::load(Lua& lua, const QString& module)
+void DirectoryModuleLoader::load(Lua& lua, const std::string& module)
 {
     QFile moduleFile;
     resolve(moduleFile, module);
     if (!moduleFile.exists()) {
         throw std::runtime_error(
-            (QString("Module name '") + module + "' must resolve to an existing file").toStdString()
+            std::string("Module name '") + module + "' must resolve to an existing file"
         );
     }
     lua(moduleFile);

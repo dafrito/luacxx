@@ -363,11 +363,6 @@ LuaStack& LuaStack::global(const std::string& name)
     return global(name.c_str());
 }
 
-LuaStack& LuaStack::global(const QString& name)
-{
-    return global(name.toAscii().data());
-}
-
 void LuaStack::pushedGet(int tablePos)
 {
     assertUnlocked();
@@ -464,12 +459,12 @@ void collectUserdata(LuaStack& stack)
     userdata->~LuaUserdata();
 }
 
-void LuaStack::push(const std::shared_ptr<void>& obj, QString type)
+void LuaStack::push(const std::shared_ptr<void>& obj, const std::string& type)
 {
     *this << LuaUserdata(obj, type);
 }
 
-void LuaStack::push(void* const p, QString type)
+void LuaStack::push(void* const p, const std::string& type)
 {
     *this << LuaUserdata(p, type);
 }
