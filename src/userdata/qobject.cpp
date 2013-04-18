@@ -20,43 +20,20 @@ namespace {
 
 } // namespace anonymous
 
-LuaStack& operator<<(LuaStack& stack, QObject* const& ptr)
-{
-    return stack << *ptr;
-}
-
-LuaStack& operator<<(LuaStack& stack, QObject& ptr)
-{
-    stack << LuaUserdata(&ptr, "QObject");
-
-    stack.pushMetatable();
-    lua::userdata::qobject(stack, &ptr);
-    stack.setMetatable();
-    return stack;
-}
-
-LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr)
-{
-    stack << LuaUserdata(ptr, "QObject");
-
-    stack.pushMetatable();
-    lua::userdata::qobject(stack, ptr.get());
-    stack.setMetatable();
-    return stack;
-}
-
 namespace lua {
 namespace userdata {
 
-void qobject(LuaStack& stack, QObject* const obj)
+void qobject(LuaStack& stack, QObject& obj)
 {
-    stack.pushPointer(obj);
+    stack.pushMetatable();
+    stack.pushPointer(&obj);
     stack.push(__index, 1);
     stack.pushedSet("__index", -2);
 
-    stack.pushPointer(obj);
+    stack.pushPointer(&obj);
     stack.push(__newindex, 1);
     stack.pushedSet("__newindex", -2);
+    stack.setMetatable();
 }
 
 } // namespace userdata

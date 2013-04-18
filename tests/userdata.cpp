@@ -37,31 +37,24 @@ template<>
 struct UserdataType<Counter>
 {
     constexpr static const char* name = "Counter";
+
+    static void initialize(LuaStack& stack, QObject& obj)
+    {
+        lua::userdata::qobject(stack, obj);
+    }
 };
 
 template<>
 struct UserdataType<Blank>
 {
     constexpr static const char* name = "Blank";
+
+    static void initialize(LuaStack& stack, Blank& obj)
+    {
+    }
 };
 
 } // namespace lua
-
-LuaStack& operator<<(LuaStack& stack, Blank& ptr)
-{
-    stack << LuaUserdata(&ptr, "Blank");
-    return stack;
-}
-
-LuaStack& operator<<(LuaStack& stack, Counter& ptr)
-{
-    stack << LuaUserdata(&ptr, "Counter");
-
-    stack.pushMetatable();
-    lua::userdata::qobject(stack, &ptr);
-    stack.setMetatable();
-    return stack;
-}
 
 BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
 {

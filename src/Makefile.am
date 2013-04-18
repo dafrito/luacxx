@@ -35,7 +35,6 @@ liblua_cxx_la_SOURCES = \
 	LuaStack.cpp \
 	LuaIndex.cpp \
 	DirectoryModuleLoader.cpp \
-	userdata/standard.cpp \
 	userdata/qobject.cpp \
 	LuaAccessible.cpp \
 	LuaReferenceAccessible.cpp \

@@ -4,6 +4,14 @@ namespace lua {
     struct UserdataType
     {
         constexpr static const char* name = 0;
+
+        /**
+         * Initialize the userdata at the top of this stack. This is
+         * typically used to set up a metatable.
+         */
+        static void initialize(LuaStack& stack, T& object)
+        {
+        }
     };
 
     template <typename T>
@@ -19,6 +27,16 @@ namespace lua {
                 >::type type;
 
         constexpr static const bool value = UserdataType<isUserdataType::type>::name != 0;
+    };
+
+    template<>
+    struct UserdataType<lua::LuaCallable>
+    {
+        constexpr static const char* name = "lua::LuaCallable";
+
+        static void initialize(LuaStack& stack, lua::LuaCallable& object)
+        {
+        }
     };
 
     // Handle primitive types

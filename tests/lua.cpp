@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanPushClosures)
     LuaStack s(lua);
     s << 42;
     s << 24;
-    s.push(addNumbers, 2);
+    lua::push(s, addNumbers, 2);
     s.setGlobal("foo");
     lua("assert(foo() == 66)");
 }
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanPushClosuresWithMultipleArguments)
     LuaStack s(lua);
     s << 42;
     s << 20;
-    s.push(subtract, 2);
+    lua::push(s, subtract, 2);
     s.setGlobal("foo");
     BOOST_REQUIRE_EQUAL((int)lua("return foo()"), 22);
 }
@@ -169,7 +169,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanPushLambdas)
     // In a perfect world, we wouldn't need to wrap the lambda inside a std::function, but
     // as far as I know, there's no way to get access the argument types of a lambda. This
     // is required for us to actually forward the function into Lua.
-    s.push(std::function<int(int, int)>([](int a, int b) { return a + b; }), 2);
+    lua::push(s, std::function<int(int, int)>([](int a, int b) { return a + b; }), 2);
     s.setGlobal("foo");
     lua("assert(foo() == 66)");
 }

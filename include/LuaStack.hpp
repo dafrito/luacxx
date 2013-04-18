@@ -27,12 +27,6 @@ class LuaReferenceAccessible;
 template <class Accessible>
 class LuaValue;
 
-namespace
-{
-    template <typename RV, typename... Args>
-    class LuaWrapper;
-}
-
 namespace lua
 {
     typedef std::function<void (LuaStack& stack)> LuaCallable;
@@ -295,28 +289,28 @@ public:
     /**
      * Pushes the C++ value onto the top of this stack.
      */
-    LuaStack& operator<<(const bool& b);
-    LuaStack& operator<<(const char& b);
-    LuaStack& operator<<(const short& b);
-    LuaStack& operator<<(const int& b);
-    LuaStack& operator<<(const long& b);
-    LuaStack& operator<<(const float& b);
-    LuaStack& operator<<(const lua_Number& value);
-    LuaStack& operator<<(const char* value);
+    void push(const bool& b);
+    void push(const char& b);
+    void push(const short& b);
+    void push(const int& b);
+    void push(const long& b);
+    void push(const float& b);
+    void push(const lua_Number& value);
+    void push(const char* value);
     void push(const char* value, int len);
-    LuaStack& operator<<(const std::string& value);
+    void push(const std::string& value);
 
     void push(const std::shared_ptr<void>& obj, const std::string& type);
     void push(void* const p, const std::string& type);
 
     bool acceptsStackUserdata() const;
     void setAcceptsStackUserdata(const bool accepts);
-    LuaStack& operator<<(const LuaUserdata& userdata);
-    LuaStack& operator<<(void* p)=delete;
+    void push(const LuaUserdata& userdata);
+    void push(void* p)=delete;
 
-    LuaStack& operator<<(const LuaAccessible& value);
+    void push(const LuaAccessible& value);
 
-    LuaStack& operator<<(const lua::value& value);
+    void push(const lua::value& value);
 
     /**
      * Push an unmanaged pointer onto the stack. The pointer must outlive the
@@ -333,33 +327,9 @@ public:
      * number of arguments will be pulled from the stack
      * and partially applied to the specified function.
      */
-    void push(const lua::LuaCallable& f, const int closed);
-    void push(void (*p)(LuaStack& stack), const int closed);
-    void push(lua_CFunction func, const int closed);
-
-    LuaStack& operator<<(const lua::LuaCallable& f);
-    LuaStack& operator<<(void (*p)(LuaStack& stack));
-    LuaStack& operator<<(lua_CFunction func);
-
-    template <class RV>
-    LuaStack& operator<<(RV (*p)(LuaStack&))
-    {
-        return *this << lua::LuaCallable([=](LuaStack& stack) {
-            RV sink(p(stack));
-            stack.clear();
-            stack << sink;
-        });
-    }
-
-    template <class RV>
-    LuaStack& operator<<(std::function<RV(LuaStack&)> func)
-    {
-        return *this << lua::LuaCallable([=](LuaStack& stack) {
-            RV sink(func(stack));
-            stack.clear();
-            stack << sink;
-        });
-    }
+    void push(const lua::LuaCallable& f, const int closed = 0);
+    void push(void (*p)(LuaStack& stack), const int closed = 0);
+    void push(lua_CFunction func, const int closed = 0);
 
     /**
      * Returns whether the stack value at the specified
@@ -378,46 +348,8 @@ public:
     void pushMetatable(const int pos = -1);
     void setMetatable(const int pos = -2);
 
-    /**
-     * Push the specified C++ function onto this stack.
-     */
-    template <typename RV, typename... Args>
-    LuaStack& operator<<(RV(*p)(Args...))
-    {
-        push(p, 0);
-        return *this;
-    }
-
-    template <typename RV, typename... Args>
-    void push(RV(*p)(Args...), const int closed)
-    {
-        push(LuaWrapper<RV, Args...>(p), closed);
-    }
-
-    template <typename RV, typename... Args>
-    LuaStack& operator<<(std::function<RV(Args...)> p)
-    {
-        push(p, 0);
-        return *this;
-    }
-
-    template <typename RV, typename... Args>
-    void push(std::function<RV(Args...)> p, const int closed = 0)
-    {
-        this->push(LuaWrapper<RV, Args...>(p), closed);
-    }
-
     template <typename... Args>
-    void invoke(Args&&... args)
-    {
-        LuaStack child(*this);
-        child.grab(1);
-        child.setAcceptsStackUserdata(true);
-        child << onError;
-        child.swap();
-        callLua(luaState(), child, args...);
-        child.disown();
-    }
+    void invoke(Args&&... args);
 
     static std::string onError(LuaStack& stack)
     {
@@ -448,11 +380,7 @@ public:
     }
 
     template <typename Arg, typename... Rest>
-    static void callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest)
-    {
-        stack << arg;
-        callLua(s, stack, rest...);
-    }
+    static void callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest);
 
     /**
      * Pushes a value from the specified table, using the topmost stack
@@ -525,27 +453,14 @@ public:
      * The table must be at the stack position specified.
      */
     template <typename K, typename V>
-    void set(K key, const V& value, int tablePos = -1)
-    {
-        checkPos(tablePos);
-        *this << value;
-        // Since we inserted a value, we may need to relocate tablePos
-        // so it still points to the table.
-        if (!isMagicalPos(tablePos) && tablePos < 0)
-            --tablePos;
-        pushedSet(key, tablePos);
-    }
+    void set(K key, const V& value, int tablePos = -1);
 
     /**
      * Set the global with the specified name to the
      * specified value.
      */
     template <typename V>
-    void setGlobal(const std::string& key, const V& value)
-    {
-        *this << value;
-        setGlobal(key);
-    }
+    void setGlobal(const std::string& key, const V& value);
 
     /**
      * Set the global with the specified name to the value
@@ -624,9 +539,151 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 
-LuaStack& operator<<(LuaStack& stack, const QChar& value);
-LuaStack& operator<<(LuaStack& stack, const QString& value);
-LuaStack& operator<<(LuaStack& stack, const QVariant& variant);
-LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable);
+namespace lua {
+
+void push(LuaStack& stack, const QChar& value);
+void push(LuaStack& stack, const QString& value);
+void push(LuaStack& stack, const QVariant& variant);
+
+template <typename Source,
+    typename std::enable_if<!isUserdataType<Source>::value, int>::type = 0>
+void push(LuaStack& stack, const Source& value)
+{
+    stack.push(value);
+}
+
+// Handle userdata pointers and shared_ptr's
+template <typename Source,
+    typename std::enable_if<
+        isUserdataType<Source>::value
+        && (
+            std::is_constructible<
+                typename std::remove_reference<Source>::type,
+                std::shared_ptr<typename isUserdataType<Source>::type>>
+            ::value || std::is_pointer<Source>::value
+        ),
+    int>::type = 0>
+void push(LuaStack& stack, const Source& value)
+{
+    lua::push(stack, LuaUserdata(
+        value,
+        UserdataType<typename isUserdataType<Source>::type>::name
+    ));
+
+    UserdataType<typename isUserdataType<Source>::type>::initialize(stack, *value);
+}
+
+// Handle userdata references
+template <typename Source,
+    typename std::enable_if<
+        isUserdataType<Source>::value
+        && !(
+            std::is_constructible<
+                typename std::remove_reference<Source>::type,
+                std::shared_ptr<typename isUserdataType<Source>::type>>
+            ::value || std::is_pointer<Source>::value
+        ),
+    int>::type = 0>
+void push(LuaStack& stack, Source& value)
+{
+    lua::push(stack, LuaUserdata(
+        &value,
+        UserdataType<typename isUserdataType<Source>::type>::name
+    ));
+
+    UserdataType<typename isUserdataType<Source>::type>::initialize(stack, value);
+}
+
+void push(LuaStack& stack, void (*func)(LuaStack&), const int closed = 0);
+void push(LuaStack& stack, const LuaCallable& callable, const int closed = 0);
+void push(LuaStack& stack, lua_CFunction callable, const int closed = 0);
+
+template <class RV,
+    typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
+void push(LuaStack& stack, RV (*p)(LuaStack&), const int closed = 0)
+{
+    lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
+        RV sink(p(stack));
+        stack.clear();
+        stack << sink;
+    }), closed);
+}
+
+template <class RV,
+    typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
+void push(LuaStack& stack, std::function<RV(LuaStack&)> func, const int closed = 0)
+{
+    lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
+        RV sink(func(stack));
+        stack.clear();
+        stack << sink;
+    }), closed);
+}
+
+template <typename RV, typename... Args>
+void push(LuaStack& stack, RV(*p)(Args...), const int closed = 0)
+{
+    lua::push(stack, lua::LuaCallable(LuaWrapper<RV, Args...>(p)), closed);
+}
+
+template <typename RV, typename... Args>
+void push(LuaStack& stack, std::function<RV(Args...)> p, const int closed = 0)
+{
+    lua::push(stack, lua::LuaCallable(LuaWrapper<RV, Args...>(p)), closed);
+}
+
+} // namespace lua
+
+template <typename Source>
+LuaStack& operator<<(LuaStack& stack, Source& value)
+{
+    lua::push(stack, value);
+    return stack;
+}
+
+template <typename Source>
+LuaStack& operator<<(LuaStack& stack, const Source& value)
+{
+    lua::push(stack, value);
+    return stack;
+}
+
+template <typename Arg, typename... Rest>
+void LuaStack::callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest)
+{
+    lua::push(stack, arg);
+    callLua(s, stack, rest...);
+}
+
+template <typename... Args>
+void LuaStack::invoke(Args&&... args)
+{
+    LuaStack child(*this);
+    child.grab(1);
+    child.setAcceptsStackUserdata(true);
+    child << onError;
+    child.swap();
+    callLua(luaState(), child, args...);
+    child.disown();
+}
+
+template <typename K, typename V>
+void LuaStack::set(K key, const V& value, int tablePos)
+{
+    checkPos(tablePos);
+    lua::push(*this, value);
+    // Since we inserted a value, we may need to relocate tablePos
+    // so it still points to the table.
+    if (!isMagicalPos(tablePos) && tablePos < 0)
+        --tablePos;
+    pushedSet(key, tablePos);
+}
+
+template <typename V>
+void LuaStack::setGlobal(const std::string& key, const V& value)
+{
+    lua::push(*this, value);
+    setGlobal(key);
+}
 
 #endif

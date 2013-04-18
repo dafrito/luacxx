@@ -14,7 +14,7 @@ namespace lua {
 
 namespace userdata {
 
-void qobject(LuaStack& stack, QObject* obj);
+void qobject(LuaStack& stack, QObject& obj);
 
 } // namespace userdata
 
@@ -22,19 +22,13 @@ template<>
 struct UserdataType<QObject>
 {
     constexpr static const char* name = "QObject";
-};
 
-template<>
-struct UserdataType<lua::LuaCallable>
-{
-    constexpr static const char* name = "lua::LuaCallable";
+    static void initialize(LuaStack& stack, QObject& obj)
+    {
+        lua::userdata::qobject(stack, obj);
+    }
 };
 
 } // namespace lua
-
-LuaStack& operator<<(LuaStack& stack, QObject& ptr);
-LuaStack& operator<<(LuaStack& stack, QObject* const & ptr);
-LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<QObject>& ptr);
-LuaStack& operator<<(LuaStack& stack, const std::shared_ptr<lua::LuaCallable>& callable);
 
 #endif

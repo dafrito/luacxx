@@ -159,12 +159,15 @@ public:
     }
 };
 
+namespace lua {
+
 template<class Accessible>
-LuaStack& operator<<(LuaStack& stack, LuaValue<Accessible>& value)
+void push(LuaStack& stack, const LuaValue<Accessible>& value)
 {
     value.push(stack);
-    return stack;
 }
+
+} // namespace lua
 
 template<class Accessible>
 LuaIndex& operator>>(LuaIndex& index, LuaValue<Accessible>& sink)

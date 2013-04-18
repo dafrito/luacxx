@@ -392,17 +392,15 @@ void LuaStack::pushedSet(int tablePos)
     lua_settable(luaState(), tablePos);
 }
 
-LuaStack& LuaStack::operator<<(const char& value)
+void LuaStack::push(const char& value)
 {
     push(&value, 1);
-    return (*this);
 }
 
-LuaStack& LuaStack::operator<<(const char* value)
+void LuaStack::push(const char* value)
 {
     assertUnlocked();
     lua_pushstring(luaState(), value);
-    return (*this);
 }
 
 void LuaStack::push(const char* value, int len)
@@ -411,51 +409,45 @@ void LuaStack::push(const char* value, int len)
     lua_pushlstring(luaState(), value, len);
 }
 
-LuaStack& LuaStack::operator<<(const std::string& value)
+void LuaStack::push(const std::string& value)
 {
-    return *this << value.c_str();
+    push(value.c_str());
 }
 
-LuaStack& LuaStack::operator<<(const lua_Number& value)
+void LuaStack::push(const lua_Number& value)
 {
     assertUnlocked();
     lua_pushnumber(luaState(), value);
-    return (*this);
 }
 
-LuaStack& LuaStack::operator<<(const short& value)
+void LuaStack::push(const short& value)
 {
     assertUnlocked();
     lua_pushinteger(luaState(), value);
-    return (*this);
 }
 
-LuaStack& LuaStack::operator<<(const int& value)
+void LuaStack::push(const int& value)
 {
     assertUnlocked();
     lua_pushinteger(luaState(), value);
-    return (*this);
 }
 
-LuaStack& LuaStack::operator<<(const long& value)
+void LuaStack::push(const long& value)
 {
     assertUnlocked();
     lua_pushnumber(luaState(), value);
-    return (*this);
 }
 
-LuaStack& LuaStack::operator<<(const float& value)
+void LuaStack::push(const float& value)
 {
     assertUnlocked();
     lua_pushnumber(luaState(), value);
-    return (*this);
 }
 
-LuaStack& LuaStack::operator<<(const bool& b)
+void LuaStack::push(const bool& b)
 {
     assertUnlocked();
     lua_pushboolean(luaState(), b);
-    return (*this);
 }
 
 bool LuaStack::acceptsStackUserdata() const
@@ -476,15 +468,15 @@ void collectUserdata(LuaStack& stack)
 
 void LuaStack::push(const std::shared_ptr<void>& obj, const std::string& type)
 {
-    *this << LuaUserdata(obj, type);
+    push(LuaUserdata(obj, type));
 }
 
 void LuaStack::push(void* const p, const std::string& type)
 {
-    *this << LuaUserdata(p, type);
+    push(LuaUserdata(p, type));
 }
 
-LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
+void LuaStack::push(const LuaUserdata& userdata)
 {
     assertUnlocked();
 
@@ -502,8 +494,6 @@ LuaStack& LuaStack::operator<<(const LuaUserdata& userdata)
     *this << lua::value::table;
     set("__gc", collectUserdata);
     setMetatable();
-
-    return (*this);
 }
 
 
@@ -511,12 +501,6 @@ void LuaStack::pushPointer(void* const p)
 {
     assertUnlocked();
     lua_pushlightuserdata(luaState(), p);
-}
-
-LuaStack& LuaStack::operator<<(lua_CFunction func)
-{
-    push(func, 0);
-    return *this;
 }
 
 void LuaStack::push(lua_CFunction func, const int closed)
@@ -537,12 +521,6 @@ int collectRawCallable(lua_State* state)
     using std::function;
     callable->~function();
     return 0;
-}
-
-LuaStack& LuaStack::operator<<(void(*func)(LuaStack& stack))
-{
-    push(func, 0);
-    return *this;
 }
 
 void LuaStack::push(void(*func)(LuaStack& stack), const int closed)
@@ -571,12 +549,6 @@ void LuaStack::push(void(*func)(LuaStack& stack), const int closed)
     push(invokeRawFromLua, 2 + closed);
 }
 
-LuaStack& LuaStack::operator<<(const lua::LuaCallable& f)
-{
-    push(f, 0);
-    return (*this);
-}
-
 void LuaStack::push(const lua::LuaCallable& f, const int closed)
 {
     assertUnlocked();
@@ -595,13 +567,12 @@ void LuaStack::push(const lua::LuaCallable& f, const int closed)
     push(invokeFromLua, 2 + closed);
 }
 
-LuaStack& LuaStack::operator<<(const LuaAccessible& value)
+void LuaStack::push(const LuaAccessible& value)
 {
     value.push(*this);
-    return *this;
 }
 
-LuaStack& LuaStack::operator<<(const lua::value& value)
+void LuaStack::push(const lua::value& value)
 {
     assertUnlocked();
     switch (value) {
@@ -612,7 +583,6 @@ LuaStack& LuaStack::operator<<(const lua::value& value)
             lua_pushnil(luaState());
             break;
     }
-    return *this;
 }
 
 bool LuaStack::hasMetatable(const int pos)
@@ -746,32 +716,55 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
     return ++index;
 }
 
-LuaStack& operator<<(LuaStack& stack, const QChar& value)
+namespace lua {
+
+void push(LuaStack& stack, void (*callable)(LuaStack&), const int closed)
 {
-    return stack << value.toAscii();
+    stack.push(callable, closed);
 }
 
-LuaStack& operator<<(LuaStack& stack, const QString& value)
+void push(LuaStack& stack, const lua::LuaCallable& callable, const int closed)
 {
-    return stack << value.toStdString();
+    stack.push(callable, closed);
 }
 
-LuaStack& operator<<(LuaStack& stack, const QVariant& variant)
+void push(LuaStack& stack, lua_CFunction callable, const int closed)
+{
+    stack.push(callable, closed);
+}
+
+void push(LuaStack& stack, const QChar& value)
+{
+    lua::push(stack, value.toAscii());
+}
+
+void push(LuaStack& stack, const QString& value)
+{
+    lua::push(stack, value.toStdString());
+}
+
+void push(LuaStack& stack, const QVariant& variant)
 {
     switch (variant.type()) {
     case QVariant::Invalid:
-        return stack << lua::value::nil;
+        lua::push(stack, lua::value::nil);
+        break;
     case QVariant::Bool:
-        return stack << variant.toBool();
+        lua::push(stack, variant.toBool());
+        break;
     case QVariant::Char:
-        return stack << variant.toChar();
+        lua::push(stack, variant.toChar());
+        break;
     case QVariant::Int:
-        return stack << variant.toInt();
+        lua::push(stack, variant.toInt());
+        break;
     case QVariant::Double:
     case QVariant::UInt:
-        return stack << variant.toDouble();
-    default:
+        lua::push(stack, variant.toDouble());
         break;
+    default:
+        throw std::logic_error(std::string("Type not supported: ") + variant.typeName());
     }
-    throw std::logic_error(std::string("Type not supported: ") + variant.typeName());
 }
+
+} // namespace lua

@@ -20,6 +20,7 @@ runtest_SOURCES = \
 	references.cpp \
 	table.cpp \
 	userdata.cpp \
+	insertion.cpp \
 	main.cpp
 
 runtest_MOC_SOURCES = \
