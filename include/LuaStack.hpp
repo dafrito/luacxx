@@ -338,11 +338,7 @@ public:
     bool isNil(const int pos = -1) const;
 
     template <class Message>
-    void error(const Message& message)
-    {
-        *this << message;
-        lua_error(luaState());
-    }
+    void error(const Message& message);
 
     bool hasMetatable(const int pos = -1);
     void pushMetatable(const int pos = -1);
@@ -394,15 +390,7 @@ public:
      * The table must be at the stack position specified by tablePos.
      */
     template <typename K>
-    LuaStack& get(K key, int tablePos = -1)
-    {
-        checkPos(tablePos);
-        *this << key;
-        if (!isMagicalPos(tablePos) && tablePos < 0)
-            --tablePos;
-        pushedGet(tablePos);
-        return *this;
-    }
+    LuaStack& get(K key, int tablePos = -1);
 
     /**
      * Sets the table value for the specified table.
@@ -422,20 +410,7 @@ public:
      * The table must be at the stack position specified by tablePos.
      */
     template <typename K>
-    void pushedSet(K key, int tablePos)
-    {
-        checkPos(tablePos);
-        *this << key;
-
-        // Stack is now [..., t, value, key], so we need to swap
-        swap();
-
-        // Adjust tablePos since we pushed a key onto the
-        // stack.
-        if (!isMagicalPos(tablePos) && tablePos < 0)
-            --tablePos;
-        pushedSet(tablePos);
-    }
+    void pushedSet(K key, int tablePos);
 
     // We need this definition since integers can be
     // implicitly converted to booleans or numbers, which
@@ -684,6 +659,40 @@ void LuaStack::setGlobal(const std::string& key, const V& value)
 {
     lua::push(*this, value);
     setGlobal(key);
+}
+
+template <class Message>
+void LuaStack::error(const Message& message)
+{
+    lua::push(*this, message);
+    lua_error(luaState());
+}
+
+template <typename K>
+LuaStack& LuaStack::get(K key, int tablePos)
+{
+    checkPos(tablePos);
+    lua::push(*this, key);
+    if (!isMagicalPos(tablePos) && tablePos < 0)
+        --tablePos;
+    pushedGet(tablePos);
+    return *this;
+}
+
+template <typename K>
+void LuaStack::pushedSet(K key, int tablePos)
+{
+    checkPos(tablePos);
+    lua::push(*this, key);
+
+    // Stack is now [..., t, value, key], so we need to swap
+    swap();
+
+    // Adjust tablePos since we pushed a key onto the
+    // stack.
+    if (!isMagicalPos(tablePos) && tablePos < 0)
+        --tablePos;
+    pushedSet(tablePos);
 }
 
 #endif
