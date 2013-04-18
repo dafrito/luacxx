@@ -1,12 +1,15 @@
 #ifndef HEADER_LUASTACK_HPP
 #define HEADER_LUASTACK_HPP
 
-#include <QVariant>
 #include <memory>
 #include <string>
 #include <sstream>
 #include <functional>
 #include <type_traits>
+
+#include <QVariant>
+#include <QString>
+
 #include <lua.hpp>
 
 #include "types.hpp"
@@ -245,10 +248,7 @@ public:
      * is not responsible for any values currently
      * present on the stack.
      */
-    bool empty() const
-    {
-        return size() == 0;
-    }
+    bool empty() const;
 
     /**
      * Returns the number of ignored stack values.
@@ -258,10 +258,7 @@ public:
      * how many stack values were present before it
      * was created. offset() will return that value.
      */
-    int offset() const
-    {
-        return _offset;
-    }
+    int offset() const;
 
     /**
      * Forcibly take all stack values currently on the
@@ -320,10 +317,7 @@ public:
      * Pops all values that have been pushed onto
      * this stack.
      */
-    void clear()
-    {
-        pop(size());
-    }
+    void clear();
 
     std::string traceback();
 

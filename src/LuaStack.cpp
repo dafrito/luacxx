@@ -84,6 +84,16 @@ int LuaStack::top() const
     return lua_gettop(luaState());
 }
 
+bool LuaStack::empty() const
+{
+    return size() == 0;
+}
+
+int LuaStack::offset() const
+{
+    return _offset;
+}
+
 void LuaStack::lock()
 {
     if (locked()) {
@@ -215,6 +225,11 @@ void LuaStack::pushCopy(int pos)
     assertUnlocked();
     checkPos(pos);
     lua_pushvalue(luaState(), pos);
+}
+
+void LuaStack::clear()
+{
+    pop(size());
 }
 
 bool LuaStack::isMagicalPos(const int& pos) const
