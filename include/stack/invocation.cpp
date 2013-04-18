@@ -91,5 +91,4 @@ namespace
             Invocator<decltype(func), RV, Args..., ArgStop>::template apply<>(index, func);
         }
     };
-}
-
+} // namespace anonymous
