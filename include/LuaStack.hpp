@@ -412,15 +412,6 @@ public:
     template <typename K>
     void pushedSet(K key, int tablePos);
 
-    // We need this definition since integers can be
-    // implicitly converted to booleans or numbers, which
-    // is ambiguous.
-    template <typename K>
-    void set(K key, int value, int tablePos = -1)
-    {
-        set<K, double>(key, value, tablePos);
-    }
-
     /**
      * Set the table value with the specified key name
      * to the specified value.

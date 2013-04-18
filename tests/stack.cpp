@@ -200,11 +200,14 @@ BOOST_AUTO_TEST_CASE(stackSetsATableValue)
     lua("c = {}");
     LuaStack stack(lua);
     stack.global("c").set("a", 42);
+    stack.global("c").set("b", true);
 
     // We don't repush global because that table should
     // already be at the top of the stack; only the key
     // and value were removed
     BOOST_REQUIRE_EQUAL(42, stack.get("a").as<int>());
+    stack.pop();
+    BOOST_REQUIRE_EQUAL(true, stack.get("b").as<bool>());
 }
 
 BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
