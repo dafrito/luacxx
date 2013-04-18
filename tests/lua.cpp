@@ -94,9 +94,9 @@ BOOST_AUTO_TEST_CASE(testLuaCallsAZeroParamFunction)
     Lua lua;
     std::string name("getMagicNumber");
     lua[name] = getMagicNumber;
-    BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
+    BOOST_CHECK_EQUAL("function", lua[name].typestring().c_str());
     lua::load_string(lua, std::string("Bar = ") + name + "()");
-    BOOST_REQUIRE(lua["Bar"] == 42);
+    BOOST_CHECK_EQUAL(lua["Bar"].as<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCallsAOneParameterFunction)
