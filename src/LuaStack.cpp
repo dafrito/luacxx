@@ -491,7 +491,7 @@ void LuaStack::push(const LuaUserdata& userdata)
         _rawUserdata.push_back(static_cast<LuaUserdata*>(luaUserdata));
     }
 
-    *this << lua::value::table;
+    push(lua::value::table);
     set("__gc", collectUserdata);
     setMetatable();
 }
@@ -536,7 +536,7 @@ void LuaStack::push(void(*func)(LuaStack& stack), const int closed)
 
     // Ensure the LuaCallable gets destructed when necessary.
     //
-    *this << lua::value::table;
+    push(lua::value::table);
     set("__gc", collectRawCallable);
     setMetatable();
 
@@ -557,7 +557,7 @@ void LuaStack::push(const lua::LuaCallable& f, const int closed)
         checkPos(-closed);
     }
 
-    *this << std::make_shared<lua::LuaCallable>(f);
+    lua::push(*this, std::make_shared<lua::LuaCallable>(f));
     pushPointer(&lua());
 
     // Invoke this twice to move both the Lua environment and the callable pointer to the top of the stack.
@@ -601,7 +601,7 @@ void LuaStack::pushMetatable(const int pos)
     checkPos(pos);
     bool hasMeta = lua_getmetatable(luaState(), pos) != 0;
     if (!hasMeta) {
-        *this << lua::value::table;
+        push(lua::value::table);
         // Offset to ensure the position is set correctly
         setMetatable(pos > 0 ? pos : pos - 1);
     }

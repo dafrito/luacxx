@@ -9,7 +9,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
     s << "No Time";
     LuaReference r = s.save();
     BOOST_REQUIRE(s.size() == 0);
-    s << r;
+    lua::push(s, r);
     BOOST_REQUIRE_EQUAL(s.as<const char*>(), "No Time");
 }
 

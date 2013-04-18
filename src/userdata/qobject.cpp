@@ -74,7 +74,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
         *obj = nullptr;
         *name = nullptr;
         stack.clear();
-        stack << lua::value::nil;
+        lua::push(stack, lua::value::nil);
         return false;
 }
 
@@ -90,7 +90,7 @@ void __index(LuaStack& stack)
     QVariant propValue = obj->property(name);
 
     if (propValue.isValid()) {
-        stack << propValue;
+        lua::push(stack, propValue);
         return;
     }
     // Not a property, so look for a method for the given the name.
@@ -99,12 +99,12 @@ void __index(LuaStack& stack)
         QString sig = QString::fromLatin1(metaObject->method(i).signature());
         if (sig.startsWith(QString(name) + "(")) {
             stack.pushPointer(obj);
-            stack << name;
+            lua::push(stack, name);
             stack.push(callMethod, 2);
             return;
         }
     }
-    stack << lua::value::nil;
+    lua::push(stack, lua::value::nil);
 }
 
 void __newindex(LuaStack& stack)
@@ -192,7 +192,7 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
         method.methodIndex(),
         vvargs);
     if (variants.at(0).isValid()) {
-        stack << variants.at(0);
+        lua::push(stack, variants.at(0));
     }
 }
 
@@ -209,7 +209,7 @@ void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMet
         vvargs);
     if (rv.isValid()) {
         stack.clear();
-        stack << rv;
+        lua::push(stack, rv);
     }
 }
 

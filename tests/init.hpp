@@ -12,6 +12,7 @@
 #include "LuaStack.hpp"
 #include "LuaValue.hpp"
 #include "mocks.hpp"
+#include "insertion.hpp"
 
 #endif // LUA_CXX_TEST_INIT_HEADER
 

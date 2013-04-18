@@ -29,7 +29,7 @@ namespace
         static void apply(LuaIndex& index, const Callee& func, FullArgs... args)
         {
             index.stack().clear();
-            index.stack() << func(args...);
+            lua::push(index.stack(), func(args...));
         }
     };
 

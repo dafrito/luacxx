@@ -97,7 +97,7 @@ public:
             return *this;
         }
         LuaStack s(_lua);
-        s << other;
+        lua::push(s, other);
         s >> *this;
         return *this;
     }
@@ -106,7 +106,7 @@ public:
     const LuaValue& operator=(const T& value)
     {
         LuaStack s(_lua);
-        s << value;
+        lua::push(s, value);
         accessor().store(s);
         return *this;
     }
@@ -115,7 +115,7 @@ public:
     const LuaValue& operator=(T& value)
     {
         LuaStack s(_lua);
-        s << value;
+        lua::push(s, value);
         accessor().store(s);
         return *this;
     }
@@ -137,7 +137,7 @@ public:
         if (stack.empty()) {
             // The called function didn't return anything, so push a nil
             // so we can save an empty reference.
-            stack << lua::value::nil;
+            lua::push(stack, lua::value::nil);
         }
 
         return stack.save();

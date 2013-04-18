@@ -471,48 +471,6 @@ namespace {
 }
 
 #include "stack/userdata.cpp"
-#include "stack/invocation.cpp"
-
-template <class Sink>
-Sink LuaStack::as(int pos)
-{
-    return lua::as<Sink>(LuaIndex(*this, pos));
-}
-
-/**
- * Assign the topmost value on the specified stack to the
- * specified C++ value.
- */
-template <typename Sink>
-LuaStack& operator>>(LuaStack& stack, Sink& sink)
-{
-    stack.rbegin() >> sink;
-    return stack;
-}
-
-template <class Sink>
-LuaIndex& operator>>(LuaIndex& index, Sink& sink)
-{
-    sink = lua::as<Sink>(index);
-    return ++index;
-}
-
-// This is necessary for idioms like "stack.rbegin() >> sink" where the
-// index itself is never an lvalue.
-template <class Sink>
-LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
-{
-    LuaIndex realIndex(index);
-    realIndex >> sink;
-    return realIndex;
-}
-
-LuaIndex& operator>>(LuaIndex& index, std::string& sink);
-LuaIndex& operator>>(LuaIndex& index, QString& sink);
-LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
-
-LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
-LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 
 namespace lua {
 
@@ -580,7 +538,7 @@ void push(LuaStack& stack, RV (*p)(LuaStack&), const int closed = 0)
     lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
         RV sink(p(stack));
         stack.clear();
-        stack << sink;
+        lua::push(stack, sink);
     }), closed);
 }
 
@@ -591,37 +549,80 @@ void push(LuaStack& stack, std::function<RV(LuaStack&)> func, const int closed =
     lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
         RV sink(func(stack));
         stack.clear();
-        stack << sink;
+        lua::push(stack, sink);
     }), closed);
 }
 
+} // namespace lua
+
+namespace lua {
+
 template <typename RV, typename... Args>
-void push(LuaStack& stack, RV(*p)(Args...), const int closed = 0)
+void push(LuaStack& stack, RV(*p)(Args...), const int closed = 0);
+
+template <typename RV, typename... Args>
+void push(LuaStack& stack, std::function<RV(Args...)> p, const int closed = 0);
+
+} // namespace lua
+
+#include "stack/invocation.cpp"
+
+namespace lua {
+
+template <typename RV, typename... Args>
+void push(LuaStack& stack, RV(*p)(Args...), const int closed)
 {
     lua::push(stack, lua::LuaCallable(LuaWrapper<RV, Args...>(p)), closed);
 }
 
 template <typename RV, typename... Args>
-void push(LuaStack& stack, std::function<RV(Args...)> p, const int closed = 0)
+void push(LuaStack& stack, std::function<RV(Args...)> p, const int closed)
 {
     lua::push(stack, lua::LuaCallable(LuaWrapper<RV, Args...>(p)), closed);
 }
 
 } // namespace lua
 
-template <typename Source>
-LuaStack& operator<<(LuaStack& stack, Source& value)
+template <class Sink>
+Sink LuaStack::as(int pos)
 {
-    lua::push(stack, value);
+    return lua::as<Sink>(LuaIndex(*this, pos));
+}
+
+/**
+ * Assign the topmost value on the specified stack to the
+ * specified C++ value.
+ */
+template <typename Sink>
+LuaStack& operator>>(LuaStack& stack, Sink& sink)
+{
+    stack.rbegin() >> sink;
     return stack;
 }
 
-template <typename Source>
-LuaStack& operator<<(LuaStack& stack, const Source& value)
+template <class Sink>
+LuaIndex& operator>>(LuaIndex& index, Sink& sink)
 {
-    lua::push(stack, value);
-    return stack;
+    sink = lua::as<Sink>(index);
+    return ++index;
 }
+
+// This is necessary for idioms like "stack.rbegin() >> sink" where the
+// index itself is never an lvalue.
+template <class Sink>
+LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
+{
+    LuaIndex realIndex(index);
+    realIndex >> sink;
+    return realIndex;
+}
+
+LuaIndex& operator>>(LuaIndex& index, std::string& sink);
+LuaIndex& operator>>(LuaIndex& index, QString& sink);
+LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
+
+LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
+LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 
 template <typename Arg, typename... Rest>
 void LuaStack::callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest)
@@ -636,7 +637,7 @@ void LuaStack::invoke(Args&&... args)
     LuaStack child(*this);
     child.grab(1);
     child.setAcceptsStackUserdata(true);
-    child << onError;
+    lua::push(child, onError);
     child.swap();
     callLua(luaState(), child, args...);
     child.disown();

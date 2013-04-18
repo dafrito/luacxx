@@ -160,14 +160,15 @@ void Lua::loadModule(LuaStack& stack)
 
     for (auto loader : lua._moduleLoaders) {
         if (loader->search(moduleName)) {
-            stack << std::function<void()>([=, &lua]() {
+            lua::push(stack, std::function<void()>([=, &lua]() {
                 loader->load(lua, moduleName);
-            });
+            }));
             return;
         }
     }
 
-    stack << "Unable to find module: " << moduleName;
+    lua::push(stack, "Unable to find module: ");
+    lua::push(stack, moduleName);
 }
 
 int Lua::internalStackSize() const
