@@ -44,5 +44,5 @@ if test x"$have_qt_core" = xno || test x"$have_qt_gui" = xno || test x"$have_qt_
     AC_MSG_ERROR([Qt is required to build lua-cxx])
 fi;
 
-AC_CONFIG_FILES([lua-cxx.m4 Makefile src/Makefile tests/Makefile rpm.spec])
+AC_CONFIG_FILES([lua-cxx.m4 Makefile src/Makefile include/Makefile tests/Makefile rpm.spec])
 AC_OUTPUT

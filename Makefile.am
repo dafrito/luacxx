@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src tests
+SUBDIRS = src tests include
 
 pkgdata_DATA = \
 	lua-cxx.m4
