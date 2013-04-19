@@ -74,7 +74,10 @@ namespace
             // native Lua methods don't check for that condition, so for us to fit in,
             // we won't either.
 
+            #pragma clang diagnostic push
+            #pragma clang diagnostic ignored "-Wtautological-compare"
             if (stack.size() < sizeof...(Args)) {
+            #pragma clang diagnostic pop
                 std::stringstream msg;
                 msg << "Function expects at least "
                     << sizeof...(Args)

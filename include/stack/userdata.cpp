@@ -61,6 +61,7 @@ namespace lua {
         static_assert(!std::is_same<Sink, LuaStack&>::value,
             "Refusing to try to retrieve a LuaStack value from a stack, as this is almost certainly a bug."
         );
+        throw "Unreachable";
     }
 
     template <typename Target>
