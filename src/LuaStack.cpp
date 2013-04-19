@@ -66,7 +66,7 @@ void LuaStack::offset(const int offset)
     _offset = offset;
 }
 
-int LuaStack::size() const
+unsigned int LuaStack::size() const
 {
     return top() - offset();
 }
@@ -144,7 +144,7 @@ LuaIndex LuaStack::at(const int pos, const int direction)
     return LuaIndex(*this, pos, direction);
 }
 
-void LuaStack::pop(int count)
+void LuaStack::pop(unsigned int count)
 {
     assertUnlocked();
     if(count > size())
@@ -152,7 +152,7 @@ void LuaStack::pop(int count)
     lua_pop(luaState(), count);
 }
 
-void LuaStack::shift(int count)
+void LuaStack::shift(unsigned int count)
 {
     assertUnlocked();
     while(count-- > 0) {

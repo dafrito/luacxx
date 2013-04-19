@@ -87,7 +87,7 @@ public slots:
         // Be sure not to touch the stack here, so we can ensure
         // our caller cleans everything up for us.
         auto total = getValue();
-        for (int i = 0; i < stack.size(); ++i) {
+        for (unsigned int i = 0; i < stack.size(); ++i) {
             total += stack.as<int>(i + 1);
         }
         return total;

@@ -147,7 +147,7 @@ public:
      * instance, and it will be popped once this
      * instance is destroyed.
      */
-    int size() const;
+    unsigned int size() const;
 
     int bottom() const;
     int top() const;
@@ -201,13 +201,13 @@ public:
      * Pops the specified number of stack values from
      * this stack.
      */
-    void pop(int count = 1);
+    void pop(unsigned int count = 1);
 
     /**
      * Shifts the specified number of stack values from
      * the front of this stack.
      */
-    void shift(int count = 1);
+    void shift(unsigned int count = 1);
 
     /**
      * Replaces the stack value at the specified position
