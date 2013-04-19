@@ -43,16 +43,20 @@ AC_DEFUN([AX_HAVE_LUA_CXX],
   )
 
   if test x"$want_lua_cxx" = "xyes"; then
-    AC_MSG_CHECKING([for lua-cxx])
-
     # Ensure we have a suitable C++ compiler
     AC_REQUIRE([AC_PROG_CC])
     AC_REQUIRE([AX_HAVE_QT_CORE])
     AC_REQUIRE([AC_PROG_CXX])
 
+    # Check for dependencies
+    AX_CXX_COMPILE_STDCXX_11([noext],[ax_lua_cxx_cxx11_flags])
+    AX_HAVE_QT_CORE
+
+    AC_MSG_CHECKING([for lua-cxx])
+
     ax_lua_cxx_saved_CPPFLAGS="$CPPFLAGS"
     ax_lua_cxx_INCLUDE=""
-    CPPFLAGS="$CPPFLAGS $ax_lua_cxx_INCLUDE"
+    CPPFLAGS="$CPPFLAGS $ax_lua_cxx_cxx11_flags $QT_CXXFLAGS $ax_lua_cxx_INCLUDE"
     export CPPFLAGS
 
     ax_lua_cxx_saved_LIBS="$LIBS"
