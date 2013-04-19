@@ -1,30 +1,30 @@
 #define BOOST_TEST_MODULE lua-cxx
 #include "init.hpp"
 
-#include <QApplication>
+#include <QCoreApplication>
 
-struct QApplicationFixture
+struct QCoreApplicationFixture
 {
     int argc;
     char name[100];
     char* argv[1];
 
-    QApplication* app;
+    QCoreApplication* app;
 public:
-    QApplicationFixture() :
+    QCoreApplicationFixture() :
         argc(1)
     {
         strcpy(name, "lua-cxx");
         argv[0] = name;
-        app = new QApplication(argc, argv);
+        app = new QCoreApplication(argc, argv);
     }
 
-    ~QApplicationFixture()
+    ~QCoreApplicationFixture()
     {
         delete app;
     }
 };
 
-BOOST_GLOBAL_FIXTURE(QApplicationFixture);
+BOOST_GLOBAL_FIXTURE(QCoreApplicationFixture);
 
 // vim: set ts=4 sw=4 :

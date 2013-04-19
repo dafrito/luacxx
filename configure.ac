@@ -37,7 +37,6 @@ AX_LUA_HEADERS
 
 # Check for Qt
 AX_HAVE_QT_CORE
-AX_HAVE_QT_GUI
 AX_HAVE_QT_MOC
 
 if test x"$have_qt_core" = xno || test x"$have_qt_gui" = xno || test x"$have_qt_moc" = xno; then
