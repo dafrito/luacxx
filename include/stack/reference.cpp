@@ -38,7 +38,12 @@ class LuaReferenceAccessible : public LuaAccessible
 
 public:
     LuaReferenceAccessible(lua_State* state) :
-        _reference(std::shared_ptr<RawLuaReference>(new RawLuaReference(state)))
+        _reference(new RawLuaReference(state))
+    {
+    }
+
+    LuaReferenceAccessible(const LuaReferenceAccessible& other) :
+        _reference(other._reference)
     {
     }
 
