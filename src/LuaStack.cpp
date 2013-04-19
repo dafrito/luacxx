@@ -253,12 +253,12 @@ std::string LuaStack::traceback()
 {
     #if LUA_VERSION_NUM >= 502
         std::string rv;
-        luaL_traceback(luaState(), luaState(), NULL, 1);
+        luaL_traceback(luaState(), luaState(), NULL, 2);
         rv = as<std::string>();
         pop();
         return rv;
     #else
-        return lua()["debug"]["traceback"]().as<std::string>();
+        return lua()["debug"]["traceback"]("", 2).as<std::string>().substr(1);
     #endif
 }
 
