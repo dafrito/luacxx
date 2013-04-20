@@ -157,7 +157,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesQString)
     s << i;
     QString o;
     s >> o;
-    BOOST_REQUIRE(o == "c");
+    BOOST_CHECK(o == QString("c"));
 }
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
