@@ -279,8 +279,7 @@ void LuaStack::to(std::string& sink, int pos)
 
 void LuaStack::to(QString& sink, int pos)
 {
-    const char* str = as<const char*>(pos);
-    sink = str;
+    sink = QString::fromUtf8(as<const char*>(pos));
 }
 
 void* LuaStack::pointer(int pos)
@@ -686,7 +685,7 @@ LuaIndex& operator>>(LuaIndex& index, std::string& sink)
 
 LuaIndex& operator>>(LuaIndex& index, QString& sink)
 {
-    sink = index.stack().as<const char*>(index.pos());
+    sink = QString::fromUtf8(index.stack().as<const char*>(index.pos()));
     return ++index;
 }
 
