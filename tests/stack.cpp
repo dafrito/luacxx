@@ -267,3 +267,19 @@ BOOST_AUTO_TEST_CASE(throwAnError)
 
     BOOST_REQUIRE(errored);
 }
+
+void immediatelyThrow()
+{
+    throw LuaException("Intentional");
+}
+
+BOOST_AUTO_TEST_CASE(luaExceptionIsCatchableWithinLua)
+{
+    Lua lua;
+
+    lua["thrower"] = immediatelyThrow;
+
+    lua("result = not pcall(thrower);");
+
+    BOOST_CHECK_EQUAL(lua["result"].as<bool>(), true);
+}

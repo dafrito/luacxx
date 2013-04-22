@@ -647,8 +647,16 @@ int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func
     }
     LuaStack stack(*lua);
     stack.grab();
-    (*func)(stack);
-    stack.disown();
+    try {
+        (*func)(stack);
+        stack.disown();
+    }
+    catch (LuaException& ex) {
+        stack.clear();
+        lua::push(stack, ex.what());
+        // This throws its own exception, so we never return.
+        lua_error(state);
+    }
     return lua_gettop(state);
 }
 
