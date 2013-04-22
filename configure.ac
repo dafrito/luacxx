@@ -2,7 +2,7 @@
 
 AC_PREREQ([2.68])
 AC_INIT([lua-cxx], [1.2], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
-AC_SUBST([PACKAGE_RELEASE], [2])
+AC_SUBST([PACKAGE_RELEASE], [11])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/LuaEnvironment.cpp])
 AC_CONFIG_HEADERS([src/config.h])
