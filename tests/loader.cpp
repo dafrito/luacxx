@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_CASE(testLuaSupportsQFile)
     lua(file);
 }
 
-BOOST_AUTO_TEST_CASE(testLuaSuxxpportsQFile)
+BOOST_AUTO_TEST_CASE(testLuaThrowsOnInvalidFilename)
 {
     Lua lua;
     BOOST_CHECK_THROW(lua::load_file(lua, "foosdfsdfsd.lua"), std::runtime_error);
