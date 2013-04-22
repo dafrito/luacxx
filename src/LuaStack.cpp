@@ -249,16 +249,16 @@ std::string LuaStack::typestring(int pos) const
     return std::string(lua_typename(luaState(), lua_type(luaState(), pos)));
 }
 
-std::string LuaStack::traceback()
+std::string LuaStack::traceback(const int topLevel)
 {
     #if LUA_VERSION_NUM >= 502
         std::string rv;
-        luaL_traceback(luaState(), luaState(), NULL, 2);
+        luaL_traceback(luaState(), luaState(), NULL, topLevel);
         rv = as<std::string>();
         pop();
         return rv;
     #else
-        return lua()["debug"]["traceback"]("", 2).as<std::string>().substr(1);
+        return lua()["debug"]["traceback"]("", topLevel).as<std::string>().substr(1);
     #endif
 }
 
@@ -653,7 +653,12 @@ int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func
     }
     catch (LuaException& ex) {
         stack.clear();
-        lua::push(stack, ex.what());
+        std::string error("Error occurred while invoking C++ function from Lua");
+        error += '\n';
+        error += ex.what();
+        error += '\n';
+        error += stack.traceback(1);
+        lua::push(stack, error);
         // This throws its own exception, so we never return.
         lua_error(state);
     }

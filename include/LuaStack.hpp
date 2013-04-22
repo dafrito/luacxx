@@ -232,7 +232,7 @@ public:
      */
     void clear();
 
-    std::string traceback();
+    std::string traceback(const int topLevel = 2);
 
     /**
      * Returns the type of the Lua stack value at the
