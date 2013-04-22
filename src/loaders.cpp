@@ -10,6 +10,9 @@ namespace lua
     void load_file(Lua& lua, const std::string& file)
     {
         std::ifstream f(file, std::ios::in);
+        if (!f) {
+            throw std::runtime_error(std::string("File stream could not be opened for '") + file + "'");
+        }
         lua(f, file);
     }
 

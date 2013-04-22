@@ -31,9 +31,13 @@ namespace {
     const char* read_stream(lua_State *, void *data, size_t *size)
     {
         LuaReadingData* d = static_cast<LuaReadingData*>(data);
-        if (!d->stream)
+        if (d->stream.eof()) {
             return NULL;
-        d->stream.read(d->buffer, CHUNKSIZE);
+        }
+        d->stream.readsome(d->buffer, CHUNKSIZE);
+        if (d->stream.fail()) {
+            throw std::runtime_error("Error while reading stream");
+        }
         *size = d->stream.gcount();
         return d->buffer;
     }
@@ -94,9 +98,13 @@ void Lua::handleLoadValue(const int rv)
     }
 }
 
-LuaReference Lua::operator()(std::istream& stream, const std::string& name = NULL)
+LuaReference Lua::operator()(std::istream& stream, const std::string& name)
 {
     LuaReadingData d(stream);
+
+    if (!stream) {
+        throw std::runtime_error(std::string("Input stream is invalid for '") + name + "'");
+    }
 
     LuaStack stack(*this);
     handleLoadValue(lua_load(state, &read_stream, &d, name.c_str()
