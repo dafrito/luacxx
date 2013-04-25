@@ -13,6 +13,7 @@ nobase_pkginclude_HEADERS = \
 	LuaTableAccessible.hpp \
 	ModuleLoader.hpp \
 	DirectoryModuleLoader.hpp \
+	QObjectObserver.hpp \
 	types.hpp \
 	table.hpp \
 	LuaUserdata.hpp \

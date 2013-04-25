@@ -4,7 +4,8 @@ liblua_cxx_la_LIBADD = @QT_LIBS@ @LUA_LIB@
 liblua_cxx_la_LDFLAGS = -version-info 0:0:0
 
 # moc-generated source files
-liblua_cxx_la_MOC_SOURCES =
+liblua_cxx_la_MOC_SOURCES = \
+	moc_QObjectObserver.cpp
 
 nodist_liblua_cxx_la_SOURCES = $(liblua_cxx_la_MOC_SOURCES)
 
@@ -18,6 +19,7 @@ liblua_cxx_la_SOURCES = \
 	LuaAccessible.cpp \
 	LuaReferenceAccessible.cpp \
 	LuaGlobalAccessible.cpp \
+	QObjectObserver.cpp \
 	types.cpp
 
 mostlyclean-local:

@@ -487,11 +487,12 @@ template <typename Source,
             ::value || std::is_pointer<Source>::value
         ),
     int>::type = 0>
-void push(LuaStack& stack, const Source& value)
+void push(LuaStack& stack, const Source& value, const bool manuallyManaged = false)
 {
     lua::push(stack, LuaUserdata(
         value,
-        UserdataType<typename isUserdataType<Source>::type>::name
+        UserdataType<typename isUserdataType<Source>::type>::name,
+        manuallyManaged
     ));
 
     UserdataType<typename isUserdataType<Source>::type>::initialize(stack, *value);
@@ -508,11 +509,12 @@ template <typename Source,
             ::value || std::is_pointer<Source>::value
         ),
     int>::type = 0>
-void push(LuaStack& stack, Source& value)
+void push(LuaStack& stack, Source& value, const bool manuallyManaged = false)
 {
     lua::push(stack, LuaUserdata(
         &value,
-        UserdataType<typename isUserdataType<Source>::type>::name
+        UserdataType<typename isUserdataType<Source>::type>::name,
+        manuallyManaged
     ));
 
     UserdataType<typename isUserdataType<Source>::type>::initialize(stack, value);

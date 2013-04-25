@@ -479,14 +479,14 @@ void LuaStack::push(const LuaUserdata& userdata)
 {
     assertUnlocked();
 
-    if (userdata.isRaw() && !acceptsStackUserdata() && !lua().acceptsStackUserdata()) {
+    if (!userdata.managed() && userdata.isRaw() && !acceptsStackUserdata() && !lua().acceptsStackUserdata()) {
         throw std::logic_error("Stack does not accept raw pointers");
     }
 
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
     new (luaUserdata) LuaUserdata(userdata);
 
-    if (userdata.isRaw() && acceptsStackUserdata()) {
+    if (!userdata.managed() && userdata.isRaw() && acceptsStackUserdata()) {
         _rawUserdata.push_back(static_cast<LuaUserdata*>(luaUserdata));
     }
 
