@@ -283,3 +283,12 @@ BOOST_AUTO_TEST_CASE(luaExceptionIsCatchableWithinLua)
 
     BOOST_CHECK_EQUAL(lua["result"].as<bool>(), true);
 }
+
+BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
+{
+    Lua lua;
+
+    lua("foo = {}");
+    auto bar = lua("return function(a) end;");
+    bar(lua["foo"]);
+}

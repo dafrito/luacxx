@@ -161,11 +161,16 @@ public:
 
 namespace lua {
 
-template<class Accessible>
-void push(LuaStack& stack, const LuaValue<Accessible>& value)
+template <class Accessible>
+struct PushOverride<LuaValue<Accessible>>
 {
-    value.push(stack);
-}
+    static constexpr bool value = true;
+
+    static void push(LuaStack& stack, const LuaValue<Accessible>& value)
+    {
+        value.push(stack);
+    }
+};
 
 } // namespace lua
 
