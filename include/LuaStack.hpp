@@ -349,11 +349,13 @@ public:
 
     static std::string onError(LuaStack& stack)
     {
-        std::string error("Error occurred while invoking Lua function from C++");
-        error += '\n';
-        error += stack.as<const char*>(1);
-        error += '\n';
-        error += stack.traceback();
+        auto error = stack.as<std::string>(1);
+        if (error.find("\nstack traceback:\n") != std::string::npos) {
+            // Already has a traceback, so just use it directly
+            return error;
+        }
+        error += "\n";
+        error += stack.traceback(2);
         return error;
     }
 
@@ -366,12 +368,22 @@ public:
         switch (result) {
             case 0:
                 return;
-            case LUA_ERRRUN:
-                throw LuaException(stack.as<std::string>());
             case LUA_ERRMEM:
                 throw std::runtime_error("Lua memory error");
             case LUA_ERRERR:
                 throw std::runtime_error("Lua error within error handler");
+            case LUA_ERRRUN:
+                auto fullError = stack.as<std::string>();
+                auto sep = fullError.find("\nstack traceback:\n");
+                if (sep != std::string::npos) {
+                    auto reason = fullError.substr(0, sep);
+                    auto traceback = fullError.substr(sep + 1);
+                    LuaException ex(reason);
+                    ex.setTraceback(traceback);
+                    throw ex;
+                } else {
+                    throw LuaException(fullError);
+                }
         }
     }
 

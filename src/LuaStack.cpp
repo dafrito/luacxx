@@ -652,13 +652,11 @@ int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func
         stack.disown();
     }
     catch (LuaException& ex) {
+        if (!ex.hasTraceback()) {
+            ex.setTraceback(stack.traceback(1));
+        }
         stack.clear();
-        std::string error("Error occurred while invoking C++ function from Lua");
-        error += '\n';
-        error += ex.what();
-        error += '\n';
-        error += stack.traceback(1);
-        lua::push(stack, error);
+        lua::push(stack, ex.what());
         // This throws its own exception, so we never return.
         lua_error(state);
     }
