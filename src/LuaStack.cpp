@@ -721,7 +721,7 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
     case lua::FUNCTION:
     case lua::THREAD:
     default:
-        throw std::logic_error(std::string("Type not supported: ") + stack.typestring(pos));
+        throw std::logic_error(std::string("QVariant type not supported: ") + stack.typestring(pos));
     }
     return ++index;
 }
@@ -773,7 +773,7 @@ void push(LuaStack& stack, const QVariant& variant)
         lua::push(stack, variant.toDouble());
         break;
     default:
-        throw std::logic_error(std::string("Type not supported: ") + variant.typeName());
+        throw std::logic_error(std::string("QVariant type not supported: ") + variant.typeName());
     }
 }
 
