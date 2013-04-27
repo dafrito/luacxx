@@ -10,6 +10,7 @@
 #include "LuaStack.hpp"
 #include "LuaEnvironment.hpp"
 #include "LuaValue.hpp"
+#include "userdata.hpp"
 
 namespace lua {
 

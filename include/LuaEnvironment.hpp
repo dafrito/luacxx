@@ -9,6 +9,7 @@
 
 #include "LuaStack.hpp"
 #include "LuaGlobalAccessible.hpp"
+#include "userdata.hpp"
 
 class ModuleLoader;
 

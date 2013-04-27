@@ -1,6 +1,7 @@
 #include "init.hpp"
 
 #include "userdata.hpp"
+#include "LuaStackAccessible.hpp"
 
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 {
@@ -40,7 +41,7 @@ struct UserdataType<Counter>
 
     static void initialize(LuaStack& stack, QObject& obj)
     {
-        lua::userdata::qobject(stack, obj);
+        UserdataType<QObject>::initialize(stack, obj);
     }
 };
 
@@ -194,9 +195,7 @@ BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)
     auto obj = std::shared_ptr<QObject>(new Counter(42));
     lua["c"] = obj;
 
-    lua("c.someValue = 24");
-
-    BOOST_REQUIRE_EQUAL((int)lua("return c.someValue"), 24);
+    BOOST_CHECK_THROW(lua("c.someValue = 24"), LuaException);
 }
 
 BOOST_AUTO_TEST_CASE(luaCanCallQObjectMethods)
@@ -320,4 +319,56 @@ BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
     counter.setValue(60);
 
     BOOST_CHECK_EQUAL(flag.getValue(), 30);
+}
+
+BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
+{
+    Lua lua;
+    lua.setAcceptsStackUserdata(true);
+
+    lua::qvariantPusher(QVariant::Point, [](LuaStack& stack, const QVariant& source)
+    {
+        auto point = source.toPoint();
+        lua::push(stack, lua::value::table);
+
+        stack.set("x", point.x());
+        stack.set("y", point.y());
+    });
+
+    lua::qvariantStorer(QVariant::Point, [](LuaIndex& index, QVariant& sink)
+    {
+        LuaStack& stack = index.stack();
+        stack.pushCopy(index.pos());
+        auto table = stack.save();
+
+        sink.setValue(QPoint(
+            table["x"].as<int>(),
+            table["y"].as<int>()
+        ));
+    });
+
+    lua(
+    "function work(counter)"
+    "    counter.point = {x = 2, y = 4};"
+    "end;");
+
+    Counter counter(42);
+    counter.setPoint(QPoint(36, 54));
+    lua["work"](counter);
+    BOOST_CHECK_EQUAL(counter.getPoint().x(), 2);
+
+    counter.setPoint(QPoint(85, 34));
+
+    lua(
+    "function work(counter)"
+    "    remover = counter:connect('pointEmitted', function(point)"
+    "        foo = point;"
+    "    end);"
+    "end;");
+    lua["work"](counter);
+
+    counter.setValue(23);
+
+    BOOST_CHECK_EQUAL(lua["foo"]["x"].as<int>(), 85);
+    BOOST_CHECK_EQUAL(lua["foo"]["y"].as<int>(), 34);
 }

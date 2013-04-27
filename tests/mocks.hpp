@@ -2,6 +2,7 @@
 #define MOCKS_HPP
 
 #include <QObject>
+#include <QPoint>
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 
@@ -57,13 +58,28 @@ class Counter : public QObject
 {
     Q_OBJECT
     int value;
+    QPoint point;
 
     Q_PROPERTY(int value READ getValue WRITE setValue);
+    Q_PROPERTY(QPoint point READ getPoint WRITE setPoint);
+
+public:
+    QPoint getPoint()
+    {
+        return point;
+    }
+
+    void setPoint(const QPoint& point)
+    {
+        this->point = point;
+    }
 public slots:
     void setValue(const int value) {
         if (this->value != value) {
             this->value = value;
             emit valueChanged(value);
+            emit stringEmitted("Hello!");
+            emit pointEmitted(getPoint());
         }
     }
 
@@ -94,6 +110,8 @@ public slots:
     }
 signals:
     void valueChanged(int value) const;
+    void stringEmitted(const QString& value) const;
+    void pointEmitted(const QPoint& value) const;
 public:
     Counter(int value = 0) : value(value) {}
 };

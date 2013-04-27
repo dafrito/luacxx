@@ -7,8 +7,8 @@
 #include <functional>
 #include <type_traits>
 
-#include <QVariant>
 #include <QString>
+#include <QVariant>
 
 #include <lua.hpp>
 
@@ -440,38 +440,30 @@ namespace {
 namespace lua {
 
 template <class Source>
-struct PushOverride
+struct Pusher
 {
-    static constexpr bool value = false;
-
     static void push(LuaStack& stack, const Source& value)
     {
         stack.push(value);
     }
 };
 
-void push(LuaStack& stack, const QChar& value);
-void push(LuaStack& stack, const QString& value);
-void push(LuaStack& stack, const QVariant& variant);
-
 template <typename Source,
     typename std::enable_if<
-        !isUserdataType<Source>::value
-        && !PushOverride<typename std::remove_reference<Source>::type>::value, int
+        !isUserdataType<Source>::value, int
     >::type = 0>
-void push(LuaStack& stack, const Source& value)
+void push(LuaStack& stack, Source& value)
 {
-    stack.push(value);
+    Pusher<typename std::remove_reference<Source>::type>::push(stack, value);
 }
 
 template <typename Source,
     typename std::enable_if<
-        !isUserdataType<Source>::value
-        && PushOverride<typename std::remove_reference<Source>::type>::value, int
+        !isUserdataType<Source>::value, int
     >::type = 0>
 void push(LuaStack& stack, const Source& value)
 {
-    PushOverride<typename std::remove_reference<Source>::type>::push(stack, value);
+    Pusher<typename std::remove_reference<Source>::type>::push(stack, value);
 }
 
 // Handle userdata pointers and shared_ptr's

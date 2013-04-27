@@ -4,7 +4,6 @@
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
 #include "LuaUserdata.hpp"
-
 #include <sstream>
 
 LuaStack::LuaStack(Lua& lua) :
@@ -750,27 +749,7 @@ LuaIndex& operator>>(LuaIndex& index, QString& sink)
 
 LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
 {
-    LuaStack& stack = index.stack();
-    const int pos(index.pos());
-    switch(stack.type(pos)) {
-    case lua::NIL:
-        sink.clear();
-        break;
-    case lua::BOOLEAN:
-        sink.setValue(stack.as<bool>(pos));
-        break;
-    case lua::NUMBER:
-        sink.setValue(stack.as<double>(pos));
-        break;
-    case lua::STRING:
-        sink.setValue(stack.as<QString>(pos));
-        break;
-    case lua::TABLE:
-    case lua::FUNCTION:
-    case lua::THREAD:
-    default:
-        throw std::logic_error(std::string("QVariant type not supported: ") + stack.typestring(pos));
-    }
+    lua::storeVariant(index, sink);
     return ++index;
 }
 
@@ -789,40 +768,6 @@ void push(LuaStack& stack, const lua::LuaCallable& callable, const int closed)
 void push(LuaStack& stack, lua_CFunction callable, const int closed)
 {
     stack.push(callable, closed);
-}
-
-void push(LuaStack& stack, const QChar& value)
-{
-    lua::push(stack, value.toAscii());
-}
-
-void push(LuaStack& stack, const QString& value)
-{
-    lua::push(stack, value.toStdString());
-}
-
-void push(LuaStack& stack, const QVariant& variant)
-{
-    switch (variant.type()) {
-    case QVariant::Invalid:
-        lua::push(stack, lua::value::nil);
-        break;
-    case QVariant::Bool:
-        lua::push(stack, variant.toBool());
-        break;
-    case QVariant::Char:
-        lua::push(stack, variant.toChar());
-        break;
-    case QVariant::Int:
-        lua::push(stack, variant.toInt());
-        break;
-    case QVariant::Double:
-    case QVariant::UInt:
-        lua::push(stack, variant.toDouble());
-        break;
-    default:
-        throw std::logic_error(std::string("QVariant type not supported: ") + variant.typeName());
-    }
 }
 
 void pushAll(LuaStack& stack)

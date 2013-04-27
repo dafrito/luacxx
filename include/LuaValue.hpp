@@ -162,7 +162,7 @@ public:
 namespace lua {
 
 template <class Accessible>
-struct PushOverride<LuaValue<Accessible>>
+struct Pusher<LuaValue<Accessible>>
 {
     static constexpr bool value = true;
 
