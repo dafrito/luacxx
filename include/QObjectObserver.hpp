@@ -28,8 +28,7 @@ public slots:
     void destroyedFromC();
 };
 
-}
-
+} // namespace lua
 
 #endif // LUA_CXX_QOBJECTOBSERVER_HEADER
 

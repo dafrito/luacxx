@@ -100,7 +100,7 @@ void __index(LuaStack& stack)
         if (sig.startsWith(QString(name) + "(")) {
             stack.pushPointer(obj);
             lua::push(stack, name);
-            stack.push(callMethod, 2);
+            lua::push(stack, callMethod, 2);
             return;
         }
     }

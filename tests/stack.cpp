@@ -184,7 +184,7 @@ static void receive(LuaStack& stack)
     BOOST_REQUIRE_EQUAL(stack.as<int>(2), 2);
 }
 
-BOOST_AUTO_TEST_CASE(testLuaHandlesStringsProperly)
+BOOST_AUTO_TEST_CASE(closuresHandleStringsProperly)
 {
     Lua lua;
     LuaStack s(lua);
