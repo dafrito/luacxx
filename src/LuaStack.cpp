@@ -486,7 +486,7 @@ void LuaStack::push(const LuaUserdata& userdata)
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
     new (luaUserdata) LuaUserdata(userdata);
 
-    if (!userdata.managed() && userdata.isRaw() && acceptsStackUserdata()) {
+    if (!userdata.managed() && userdata.isRaw() && acceptsStackUserdata() && !lua().acceptsStackUserdata()) {
         _rawUserdata.push_back(static_cast<LuaUserdata*>(luaUserdata));
     }
 
