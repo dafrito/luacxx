@@ -676,6 +676,54 @@ int LuaStack::invokeFromLua(lua_State* state)
     return invokeFromLua(state, static_cast<lua::LuaCallable*>(funcPtr->rawData()));
 }
 
+static std::string onError(LuaStack& stack)
+{
+    std::string error("An error occurred within Lua");
+    if (!stack.empty()) {
+        error = stack.as<std::string>(-1);
+    }
+    if (error.find("\nstack traceback:\n") != std::string::npos) {
+        // Already has a traceback, so just use it directly
+        return error;
+    }
+    error += "\n";
+    error += stack.traceback(2);
+    return error;
+}
+
+void LuaStack::pushedInvoke(const int numArgs)
+{
+    checkPos(offset() + size() - numArgs);
+    assertUnlocked();
+
+    // Call Lua function. LUA_MULTRET ensures all arguments are returned
+    // Subtract one from the size to ignore the function itself and pass
+    // the correct number of arguments
+    lua::push(*this, onError);
+    lua_insert(luaState(), offset() + size() - numArgs - 1);
+    int result = lua_pcall(luaState(), numArgs, LUA_MULTRET, offset() + size() - numArgs - 1);
+    switch (result) {
+        case 0:
+            return;
+        case LUA_ERRMEM:
+            throw std::runtime_error("Lua memory error");
+        case LUA_ERRERR:
+            throw std::runtime_error("Lua error within error handler");
+        case LUA_ERRRUN:
+            auto fullError = as<std::string>();
+            auto sep = fullError.find("\nstack traceback:\n");
+            if (sep != std::string::npos) {
+                auto reason = fullError.substr(0, sep);
+                auto traceback = fullError.substr(sep + 1);
+                LuaException ex(reason);
+                ex.setTraceback(traceback);
+                throw ex;
+            } else {
+                throw LuaException(fullError);
+            }
+    }
+}
+
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink)
 {
     index.stack().to(sink, index.pos());

@@ -347,48 +347,10 @@ public:
     template <typename... Args>
     void invoke(Args&&... args);
 
-    static std::string onError(LuaStack& stack)
-    {
-        auto error = stack.as<std::string>(1);
-        if (error.find("\nstack traceback:\n") != std::string::npos) {
-            // Already has a traceback, so just use it directly
-            return error;
-        }
-        error += "\n";
-        error += stack.traceback(2);
-        return error;
-    }
-
-    static void callLua(lua_State* s, LuaStack& stack)
-    {
-        // Call Lua function. LUA_MULTRET ensures all arguments are returned
-        // Subtract one from the size to ignore the function itself and pass
-        // the correct number of arguments
-        int result = lua_pcall(s, stack.size() - 2, LUA_MULTRET, stack.offset() + 1);
-        switch (result) {
-            case 0:
-                return;
-            case LUA_ERRMEM:
-                throw std::runtime_error("Lua memory error");
-            case LUA_ERRERR:
-                throw std::runtime_error("Lua error within error handler");
-            case LUA_ERRRUN:
-                auto fullError = stack.as<std::string>();
-                auto sep = fullError.find("\nstack traceback:\n");
-                if (sep != std::string::npos) {
-                    auto reason = fullError.substr(0, sep);
-                    auto traceback = fullError.substr(sep + 1);
-                    LuaException ex(reason);
-                    ex.setTraceback(traceback);
-                    throw ex;
-                } else {
-                    throw LuaException(fullError);
-                }
-        }
-    }
+    void pushedInvoke(const int numArgs);
 
     template <typename Arg, typename... Rest>
-    static void callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest);
+    void pushedInvoke(const int numArgs, Arg&& arg, Rest&&... rest);
 
     /**
      * Pushes a value from the specified table, using the topmost stack
@@ -662,22 +624,14 @@ LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 
-template <typename Arg, typename... Rest>
-void LuaStack::callLua(lua_State* s, LuaStack& stack, Arg&& arg, Rest&&... rest)
-{
-    lua::push(stack, arg);
-    callLua(s, stack, rest...);
-}
-
 template <typename... Args>
 void LuaStack::invoke(Args&&... args)
 {
     LuaStack child(*this);
     child.grab(1);
     child.setAcceptsStackUserdata(true);
-    lua::push(child, onError);
-    child.swap();
-    callLua(luaState(), child, args...);
+    lua::pushAll(child, args...);
+    child.pushedInvoke(sizeof...(args));
     child.disown();
 }
 
