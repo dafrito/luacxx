@@ -20,6 +20,7 @@ liblua_cxx_la_SOURCES = \
 	LuaReferenceAccessible.cpp \
 	LuaGlobalAccessible.cpp \
 	QObjectObserver.cpp \
+	QObjectSlot.cpp \
 	types.cpp
 
 mostlyclean-local:

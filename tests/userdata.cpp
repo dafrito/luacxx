@@ -290,3 +290,19 @@ BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
 
     //BOOST_REQUIRE_EQUAL(counter.getValue(), 50);
 }
+
+BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
+{
+    Lua lua;
+
+    Counter a(42);
+
+    lua(
+    "function work(counter)"
+    "    counter:connect('valueChanged(int)', function(newNum) print('Fucking success: ' .. newNum); end);"
+    "end;");
+
+    lua["work"](a);
+
+    a.setValue(50);
+}

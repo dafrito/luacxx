@@ -14,6 +14,7 @@ nobase_pkginclude_HEADERS = \
 	ModuleLoader.hpp \
 	DirectoryModuleLoader.hpp \
 	QObjectObserver.hpp \
+	QObjectSlot.hpp \
 	types.hpp \
 	table.hpp \
 	LuaUserdata.hpp \

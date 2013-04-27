@@ -2,8 +2,10 @@
 
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
+#include "LuaValue.hpp"
 #include "LuaUserdata.hpp"
 #include "LuaException.hpp"
+#include "QObjectSlot.hpp"
 
 #include <QObject>
 #include <QMetaObject>
@@ -17,6 +19,7 @@ namespace {
     void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
     void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
     void callMethod(LuaStack& stack);
+    void connectSlot(LuaStack& stack);
 
 } // namespace anonymous
 
@@ -93,6 +96,12 @@ void __index(LuaStack& stack)
         lua::push(stack, propValue);
         return;
     }
+
+    if (QString(name) == "connect") {
+        stack.pushPointer(obj);
+        lua::push(stack, connectSlot, 1);
+    }
+
     // Not a property, so look for a method for the given the name.
     const QMetaObject* const metaObject = obj->metaObject();
     for(int i = 0; i < metaObject->methodCount(); ++i) {
@@ -117,6 +126,79 @@ void __newindex(LuaStack& stack)
     QVariant v;
     stack.begin() >> v;
     obj->setProperty(name, v);
+}
+
+void connectSlot(LuaStack& stack)
+{
+    QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
+    stack.shift();
+
+    auto userdata = stack.as<LuaUserdata*>(1);
+    if (!userdata) {
+        throw LuaException("Method must be invoked with a valid userdata");
+    }
+    if (userdata->rawData() != validatingUserdata) {
+        if (!userdata->data()) {
+            throw LuaException("Userdata must have an associated internal object");
+        }
+        if (userdata->dataType() != "QObject") {
+            throw LuaException(
+                QString("Userdata must be of type QObject, but was given: '%1'")
+                    .arg(userdata->dataType().c_str())
+                    .toStdString()
+            );
+        }
+        throw LuaException("Userdata provided with method call must match the userdata used to access that method");
+    }
+    QObject* const obj = validatingUserdata;
+    stack.shift();
+
+    if (stack.size() != 2) {
+        throw LuaException(
+            QString("Exactly 2 arguments must be provided. Given %1").arg(stack.size()).toStdString()
+        );
+    }
+
+    if (stack.typestring(1) != "string") {
+        throw LuaException("signal must be a string");
+    }
+    auto signal = stack.as<std::string>(1);
+    stack.shift();
+
+    auto slot = stack.save();
+    if (slot.typestring() != "function") {
+        throw LuaException("Provided slot must be a function");
+    }
+
+    const QMetaObject* const metaObject = obj->metaObject();
+
+    // Find the signal
+
+    int signalId = -1;
+    if (signal.find("(") != std::string::npos) {
+        QByteArray signalSig = QMetaObject::normalizedSignature(signal.c_str());
+        signalId = metaObject->indexOfSignal(signalSig);
+    } else {
+        for (int i = 0; i < metaObject->methodCount(); ++i) {
+            if (QString(metaObject->method(i).signature()).startsWith(signal.c_str())) {
+                if (signalId != -1) {
+                    throw new LuaException(std::string("Ambiguous signal name: ") + signal);
+                }
+                signalId = i;
+            }
+        }
+    }
+    if (signalId == -1) {
+        throw LuaException(std::string("No signal for name: ") + signal);
+    }
+
+    auto slotWrapper = new lua::QObjectSlot(
+        obj,
+        metaObject->method(signalId),
+        slot
+    );
+
+    QMetaObject::connect(obj, signalId, slotWrapper, 0);
 }
 
 void callMethod(LuaStack& stack)
