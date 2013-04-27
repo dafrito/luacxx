@@ -189,6 +189,7 @@ void __index(LuaStack& stack)
     if (QString(name) == "connect") {
         stack.pushPointer(obj);
         lua::push(stack, connectSlot, 1);
+        return;
     }
 
     // Not a property, so look for a method for the given the name.
