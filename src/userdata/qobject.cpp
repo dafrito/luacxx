@@ -127,18 +127,20 @@ void callMethod(LuaStack& stack)
     auto name = stack.as<const char*>(1);
     auto userdata = stack.as<LuaUserdata*>(2);
     if (!userdata) {
-        stack.error("Method must be invoked with a valid userdata");
+        throw LuaException("Method must be invoked with a valid userdata");
     }
     if (userdata->rawData() != validatingUserdata) {
         if (!userdata->data()) {
-            stack.error("Userdata must have an associated internal object");
+            throw LuaException("Userdata must have an associated internal object");
         }
         if (userdata->dataType() != "QObject") {
-            stack.error(
-                QString("Userdata must be of type QObject, but was given: '%1'").arg(userdata->dataType().c_str())
+            throw LuaException(
+                QString("Userdata must be of type QObject, but was given: '%1'")
+                    .arg(userdata->dataType().c_str())
+                    .toStdString()
             );
         }
-        stack.error("Userdata provided with method call must match the userdata used to access that method");
+        throw LuaException("Userdata provided with method call must match the userdata used to access that method");
     }
     QObject* const obj = validatingUserdata;
     stack.shift(2);
@@ -166,7 +168,7 @@ void callMethod(LuaStack& stack)
         }
     }
 
-    stack.error(QString("No method found with name '%1'").arg(name));
+    throw LuaException(QString("No method found with name '%1'").arg(name).toStdString());
 }
 
 void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
