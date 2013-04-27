@@ -5,6 +5,8 @@
 #include <functional>
 #include <string>
 
+#include "LuaException.hpp"
+
 class Lua;
 class LuaStack;
 
@@ -59,6 +61,13 @@ public:
         _manager = func;
     }
 
+    void assertData() const
+    {
+        if (!hasData()) {
+            throw LuaException("Userdata must not be accessed if it has no underlying data");
+        }
+    }
+
     /**
      * For userdata that map to a native C++ object, this should return
      * a pointer to that data. For those that do not have a native mapping,
@@ -66,12 +75,19 @@ public:
      */
     const std::shared_ptr<void>& data() const
     {
+        assertData();
         return _data;
     }
 
-    void* rawData()
+    void* rawData() const
     {
+        assertData();
         return isShared() ? data().get() : _rawData;
+    }
+
+    bool hasData() const
+    {
+        return _data || _rawData;
     }
 
     void reset()
