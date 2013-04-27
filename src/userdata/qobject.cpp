@@ -332,7 +332,7 @@ void callMethod(LuaStack& stack)
     const QMetaObject* const metaObject = obj->metaObject();
 
     // Prefer methods that handle the stack directly.
-    for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
         QMetaMethod method(metaObject->method(i));
         QString sig = QString::fromLatin1(method.signature());
         if (sig == QString(name) + "(LuaStack&)") {
@@ -343,7 +343,7 @@ void callMethod(LuaStack& stack)
     }
 
     // Look for any method that matches the requested name
-    for (int i = metaObject->methodOffset(); i < metaObject->methodCount(); ++i) {
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
         QMetaMethod method(metaObject->method(i));
         QString sig = QString::fromLatin1(method.signature());
         if (sig.startsWith(QString(name) + "(")) {
