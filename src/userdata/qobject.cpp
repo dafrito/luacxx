@@ -182,7 +182,7 @@ void connectSlot(LuaStack& stack)
         for (int i = 0; i < metaObject->methodCount(); ++i) {
             if (QString(metaObject->method(i).signature()).startsWith(signal.c_str())) {
                 if (signalId != -1) {
-                    throw new LuaException(std::string("Ambiguous signal name: ") + signal);
+                    throw LuaException(std::string("Ambiguous signal name: ") + signal);
                 }
                 signalId = i;
             }
