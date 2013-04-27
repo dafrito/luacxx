@@ -1,8 +1,7 @@
-#ifndef LUA_GLOBAL_ACCESSIBLE_HPP
-#define LUA_GLOBAL_ACCESSIBLE_HPP
+#ifndef LUA_STACK_ACCESSIBLE_HPP
+#define LUA_STACK_ACCESSIBLE_HPP
 
 #include <lua.hpp>
-#include "LuaAccessible.hpp"
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 
@@ -32,5 +31,7 @@ public:
     }
 };
 
-#endif // LUA_GLOBAL_ACCESSIBLE_HPP
+typedef LuaValue<LuaStackAccessible> LuaStackValue;
+
+#endif // LUA_STACK_ACCESSIBLE_HPP
 
