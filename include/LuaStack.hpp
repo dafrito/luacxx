@@ -610,6 +610,15 @@ void push(LuaStack& stack, std::function<RV(Args...)> p, const int closed)
     lua::push(stack, lua::LuaCallable(LuaWrapper<RV, Args...>(p)), closed);
 }
 
+void pushAll(LuaStack& stack);
+
+template <typename Arg, typename... Values>
+void pushAll(LuaStack& stack, Arg&& arg, Values&&... values)
+{
+    lua::push(stack, arg);
+    pushAll(stack, values...);
+}
+
 } // namespace lua
 
 template <class Sink>

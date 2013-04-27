@@ -777,4 +777,9 @@ void push(LuaStack& stack, const QVariant& variant)
     }
 }
 
+void pushAll(LuaStack& stack)
+{
+    // Termination case.
+}
+
 } // namespace lua
