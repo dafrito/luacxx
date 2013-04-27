@@ -294,15 +294,30 @@ BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
 BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
 {
     Lua lua;
+    lua.setAcceptsStackUserdata(true);
 
-    Counter a(42);
+    Counter counter(42);
+    Counter flag(10);
 
     lua(
-    "function work(counter)"
-    "    counter:connect('valueChanged(int)', function(newNum) print('Fucking success: ' .. newNum); end);"
+    "function work(counter, flag)"
+    "    remover = counter:connect('valueChanged', function(newNum)"
+    "        flag.value = newNum;"
+    "    end);"
     "end;");
 
-    lua["work"](a);
+    lua["work"](counter, flag);
 
-    a.setValue(50);
+    counter.setValue(50);
+    BOOST_CHECK_EQUAL(flag.getValue(), 50);
+
+    // Invoke twice to ensure the removal process is idempotent
+    lua("remover()");
+    lua("remover()");
+
+    flag.setValue(30);
+
+    counter.setValue(60);
+
+    BOOST_CHECK_EQUAL(flag.getValue(), 30);
 }

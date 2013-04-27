@@ -197,8 +197,15 @@ void connectSlot(LuaStack& stack)
         metaObject->method(signalId),
         slot
     );
+    lua::QObjectSlot::connect(slotWrapper);
 
     QMetaObject::connect(obj, signalId, slotWrapper, 0);
+
+    stack.clear();
+
+    lua::push(stack, std::function<void()>([=]() {
+        lua::QObjectSlot::disconnect(slotWrapper);
+    }));
 }
 
 void callMethod(LuaStack& stack)
