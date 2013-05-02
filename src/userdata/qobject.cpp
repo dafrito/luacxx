@@ -217,9 +217,6 @@ void __newindex(LuaStack& stack)
     if (!prop.isValid()) {
         throw LuaException("New properties must not be added to this userdata");
     }
-    if (stack.empty()) {
-        throw LuaException("WHOOAA");
-    }
     stack.begin() >> prop;
     obj->setProperty(name, prop);
 }
