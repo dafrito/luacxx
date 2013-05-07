@@ -47,7 +47,7 @@ struct Pusher<QChar>
 {
     static void push(LuaStack& stack, const QChar& value)
     {
-        lua::push(stack, value.toAscii());
+        lua::push(stack, value.unicode());
     }
 };
 

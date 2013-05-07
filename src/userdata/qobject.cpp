@@ -170,6 +170,15 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
         return false;
 }
 
+QString getSignature(const QMetaMethod& method)
+{
+    #if QT_VERSION >= 0x050000
+    return QString::fromLatin1(method.methodSignature());
+    #else
+    return QString::fromLatin1(method.signature());
+    #endif
+}
+
 void __index(LuaStack& stack)
 {
     QObject* obj;
@@ -195,7 +204,7 @@ void __index(LuaStack& stack)
     // Not a property, so look for a method for the given the name.
     const QMetaObject* const metaObject = obj->metaObject();
     for(int i = 0; i < metaObject->methodCount(); ++i) {
-        QString sig = QString::fromLatin1(metaObject->method(i).signature());
+        QString sig = getSignature(metaObject->method(i));
         if (sig.startsWith(QString(name) + "(")) {
             stack.pushPointer(obj);
             lua::push(stack, name);
@@ -273,7 +282,7 @@ void connectSlot(LuaStack& stack)
         signalId = metaObject->indexOfSignal(signalSig);
     } else {
         for (int i = 0; i < metaObject->methodCount(); ++i) {
-            if (QString(metaObject->method(i).signature()).startsWith(signal.c_str())) {
+            if (getSignature(metaObject->method(i)).startsWith(signal.c_str())) {
                 if (signalId != -1) {
                     throw LuaException(std::string("Ambiguous signal name: ") + signal);
                 }
@@ -332,7 +341,7 @@ void callMethod(LuaStack& stack)
     // Prefer methods that handle the stack directly.
     for (int i = 0; i < metaObject->methodCount(); ++i) {
         QMetaMethod method(metaObject->method(i));
-        QString sig = QString::fromLatin1(method.signature());
+        QString sig = getSignature(method);
         if (sig == QString(name) + "(LuaStack&)") {
             // The method is capable of handling the Lua stack directly, so invoke it
             metaInvokeLuaCallableMethod(stack, obj, method);
@@ -343,7 +352,7 @@ void callMethod(LuaStack& stack)
     // Look for any method that matches the requested name
     for (int i = 0; i < metaObject->methodCount(); ++i) {
         QMetaMethod method(metaObject->method(i));
-        QString sig = QString::fromLatin1(method.signature());
+        QString sig = getSignature(method);
         if (sig.startsWith(QString(name) + "(")) {
             metaInvokeDirectMethod(stack, obj, method);
             return;

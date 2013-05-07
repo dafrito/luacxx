@@ -129,7 +129,7 @@ LuaReference Lua::operator()(QFile& file)
     }
     QtReadingData d(file);
     LuaStack stack(*this);
-    handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toAscii().constData()
+    handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toUtf8().constData()
         #if LUA_VERSION_NUM >= 502
             // Account for the extra mode parameter introduced in 5.2
             , NULL
