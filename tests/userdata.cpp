@@ -3,6 +3,8 @@
 #include "userdata.hpp"
 #include "LuaStackAccessible.hpp"
 
+#include <math.h>
+
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 {
     Lua lua;
