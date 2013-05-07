@@ -28,7 +28,9 @@ AX_CXX_COMPILE_STDCXX_11([noext],[AM_CXXFLAGS])
 AC_SUBST([AM_CXXFLAGS])
 
 # Check for Boost
-AX_BOOST_BASE
+AX_BOOST_BASE([], [:], [
+    AC_MSG_ERROR([Boost is required to build lua-cxx])
+])
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
 # Check for Lua
