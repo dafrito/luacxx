@@ -11,6 +11,9 @@
 
 #include "LuaGlobalAccessible.hpp"
 
+#include <lauxlib.h>
+#include <lualib.h>
+
 namespace {
     struct LuaReadingData
     {

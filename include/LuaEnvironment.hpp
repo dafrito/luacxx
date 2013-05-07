@@ -3,7 +3,7 @@
 
 #include <string>
 #include <istream>
-#include <lua.hpp>
+#include <lua.h>
 #include <QFile>
 #include <vector>
 

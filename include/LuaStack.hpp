@@ -10,7 +10,8 @@
 #include <QString>
 #include <QVariant>
 
-#include <lua.hpp>
+#include <lua.h>
+#include <lauxlib.h>
 
 #include "types.hpp"
 #include "LuaIndex.hpp"

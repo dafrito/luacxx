@@ -1,7 +1,7 @@
 #ifndef LUA_STACK_ACCESSIBLE_HPP
 #define LUA_STACK_ACCESSIBLE_HPP
 
-#include <lua.hpp>
+#include <lua.h>
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 
