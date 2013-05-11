@@ -4,6 +4,9 @@ SUBDIRS = src tests include
 pkgdata_DATA = \
 	lua-cxx.m4
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = lua-cxx.pc
+
 export RPMDIR ?= $$HOME/rpmbuild
 
 checkdebug: $(TESTS)
