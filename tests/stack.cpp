@@ -166,9 +166,10 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
     LuaStack s(lua);
     QChar i('c');
     s << i;
-    QString o;
-    s >> o;
-    BOOST_REQUIRE(o == QString("c"));
+    QChar o(s.as<char>());
+
+    BOOST_CHECK_EQUAL(o.toLatin1(), i.toLatin1());
+    BOOST_CHECK(i == o);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesQVariants)
