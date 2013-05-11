@@ -34,8 +34,15 @@ AX_BOOST_BASE([], [:], [
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
 # Check for Lua
-AX_LUA_LIBS
-AX_LUA_HEADERS
+
+AC_SUBST(LUA_INCLUDE)
+AC_SUBST(LUA_LIB)
+if pkg-config --print-errors --exists 'lua >= 5.0'; then
+    LUA_INCLUDE=`pkg-config --cflags lua`
+    LUA_LIB=`pkg-config --libs lua`
+else
+    AC_MSG_ERROR([Lua is required to build lua-cxx])
+fi
 
 # Check for Qt
 AX_HAVE_QT_CORE

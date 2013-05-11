@@ -1,7 +1,7 @@
 check_PROGRAMS = runtest
 TESTS = $(check_PROGRAMS)
 
-runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ -I$(top_srcdir)/include -I$(top_srcdir)/src \
+runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ @LUA_INCLUDE@ -I$(top_srcdir)/include -I$(top_srcdir)/src \
 	@BOOST_CPPFLAGS@ \
 	-DBOOST_TEST_DYN_LINK \
 	-U__STRICT_ANSI__ \
