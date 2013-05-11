@@ -15,7 +15,7 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 
 # Initialize libtool
-AM_PROG_AR
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_PREREQ([2.2])
 LT_INIT
 AC_PROG_LIBTOOL
