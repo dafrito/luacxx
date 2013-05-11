@@ -71,6 +71,32 @@ BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
     BOOST_REQUIRE_EQUAL(lua["bar"].as<int>(), 42);
 }
 
+std::shared_ptr<Counter> makeCounter(LuaStack& stack)
+{
+    switch (stack.size()) {
+    case 0:
+        return std::make_shared<Counter>();
+    case 1:
+        return std::make_shared<Counter>(stack.as<int>(1));
+    default:
+        return std::make_shared<Counter>(stack.as<int>(1) + stack.as<int>(2));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(luaDoesntPrematurelyCollectSharedPtrs)
+{
+    Lua lua;
+
+    LuaStack stack(lua);
+
+    lua["Rainback"] = lua::value::table;
+    lua["Rainback"]["MakeCounter"] = makeCounter;
+
+    lua("font = Rainback.MakeCounter()");
+
+    BOOST_CHECK_EQUAL(lua("return font.value").as<int>(), 42);
+}
+
 BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
 {
     Lua lua;
