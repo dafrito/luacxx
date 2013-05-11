@@ -38,8 +38,9 @@ void lua::qobject(LuaStack& stack, QObject& obj)
 
 namespace std {
     template<>
-    struct hash<QVariant::Type>
+    class hash<QVariant::Type>
     {
+    public:
         size_t operator()(const QVariant::Type& value) const
         {
             return static_cast<int>(value);
