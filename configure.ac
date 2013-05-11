@@ -34,7 +34,6 @@ AX_BOOST_BASE([], [:], [
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
 # Check for Lua
-
 AC_SUBST(LUA_INCLUDE)
 AC_SUBST(LUA_LIB)
 if pkg-config --print-errors --exists 'lua >= 5.0'; then
