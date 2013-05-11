@@ -365,7 +365,13 @@ void callMethod(LuaStack& stack)
 void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
     QList<QVariant> variants;
-    variants << QVariant(QMetaType::type(method.typeName()), nullptr);
+    auto returnType = QMetaType::type(method.typeName());
+    if (returnType != QMetaType::Void) {
+        variants << QVariant(QMetaType::type(method.typeName()), nullptr);
+    }
+    else {
+        variants << QVariant();
+    }
     QList<QByteArray> params = method.parameterTypes();
     for (int i = 0; i < params.count(); ++i) {
         int type = QMetaType::type(params.at(i));
@@ -391,7 +397,11 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
 
 void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
 {
-    QVariant rv(QMetaType::type(method.typeName()), nullptr);
+    auto returnType = QMetaType::type(method.typeName());
+    QVariant rv;
+    if (returnType != QMetaType::Void) {
+        rv = QVariant(QMetaType::type(method.typeName()), nullptr);
+    }
     void* vvargs[2];
     vvargs[0] = const_cast<void*>(rv.data());
     vvargs[1] = &stack;
