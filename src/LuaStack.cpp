@@ -654,10 +654,7 @@ int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func
         if (!ex.hasTraceback()) {
             ex.setTraceback(stack.traceback(1));
         }
-        stack.clear();
-        lua::push(stack, ex.what());
-        // This throws its own exception, so we never return.
-        lua_error(state);
+        stack.error(ex.what());
     }
     return lua_gettop(state);
 }

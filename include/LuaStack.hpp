@@ -649,7 +649,9 @@ void LuaStack::setGlobal(const std::string& key, const V& value)
 template <class Message>
 void LuaStack::error(const Message& message)
 {
+    clear();
     lua::push(*this, message);
+    disown();
     lua_error(luaState());
 }
 
