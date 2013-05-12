@@ -95,7 +95,7 @@ void Lua::handleLoadValue(const int rv)
 {
     switch (rv) {
         case LUA_ERRSYNTAX:
-            throw std::runtime_error(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
+            throw LuaException(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
         case LUA_ERRMEM:
             throw std::runtime_error(std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
     }
