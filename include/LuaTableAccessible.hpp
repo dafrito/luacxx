@@ -1,7 +1,7 @@
 #ifndef LUA_TABLE_ACCESSIBLE_HPP
 #define LUA_TABLE_ACCESSIBLE_HPP
 
-#include <lua.h>
+#include <lua.hpp>
 #include <functional>
 
 #include "LuaStack.hpp"

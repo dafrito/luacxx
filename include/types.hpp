@@ -1,7 +1,7 @@
 #ifndef LUA_TYPES_HPP
 #define LUA_TYPES_HPP
 
-#include <lua.h>
+#include <lua.hpp>
 
 namespace lua
 {
