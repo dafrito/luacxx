@@ -285,6 +285,44 @@ BOOST_AUTO_TEST_CASE(luaExceptionIsCatchableWithinLua)
     BOOST_CHECK_EQUAL(lua["result"].as<bool>(), true);
 }
 
+struct Wrapper {
+    int& alive;
+
+    Wrapper(int& alive) : alive(alive)
+    {
+        this->alive++;
+    }
+
+    ~Wrapper()
+    {
+        this->alive++;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(luaIsBuiltWithExceptionSupport)
+{
+    Lua lua;
+
+    int value = 0;
+    lua["call"] = std::function<void(bool)>([&](bool shouldErr) {
+        Wrapper wrapper(value);
+
+        if (shouldErr) {
+            LuaStack(lua).error("Intentional");
+        }
+    });
+
+    lua["call"](false);
+    BOOST_CHECK_EQUAL(value, 2);
+
+    try {
+        lua["call"](true);
+    } catch (LuaException& ex) {
+        // pass through
+    }
+    BOOST_CHECK_EQUAL(value, 4);
+}
+
 BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
 {
     Lua lua;
