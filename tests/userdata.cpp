@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(luaDoesntPrematurelyCollectSharedPtrs)
     lua["Rainback"] = lua::value::table;
     lua["Rainback"]["MakeCounter"] = makeCounter;
 
-    lua("font = Rainback.MakeCounter()");
+    lua("font = Rainback.MakeCounter(42)");
 
     BOOST_CHECK_EQUAL(lua("return font.value").as<int>(), 42);
 }
