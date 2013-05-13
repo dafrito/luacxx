@@ -83,9 +83,9 @@ namespace
                     << sizeof...(Args)
                     << " argument" << (sizeof...(Args) == 1 ? "" : "s");
                 if (stack.size() > 1) {
-                    msg << " but only" << stack.size() << " were given";
+                    msg << " but only " << stack.size() << " were given";
                 } else if (stack.size() > 0) {
-                    msg << " but only" << stack.size() << " was given";
+                    msg << " but only " << stack.size() << " was given";
                 } else {
                     msg << " but none were given";
                 }
