@@ -3,7 +3,8 @@
 #include "userdata.hpp"
 #include "LuaStackAccessible.hpp"
 
-#include <math.h>
+#include <boost/math/constants/constants.hpp>
+using namespace boost::math;
 
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 {
@@ -281,7 +282,7 @@ BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
     auto square = new Square;
 
     int old = square->getX();
-    lua["Tick"](std::shared_ptr<QObject>(square), M_PI);
+    lua["Tick"](std::shared_ptr<QObject>(square), constants::pi<double>());
     BOOST_REQUIRE(square->getX() != old);
 }
 

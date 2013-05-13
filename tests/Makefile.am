@@ -4,7 +4,6 @@ TESTS = $(check_PROGRAMS)
 runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ @LUA_INCLUDE@ -I$(top_srcdir)/include -I$(top_srcdir)/src \
 	@BOOST_CPPFLAGS@ \
 	-DBOOST_TEST_DYN_LINK \
-	-U__STRICT_ANSI__ \
 	-DLUA_DIR=\"$(srcdir)/lua/\"
 
 # Don't try changing "../src" to use "top_srcdir" - this is referring to the
