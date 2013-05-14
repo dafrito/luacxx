@@ -514,6 +514,7 @@ void push(LuaStack& stack, void (*func)(LuaStack&), const int closed = 0);
 void push(LuaStack& stack, const LuaCallable& callable, const int closed = 0);
 void push(LuaStack& stack, lua_CFunction callable, const int closed = 0);
 
+// Raw LuaCallables that return useful values
 template <class RV,
     typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
 void push(LuaStack& stack, RV (*p)(LuaStack&), const int closed = 0)
@@ -525,6 +526,7 @@ void push(LuaStack& stack, RV (*p)(LuaStack&), const int closed = 0)
     }), closed);
 }
 
+// C++ LuaCallables that return useful values
 template <class RV,
     typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
 void push(LuaStack& stack, std::function<RV(LuaStack&)> func, const int closed = 0)
