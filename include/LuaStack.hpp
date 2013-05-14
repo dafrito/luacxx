@@ -219,6 +219,8 @@ public:
 
     void remove(int pos);
 
+    void insert(int pos);
+
     /**
      * Swaps the values at the two specified indices.
      */
@@ -274,10 +276,14 @@ public:
     int length(int pos = -1);
 
     /**
-     * Saves the value at the top of this stack into
-     * a Lua reference.
+     * Saves the value at the specified position as a reference.
      */
-    LuaReference save();
+    LuaReference save(int pos = -1);
+
+    /**
+     * Saves and removes the value at the specified position.
+     */
+    LuaReference saveAndPop();
 
     /**
      * Pushes the global value with the specified

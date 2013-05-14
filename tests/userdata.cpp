@@ -366,10 +366,7 @@ BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
 
     lua::qvariantStorer(QVariant::Point, [](LuaIndex& index, QVariant& sink)
     {
-        LuaStack& stack = index.stack();
-        stack.pushCopy(index.pos());
-        auto table = stack.save();
-
+        auto table = index.stack().save(index.pos());
         sink.setValue(QPoint(
             table["x"].as<int>(),
             table["y"].as<int>()

@@ -268,7 +268,7 @@ void connectSlot(LuaStack& stack)
     auto signal = stack.as<std::string>(1);
     stack.shift();
 
-    auto slot = stack.save();
+    auto slot = stack.saveAndPop();
     if (slot.typestring() != "function") {
         throw LuaException("Provided slot must be a function");
     }

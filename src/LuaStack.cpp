@@ -203,6 +203,13 @@ void LuaStack::remove(int pos)
     lua_remove(luaState(), pos);
 }
 
+void LuaStack::insert(int pos)
+{
+    assertUnlocked();
+    checkPos(pos);
+    lua_insert(luaState(), pos);
+}
+
 void LuaStack::swap(int a, int b)
 {
     checkPos(a);
@@ -302,12 +309,20 @@ int LuaStack::length(int pos)
     return length;
 }
 
-LuaValue<LuaReferenceAccessible> LuaStack::save()
+LuaValue<LuaReferenceAccessible> LuaStack::save(int pos)
 {
-    checkPos(-1);
+    checkPos(pos);
+    pushCopy(pos);
     return LuaValue<LuaReferenceAccessible>(
         lua(), LuaReferenceAccessible(luaState())
     );
+}
+
+LuaValue<LuaReferenceAccessible> LuaStack::saveAndPop()
+{
+    auto ref = save();
+    pop();
+    return ref;
 }
 
 void LuaStack::to(bool& sink, int pos)

@@ -82,7 +82,7 @@ LuaReference Lua::operator()(const char* runnable)
     LuaStack stack(*this);
     luaL_loadstring(state, runnable);
     stack.invoke();
-    return stack.save();
+    return stack.saveAndPop();
 }
 
 LuaReference Lua::operator()(const std::string& runnable)
@@ -117,7 +117,7 @@ LuaReference Lua::operator()(std::istream& stream, const std::string& name)
         #endif
     ));
     stack.invoke();
-    return stack.save();
+    return stack.saveAndPop();
 }
 
 LuaReference Lua::operator()(QFile& file)
@@ -136,7 +136,7 @@ LuaReference Lua::operator()(QFile& file)
         #endif
     ));
     stack.invoke();
-    return stack.save();
+    return stack.saveAndPop();
 }
 
 LuaGlobal Lua::operator[](const char* key)

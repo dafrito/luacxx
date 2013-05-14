@@ -140,7 +140,7 @@ public:
             lua::push(stack, lua::value::nil);
         }
 
-        return stack.save();
+        return stack.saveAndPop();
     }
 
     template <typename Key>
