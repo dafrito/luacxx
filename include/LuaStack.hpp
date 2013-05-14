@@ -556,10 +556,6 @@ void push(LuaStack& stack, std::function<RV(LuaStack&)> func, const int closed =
     }), closed);
 }
 
-} // namespace lua
-
-namespace lua {
-
 template <typename RV, typename... Args>
 void push(LuaStack& stack, RV(*p)(Args...), const int closed = 0);
 
