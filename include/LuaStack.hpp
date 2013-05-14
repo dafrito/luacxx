@@ -479,6 +479,10 @@ template <typename Source,
     int>::type = 0>
 void push(LuaStack& stack, const Source& value, const bool manuallyManaged = false)
 {
+    if (!value) {
+        lua::push(stack, lua::value::nil);
+        return;
+    }
     lua::push(stack, LuaUserdata(
         value,
         UserdataType<typename isUserdataType<Source>::type>::name,
