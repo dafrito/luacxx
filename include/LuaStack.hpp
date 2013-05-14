@@ -6,6 +6,7 @@
 #include <sstream>
 #include <functional>
 #include <type_traits>
+#include <iostream>
 
 #include <QString>
 #include <QVariant>
