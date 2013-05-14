@@ -258,7 +258,7 @@ BOOST_AUTO_TEST_CASE(throwAnError)
 
     try {
         lua("function foo()"
-        "   bar();"
+        "   someUnknownFunction();"
         "end");
 
         lua["foo"]();
