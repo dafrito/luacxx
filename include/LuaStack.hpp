@@ -537,6 +537,7 @@ template <class RV,
     typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
 void push(LuaStack& stack, RV (*p)(LuaStack&), const int closed = 0)
 {
+    //std::cout << "Pushing raw LuaCallable with return value" << std::endl;
     lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
         RV sink(p(stack));
         stack.clear();
@@ -549,6 +550,7 @@ template <class RV,
     typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
 void push(LuaStack& stack, std::function<RV(LuaStack&)> func, const int closed = 0)
 {
+    //std::cout << "Pushing std::function LuaCallable with return value" << std::endl;
     lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
         RV sink(func(stack));
         stack.clear();
