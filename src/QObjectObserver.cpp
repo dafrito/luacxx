@@ -9,6 +9,10 @@ QObjectObserver::QObjectObserver(
     userdata(userdata),
     _destroyOnGC(false)
 {
+    if (!userdata->managed()) {
+        throw std::logic_error("Refusing to manage a non-managed userdata");
+    }
+
     // Watch for destruction from C++
     connect(object, SIGNAL(destroyed(QObject*)), this, SLOT(destroyedFromC()));
 

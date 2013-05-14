@@ -38,6 +38,9 @@ public:
         _rawData(nullptr),
         _dataType(dataType)
     {
+        if (_isManaged) {
+            throw std::logic_error("shared_ptr userdata must not be manually managed");
+        }
     }
 
     bool isShared() const
@@ -58,6 +61,12 @@ public:
     template <class Func>
     void setManager(const Func& func)
     {
+        if (!managed()) {
+            throw std::logic_error("Userdata must not have a manager if it's not managed");
+        }
+        if (_manager) {
+            throw std::logic_error("Refusing to overwrite an existing manager");
+        }
         _manager = func;
     }
 
