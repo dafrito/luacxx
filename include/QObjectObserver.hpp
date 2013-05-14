@@ -16,10 +16,7 @@ class QObjectObserver : public QObject
 public:
     QObjectObserver(const QObject* const object, LuaUserdata* const userdata);
 
-    void setDestroyOnGC(const bool destroy)
-    {
-        _destroyOnGC = destroy;
-    }
+    void setDestroyOnGC(const bool destroy);
 
     ~QObjectObserver();
 
