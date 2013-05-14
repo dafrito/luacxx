@@ -93,24 +93,29 @@ namespace lua {
             return userdata;
         }
 
+        // Handle raw pointers
         template <typename Sink>
         static typename std::enable_if<
                 std::is_pointer<Sink>::value,
                 Target*>::type
         as(const LuaIndex& index)
         {
+            //std::cout << "Converting to raw pointer" << std::endl;
             return static_cast<Target*>(getUserdataObject(index)->rawData());
         }
 
+        // Handle values
         template <typename Sink>
         static typename std::enable_if<
                 std::is_same<Sink, Target>::value,
                 Target>::type
         as(const LuaIndex& index)
         {
+            //std::cout << "Converting to value" << std::endl;
             return Sink(as<Target&>(index));
         }
 
+        // Handle shared_ptrs
         template <typename Sink>
         static typename std::enable_if<
                 !std::is_pointer<Sink>::value && std::is_constructible<Sink, std::shared_ptr<Target>>::value,
@@ -118,6 +123,7 @@ namespace lua {
         >::type
         as(const LuaIndex& index)
         {
+            //std::cout << "Converting to shared_ptr" << std::endl;
             LuaUserdata* userdata = getUserdataObject(index);
             return std::shared_ptr<Target>(
                 userdata->data(),
@@ -125,12 +131,14 @@ namespace lua {
             );
         }
 
+        // Handle references
         template <typename Sink>
         static typename std::enable_if<
             std::is_reference<Sink>::value,
             Target&>::type
         as(const LuaIndex& index)
         {
+            //std::cout << "Converting to reference" << std::endl;
             LuaUserdata* userdata = getUserdataObject(index);
             if (!userdata->rawData()) {
                 std::stringstream msg;

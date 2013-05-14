@@ -446,6 +446,7 @@ namespace {
 
 namespace lua {
 
+// Push primitive values
 template <class Source>
 struct Pusher
 {
@@ -455,21 +456,25 @@ struct Pusher
     }
 };
 
+// Push values using a pusher
 template <typename Source,
     typename std::enable_if<
         !isUserdataType<Source>::value, int
     >::type = 0>
 void push(LuaStack& stack, Source& value)
 {
+    //std::cout << "Pushing primitive value" << std::endl;
     Pusher<typename std::remove_reference<Source>::type>::push(stack, value);
 }
 
+// Push const values using a pusher
 template <typename Source,
     typename std::enable_if<
         !isUserdataType<Source>::value, int
     >::type = 0>
 void push(LuaStack& stack, const Source& value)
 {
+    //std::cout << "Pushing const primitive value" << std::endl;
     Pusher<typename std::remove_reference<Source>::type>::push(stack, value);
 }
 
@@ -486,6 +491,7 @@ template <typename Source,
     int>::type = 0>
 void push(LuaStack& stack, const Source& value, const bool manuallyManaged = false)
 {
+    //std::cout << "Pushing userdata pointer" << std::endl;
     if (!value) {
         lua::push(stack, lua::value::nil);
         return;
@@ -512,6 +518,7 @@ template <typename Source,
     int>::type = 0>
 void push(LuaStack& stack, Source& value, const bool manuallyManaged = false)
 {
+    //std::cout << "Pushing userdata reference" << std::endl;
     lua::push(stack, LuaUserdata(
         &value,
         UserdataType<typename isUserdataType<Source>::type>::name,
