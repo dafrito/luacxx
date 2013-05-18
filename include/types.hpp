@@ -5,21 +5,21 @@
 
 namespace lua
 {
-    enum Type
+    enum class type
     {
-        INVALID = LUA_TNONE, // For invalid stack indices
-        NIL = LUA_TNIL,
-        BOOLEAN = LUA_TBOOLEAN,
-        NUMBER = LUA_TNUMBER,
-        STRING = LUA_TSTRING,
-        TABLE = LUA_TTABLE,
-        FUNCTION = LUA_TFUNCTION,
-        THREAD = LUA_TTHREAD,
-        USERDATA = LUA_TUSERDATA,
-        LIGHTUSERDATA = LUA_TLIGHTUSERDATA
+        invalid = LUA_TNONE, // For invalid stack indices
+        nil = LUA_TNIL,
+        boolean = LUA_TBOOLEAN,
+        number = LUA_TNUMBER,
+        string = LUA_TSTRING,
+        table = LUA_TTABLE,
+        function = LUA_TFUNCTION,
+        thread = LUA_TTHREAD,
+        userdata = LUA_TUSERDATA,
+        lightuserdata = LUA_TLIGHTUSERDATA
     };
 
-    Type convert_lua_type(const int& luaType);
+    lua::type convertType(const int& luaType);
 }
 
 #endif

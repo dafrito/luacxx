@@ -32,7 +32,7 @@ namespace lua
 {
     typedef std::function<void (LuaStack& stack)> LuaCallable;
 
-    enum value {
+    enum class value {
         table,
         nil
     };
@@ -241,7 +241,7 @@ public:
      * Returns the type of the Lua stack value at the
      * specified stack position.
      */
-    lua::Type type(int pos = -1) const;
+    lua::type type(int pos = -1) const;
 
     /**
      * Returns the human-readable type name of the Lua

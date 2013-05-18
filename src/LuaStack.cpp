@@ -243,10 +243,10 @@ bool LuaStack::isMagicalPos(const int& pos) const
     return false;
 }
 
-lua::Type LuaStack::type(int pos) const
+lua::type LuaStack::type(int pos) const
 {
     checkPos(pos);
-    return lua::convert_lua_type(lua_type(luaState(), pos));
+    return lua::convertType(lua_type(luaState(), pos));
 }
 
 std::string LuaStack::typestring(int pos) const

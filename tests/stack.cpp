@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackPushesABoolean)
     Lua lua;
     LuaStack(lua).setGlobal("Good", false);
     BOOST_REQUIRE_EQUAL((bool)lua["Good"], false);
-    BOOST_REQUIRE_EQUAL(LuaStack(lua).global("Good").type(), lua::Type::BOOLEAN);
+    BOOST_REQUIRE(LuaStack(lua).global("Good").type() == lua::type::boolean);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaStackSetsANumber)

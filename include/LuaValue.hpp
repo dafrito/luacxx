@@ -55,7 +55,7 @@ public:
         return stack.isNil();
     }
 
-    lua::Type type()
+    lua::type type()
     {
         LuaStack stack(_lua);
         push(stack);

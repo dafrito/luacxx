@@ -1,17 +1,17 @@
 #include "types.hpp"
 
-lua::Type lua::convert_lua_type(const int& luaType)
+lua::type lua::convertType(const int& luaType)
 {
     switch(luaType) {
-    case LUA_TNIL:           return lua::Type::NIL;
-    case LUA_TBOOLEAN:       return lua::Type::BOOLEAN;
-    case LUA_TNUMBER:        return lua::Type::NUMBER;
-    case LUA_TSTRING:        return lua::Type::STRING;
-    case LUA_TTABLE:         return lua::Type::TABLE;
-    case LUA_TFUNCTION:      return lua::Type::FUNCTION;
-    case LUA_TTHREAD:        return lua::Type::THREAD;
-    case LUA_TUSERDATA:      return lua::Type::USERDATA;
-    case LUA_TLIGHTUSERDATA: return lua::Type::LIGHTUSERDATA;
-    default:                 return lua::Type::INVALID;
+    case LUA_TNIL:           return lua::type::nil;
+    case LUA_TBOOLEAN:       return lua::type::boolean;
+    case LUA_TNUMBER:        return lua::type::number;
+    case LUA_TSTRING:        return lua::type::string;
+    case LUA_TTABLE:         return lua::type::table;
+    case LUA_TFUNCTION:      return lua::type::function;
+    case LUA_TTHREAD:        return lua::type::thread;
+    case LUA_TUSERDATA:      return lua::type::userdata;
+    case LUA_TLIGHTUSERDATA: return lua::type::lightuserdata;
+    default:                 return lua::type::invalid;
     }
 }
