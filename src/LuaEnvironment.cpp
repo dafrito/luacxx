@@ -77,6 +77,13 @@ Lua::Lua() :
     table::push((*this)["package"][searchersName], Lua::loadModule);
 }
 
+LuaReference Lua::newReference()
+{
+    LuaStack stack(*this);
+    lua::push(stack, lua::value::nil);
+    return stack.saveAndPop();
+}
+
 LuaReference Lua::operator()(const char* runnable)
 {
     LuaStack stack(*this);

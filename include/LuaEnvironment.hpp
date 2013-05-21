@@ -28,6 +28,8 @@ public:
     Lua();
     ~Lua();
 
+    LuaReference newReference();
+
     LuaGlobal operator[](const char* key);
     LuaGlobal operator[](const std::string& key);
 
