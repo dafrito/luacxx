@@ -96,9 +96,9 @@ public:
         if (&other == this) {
             return *this;
         }
-        LuaStack s(_lua);
-        lua::push(s, other);
-        s >> *this;
+        LuaStack stack(_lua);
+        other.accessor().push(stack);
+        accessor().store(stack);
         return *this;
     }
 
@@ -173,15 +173,5 @@ struct Pusher<LuaValue<Accessible>>
 };
 
 } // namespace lua
-
-template<class Accessible>
-LuaIndex& operator>>(LuaIndex& index, LuaValue<Accessible>& sink)
-{
-    LuaStack& stack = index.stack();
-    stack.pushCopy(index.pos());
-    sink.accessor().store(stack);
-    stack.pop();
-    return index;
-}
 
 #endif
