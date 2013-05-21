@@ -312,10 +312,13 @@ int LuaStack::length(int pos)
 LuaValue<LuaReferenceAccessible> LuaStack::save(int pos)
 {
     checkPos(pos);
+
     pushCopy(pos);
-    return LuaValue<LuaReferenceAccessible>(
-        lua(), LuaReferenceAccessible(luaState())
-    );
+    auto ref = LuaReferenceAccessible(luaState());
+    ref.store(*this);
+    pop();
+
+    return LuaValue<LuaReferenceAccessible>(lua(), ref);
 }
 
 LuaValue<LuaReferenceAccessible> LuaStack::saveAndPop()

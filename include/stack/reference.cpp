@@ -15,7 +15,13 @@ class LuaReferenceAccessible : public LuaAccessible
         RawLuaReference(lua_State* state) :
             _state(state)
         {
+            lua_pushinteger(luaState(), 0);
             ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
+
+            // Push an integer first, then set to nil to prevent
+            // Lua from returning LUA_REFNIL for nil values.
+            lua_pushnil(luaState());
+            store();
         }
 
         void push() const
