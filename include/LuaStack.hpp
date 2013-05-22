@@ -7,6 +7,7 @@
 #include <functional>
 #include <type_traits>
 #include <iostream>
+#include <cassert>
 
 #include <QString>
 #include <QVariant>
