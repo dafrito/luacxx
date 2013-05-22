@@ -69,12 +69,10 @@ class LuaReferenceAccessible : public LuaAccessible
             if (lua_type(luaState(), -1) == LUA_TNIL) {
                 storeNil();
 
-                // Pop the nil value that was on the stack
-                lua_pop(luaState(), 1);
-
                 return;
             }
 
+            lua_pushvalue(luaState(), -1);
             lua_rawseti(luaState(), LUA_REGISTRYINDEX, ref);
             _type = type();
         }
