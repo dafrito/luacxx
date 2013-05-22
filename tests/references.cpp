@@ -8,9 +8,9 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
     LuaStack stack(lua);
     stack << "No Time";
     LuaReference ref = stack.save();
-    BOOST_REQUIRE(stack.size() == 1);
+    BOOST_CHECK_EQUAL(stack.size(), 1);
     lua::push(stack, ref);
-    BOOST_REQUIRE_EQUAL(stack.as<const char*>(), "No Time");
+    BOOST_CHECK_EQUAL(stack.as<const char*>(), "No Time");
 }
 
 BOOST_AUTO_TEST_CASE(testAccessibleCanGetAReference)
