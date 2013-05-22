@@ -185,6 +185,8 @@ public:
 
     void grab(const int count);
 
+    std::string dump();
+
     /**
      * Forcibly abandon all stack values. This
      * instance will no longer be responsible for

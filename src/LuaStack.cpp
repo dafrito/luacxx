@@ -70,6 +70,36 @@ unsigned int LuaStack::size() const
     return top() - offset();
 }
 
+std::string LuaStack::dump()
+{
+    std::stringstream str;
+
+    str << "Stack (" << size() << " item";
+    if (size() != 1) {
+        str << "s";
+    }
+    str << ") [";
+
+    for (int i=1; i <= size(); ++i) {
+        str << typestring(i) << "(";
+        std::string info(lua_tostring(luaState(), i));
+        if (info.size() > 30) {
+            info = info.substr(0, 30);
+            str << info << "...";
+        } else  {
+            str << info;
+        }
+        str << ")";
+        if (i != size()) {
+            str << ", ";
+        }
+    }
+
+    str << "]";
+
+    return str.str();
+}
+
 int LuaStack::bottom() const
 {
     return offset() + 1;
