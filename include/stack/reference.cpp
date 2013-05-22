@@ -68,7 +68,6 @@ class LuaReferenceAccessible : public LuaAccessible
         {
             if (lua_type(luaState(), -1) == LUA_TNIL) {
                 storeNil();
-
                 return;
             }
 
