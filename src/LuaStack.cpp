@@ -344,7 +344,10 @@ LuaValue<LuaReferenceAccessible> LuaStack::save(int pos)
     checkPos(pos);
 
     auto ref = LuaReferenceAccessible(luaState());
+
+    pushCopy(pos);
     ref.store(*this);
+    pop();
 
     return LuaValue<LuaReferenceAccessible>(lua(), ref);
 }
