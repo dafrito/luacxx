@@ -763,6 +763,7 @@ void LuaStack::pushedInvoke(const int numArgs)
 {
     checkPos(offset() + size() - numArgs);
     assertUnlocked();
+    assert(type(-(numArgs + 1)) == lua::type::function);
 
     // Call Lua function. LUA_MULTRET ensures all arguments are returned
     // Subtract one from the size to ignore the function itself and pass
