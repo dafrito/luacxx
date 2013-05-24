@@ -74,10 +74,16 @@ std::string LuaStack::dump()
 {
     std::stringstream str;
 
-    str << "Stack (" << size() << " item";
-    if (size() != 1) {
-        str << "s";
+    str << "Stack (" << size() << " ";
+    if (size() == 0) {
+        str << "items";
+    } else if (size() == 1) {
+        str << "item [" << bottom() << "]";
+    } else {
+        assert(size() > 1);
+        str << "items [" << bottom() << ", " << top() << "]";
     }
+
     str << ") [";
 
     for (int i=1; i <= size(); ++i) {
