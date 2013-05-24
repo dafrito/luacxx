@@ -67,7 +67,7 @@ void LuaStack::offset(const int offset)
 
 unsigned int LuaStack::size() const
 {
-    return top() - offset();
+    return top() - bottom() + 1;
 }
 
 std::string LuaStack::dump()
