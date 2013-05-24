@@ -81,15 +81,32 @@ std::string LuaStack::dump()
     str << ") [";
 
     for (int i=1; i <= size(); ++i) {
-        str << typestring(i) << "(";
-        std::string info(lua_tostring(luaState(), i));
-        if (info.size() > 30) {
-            info = info.substr(0, 30);
-            str << info << "...";
-        } else  {
-            str << info;
+        str << typestring(i);
+        std::string info;
+        switch (type(i)) {
+            case lua::type::boolean:
+                info = as<bool>(i) ? "true" : "false";
+                break;
+            case lua::type::string:
+                info = as<std::string>(i);
+                break;
+            case lua::type::number:
+                info = lua_tostring(luaState(), i);
+                break;
+            default:
+                // Do nothing
+                break;
         }
-        str << ")";
+        if (info.size()) {
+            str << "(";
+            if (info.size() > 30) {
+                info = info.substr(0, 30);
+                str << info << "...";
+            } else  {
+                str << info;
+            }
+            str << ")";
+        }
         if (i != size()) {
             str << ", ";
         }
