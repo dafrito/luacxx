@@ -331,3 +331,24 @@ BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
     auto bar = lua("return function(a) end;");
     bar(lua["foo"]);
 }
+
+BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
+{
+    Lua lua;
+
+    LuaStack stack(lua);
+
+    // This extra argument is important for this test, to ensure the stack doesn't just
+    // naively return the "second" argument
+    lua::push(stack, "notime");
+
+    auto worker = stack.lua()(""
+    "return function(value)"
+    "foo=value;"
+    "end;"
+    "");
+
+    worker(42);
+    BOOST_CHECK_EQUAL(lua["foo"].typestring(), "number");
+    BOOST_CHECK_EQUAL(lua["foo"].as<int>(), 42);
+}
