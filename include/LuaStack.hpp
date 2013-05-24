@@ -640,7 +640,11 @@ LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 template <typename... Args>
 void LuaStack::invoke(Args&&... args)
 {
-    assert(type(-1) == lua::type::function);
+    if (type(-1) != lua::type::function) {
+        throw std::logic_error(
+            std::string("A function must be at the top of the stack, not a ") + typestring(-1)
+        );
+    }
     LuaStack child(*this);
     child.grab(1);
     child.setAcceptsStackUserdata(true);
