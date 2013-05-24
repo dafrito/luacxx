@@ -88,8 +88,7 @@ LuaReference innerInvoke(LuaStack& stack)
 {
     int funcLoc = stack.top();
     stack.invoke();
-    assert(stack.type(funcLoc) == lua::type::function);
-    return stack.top() > funcLoc ? stack.save(funcLoc + 1) : stack.lua().newReference();
+    return stack.top() >= funcLoc ? stack.save(funcLoc) : stack.lua().newReference();
 }
 
 LuaReference Lua::operator()(const char* runnable)

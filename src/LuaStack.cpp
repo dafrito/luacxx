@@ -768,8 +768,14 @@ void LuaStack::pushedInvoke(const int numArgs)
     // Subtract one from the size to ignore the function itself and pass
     // the correct number of arguments
     lua::push(*this, onError);
-    lua_insert(luaState(), offset() + size() - numArgs - 1);
+    auto errorHandlerIndex = offset() + size() - numArgs - 1;
+    lua_insert(luaState(), errorHandlerIndex);
+
     int result = lua_pcall(luaState(), numArgs, LUA_MULTRET, offset() + size() - numArgs - 1);
+
+    // Be sure to remove the error handler
+    lua_remove(luaState(), errorHandlerIndex);
+
     switch (result) {
         case 0:
             return;
