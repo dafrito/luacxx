@@ -285,7 +285,7 @@ public:
     LuaReference save(int pos = -1);
 
     /**
-     * Saves and removes the value at the specified position.
+     * Saves and removes the topmost value.
      */
     LuaReference saveAndPop();
 
