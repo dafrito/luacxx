@@ -211,3 +211,13 @@ BOOST_AUTO_TEST_CASE(someLuaFunctionsCanReturnValues)
     lua["bar"] = std::function<int(LuaStack&)>(semiManaged);
     BOOST_REQUIRE_EQUAL((int)lua["bar"](3, 4), 7);
 }
+
+BOOST_AUTO_TEST_CASE(dualReturnValuesUseTheFirst)
+{
+    Lua lua;
+    QFile falseFile(LUA_DIR "returnfalse.lua");
+    BOOST_CHECK_EQUAL(lua(falseFile).as<bool>(), false);
+
+    QFile trueFile(LUA_DIR "returntrue.lua");
+    BOOST_CHECK_EQUAL(lua(trueFile).as<bool>(), true);
+}

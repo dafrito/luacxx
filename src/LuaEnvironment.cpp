@@ -84,12 +84,18 @@ LuaReference Lua::newReference()
     return stack.saveAndPop();
 }
 
+LuaReference innerInvoke(LuaStack& stack)
+{
+    stack.invoke();
+    // Use the second arg, since the first is the function itself.
+    return stack.size() > 1 ? stack.save(2) : stack.lua().newReference();
+}
+
 LuaReference Lua::operator()(const char* runnable)
 {
     LuaStack stack(*this);
     luaL_loadstring(state, runnable);
-    stack.invoke();
-    return stack.saveAndPop();
+    return innerInvoke(stack);
 }
 
 LuaReference Lua::operator()(const std::string& runnable)
@@ -123,8 +129,7 @@ LuaReference Lua::operator()(std::istream& stream, const std::string& name)
             , NULL
         #endif
     ));
-    stack.invoke();
-    return stack.saveAndPop();
+    return innerInvoke(stack);
 }
 
 LuaReference Lua::operator()(QFile& file)
@@ -142,8 +147,7 @@ LuaReference Lua::operator()(QFile& file)
             , NULL
         #endif
     ));
-    stack.invoke();
-    return stack.saveAndPop();
+    return innerInvoke(stack);
 }
 
 LuaGlobal Lua::operator[](const char* key)
