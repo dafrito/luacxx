@@ -640,6 +640,7 @@ LuaIndex& operator>>(LuaIndex& index, const char*& sink);
 template <typename... Args>
 void LuaStack::invoke(Args&&... args)
 {
+    assert(type(-1) == lua::type::function);
     LuaStack child(*this);
     child.grab(1);
     child.setAcceptsStackUserdata(true);
