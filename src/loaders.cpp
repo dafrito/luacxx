@@ -45,7 +45,9 @@ namespace lua
     void load_dir(Lua& lua, const QDir& dir, const bool recurse)
     {
         foreach(QFileInfo info, dir.entryInfoList(
-            (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot))
+            (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot,
+            QDir::Name
+            ))
         {
             if (info.isFile()) {
                 QFile file(info.filePath());
