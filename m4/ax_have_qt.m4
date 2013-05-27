@@ -145,11 +145,11 @@ AC_DEFUN([AX_HAVE_QT_GUI], [
   AC_REQUIRE([AX_HAVE_QT_CORE])
   _AX_HAVE_QT_ADD_MODULE(
     [Gui],
-    [QApplication],
+    [QBrush],
     [[
       int    argc;
       char **argv;
-      QApplication app(argc, argv);
+      QBrush brush;
     ]],
     [$X_CFLAGS],
     [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS],
@@ -160,6 +160,32 @@ AC_DEFUN([AX_HAVE_QT_GUI], [
     ], [
     AC_MSG_RESULT([no])
     have_qt_gui=no
+  ])
+])
+
+AC_DEFUN([AX_HAVE_QT_WIDGETS], [
+  AC_MSG_CHECKING([QtWidgets])
+  AC_REQUIRE([AC_PATH_X])
+  AC_REQUIRE([AC_PATH_XTRA])
+  AC_REQUIRE([AX_HAVE_QT_CORE])
+  AC_REQUIRE([AX_HAVE_QT_GUI])
+  _AX_HAVE_QT_ADD_MODULE(
+    [Widgets],
+    [QApplication],
+    [[
+      int    argc;
+      char **argv;
+      QApplication app(argc, argv);
+    ]],
+    [$X_CFLAGS],
+    [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS],
+    [
+      AC_MSG_RESULT([yes])
+      AC_DEFINE([HAVE_QT_WIDGETS],,[define if the QtWidgets module is available])
+      have_qt_widgets=yes
+    ], [
+    AC_MSG_RESULT([no])
+    have_qt_widgets=no
   ])
 ])
 
