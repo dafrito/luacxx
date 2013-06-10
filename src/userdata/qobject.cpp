@@ -213,6 +213,17 @@ void __index(LuaStack& stack)
             return;
         }
     }
+
+    // Still couldn't find anything, so ignore case
+    for(int i = 0; i < metaObject->methodCount(); ++i) {
+        QString sig = getSignature(metaObject->method(i));
+        if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
+            stack.pushPointer(obj);
+            lua::push(stack, name);
+            lua::push(stack, callMethod, 2);
+            return;
+        }
+    }
     lua::push(stack, lua::value::nil);
 }
 
@@ -350,11 +361,32 @@ void callMethod(LuaStack& stack)
         }
     }
 
+    // Ignore case and perform the above search again
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
+        QMetaMethod method(metaObject->method(i));
+        QString sig = getSignature(method);
+        if (sig.endsWith("(LuaStack&)") && sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
+            // The method is capable of handling the Lua stack directly, so invoke it
+            metaInvokeLuaCallableMethod(stack, obj, method);
+            return;
+        }
+    }
+
     // Look for any method that matches the requested name
     for (int i = 0; i < metaObject->methodCount(); ++i) {
         QMetaMethod method(metaObject->method(i));
         QString sig = getSignature(method);
         if (sig.startsWith(QString(name) + "(")) {
+            metaInvokeDirectMethod(stack, obj, method);
+            return;
+        }
+    }
+
+    // Still can't find anything, so ignore case and look again
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
+        QMetaMethod method(metaObject->method(i));
+        QString sig = getSignature(method);
+        if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
             metaInvokeDirectMethod(stack, obj, method);
             return;
         }
