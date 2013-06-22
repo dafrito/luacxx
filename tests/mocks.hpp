@@ -40,7 +40,7 @@ public:
     {
         this->x = x;
     }
-    int getX()
+    const int getX() const
     {
         return x;
     }
@@ -48,7 +48,7 @@ public:
     {
         this->y = y;
     }
-    int getY()
+    const int getY() const
     {
         return y;
     }
