@@ -408,6 +408,12 @@ void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMeth
     QList<QByteArray> params = method.parameterTypes();
     for (int i = 0; i < params.count(); ++i) {
         int type = QMetaType::type(params.at(i));
+        if (!type) {
+            std::stringstream str;
+            str << "Cannot convert the unsupported object type required for parameter " << (i + 1);
+            str << " to invoke the method " << getSignature(method).toStdString();
+            throw std::logic_error(str.str());
+        }
         QVariant p(type, (void*)0);
         stack.at(i + 1) >> p;
         p.convert((QVariant::Type)type);

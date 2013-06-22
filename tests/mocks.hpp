@@ -90,6 +90,11 @@ public slots:
 
     int getValue() const { return value; }
 
+    void set(const Counter& other)
+    {
+        setValue(other.getValue());
+    }
+
     void addAll(LuaStack& stack)
     {
         while (!stack.empty()) {

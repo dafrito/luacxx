@@ -315,9 +315,21 @@ BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
     lua["work"](&a, Counter(42));
     lua["work"](&a, a);
     lua["work"](a, &a);
-
-    //BOOST_REQUIRE_EQUAL(counter.getValue(), 50);
 }
+
+BOOST_AUTO_TEST_CASE(luaCrashesWhenHandlingNonQVariantTypes)
+{
+    Lua lua;
+
+    lua(
+    "function work(a, b)"
+    "   a:set(b);"
+    "end;");
+
+    Counter a(42);
+    BOOST_CHECK_THROW(lua["work"](a, Counter(53)), std::logic_error);
+}
+
 
 BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
 {
