@@ -419,6 +419,12 @@ void LuaStack::to(long& sink, int pos)
     sink = lua_tonumber(luaState(), pos);
 }
 
+void LuaStack::to(unsigned int& sink, int pos)
+{
+    checkPos(pos);
+    sink = lua_tonumber(luaState(), pos);
+}
+
 void LuaStack::to(float& sink, int pos)
 {
     checkPos(pos);
@@ -500,6 +506,12 @@ void LuaStack::push(const int& value)
 {
     assertUnlocked();
     lua_pushinteger(luaState(), value);
+}
+
+void LuaStack::push(const unsigned int& value)
+{
+    assertUnlocked();
+    lua_pushnumber(luaState(), value);
 }
 
 void LuaStack::push(const long& value)

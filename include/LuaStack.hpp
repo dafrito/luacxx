@@ -260,6 +260,7 @@ public:
     void to(char& sink, int pos = -1);
     void to(short& sink, int pos = -1);
     void to(int& sink, int pos = -1);
+    void to(unsigned int& sink, int pos = -1);
     void to(long& sink, int pos = -1);
     void to(float& sink, int pos = -1);
     void to(lua_Number& sink, int pos = -1);
@@ -303,6 +304,7 @@ public:
     void push(const char& b);
     void push(const short& b);
     void push(const int& b);
+    void push(const unsigned int& b);
     void push(const long& b);
     void push(const float& b);
     void push(const lua_Number& value);
