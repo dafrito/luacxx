@@ -5,14 +5,14 @@
 
 BOOST_AUTO_TEST_CASE(testLuaCanLoadAFileStreamIntoItsEnvironment)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["No"] = "Time";
-    lua::load_file(lua, LUA_DIR "simple.lua");
+    lua::loadFile(lua, LUA_DIR "simple.lua");
 }
 
 BOOST_AUTO_TEST_CASE(testLuaSupportsQFile)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["No"] = "Time";
     QFile file(LUA_DIR "simple.lua");
     lua(file);
@@ -20,21 +20,21 @@ BOOST_AUTO_TEST_CASE(testLuaSupportsQFile)
 
 BOOST_AUTO_TEST_CASE(testLuaThrowsOnInvalidFilename)
 {
-    Lua lua;
-    BOOST_CHECK_THROW(lua::load_file(lua, "foosdfsdfsd.lua"), std::runtime_error);
+    LuaEnvironment lua;
+    BOOST_CHECK_THROW(lua::loadFile(lua, "foosdfsdfsd.lua"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(luaSupportsDirectories)
 {
-    Lua lua;
-    lua::load_dir(lua, QDir(LUA_DIR "bin"), true);
+    LuaEnvironment lua;
+    lua::loadDir(lua, QDir(LUA_DIR "bin"), true);
     BOOST_REQUIRE_EQUAL((int)lua["a"], 42);
     BOOST_REQUIRE_EQUAL((const char*)lua["b"], "foo");
 }
 
 BOOST_AUTO_TEST_CASE(testDirectoryModuleLoader)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     DirectoryModuleLoader loader;
     loader.setRoot(QDir(LUA_DIR "testlib"));
@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(testDirectoryModuleLoader)
 
 BOOST_AUTO_TEST_CASE(testModuleLoaderUtility)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     DirectoryModuleLoader loader;
     loader.setRoot(QDir(LUA_DIR "testlib"));

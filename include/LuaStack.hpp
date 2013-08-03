@@ -19,6 +19,7 @@
 
 class LuaStack;
 class LuaUserdata;
+class LuaEnvironment;
 
 namespace lua
 {
@@ -119,6 +120,7 @@ private:
     void assertUnlocked() const;
 
 public:
+    LuaStack(LuaEnvironment& lua);
     LuaStack(lua_State* const lua);
     LuaStack(LuaStack& stack);
 

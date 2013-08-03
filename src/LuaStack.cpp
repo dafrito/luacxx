@@ -1,5 +1,6 @@
 #include "LuaStack.hpp"
 
+#include "LuaEnvironment.hpp"
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
 #include "LuaUserdata.hpp"
@@ -26,6 +27,11 @@ LuaStack::LuaStack(LuaStack& parent) :
     _acceptsStackUserdata(false)
 {
     _parent->lock();
+}
+
+LuaStack::LuaStack(LuaEnvironment& lua) :
+    LuaStack(lua.luaState())
+{
 }
 
 lua_State* LuaStack::luaState() const

@@ -18,7 +18,7 @@ int returnMagic()
 
 BOOST_AUTO_TEST_CASE(testPushWithInteger)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack stack(lua);
 
     lua("foo = {}");
@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(testPushWithInteger)
 
 BOOST_AUTO_TEST_CASE(testPushWithFunction)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack stack(lua);
 
     lua("foo = {}");
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE(testPushWithFunction)
 
 BOOST_AUTO_TEST_CASE(tablesCanBeSetWhileNested)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua["Rainback"] = lua::value::table;
     lua["Rainback"]["Font"] = returnMagic;
@@ -52,7 +52,7 @@ BOOST_AUTO_TEST_CASE(tablesCanBeSetWhileNested)
 
 BOOST_AUTO_TEST_CASE(tableReferences)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua("foo = {bar = 42}");
 

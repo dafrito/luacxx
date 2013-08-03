@@ -13,6 +13,11 @@ LuaStack& LuaIndex::stack() const
     return _stack;
 }
 
+lua_State* LuaIndex::luaState() const
+{
+    return _stack.luaState();
+}
+
 int LuaIndex::pos() const
 {
     return _pos;

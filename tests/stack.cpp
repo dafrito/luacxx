@@ -2,7 +2,7 @@
 
 BOOST_AUTO_TEST_CASE(testLuaStackManagesItOwnStack)
 {
-    Lua lua;
+    LuaEnvironment lua;
     {
         LuaStack s(lua);
         s.global("No");
@@ -22,7 +22,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackManagesItOwnStack)
 
 BOOST_AUTO_TEST_CASE(testLuaStackCanReplaceValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42 << 24;
     s.replace(-2);
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanReplaceValues)
 
 BOOST_AUTO_TEST_CASE(testLuaStackCanSwapValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 1 << 2;
     // Stack is now [1, 2]
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanSwapValues)
 
 BOOST_AUTO_TEST_CASE(testLuaStackCanSetGlobalValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s.setGlobal("No", "Time");
     BOOST_REQUIRE_EQUAL((const char*)lua["No"], "Time");
@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanSetGlobalValues)
 
 BOOST_AUTO_TEST_CASE(luaStackCanBeComparedToValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42;
 
@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(luaStackCanBeComparedToValues)
 
 BOOST_AUTO_TEST_CASE(testLuaStackHandlesNilValuesProperly)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
 
     s << lua::value::nil;
@@ -77,7 +77,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackHandlesNilValuesProperly)
 
 BOOST_AUTO_TEST_CASE(testLuaStackSupportsBitwiseOperators)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42 << 34;
     int a, b;
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackSupportsBitwiseOperators)
 
 BOOST_AUTO_TEST_CASE(testLuaStackCanBeDirectlyCastToAValue)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42;
     BOOST_REQUIRE(s.as<int>() == 42);
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanBeDirectlyCastToAValue)
 
 BOOST_AUTO_TEST_CASE(testStackSupportsIndexing)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 5 << 6 << 7;
 
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(testStackSupportsIndexing)
 
 BOOST_AUTO_TEST_CASE(testLuaStackPushesABoolean)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack(lua).setGlobal("Good", false);
     BOOST_REQUIRE_EQUAL((bool)lua["Good"], false);
     BOOST_REQUIRE(LuaStack(lua).global("Good").type() == lua::type::boolean);
@@ -120,7 +120,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackPushesABoolean)
 
 BOOST_AUTO_TEST_CASE(testLuaStackSetsANumber)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     // Note that Lua implicitly converts these numbers
     // to a floating-point type (typically a double), so
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackSetsANumber)
 
 BOOST_AUTO_TEST_CASE(testYouCanPushTables)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << lua::value::table;
     BOOST_REQUIRE("table" == s.typestring());
@@ -140,7 +140,7 @@ BOOST_AUTO_TEST_CASE(testYouCanPushTables)
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesInterestingCharValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     char c = 'c';
     s.push(&c, 1);
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesInterestingCharValues)
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesQString)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     QString i('c');
     s << i;
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesQString)
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     QChar i('c');
     s << i;
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesQVariants)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["foo"] = QVariant(42);
     BOOST_REQUIRE(lua["foo"] == 42);
 }
@@ -187,7 +187,7 @@ static void receive(LuaStack& stack)
 
 BOOST_AUTO_TEST_CASE(closuresHandleStringsProperly)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << "getValue";
     s.push(receive, 1);
@@ -197,7 +197,7 @@ BOOST_AUTO_TEST_CASE(closuresHandleStringsProperly)
 
 BOOST_AUTO_TEST_CASE(stackSetsATableValue)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua("c = {}");
     LuaStack stack(lua);
     stack.global("c").set("a", 42);
@@ -213,7 +213,7 @@ BOOST_AUTO_TEST_CASE(stackSetsATableValue)
 
 BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua("c = {f = 42};");
     LuaStack stack(lua);
     BOOST_REQUIRE_EQUAL(stack.global("c").get("f").as<int>(), 42);
@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
 
 BOOST_AUTO_TEST_CASE(cRetrievesNestedPropertiesWithLuaStack)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua("d = {e = {f = 42} };");
     LuaStack stack(lua);
     BOOST_REQUIRE_EQUAL(stack.global("d").get("e").get("f").as<int>(), 42);
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(cRetrievesNestedPropertiesWithLuaStack)
 
 BOOST_AUTO_TEST_CASE(cRetrievesDeeplyNestedPropertiesWithLuaStack)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua("c = {d = {e = {f = 42} } };");
     LuaStack stack(lua);
     BOOST_REQUIRE_EQUAL(stack.global("c").get("d").get("e").get("f").as<int>(), 42);
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(cRetrievesDeeplyNestedPropertiesWithLuaStack)
 
 BOOST_AUTO_TEST_CASE(nestedInvocations)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua["bar"] = std::function<const char*()>([&]() {
         return "bar";
@@ -252,7 +252,7 @@ BOOST_AUTO_TEST_CASE(nestedInvocations)
 
 BOOST_AUTO_TEST_CASE(throwAnError)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     bool errored = false;
 
@@ -276,7 +276,7 @@ void immediatelyThrow()
 
 BOOST_AUTO_TEST_CASE(luaExceptionIsCatchableWithinLua)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua["thrower"] = immediatelyThrow;
 
@@ -301,7 +301,7 @@ struct Wrapper {
 
 BOOST_AUTO_TEST_CASE(luaIsBuiltWithExceptionSupport)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     int value = 0;
     lua["call"] = std::function<void(bool)>([&](bool shouldErr) {
@@ -325,7 +325,7 @@ BOOST_AUTO_TEST_CASE(luaIsBuiltWithExceptionSupport)
 
 BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua("foo = {}");
     auto bar = lua("return function(a) end;");
@@ -334,7 +334,7 @@ BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
 
 BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     LuaStack stack(lua);
 
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
     // naively return the "second" argument
     lua::push(stack, "notime");
 
-    auto worker = stack.lua()(""
+    auto worker = lua(""
     "return function(value)"
     "foo=value;"
     "end;"

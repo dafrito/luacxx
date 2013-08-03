@@ -4,10 +4,10 @@
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack stack(lua);
     stack << "No Time";
-    LuaReference ref = stack.save();
+    LuaReference ref(lua.luaState(), LuaReferenceAccessible(lua.luaState(), stack.save()));
     BOOST_CHECK_EQUAL(stack.size(), 1);
     lua::push(stack, ref);
     BOOST_CHECK_EQUAL(stack.as<const char*>(), "No Time");
@@ -15,7 +15,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
 
 BOOST_AUTO_TEST_CASE(testAccessibleCanGetAReference)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaReferenceAccessible accessor(lua.luaState());
     LuaStack s(lua);
     s << "No Time";
@@ -28,7 +28,7 @@ BOOST_AUTO_TEST_CASE(testAccessibleCanGetAReference)
 
 BOOST_AUTO_TEST_CASE(testAccessibleCanGetAGlobal)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaGlobalAccessible accessor("foo");
     LuaStack s(lua);
     s << "No Time";
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(testAccessibleCanGetAGlobal)
 
 BOOST_AUTO_TEST_CASE(testLuaValueGetsALength)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua("foo = {42, 42, 42}");
     BOOST_REQUIRE_EQUAL(lua["foo"].length(), 3);
 }

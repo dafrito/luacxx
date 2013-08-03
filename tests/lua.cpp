@@ -48,7 +48,7 @@ int semiManaged(LuaStack& stack)
 
 BOOST_AUTO_TEST_CASE(testLuaOffersSubscriptSupportForAccessingGlobalValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua("No = 'Time'");
     auto g = lua["No"];
     QString str;
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(testLuaOffersSubscriptSupportForAccessingGlobalValues)
 
 BOOST_AUTO_TEST_CASE(testLuaOffersSubscriptSupportForGlobalValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     auto g = lua["No"];
     g = "Time";
     BOOST_REQUIRE_EQUAL((const char*)lua["No"], "Time");
@@ -66,14 +66,14 @@ BOOST_AUTO_TEST_CASE(testLuaOffersSubscriptSupportForGlobalValues)
 
 BOOST_AUTO_TEST_CASE(testLuaRunsStringsDirectly)
 {
-    Lua lua;
-    lua::load_string(lua, "_G['No']='Foo'");
+    LuaEnvironment lua;
+    lua::loadString(lua, "_G['No']='Foo'");
     BOOST_REQUIRE_EQUAL((const char*)lua["No"], "Foo");
 }
 
 BOOST_AUTO_TEST_CASE(testLuaValueIsAProxyForTheGlobalTable)
 {
-    Lua lua;
+    LuaEnvironment lua;
     auto v = lua["No"];
     v = "Time";
     BOOST_REQUIRE_EQUAL((const char*)lua["No"], "Time");
@@ -81,66 +81,66 @@ BOOST_AUTO_TEST_CASE(testLuaValueIsAProxyForTheGlobalTable)
 
 BOOST_AUTO_TEST_CASE(testLuaCallsACFunction)
 {
-    Lua lua;
+    LuaEnvironment lua;
     std::string name("luaAdd");
     lua[name] = luaAdd;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::load_string(lua, std::string("Bar = ") + name + "(2, 2)");
+    lua::loadString(lua, std::string("Bar = ") + name + "(2, 2)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 4);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCallsAZeroParamFunction)
 {
-    Lua lua;
+    LuaEnvironment lua;
     std::string name("getMagicNumber");
     lua[name] = getMagicNumber;
     BOOST_CHECK_EQUAL("function", lua[name].typestring().c_str());
-    lua::load_string(lua, std::string("Bar = ") + name + "()");
+    lua::loadString(lua, std::string("Bar = ") + name + "()");
     BOOST_CHECK_EQUAL(lua["Bar"].as<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCallsAOneParameterFunction)
 {
-    Lua lua;
+    LuaEnvironment lua;
     std::string name("addToMagicNumber");
     lua[name] = addToMagicNumber;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::load_string(lua, std::string("Bar = ") + name + "(2)");
+    lua::loadString(lua, std::string("Bar = ") + name + "(2)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 44);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCallsATwoParameterFunction)
 {
-    Lua lua;
+    LuaEnvironment lua;
     std::string name("addNumbers");
     lua[name] = addNumbers;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::load_string(lua, std::string("Bar = ") + name + "(2, 3)");
+    lua::loadString(lua, std::string("Bar = ") + name + "(2, 3)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 5);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCallsABonanza)
 {
-    Lua lua;
+    LuaEnvironment lua;
     std::string name("addBonanza");
     lua[name] = addBonanza;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::load_string(lua, std::string("Bar = ") + name + "(2, 3, 4, 5, 6)");
+    lua::loadString(lua, std::string("Bar = ") + name + "(2, 3, 4, 5, 6)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 2+3+4+5+6);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaStackCallsAVoidFunction)
 {
-    Lua lua;
+    LuaEnvironment lua;
     std::string name("doNothing");
     lua[name] = doNothing;
     BOOST_REQUIRE("function" == lua[name].typestring());
-    lua::load_string(lua, std::string("Bar = ") + name + "(2)");
+    lua::loadString(lua, std::string("Bar = ") + name + "(2)");
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCanPushClosures)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42;
     s << 24;
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanPushClosures)
 
 BOOST_AUTO_TEST_CASE(testLuaCanPushClosuresWithMultipleArguments)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42;
     s << 20;
@@ -162,7 +162,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanPushClosuresWithMultipleArguments)
 
 BOOST_AUTO_TEST_CASE(testLuaCanPushLambdas)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack s(lua);
     s << 42;
     s << 24;
@@ -176,7 +176,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanPushLambdas)
 
 BOOST_AUTO_TEST_CASE(luaFunctionsCanBeCalledFromC)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua(""
     "function foo(a, b)\n"
     "    return a + b\n"
@@ -187,13 +187,13 @@ BOOST_AUTO_TEST_CASE(luaFunctionsCanBeCalledFromC)
 
 BOOST_AUTO_TEST_CASE(luaCanReturnValuesFromEvaluatedStrings)
 {
-    Lua lua;
+    LuaEnvironment lua;
     BOOST_REQUIRE_EQUAL((int)lua("return 42"), 42);
 }
 
 BOOST_AUTO_TEST_CASE(luaValuesCanBeSetToRawValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["foo"] = 42;
     lua("assert(foo == 42)");
     lua["foo"] = lua::value::table;
@@ -205,7 +205,7 @@ BOOST_AUTO_TEST_CASE(luaValuesCanBeSetToRawValues)
 
 BOOST_AUTO_TEST_CASE(someLuaFunctionsCanReturnValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["foo"] = semiManaged;
     BOOST_REQUIRE_EQUAL((int)lua["foo"](1, 2), 3);
     lua["bar"] = std::function<int(LuaStack&)>(semiManaged);
@@ -214,7 +214,7 @@ BOOST_AUTO_TEST_CASE(someLuaFunctionsCanReturnValues)
 
 BOOST_AUTO_TEST_CASE(dualReturnValuesUseTheFirst)
 {
-    Lua lua;
+    LuaEnvironment lua;
     QFile falseFile(LUA_DIR "returnfalse.lua");
     BOOST_CHECK_EQUAL(lua(falseFile).as<bool>(), false);
 

@@ -8,7 +8,7 @@ using namespace boost::math;
 
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
     LuaStack s(lua);
 
@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjectsWithMinimalSemantics)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack stack(lua);
 
     auto orig = std::shared_ptr<QObject>(new QObject);
@@ -62,7 +62,7 @@ struct UserdataType<Blank>
 
 BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
 
     Counter counter(42);
@@ -86,7 +86,7 @@ std::shared_ptr<Counter> makeCounter(LuaStack& stack)
 
 BOOST_AUTO_TEST_CASE(luaDoesntPrematurelyCollectSharedPtrs)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     LuaStack stack(lua);
 
@@ -100,7 +100,7 @@ BOOST_AUTO_TEST_CASE(luaDoesntPrematurelyCollectSharedPtrs)
 
 BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
 
     Counter counter(42);
@@ -142,7 +142,7 @@ static int receiveConstRef(const Counter& counter)
 
 BOOST_AUTO_TEST_CASE(luaCanPassBackCxxValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
 
     Counter counter(42);
@@ -168,7 +168,7 @@ BOOST_AUTO_TEST_CASE(luaCanPassBackCxxValues)
 
 BOOST_AUTO_TEST_CASE(throwLuaExceptionOnLuaProblems)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["receiveRef"] = receiveRef;
     lua.setAcceptsStackUserdata(true);
 
@@ -187,7 +187,7 @@ BOOST_AUTO_TEST_CASE(throwLuaExceptionOnLuaProblems)
 
 BOOST_AUTO_TEST_CASE(luaCanPassUserdataByValue)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
 
     Blank blank(42);
@@ -210,7 +210,7 @@ void acceptSharedRef(const std::shared_ptr<Counter>& ptr)
 
 BOOST_AUTO_TEST_CASE(sharedPtrsCanBePassedToCxxFunctions)
 {
-    Lua lua;
+    LuaEnvironment lua;
     auto obj = std::shared_ptr<QObject>(new Counter(42));
     lua["c"] = obj;
 
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(sharedPtrsCanBePassedToCxxFunctions)
 
 BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)
 {
-    Lua lua;
+    LuaEnvironment lua;
     auto obj = std::shared_ptr<QObject>(new Counter(42));
     lua["c"] = obj;
 
@@ -229,7 +229,7 @@ BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)
 
 BOOST_AUTO_TEST_CASE(luaCanCallQObjectMethods)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["c"] = std::shared_ptr<QObject>(new Counter(42));
     lua("foo = c:getValue()");
     BOOST_REQUIRE(lua["foo"] == 42);
@@ -237,7 +237,7 @@ BOOST_AUTO_TEST_CASE(luaCanCallQObjectMethods)
 
 BOOST_AUTO_TEST_CASE(luaCanPassValuesToQObjectMethods)
 {
-    Lua lua;
+    LuaEnvironment lua;
     Counter* counter = new Counter;
     lua["c"] = std::shared_ptr<QObject>(counter);
 
@@ -247,7 +247,7 @@ BOOST_AUTO_TEST_CASE(luaCanPassValuesToQObjectMethods)
 
 BOOST_AUTO_TEST_CASE(luaCanPassTwoValuesToQObjectMethods)
 {
-    Lua lua;
+    LuaEnvironment lua;
     Counter* counter = new Counter;
     lua["c"] = std::shared_ptr<QObject>(counter);
 
@@ -257,7 +257,7 @@ BOOST_AUTO_TEST_CASE(luaCanPassTwoValuesToQObjectMethods)
 
 BOOST_AUTO_TEST_CASE(methodsCanUseTheStackDirectly)
 {
-    Lua lua;
+    LuaEnvironment lua;
     Counter* counter = new Counter(2);
     lua["c"] = std::shared_ptr<QObject>(counter);
 
@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(methodsCanUseTheStackDirectly)
 
 BOOST_AUTO_TEST_CASE(methodsCanStillReturnValues)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua["c"] = std::shared_ptr<QObject>(new Counter(0));
 
     BOOST_REQUIRE_EQUAL((int)lua("return c:summed(1, 2, 3)"), 6);
@@ -275,7 +275,7 @@ BOOST_AUTO_TEST_CASE(methodsCanStillReturnValues)
 
 BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
 {
-    Lua lua;
+    LuaEnvironment lua;
     QFile file(LUA_DIR "anim.lua");
     lua(file);
 
@@ -288,7 +288,7 @@ BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
 
 BOOST_AUTO_TEST_CASE(stackAcceptsRawPointers)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     Counter counter;
     LuaStack stack(lua);
@@ -299,7 +299,7 @@ BOOST_AUTO_TEST_CASE(stackAcceptsRawPointers)
 
 BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua(
     "function work(a, b)"
@@ -319,7 +319,7 @@ BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
 
 BOOST_AUTO_TEST_CASE(luaCrashesWhenHandlingNonQVariantTypes)
 {
-    Lua lua;
+    LuaEnvironment lua;
 
     lua(
     "function work(a, b)"
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(luaCrashesWhenHandlingNonQVariantTypes)
 
 BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
 
     Counter counter(42);
@@ -364,7 +364,7 @@ BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
 
 BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
 {
-    Lua lua;
+    LuaEnvironment lua;
     lua.setAcceptsStackUserdata(true);
 
     lua::qvariantPusher(QVariant::Point, [](LuaStack& stack, const QVariant& source)
@@ -378,7 +378,10 @@ BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
 
     lua::qvariantStorer(QVariant::Point, [](LuaIndex& index, QVariant& sink)
     {
-        auto table = index.stack().save(index.pos());
+        // TODO Make this more concise
+        LuaReference table(index.luaState(),
+            LuaReferenceAccessible(index.luaState(), index.stack().save(index.pos()))
+        );
         sink.setValue(QPoint(
             table["x"].as<int>(),
             table["y"].as<int>()

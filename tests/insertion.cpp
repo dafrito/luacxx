@@ -2,7 +2,7 @@
 
 BOOST_AUTO_TEST_CASE(insertion)
 {
-    Lua lua;
+    LuaEnvironment lua;
     LuaStack stack(lua);
 
     lua::push(stack, true);

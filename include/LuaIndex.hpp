@@ -1,6 +1,8 @@
 #ifndef LUAINDEX_HEADER
 #define LUAINDEX_HEADER
 
+#include <lua.hpp>
+
 class LuaStack;
 
 class LuaIndex
@@ -13,6 +15,8 @@ public:
     LuaIndex(LuaStack& stack, const int pos, const int direction = 1);
 
     LuaStack& stack() const;
+    lua_State* luaState() const;
+
     int pos() const;
     LuaIndex operator++(int);
     LuaIndex& operator++();
