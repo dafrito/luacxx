@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "LuaStack.hpp"
-#include "LuaGlobalAccessible.hpp"
+#include "values.hpp"
 #include "qobject.hpp"
 
 class ModuleLoader;

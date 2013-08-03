@@ -2,7 +2,6 @@
 #define LUA_USERDATA_HPP
 
 #include <memory>
-#include "LuaUserdata.hpp"
 #include "LuaStack.hpp"
 #include "LuaEnvironment.hpp"
 #include "LuaException.hpp"

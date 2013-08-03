@@ -1,3 +1,12 @@
+#ifndef HEADER_LUA_REFERENCE_ACCESSIBLE
+#define HEADER_LUA_REFERENCE_ACCESSIBLE
+
+#include <cassert>
+
+#include <lua.hpp>
+
+#include "LuaAccessible.hpp"
+
 class LuaReferenceAccessible : public LuaAccessible
 {
 
@@ -27,6 +36,15 @@ class LuaReferenceAccessible : public LuaAccessible
 
             auto after = lua_gettop(luaState());
             assert(before == after);
+        }
+
+        RawLuaReference(lua_State* state, int ref) :
+            _state(state),
+            ref(ref)
+        {
+            lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
+            _type = lua_type(luaState(), -1);
+            lua_pop(luaState(), 1);
         }
 
         int type() const
@@ -90,6 +108,11 @@ public:
     {
     }
 
+    LuaReferenceAccessible(lua_State* state, int ref) :
+        _reference(new RawLuaReference(state, ref))
+    {
+    }
+
     LuaReferenceAccessible(const LuaReferenceAccessible& other) :
         _reference(other._reference)
     {
@@ -99,4 +122,4 @@ public:
     void store(LuaStack& stack) const;
 };
 
-typedef LuaValue<LuaReferenceAccessible> LuaReference;
+#endif // HEADER_LUA_REFERENCE_ACCESSIBLE

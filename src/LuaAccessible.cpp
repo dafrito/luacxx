@@ -1,4 +1,4 @@
-#include "LuaStack.hpp"
+#include "LuaAccessible.hpp"
 
 namespace lua {
     const LuaAccessible& retrieveAccessor(const LuaAccessible& accessible)

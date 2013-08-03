@@ -1,12 +1,11 @@
 #include "LuaStack.hpp"
 
-#include "LuaEnvironment.hpp"
 #include "LuaException.hpp"
 #include "LuaValue.hpp"
 #include "LuaUserdata.hpp"
 #include <sstream>
 
-LuaStack::LuaStack(Lua& lua) :
+LuaStack::LuaStack(lua_State* const lua) :
     _lua(lua),
     _parent(0),
     _locked(false),
@@ -18,7 +17,7 @@ LuaStack::LuaStack(Lua& lua) :
 }
 
 LuaStack::LuaStack(LuaStack& parent) :
-    _lua(parent.lua()),
+    _lua(parent.luaState()),
     _parent(&parent),
     _locked(false),
     _offset(parent.top()),
@@ -29,14 +28,9 @@ LuaStack::LuaStack(LuaStack& parent) :
     _parent->lock();
 }
 
-Lua& LuaStack::lua() const
-{
-    return _lua;
-}
-
 lua_State* LuaStack::luaState() const
 {
-    return _lua.luaState();
+    return _lua;
 }
 
 void LuaStack::grab()
@@ -362,24 +356,20 @@ int LuaStack::length(int pos)
     return length;
 }
 
-LuaValue<LuaReferenceAccessible> LuaStack::save(int pos)
+int LuaStack::save(int pos)
 {
     checkPos(pos);
 
-    auto ref = LuaReferenceAccessible(luaState());
-
     pushCopy(pos);
-    ref.store(*this);
+    auto ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
     pop();
 
-    return LuaValue<LuaReferenceAccessible>(lua(), ref);
+    return ref;
 }
 
-LuaValue<LuaReferenceAccessible> LuaStack::saveAndPop()
+int LuaStack::saveAndPop()
 {
-    auto ref = save();
-    pop();
-    return ref;
+    return luaL_ref(luaState(), LUA_REGISTRYINDEX);
 }
 
 void LuaStack::to(bool& sink, int pos)
@@ -558,18 +548,33 @@ void LuaStack::push(void* const p, const std::string& type)
     push(LuaUserdata(p, type));
 }
 
+bool environmentAcceptsStackUserdata(lua_State* lua)
+{
+    lua_pushstring(lua, "acceptsStackUserdata");
+    lua_gettable(lua, LUA_REGISTRYINDEX);
+    auto result = lua_toboolean(lua, -1);
+    lua_pop(lua, 1);
+    return result;
+}
+
 void LuaStack::push(const LuaUserdata& userdata)
 {
     assertUnlocked();
 
-    if (!userdata.managed() && userdata.isRaw() && !acceptsStackUserdata() && !lua().acceptsStackUserdata()) {
+    if (!userdata.managed()
+            && userdata.isRaw()
+            && !acceptsStackUserdata()
+            && !environmentAcceptsStackUserdata(luaState())) {
         throw std::logic_error("Stack does not accept raw pointers");
     }
 
     void* luaUserdata = lua_newuserdata(luaState(), sizeof(LuaUserdata));
     new (luaUserdata) LuaUserdata(userdata);
 
-    if (!userdata.managed() && userdata.isRaw() && acceptsStackUserdata() && !lua().acceptsStackUserdata()) {
+    if (!userdata.managed()
+            && userdata.isRaw()
+            && acceptsStackUserdata()
+            && !environmentAcceptsStackUserdata(luaState())) {
         _rawUserdata.push_back(static_cast<LuaUserdata*>(luaUserdata));
     }
 
@@ -622,7 +627,7 @@ void LuaStack::push(void(*func)(LuaStack& stack), const int closed)
     set("__gc", collectRawCallable);
     setMetatable();
 
-    pushPointer(&lua());
+    pushPointer(luaState());
 
     // Invoke this twice to move both the Lua environment and the callable pointer to the top of the stack.
     lua_insert(luaState(), -2-closed);
@@ -640,7 +645,7 @@ void LuaStack::push(const lua::LuaCallable& f, const int closed)
     }
 
     lua::push(*this, std::make_shared<lua::LuaCallable>(f));
-    pushPointer(&lua());
+    pushPointer(luaState());
 
     // Invoke this twice to move both the Lua environment and the callable pointer to the top of the stack.
     lua_insert(luaState(), -2-closed);
@@ -649,10 +654,11 @@ void LuaStack::push(const lua::LuaCallable& f, const int closed)
     push(invokeFromLua, 2 + closed);
 }
 
-void LuaStack::push(const LuaAccessible& value)
+// TODO Reenable LuaAccessible pushes
+/*void LuaStack::push(const LuaAccessible& value)
 {
     value.push(*this);
-}
+}*/
 
 void LuaStack::push(const lua::value& value)
 {
@@ -718,7 +724,7 @@ LuaStack::~LuaStack()
 int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func)
 {
     void* p = lua_touserdata(state, lua_upvalueindex(2));
-    Lua* const lua = static_cast<Lua*>(p);
+    lua_State* const lua = static_cast<lua_State*>(p);
 
     // Push all upvalues unto the stack.
     int upvalueIndex = 1;
@@ -728,7 +734,7 @@ int LuaStack::invokeFromLua(lua_State* state, const lua::LuaCallable* const func
         lua_insert(state, upvalueIndex++);
         i++;
     }
-    LuaStack stack(*lua);
+    LuaStack stack(lua);
     stack.grab();
     try {
         (*func)(stack);
@@ -835,11 +841,14 @@ LuaIndex& operator>>(LuaIndex& index, QString& sink)
     return ++index;
 }
 
+// TODO Reenable QVariant handling
+/*
 LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
 {
     lua::storeVariant(index, sink);
     return ++index;
 }
+*/
 
 namespace lua {
 

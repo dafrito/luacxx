@@ -19,6 +19,7 @@ liblua_cxx_la_SOURCES = \
 	LuaAccessible.cpp \
 	LuaReferenceAccessible.cpp \
 	LuaGlobalAccessible.cpp \
+	LuaUserdata.cpp \
 	QObjectObserver.cpp \
 	QObjectSlot.cpp \
 	types.cpp

@@ -79,21 +79,34 @@ Lua::Lua() :
 
 LuaReference Lua::newReference()
 {
-    LuaStack stack(*this);
+    LuaStack stack(luaState());
     lua::push(stack, lua::value::nil);
-    return stack.saveAndPop();
+
+    return LuaReference(
+        luaState(),
+        LuaReferenceAccessible(luaState(), stack.saveAndPop())
+    );
 }
 
 LuaReference innerInvoke(LuaStack& stack)
 {
     int funcLoc = stack.top();
     stack.invoke();
-    return stack.top() >= funcLoc ? stack.save(funcLoc) : stack.lua().newReference();
+    if (stack.top() >= funcLoc) {
+        return LuaReference(
+            stack.luaState(),
+            LuaReferenceAccessible(stack.luaState(), stack.save(funcLoc))
+        );
+    }
+    return LuaReference(
+        stack.luaState(),
+        LuaReferenceAccessible(stack.luaState())
+    );
 }
 
 LuaReference Lua::operator()(const char* runnable)
 {
-    LuaStack stack(*this);
+    LuaStack stack(luaState());
     luaL_loadstring(state, runnable);
     return innerInvoke(stack);
 }
@@ -122,7 +135,7 @@ LuaReference Lua::operator()(std::istream& stream, const std::string& name)
         throw std::runtime_error(std::string("Input stream is invalid for '") + name + "'");
     }
 
-    LuaStack stack(*this);
+    LuaStack stack(luaState());
     handleLoadValue(lua_load(state, &read_stream, &d, name.c_str()
         #if LUA_VERSION_NUM >= 502
             // Account for the extra mode parameter introduced in 5.2
@@ -140,7 +153,7 @@ LuaReference Lua::operator()(QFile& file)
         );
     }
     QtReadingData d(file);
-    LuaStack stack(*this);
+    LuaStack stack(luaState());
     handleLoadValue(lua_load(state, &read_qstream, &d, file.fileName().toUtf8().constData()
         #if LUA_VERSION_NUM >= 502
             // Account for the extra mode parameter introduced in 5.2
@@ -157,7 +170,7 @@ LuaGlobal Lua::operator[](const char* key)
 
 LuaGlobal Lua::operator[](const std::string& key)
 {
-    return LuaGlobal(*this, LuaGlobalAccessible(key));
+    return LuaGlobal(luaState(), LuaGlobalAccessible(key));
 }
 
 void Lua::addModuleLoader(ModuleLoader* const loader)
@@ -178,7 +191,9 @@ void Lua::loadModule(LuaStack& stack)
     auto moduleName = stack.as<std::string>();
     stack.clear();
 
-    Lua& lua = stack.lua();
+    // TODO Fix this module loading
+
+    /*Lua& lua = stack.lua();
 
     for (auto loader : lua._moduleLoaders) {
         if (loader->search(moduleName)) {
@@ -187,7 +202,7 @@ void Lua::loadModule(LuaStack& stack)
             }));
             return;
         }
-    }
+    }*/
 
     lua::push(stack, std::string("Unable to find module: ") + moduleName);
 }

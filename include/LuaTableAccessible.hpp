@@ -5,6 +5,7 @@
 #include <functional>
 
 #include "LuaStack.hpp"
+#include "LuaAccessible.hpp"
 
 class LuaStack;
 
@@ -51,9 +52,6 @@ public:
         // [value]
     }
 };
-
-template <class Key, class ParentAccessible>
-using LuaTableValue = LuaValue<LuaTableAccessible<Key, ParentAccessible>>;
 
 #endif // LUA_TABLE_ACCESSIBLE_HPP
 

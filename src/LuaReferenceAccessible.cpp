@@ -1,3 +1,4 @@
+#include "LuaReferenceAccessible.hpp"
 #include "LuaStack.hpp"
 
 void LuaReferenceAccessible::push(LuaStack&) const

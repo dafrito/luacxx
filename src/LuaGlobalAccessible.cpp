@@ -1,5 +1,7 @@
 #include "LuaGlobalAccessible.hpp"
 
+#include "LuaStack.hpp"
+
 LuaGlobalAccessible::LuaGlobalAccessible(const std::string& key) :
     key(key)
 {}

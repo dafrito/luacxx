@@ -1,3 +1,10 @@
+#ifndef HEADER_LUAACCESSIBLE_HPP
+#define HEADER_LUAACCESSIBLE_HPP
+
+#include <memory>
+
+class LuaStack;
+
 /**
  * Represents a method to access a value from Lua.
  *
@@ -31,4 +38,12 @@ public:
 
     virtual ~LuaAccessible() {}
 };
+
+namespace lua {
+    const LuaAccessible& retrieveAccessor(const LuaAccessible& accessible);
+    LuaAccessible& retrieveAccessor(LuaAccessible& accessible);
+    const LuaAccessible& retrieveAccessor(const std::shared_ptr<LuaAccessible>& accessible);
+} // namespace lua
+
+#endif // HEADER_LUAACCESSIBLE_HPP
 

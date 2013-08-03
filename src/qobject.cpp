@@ -3,7 +3,6 @@
 #include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
 #include "LuaValue.hpp"
-#include "LuaUserdata.hpp"
 #include "LuaException.hpp"
 #include "QObjectSlot.hpp"
 
@@ -279,7 +278,11 @@ void connectSlot(LuaStack& stack)
     auto signal = stack.as<std::string>(1);
     stack.shift();
 
-    auto slot = stack.saveAndPop();
+    // TODO Make this use a cleaner function, like, lua::as<LuaReference>
+    LuaReference slot = LuaReference(
+        stack.luaState(),
+        LuaReferenceAccessible(stack.luaState(), stack.saveAndPop())
+    );
     if (slot.typestring() != "function") {
         throw LuaException("Provided slot must be a function");
     }

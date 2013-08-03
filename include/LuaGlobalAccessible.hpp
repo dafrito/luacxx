@@ -2,7 +2,7 @@
 #define LUA_GLOBAL_ACCESSIBLE_HPP
 
 #include <string>
-#include "LuaStack.hpp"
+#include "LuaAccessible.hpp"
 
 class LuaGlobalAccessible : public LuaAccessible
 {
@@ -12,8 +12,6 @@ public:
     void push(LuaStack& stack) const;
     void store(LuaStack& stack) const;
 };
-
-typedef LuaValue<LuaGlobalAccessible> LuaGlobal;
 
 #endif // LUA_GLOBAL_ACCESSIBLE_HPP
 

@@ -2,7 +2,7 @@
 #define LUA_CXX_QOBJECTOBSERVER_HEADER
 
 #include <QObject>
-#include "LuaUserdata.hpp"
+#include "LuaStack.hpp"
 
 namespace lua {
 

@@ -8,17 +8,12 @@
 #include "LuaStack.hpp"
 #include "LuaException.hpp"
 #include "LuaTableAccessible.hpp"
+#include "LuaReferenceAccessible.hpp"
 
-// LuaValue has a default template parameter, defined in LuaStack.hpp
 template <class Accessible>
 class LuaValue
 {
-    Lua& _lua;
-
-    lua_State* luaState() const
-    {
-        return _lua.luaState();
-    }
+    lua_State* const _lua;
 
     Accessible _accessible;
 
@@ -33,12 +28,12 @@ class LuaValue
     }
 
 public:
-    LuaValue(Lua& lua, const Accessible& accessible) :
+    LuaValue(lua_State* const lua, const Accessible& accessible) :
         _lua(lua),
         _accessible(accessible)
     {}
 
-    Lua& lua()
+    lua_State* luaState() const
     {
         return _lua;
     }
@@ -128,7 +123,7 @@ public:
     }
 
     template <typename... Args>
-    LuaReference operator()(Args&&... args)
+    LuaValue<LuaReferenceAccessible> operator()(Args&&... args)
     {
         LuaStack stack(_lua);
         push(stack);
@@ -140,14 +135,19 @@ public:
             lua::push(stack, lua::value::nil);
         }
 
-        return stack.saveAndPop();
+        return LuaValue<LuaReferenceAccessible>(
+            stack.luaState(),
+            LuaReferenceAccessible(stack.luaState(), stack.saveAndPop())
+        );
     }
 
     template <typename Key>
-    LuaTableValue<Key, Accessible> operator[](Key key)
+    LuaValue<LuaTableAccessible<Key, Accessible>> operator[](Key key)
     {
         LuaTableAccessible<Key, Accessible> tableAccessor(_accessible, key);
-        return LuaValue<decltype(tableAccessor)>(lua(), tableAccessor);
+        return LuaValue<decltype(tableAccessor)>(
+            luaState(), tableAccessor
+        );
     }
 
     int length()

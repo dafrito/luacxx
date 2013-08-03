@@ -2,8 +2,8 @@
 #define LUA_STACK_ACCESSIBLE_HPP
 
 #include <lua.hpp>
-#include "LuaEnvironment.hpp"
 #include "LuaStack.hpp"
+#include "LuaAccessible.hpp"
 
 class LuaStackAccessible : public LuaAccessible
 {

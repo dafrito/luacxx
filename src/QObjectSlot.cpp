@@ -11,7 +11,7 @@ lua::QObjectSlot::QObjectSlot(QObject* const parent, const QMetaMethod& signal, 
 
 int lua::QObjectSlot::qt_metacall(QMetaObject::Call call, int id, void **arguments)
 {
-    LuaStack stack(_slot.lua());
+    LuaStack stack(_slot.luaState());
     _slot.push(stack);
 
     stack.setAcceptsStackUserdata(true);

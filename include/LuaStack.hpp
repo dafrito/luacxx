@@ -16,18 +16,11 @@
 
 #include "types.hpp"
 #include "LuaIndex.hpp"
-#include "LuaUserdata.hpp"
 #include "LuaException.hpp"
 
 class Lua;
 class LuaStack;
 class LuaUserdata;
-
-class LuaAccessible;
-class LuaReferenceAccessible;
-
-template <class Accessible>
-class LuaValue;
 
 namespace lua
 {
@@ -37,14 +30,9 @@ namespace lua
         table,
         nil
     };
-
-    const LuaAccessible& retrieveAccessor(const LuaAccessible& accessible);
-    LuaAccessible& retrieveAccessor(LuaAccessible& accessible);
-    const LuaAccessible& retrieveAccessor(const std::shared_ptr<LuaAccessible>& accessible);
 } // namespace lua
 
-#include "stack/accessible.cpp"
-#include "stack/reference.cpp"
+#include "LuaUserdata.hpp"
 
 /**
  * Represents a stack for manipulating a Lua environment.
@@ -92,7 +80,7 @@ private:
     static int invokeRawFromLua(lua_State* state);
     static int invokeFromLua(lua_State* state, const lua::LuaCallable* const func);
 
-    Lua& _lua;
+    lua_State* const _lua;
 
     LuaStack* _parent;
     bool _locked;
@@ -102,8 +90,6 @@ private:
 
     std::vector<LuaUserdata*> _rawUserdata;
     bool _acceptsStackUserdata;
-
-    lua_State* luaState() const;
 
     /**
      * Assert that the specified position is within
@@ -135,10 +121,10 @@ private:
     void assertUnlocked() const;
 
 public:
-    LuaStack(Lua& lua);
+    LuaStack(lua_State* const lua);
     LuaStack(LuaStack& stack);
 
-    Lua& lua() const;
+    lua_State* luaState() const;
 
     /**
      * Return the number of stack values that are
@@ -283,12 +269,12 @@ public:
     /**
      * Saves the value at the specified position as a reference.
      */
-    LuaReference save(int pos = -1);
+    int save(int pos = -1);
 
     /**
      * Saves and removes the topmost value.
      */
-    LuaReference saveAndPop();
+    int saveAndPop();
 
     /**
      * Pushes the global value with the specified
@@ -319,8 +305,6 @@ public:
     void setAcceptsStackUserdata(const bool accepts);
     void push(const LuaUserdata& userdata);
     void push(void* p)=delete;
-
-    void push(const LuaAccessible& value);
 
     void push(const lua::value& value);
 

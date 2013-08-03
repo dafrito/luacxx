@@ -4,6 +4,7 @@
 #include <memory>
 #include <functional>
 #include <string>
+#include <unordered_map>
 
 #include "LuaException.hpp"
 
@@ -18,30 +19,13 @@ class LuaUserdata
     std::shared_ptr<void> _data;
     void* _rawData;
     std::string _dataType;
+
+    std::unordered_map<std::string, lua::LuaCallable> _methods;
 public:
 
-    LuaUserdata(void* const rawData, const std::string& dataType, const bool manuallyManaged = false) :
-        _isRaw(true),
-        _isManaged(manuallyManaged),
-        _manager(),
-        _data(),
-        _rawData(rawData),
-        _dataType(dataType)
-    {
-    }
+    LuaUserdata(void* const rawData, const std::string& dataType, const bool manuallyManaged = false);
 
-    LuaUserdata(const std::shared_ptr<void>& data, const std::string& dataType, const bool manuallyManaged = false) :
-        _isRaw(false),
-        _isManaged(manuallyManaged),
-        _manager(),
-        _data(data),
-        _rawData(nullptr),
-        _dataType(dataType)
-    {
-        if (_isManaged) {
-            throw std::logic_error("shared_ptr userdata must not be manually managed");
-        }
-    }
+    LuaUserdata(const std::shared_ptr<void>& data, const std::string& dataType, const bool manuallyManaged = false);
 
     bool isShared() const
     {
@@ -76,6 +60,8 @@ public:
             throw LuaException("Userdata must not be accessed if it has no underlying data");
         }
     }
+
+    void addMethod(const std::string& name, const lua::LuaCallable& method);
 
     /**
      * For userdata that map to a native C++ object, this should return

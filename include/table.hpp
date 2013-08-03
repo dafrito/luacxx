@@ -8,7 +8,7 @@ namespace table {
 template <typename Table, typename Value>
 void push(Table table, Value value)
 {
-    LuaStack stack(table.lua());
+    LuaStack stack(table.luaState());
     lua::push(stack, table);
     const int len = stack.length();
     stack.set(len + 1, value);
