@@ -7,7 +7,7 @@
 
 namespace lua
 {
-    void load_file(LuaEnvironment& lua, const std::string& file)
+    void loadFile(LuaEnvironment& lua, const std::string& file)
     {
         std::ifstream f(file, std::ios::in);
         if (!f) {
@@ -16,33 +16,33 @@ namespace lua
         lua(f, file);
     }
 
-    void load_file(LuaEnvironment& lua, const QString& file)
+    void loadFile(LuaEnvironment& lua, const QString& file)
     {
-        load_file(lua, file.toStdString());
+        loadFile(lua, file.toStdString());
     }
 
-    void load_file(LuaEnvironment& lua, const char* file)
+    void loadFile(LuaEnvironment& lua, const char* file)
     {
-        load_file(lua, std::string(file));
+        loadFile(lua, std::string(file));
     }
 
-    void load_string(LuaEnvironment& lua, const std::string& input)
+    void loadString(LuaEnvironment& lua, const std::string& input)
     {
         std::istringstream stream(input);
         lua(stream, "string input");
     }
 
-    void load_string(LuaEnvironment& lua, const QString& input)
+    void loadString(LuaEnvironment& lua, const QString& input)
     {
-        load_string(lua, input.toStdString());
+        loadString(lua, input.toStdString());
     }
 
-    void load_string(LuaEnvironment& lua, const char* input)
+    void loadString(LuaEnvironment& lua, const char* input)
     {
-        load_string(lua, std::string(input));
+        loadString(lua, std::string(input));
     }
 
-    void load_dir(LuaEnvironment& lua, const QDir& dir, const bool recurse)
+    void loadDir(LuaEnvironment& lua, const QDir& dir, const bool recurse)
     {
         foreach(QFileInfo info, dir.entryInfoList(
             (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot,
@@ -53,7 +53,7 @@ namespace lua
                 QFile file(info.filePath());
                 lua(file);
             } else if (recurse && info.isDir()) {
-                load_dir(lua, info.filePath(), recurse);
+                loadDir(lua, info.filePath(), recurse);
             }
         }
     }
