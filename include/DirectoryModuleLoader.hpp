@@ -27,7 +27,7 @@ public:
     }
 
     bool search(const std::string& module);
-    void load(Lua& lua, const std::string& module);
+    void load(LuaEnvironment& lua, const std::string& module);
 };
 
 #endif // DIRECTORYMODULELOADER_HEADER

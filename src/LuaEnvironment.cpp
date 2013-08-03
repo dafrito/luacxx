@@ -62,7 +62,7 @@ int throwFromPanic(lua_State* state)
     throw LuaException(std::string("Panic from Lua: ") + msg);
 }
 
-Lua::Lua() :
+LuaEnvironment::LuaEnvironment() :
     _acceptsStackUserdata(false)
 {
     state = luaL_newstate();
@@ -74,10 +74,10 @@ Lua::Lua() :
         searchersName = "loaders";
     #endif
 
-    table::push((*this)["package"][searchersName], Lua::loadModule);
+    table::push((*this)["package"][searchersName], LuaEnvironment::loadModule);
 }
 
-LuaReference Lua::newReference()
+LuaReference LuaEnvironment::newReference()
 {
     LuaStack stack(luaState());
     lua::push(stack, lua::value::nil);
@@ -104,20 +104,20 @@ LuaReference innerInvoke(LuaStack& stack)
     );
 }
 
-LuaReference Lua::operator()(const char* runnable)
+LuaReference LuaEnvironment::operator()(const char* runnable)
 {
     LuaStack stack(luaState());
     luaL_loadstring(state, runnable);
     return innerInvoke(stack);
 }
 
-LuaReference Lua::operator()(const std::string& runnable)
+LuaReference LuaEnvironment::operator()(const std::string& runnable)
 {
     std::istringstream stream(runnable);
     return (*this)(stream, "string input");
 }
 
-void Lua::handleLoadValue(const int rv)
+void LuaEnvironment::handleLoadValue(const int rv)
 {
     switch (rv) {
         case LUA_ERRSYNTAX:
@@ -127,7 +127,7 @@ void Lua::handleLoadValue(const int rv)
     }
 }
 
-LuaReference Lua::operator()(std::istream& stream, const std::string& name)
+LuaReference LuaEnvironment::operator()(std::istream& stream, const std::string& name)
 {
     LuaReadingData d(stream);
 
@@ -145,7 +145,7 @@ LuaReference Lua::operator()(std::istream& stream, const std::string& name)
     return innerInvoke(stack);
 }
 
-LuaReference Lua::operator()(QFile& file)
+LuaReference LuaEnvironment::operator()(QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {
         throw std::runtime_error(
@@ -163,22 +163,22 @@ LuaReference Lua::operator()(QFile& file)
     return innerInvoke(stack);
 }
 
-LuaGlobal Lua::operator[](const char* key)
+LuaGlobal LuaEnvironment::operator[](const char* key)
 {
     return (*this)[std::string(key)];
 }
 
-LuaGlobal Lua::operator[](const std::string& key)
+LuaGlobal LuaEnvironment::operator[](const std::string& key)
 {
     return LuaGlobal(luaState(), LuaGlobalAccessible(key));
 }
 
-void Lua::addModuleLoader(ModuleLoader* const loader)
+void LuaEnvironment::addModuleLoader(ModuleLoader* const loader)
 {
     _moduleLoaders.push_back(loader);
 }
 
-void Lua::removeModuleLoader(ModuleLoader* const loader)
+void LuaEnvironment::removeModuleLoader(ModuleLoader* const loader)
 {
     _moduleLoaders.erase(
         std::remove(begin(_moduleLoaders), end(_moduleLoaders), loader),
@@ -186,7 +186,7 @@ void Lua::removeModuleLoader(ModuleLoader* const loader)
     );
 }
 
-void Lua::loadModule(LuaStack& stack)
+void LuaEnvironment::loadModule(LuaStack& stack)
 {
     auto moduleName = stack.as<std::string>();
     stack.clear();
@@ -207,17 +207,17 @@ void Lua::loadModule(LuaStack& stack)
     lua::push(stack, std::string("Unable to find module: ") + moduleName);
 }
 
-int Lua::internalStackSize() const
+int LuaEnvironment::internalStackSize() const
 {
     return lua_gettop(state);
 }
 
-void Lua::collectGarbage()
+void LuaEnvironment::collectGarbage()
 {
     lua_gc(state, LUA_GCCOLLECT, 0);
 }
 
-Lua::~Lua()
+LuaEnvironment::~LuaEnvironment()
 {
     lua_close(state);
 }

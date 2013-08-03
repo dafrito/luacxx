@@ -20,7 +20,7 @@ bool DirectoryModuleLoader::search(const std::string& module)
     return moduleFile.exists();
 }
 
-void DirectoryModuleLoader::load(Lua& lua, const std::string& module)
+void DirectoryModuleLoader::load(LuaEnvironment& lua, const std::string& module)
 {
     QFile moduleFile;
     resolve(moduleFile, module);

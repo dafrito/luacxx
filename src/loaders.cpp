@@ -7,7 +7,7 @@
 
 namespace lua
 {
-    void load_file(Lua& lua, const std::string& file)
+    void load_file(LuaEnvironment& lua, const std::string& file)
     {
         std::ifstream f(file, std::ios::in);
         if (!f) {
@@ -16,33 +16,33 @@ namespace lua
         lua(f, file);
     }
 
-    void load_file(Lua& lua, const QString& file)
+    void load_file(LuaEnvironment& lua, const QString& file)
     {
         load_file(lua, file.toStdString());
     }
 
-    void load_file(Lua& lua, const char* file)
+    void load_file(LuaEnvironment& lua, const char* file)
     {
         load_file(lua, std::string(file));
     }
 
-    void load_string(Lua& lua, const std::string& input)
+    void load_string(LuaEnvironment& lua, const std::string& input)
     {
         std::istringstream stream(input);
         lua(stream, "string input");
     }
 
-    void load_string(Lua& lua, const QString& input)
+    void load_string(LuaEnvironment& lua, const QString& input)
     {
         load_string(lua, input.toStdString());
     }
 
-    void load_string(Lua& lua, const char* input)
+    void load_string(LuaEnvironment& lua, const char* input)
     {
         load_string(lua, std::string(input));
     }
 
-    void load_dir(Lua& lua, const QDir& dir, const bool recurse)
+    void load_dir(LuaEnvironment& lua, const QDir& dir, const bool recurse)
     {
         foreach(QFileInfo info, dir.entryInfoList(
             (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot,

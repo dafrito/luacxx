@@ -13,7 +13,7 @@
 
 class ModuleLoader;
 
-class Lua
+class LuaEnvironment
 {
     lua_State* state;
 
@@ -25,8 +25,8 @@ class Lua
 
     static void loadModule(LuaStack& stack);
 public:
-    Lua();
-    ~Lua();
+    LuaEnvironment();
+    ~LuaEnvironment();
 
     LuaReference newReference();
 
