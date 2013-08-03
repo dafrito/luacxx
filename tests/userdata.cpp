@@ -1,6 +1,6 @@
 #include "init.hpp"
 
-#include "userdata.hpp"
+#include "qobject.hpp"
 #include "LuaStackAccessible.hpp"
 
 #include <boost/math/constants/constants.hpp>

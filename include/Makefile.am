@@ -18,6 +18,6 @@ nobase_pkginclude_HEADERS = \
 	types.hpp \
 	table.hpp \
 	LuaUserdata.hpp \
-	userdata.hpp \
+	qobject.hpp \
 	LuaIndex.hpp \
 	LuaException.hpp
