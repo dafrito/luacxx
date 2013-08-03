@@ -16,7 +16,6 @@
 
 #include "types.hpp"
 #include "LuaIndex.hpp"
-#include "LuaException.hpp"
 
 class LuaStack;
 class LuaUserdata;
