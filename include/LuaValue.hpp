@@ -75,11 +75,11 @@ public:
     template<typename T>
     operator T() const
     {
-        return as<T>();
+        return get<T>();
     }
 
     template<typename Sink>
-    Sink as() const
+    Sink get() const
     {
         Sink sink;
         to(sink);

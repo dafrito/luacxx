@@ -188,7 +188,7 @@ void LuaEnvironment::removeModuleLoader(ModuleLoader* const loader)
 
 void LuaEnvironment::loadModule(LuaStack& stack)
 {
-    auto moduleName = stack.as<std::string>();
+    auto moduleName = stack.get<std::string>();
     stack.clear();
 
     // TODO Fix this module loading

@@ -22,7 +22,8 @@ liblua_cxx_la_SOURCES = \
 	LuaUserdata.cpp \
 	QObjectObserver.cpp \
 	QObjectSlot.cpp \
-	types.cpp
+	types.cpp \
+	type/QVariant.cpp
 
 mostlyclean-local:
 	rm -f $(liblua_cxx_la_MOC_SOURCES)

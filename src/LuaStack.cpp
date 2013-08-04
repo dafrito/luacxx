@@ -91,10 +91,10 @@ std::string LuaStack::dump()
         std::string info;
         switch (type(i)) {
             case lua::type::boolean:
-                info = as<bool>(i) ? "true" : "false";
+                info = get<bool>(i) ? "true" : "false";
                 break;
             case lua::type::string:
-                info = as<std::string>(i);
+                info = get<std::string>(i);
                 break;
             case lua::type::number:
                 info = lua_tostring(luaState(), i);
@@ -313,11 +313,11 @@ std::string LuaStack::traceback(const int topLevel)
     #if LUA_VERSION_NUM >= 502
         std::string rv;
         luaL_traceback(luaState(), luaState(), NULL, topLevel);
-        rv = as<std::string>();
+        rv = get<std::string>();
         pop();
         return rv;
     #else
-        return lua()["debug"]["traceback"]("", topLevel).as<std::string>().substr(1);
+        return lua()["debug"]["traceback"]("", topLevel).get<std::string>().substr(1);
     #endif
 }
 
@@ -332,13 +332,13 @@ void LuaStack::to(const char*& sink, int pos)
 
 void LuaStack::to(std::string& sink, int pos)
 {
-    const char* str = as<const char*>(pos);
+    const char* str = get<const char*>(pos);
     sink = str;
 }
 
 void LuaStack::to(QString& sink, int pos)
 {
-    sink = QString::fromUtf8(as<const char*>(pos));
+    sink = QString::fromUtf8(get<const char*>(pos));
 }
 
 void* LuaStack::pointer(int pos)
@@ -540,7 +540,7 @@ void LuaStack::setAcceptsStackUserdata(const bool accepts)
 
 void collectUserdata(LuaStack& stack)
 {
-    LuaUserdata* userdata = stack.as<LuaUserdata*>(1);
+    LuaUserdata* userdata = stack.get<LuaUserdata*>(1);
     userdata->~LuaUserdata();
 }
 
@@ -772,7 +772,7 @@ static std::string onError(LuaStack& stack)
 {
     std::string error("An error occurred within Lua");
     if (!stack.empty()) {
-        error = stack.as<std::string>(-1);
+        error = stack.get<std::string>(-1);
     }
     if (error.find("\nstack traceback:\n") != std::string::npos) {
         // Already has a traceback, so just use it directly
@@ -809,7 +809,7 @@ void LuaStack::pushedInvoke(const int numArgs)
         case LUA_ERRERR:
             throw std::runtime_error("Lua error within error handler");
         case LUA_ERRRUN:
-            auto fullError = as<std::string>();
+            auto fullError = get<std::string>();
             auto sep = fullError.find("\nstack traceback:\n");
             if (sep != std::string::npos) {
                 auto reason = fullError.substr(0, sep);
@@ -837,13 +837,13 @@ LuaIndex& operator>>(LuaIndex& index, const char*& sink)
 
 LuaIndex& operator>>(LuaIndex& index, std::string& sink)
 {
-    sink = index.stack().as<const char*>(index.pos());
+    sink = index.stack().get<const char*>(index.pos());
     return ++index;
 }
 
 LuaIndex& operator>>(LuaIndex& index, QString& sink)
 {
-    sink = QString::fromUtf8(index.stack().as<const char*>(index.pos()));
+    sink = QString::fromUtf8(index.stack().get<const char*>(index.pos()));
     return ++index;
 }
 

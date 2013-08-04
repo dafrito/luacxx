@@ -1,6 +1,7 @@
 #include "qobject.hpp"
 
-#include "LuaEnvironment.hpp"
+#include "type/QVariant.hpp"
+
 #include "LuaStack.hpp"
 #include "LuaValue.hpp"
 #include "LuaException.hpp"
@@ -35,102 +36,6 @@ void lua::qobject(LuaStack& stack, QObject& obj)
     stack.setMetatable();
 }
 
-namespace std {
-    template<>
-    class hash<QVariant::Type>
-    {
-    public:
-        size_t operator()(const QVariant::Type& value) const
-        {
-            return static_cast<int>(value);
-        }
-    };
-}
-
-namespace {
-
-static std::unordered_map<QVariant::Type, std::function<void(LuaStack&, const QVariant&)>> variantPushers;
-static std::unordered_map<QVariant::Type, std::function<void(LuaIndex&, QVariant&)>> variantStorers;
-
-}
-
-void lua::qvariantPusher(const QVariant::Type& type, const std::function<void(LuaStack&, const QVariant&)>& mapper)
-{
-    variantPushers[type] = mapper;
-}
-
-void lua::qvariantStorer(const QVariant::Type& type, const std::function<void(LuaIndex&, QVariant&)>& mapper)
-{
-    variantStorers[type] = mapper;
-}
-
-void lua::pushVariant(LuaStack& stack, const QVariant& variant)
-{
-    switch (variant.type()) {
-    case QVariant::Invalid:
-        lua::push(stack, lua::value::nil);
-        break;
-    case QVariant::Bool:
-        lua::push(stack, variant.toBool());
-        break;
-    case QVariant::Char:
-        lua::push(stack, variant.toChar());
-        break;
-    case QVariant::Int:
-        lua::push(stack, variant.toInt());
-        break;
-    case QVariant::Double:
-    case QVariant::UInt:
-        lua::push(stack, variant.toDouble());
-        break;
-    case QVariant::String:
-        lua::push(stack, variant.toString());
-        break;
-    default:
-        auto converter = variantPushers.find(variant.type());
-        if (converter != variantPushers.end()) {
-            converter->second(stack, variant);
-        } else {
-            throw std::logic_error(std::string("QVariant type not supported: ") + variant.typeName());
-        }
-    }
-}
-
-void lua::storeVariant(LuaIndex& index, QVariant& sink)
-{
-    auto pos = index.pos();
-    LuaStack& stack = index.stack();
-    switch (sink.type()) {
-    case QVariant::Invalid:
-        sink.clear();
-        break;
-    case QVariant::Bool:
-        sink.setValue(stack.as<bool>(pos));
-        break;
-    case QVariant::Char:
-        sink.setValue(QChar(stack.as<char>(pos)));
-        break;
-    case QVariant::Int:
-    case QVariant::UInt:
-        sink.setValue(stack.as<int>(pos));
-        break;
-    case QVariant::Double:
-        sink.setValue(stack.as<double>(pos));
-        break;
-    case QVariant::String:
-        sink.setValue(stack.as<QString>(pos));
-        break;
-    default:
-        auto converter = variantStorers.find(sink.type());
-        if (converter != variantStorers.end()) {
-            converter->second(index, sink);
-        } else {
-            throw std::logic_error(std::string("QVariant type not supported: ") + sink.typeName());
-        }
-    }
-
-}
-
 namespace {
 
 bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
@@ -138,7 +43,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
     void* validatingUserdata = stack.pointer(1);
     stack.shift();
 
-    auto userdata = stack.as<LuaUserdata*>(1);
+    auto userdata = stack.get<LuaUserdata*>(1);
     if (!userdata) {
         goto fail;
     }
@@ -246,7 +151,7 @@ void connectSlot(LuaStack& stack)
     QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
     stack.shift();
 
-    auto userdata = stack.as<LuaUserdata*>(1);
+    auto userdata = stack.get<LuaUserdata*>(1);
     if (!userdata) {
         throw LuaException("Method must be invoked with a valid userdata");
     }
@@ -275,10 +180,10 @@ void connectSlot(LuaStack& stack)
     if (stack.typestring(1) != "string") {
         throw LuaException("signal must be a string");
     }
-    auto signal = stack.as<std::string>(1);
+    auto signal = stack.get<std::string>(1);
     stack.shift();
 
-    // TODO Make this use a cleaner function, like, lua::as<LuaReference>
+    // TODO Make this use a cleaner function, like, lua::get<LuaReference>
     LuaReference slot = LuaReference(
         stack.luaState(),
         LuaReferenceAccessible(stack.luaState(), stack.saveAndPop())
@@ -330,8 +235,8 @@ void callMethod(LuaStack& stack)
     QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
     stack.shift();
 
-    auto name = stack.as<const char*>(1);
-    auto userdata = stack.as<LuaUserdata*>(2);
+    auto name = stack.get<const char*>(1);
+    auto userdata = stack.get<LuaUserdata*>(2);
     if (!userdata) {
         throw LuaException("Method must be invoked with a valid userdata");
     }

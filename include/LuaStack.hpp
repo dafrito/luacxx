@@ -256,7 +256,7 @@ public:
     void to(LuaUserdata*& sink, int pos = -1);
 
     template <class Sink>
-    Sink as(int pos = -1);
+    Sink get(int pos = -1);
 
     void* pointer(int pos);
 
@@ -411,6 +411,64 @@ public:
     ~LuaStack();
 };
 
+namespace lua {
+
+/**
+ * Retrieves a C++ value from Lua at the specified stack position.
+ *
+ * Provide an implementation of this class if you want your types to
+ * support retrieval in this way.
+ *
+ * It's recommended, though not required, to have this extraction
+ * symmetric with its insertion.
+ */
+template <class Source>
+struct Getter
+{
+    static Source get(const LuaIndex& index)
+    {
+        return index.stack().get<Source>(index.pos());
+    }
+};
+
+/**
+ * Use the specified C++ value as a sink for the Lua value at the
+ * specified stack position. This is especially useful if it doesn't
+ * make sense for an object to be created from nothing, or if the sink
+ * has relevant state that will affect the type of extraction. For
+ * instance, a QVariant's type will be used to retrieve an object of
+ * that type.
+ */
+template <class Source>
+struct Storer
+{
+    static void store(const LuaIndex& index, Source& sink)
+    {
+        index.stack().to(sink, index.pos());
+    }
+};
+
+/**
+ * Push the specified C++ value onto the stack.
+ *
+ * Provide an implementation of this class if you want clean insertion,
+ * such as is done with method calls and stack manipulation.
+ *
+ * It's recommended to also implement an extraction operator that is
+ * symmetric with this implementation, though sometimes this is not
+ * practical.
+ */
+template <class Source>
+struct Pusher
+{
+    static void push(LuaStack& stack, const Source& value)
+    {
+        stack.push(value);
+    }
+};
+
+} // namespace lua
+
 namespace {
     template <typename T>
     struct remove_qualifiers
@@ -434,16 +492,6 @@ namespace {
 #include "stack/userdata.cpp"
 
 namespace lua {
-
-// Push primitive values
-template <class Source>
-struct Pusher
-{
-    static void push(LuaStack& stack, const Source& value)
-    {
-        stack.push(value);
-    }
-};
 
 // Push values using a pusher
 template <typename Source,
@@ -583,9 +631,9 @@ void pushAll(LuaStack& stack, Arg&& arg, Values&&... values)
 } // namespace lua
 
 template <class Sink>
-Sink LuaStack::as(int pos)
+Sink LuaStack::get(int pos)
 {
-    return lua::as<Sink>(LuaIndex(*this, pos));
+    return lua::get<Sink>(LuaIndex(*this, pos));
 }
 
 /**
@@ -602,7 +650,7 @@ LuaStack& operator>>(LuaStack& stack, Sink& sink)
 template <class Sink>
 LuaIndex& operator>>(LuaIndex& index, Sink& sink)
 {
-    sink = lua::as<Sink>(index);
+    sink = lua::get<Sink>(index);
     return ++index;
 }
 
@@ -618,7 +666,7 @@ LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
 
 LuaIndex& operator>>(LuaIndex& index, std::string& sink);
 LuaIndex& operator>>(LuaIndex& index, QString& sink);
-LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
+//LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);

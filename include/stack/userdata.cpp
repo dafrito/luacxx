@@ -39,22 +39,20 @@ namespace lua {
         }
     };
 
-    // Handle primitive types
+    // Handle non-userdata types
     template <typename Sink>
     typename std::enable_if<
         !std::is_reference<Sink>::value && !isUserdataType<Sink>::value,
         Sink
     >::type
-    as(const LuaIndex& index)
+    get(const LuaIndex& index)
     {
-        typename std::remove_const<Sink>::type sink;
-        index.stack().to(sink, index.pos());
-        return sink;
+        return Getter<Sink>::get(index);
     }
 
     template <typename Sink, typename std::enable_if<
         std::is_same<typename std::remove_reference<Sink>::type, LuaStack>::value, int>::type = 0>
-    LuaStack& as(const LuaIndex& index)
+    LuaStack& get(const LuaIndex& index)
     {
         // This bug typically crops up when we mistakenly try to treat a void(LuaStack&) function as an
         // arbitrary function.
@@ -75,7 +73,7 @@ namespace lua {
 
         static LuaUserdata* getUserdataObject(const LuaIndex& index)
         {
-            LuaUserdata* const userdata(index.stack().as<LuaUserdata*>(index.pos()));
+            LuaUserdata* const userdata(index.stack().get<LuaUserdata*>(index.pos()));
             if (!userdata) {
                 std::stringstream msg;
                 msg << "Userdata of type '" << expectedName() << "' must be provided at position "
@@ -98,7 +96,7 @@ namespace lua {
         static typename std::enable_if<
                 std::is_pointer<Sink>::value,
                 Target*>::type
-        as(const LuaIndex& index)
+        get(const LuaIndex& index)
         {
             //std::cout << "Converting to raw pointer" << std::endl;
             return static_cast<Target*>(getUserdataObject(index)->rawData());
@@ -109,10 +107,10 @@ namespace lua {
         static typename std::enable_if<
                 std::is_same<Sink, Target>::value,
                 Target>::type
-        as(const LuaIndex& index)
+        get(const LuaIndex& index)
         {
             //std::cout << "Converting to value" << std::endl;
-            return Sink(as<Target&>(index));
+            return Sink(get<Target&>(index));
         }
 
         // Handle shared_ptrs
@@ -121,7 +119,7 @@ namespace lua {
                 !std::is_pointer<Sink>::value && std::is_constructible<Sink, std::shared_ptr<Target>>::value,
                 std::shared_ptr<Target>
         >::type
-        as(const LuaIndex& index)
+        get(const LuaIndex& index)
         {
             //std::cout << "Converting to shared_ptr" << std::endl;
             LuaUserdata* userdata = getUserdataObject(index);
@@ -136,7 +134,7 @@ namespace lua {
         static typename std::enable_if<
             std::is_reference<Sink>::value,
             Target&>::type
-        as(const LuaIndex& index)
+        get(const LuaIndex& index)
         {
             //std::cout << "Converting to reference" << std::endl;
             LuaUserdata* userdata = getUserdataObject(index);
@@ -157,9 +155,9 @@ namespace lua {
             && !std::is_constructible<typename std::remove_reference<Sink>::type, std::shared_ptr<typename isUserdataType<Sink>::type>>::value,
         Sink
     >::type
-    as(const LuaIndex& index)
+    get(const LuaIndex& index)
     {
-        return UserdataConverter<typename isUserdataType<Sink>::type>::template as<Sink>(index);
+        return UserdataConverter<typename isUserdataType<Sink>::type>::template get<Sink>(index);
     }
 
     // Handle userdata shared_ptr's
@@ -169,9 +167,9 @@ namespace lua {
             && std::is_constructible<typename std::remove_reference<Sink>::type, std::shared_ptr<typename isUserdataType<Sink>::type>>::value,
         std::shared_ptr<typename isUserdataType<Sink>::type>
     >::type
-    as(const LuaIndex& index)
+    get(const LuaIndex& index)
     {
-        return UserdataConverter<typename isUserdataType<Sink>::type>::template as<Sink>(index);
+        return UserdataConverter<typename isUserdataType<Sink>::type>::template get<Sink>(index);
     }
 
     // Handle const references by returning a value
@@ -180,9 +178,9 @@ namespace lua {
         std::is_reference<Sink>::value && !isUserdataType<Sink>::value && std::is_const<typename std::remove_reference<Sink>::type>::value,
         typename remove_qualifiers<Sink>::type
     >::type
-    as(const LuaIndex& index)
+    get(const LuaIndex& index)
     {
-        return as<typename remove_qualifiers<Sink>::type>(index);
+        return get<typename remove_qualifiers<Sink>::type>(index);
     }
 
 } // namespace lua

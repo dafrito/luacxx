@@ -4,6 +4,9 @@ nobase_pkginclude_HEADERS = \
 	LuaStack.hpp \
 	stack/invocation.cpp \
 	stack/userdata.cpp \
+	type/QVariant.hpp \
+	type/QString.hpp \
+	type/QChar.hpp \
 	insertion.hpp \
 	LuaValue.hpp \
 	LuaGlobalAccessible.hpp \

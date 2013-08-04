@@ -12,12 +12,12 @@ namespace
                         // Non-references are fine
                         !std::is_reference<Arg>::value ||
                         // References to references are fine
-                        std::is_reference<decltype(lua::as<Arg>(index++))>::value ||
+                        std::is_reference<decltype(lua::get<Arg>(index++))>::value ||
                         // References to const are fine
                         std::is_const<typename std::remove_reference<Arg>::type>::value,
                 "Provided function must not use non-const lvalue references to refer to temporary objects");
             Invocator<Callee, RV, Remaining...>::template apply<Rest..., Arg>(
-                index, func, rest..., lua::as<Arg>(index++)
+                index, func, rest..., lua::get<Arg>(index++)
             );
         }
     };
