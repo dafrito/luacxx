@@ -363,7 +363,6 @@ int LuaStack::save(int pos)
 
     pushCopy(pos);
     auto ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
-    pop();
 
     return ref;
 }
