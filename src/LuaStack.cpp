@@ -825,18 +825,6 @@ LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink)
     return ++index;
 }
 
-LuaIndex& operator>>(LuaIndex& index, const char*& sink)
-{
-    index.stack().to(sink, index.pos());
-    return ++index;
-}
-
-LuaIndex& operator>>(LuaIndex& index, std::string& sink)
-{
-    sink = index.stack().get<const char*>(index.pos());
-    return ++index;
-}
-
 namespace lua {
 
 void push(LuaStack& stack, void (*callable)(LuaStack&), const int closed)
