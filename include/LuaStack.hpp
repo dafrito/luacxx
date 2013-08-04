@@ -1,5 +1,5 @@
-#ifndef HEADER_LUASTACK_HPP
-#define HEADER_LUASTACK_HPP
+#ifndef LUA_CXX_LUASTACK_HPP
+#define LUA_CXX_LUASTACK_HPP
 
 #include <memory>
 #include <string>
@@ -748,4 +748,4 @@ void LuaStack::pushedSet(K key, int tablePos)
     pushedSet(tablePos);
 }
 
-#endif
+#endif // LUA_CXX_LUASTACK_HPP
