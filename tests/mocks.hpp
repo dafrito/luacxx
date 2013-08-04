@@ -98,7 +98,7 @@ public slots:
     void addAll(LuaStack& stack)
     {
         while (!stack.empty()) {
-            value += stack.as<decltype(value)>(1);
+            value += stack.get<decltype(value)>(1);
             stack.shift();
         }
     }
@@ -109,7 +109,7 @@ public slots:
         // our caller cleans everything up for us.
         auto total = getValue();
         for (unsigned int i = 0; i < stack.size(); ++i) {
-            total += stack.as<int>(i + 1);
+            total += stack.get<int>(i + 1);
         }
         return total;
     }

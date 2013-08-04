@@ -1,5 +1,7 @@
 #include "init.hpp"
 
+#include "type/QString.hpp"
+
 namespace {
 
 int addToMagicNumber(int v)
@@ -19,8 +21,8 @@ double addBonanza(int a, long b, float c, double d, short e)
 
 void luaAdd(LuaStack& stack)
 {
-    auto a = stack.as<int>(1);
-    auto b = stack.as<int>(2);
+    auto a = stack.get<int>(1);
+    auto b = stack.get<int>(2);
     stack.clear();
     stack << a + b;
 }
@@ -41,7 +43,7 @@ int subtract(int a, int b)
 
 int semiManaged(LuaStack& stack)
 {
-    return stack.as<int>(1) + stack.as<int>(2);
+    return stack.get<int>(1) + stack.get<int>(2);
 }
 
 } // namespace anonymous
@@ -96,7 +98,7 @@ BOOST_AUTO_TEST_CASE(testLuaCallsAZeroParamFunction)
     lua[name] = getMagicNumber;
     BOOST_CHECK_EQUAL("function", lua[name].typestring().c_str());
     lua::loadString(lua, std::string("Bar = ") + name + "()");
-    BOOST_CHECK_EQUAL(lua["Bar"].as<int>(), 42);
+    BOOST_CHECK_EQUAL(lua["Bar"].get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCallsAOneParameterFunction)
@@ -216,8 +218,8 @@ BOOST_AUTO_TEST_CASE(dualReturnValuesUseTheFirst)
 {
     LuaEnvironment lua;
     QFile falseFile(LUA_DIR "returnfalse.lua");
-    BOOST_CHECK_EQUAL(lua(falseFile).as<bool>(), false);
+    BOOST_CHECK_EQUAL(lua(falseFile).get<bool>(), false);
 
     QFile trueFile(LUA_DIR "returntrue.lua");
-    BOOST_CHECK_EQUAL(lua(trueFile).as<bool>(), true);
+    BOOST_CHECK_EQUAL(lua(trueFile).get<bool>(), true);
 }

@@ -1,5 +1,9 @@
 #include "init.hpp"
 
+#include "type/QString.hpp"
+#include "type/QVariant.hpp"
+#include "type/QChar.hpp"
+
 BOOST_AUTO_TEST_CASE(testLuaStackManagesItOwnStack)
 {
     LuaEnvironment lua;
@@ -27,7 +31,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanReplaceValues)
     s << 42 << 24;
     s.replace(-2);
     BOOST_REQUIRE_EQUAL(1, s.size());
-    BOOST_REQUIRE_EQUAL(s.as<int>(), 24);
+    BOOST_REQUIRE_EQUAL(s.get<int>(), 24);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaStackCanSwapValues)
@@ -39,9 +43,9 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanSwapValues)
 
     s.swap();
     // Stack is now [2, 1]
-    BOOST_REQUIRE_EQUAL(s.as<int>(), 1);
+    BOOST_REQUIRE_EQUAL(s.get<int>(), 1);
     s.pop();
-    BOOST_REQUIRE_EQUAL(s.as<int>(), 2);
+    BOOST_REQUIRE_EQUAL(s.get<int>(), 2);
     s.pop();
 }
 
@@ -60,10 +64,10 @@ BOOST_AUTO_TEST_CASE(luaStackCanBeComparedToValues)
     s << 42;
 
     // Truthy tests
-    BOOST_REQUIRE_EQUAL(s.as<int>(), 42);
+    BOOST_REQUIRE_EQUAL(s.get<int>(), 42);
 
     // Falsy tests
-    BOOST_REQUIRE(43 != s.as<int>());
+    BOOST_REQUIRE(43 != s.get<int>());
 }
 
 BOOST_AUTO_TEST_CASE(testLuaStackHandlesNilValuesProperly)
@@ -92,7 +96,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanBeDirectlyCastToAValue)
     LuaEnvironment lua;
     LuaStack s(lua);
     s << 42;
-    BOOST_REQUIRE(s.as<int>() == 42);
+    BOOST_REQUIRE(s.get<int>() == 42);
 }
 
 BOOST_AUTO_TEST_CASE(testStackSupportsIndexing)
@@ -127,7 +131,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackSetsANumber)
     // number() returns a double, instead of the integer
     // that we originally passed.
     s.setGlobal("No", 42);
-    BOOST_REQUIRE_EQUAL(s.global("No").as<int>(), 42);
+    BOOST_REQUIRE_EQUAL(s.global("No").get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(testYouCanPushTables)
@@ -166,7 +170,7 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
     LuaStack s(lua);
     QChar i('c');
     s << i;
-    QChar o(s.as<char>());
+    QChar o(s.get<char>());
 
     BOOST_CHECK_EQUAL(o.toLatin1(), i.toLatin1());
     BOOST_CHECK(i == o);
@@ -181,8 +185,8 @@ BOOST_AUTO_TEST_CASE(testLuaHandlesQVariants)
 
 static void receive(LuaStack& stack)
 {
-    BOOST_REQUIRE_EQUAL(stack.as<const char*>(1), "getValue");
-    BOOST_REQUIRE_EQUAL(stack.as<int>(2), 2);
+    BOOST_REQUIRE_EQUAL(stack.get<const char*>(1), "getValue");
+    BOOST_REQUIRE_EQUAL(stack.get<int>(2), 2);
 }
 
 BOOST_AUTO_TEST_CASE(closuresHandleStringsProperly)
@@ -206,9 +210,9 @@ BOOST_AUTO_TEST_CASE(stackSetsATableValue)
     // We don't repush global because that table should
     // already be at the top of the stack; only the key
     // and value were removed
-    BOOST_REQUIRE_EQUAL(42, stack.get("a").as<int>());
+    BOOST_REQUIRE_EQUAL(42, stack.get("a").get<int>());
     stack.pop();
-    BOOST_REQUIRE_EQUAL(true, stack.get("b").as<bool>());
+    BOOST_REQUIRE_EQUAL(true, stack.get("b").get<bool>());
 }
 
 BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
@@ -216,7 +220,7 @@ BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
     LuaEnvironment lua;
     lua("c = {f = 42};");
     LuaStack stack(lua);
-    BOOST_REQUIRE_EQUAL(stack.global("c").get("f").as<int>(), 42);
+    BOOST_REQUIRE_EQUAL(stack.global("c").get("f").get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(cRetrievesNestedPropertiesWithLuaStack)
@@ -224,7 +228,7 @@ BOOST_AUTO_TEST_CASE(cRetrievesNestedPropertiesWithLuaStack)
     LuaEnvironment lua;
     lua("d = {e = {f = 42} };");
     LuaStack stack(lua);
-    BOOST_REQUIRE_EQUAL(stack.global("d").get("e").get("f").as<int>(), 42);
+    BOOST_REQUIRE_EQUAL(stack.global("d").get("e").get("f").get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(cRetrievesDeeplyNestedPropertiesWithLuaStack)
@@ -232,7 +236,7 @@ BOOST_AUTO_TEST_CASE(cRetrievesDeeplyNestedPropertiesWithLuaStack)
     LuaEnvironment lua;
     lua("c = {d = {e = {f = 42} } };");
     LuaStack stack(lua);
-    BOOST_REQUIRE_EQUAL(stack.global("c").get("d").get("e").get("f").as<int>(), 42);
+    BOOST_REQUIRE_EQUAL(stack.global("c").get("d").get("e").get("f").get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(nestedInvocations)
@@ -244,10 +248,10 @@ BOOST_AUTO_TEST_CASE(nestedInvocations)
     });
 
     lua["foo"] = std::function<QString(const QString&)>([&](const QString& internal) {
-        return internal + QString("foo") + lua["bar"]().as<QString>();
+        return internal + QString("foo") + lua["bar"]().get<QString>();
     });
 
-    BOOST_REQUIRE_EQUAL(lua("return foo('lua')").as<const char*>(), "luafoobar");
+    BOOST_REQUIRE_EQUAL(lua("return foo('lua')").get<const char*>(), "luafoobar");
 }
 
 BOOST_AUTO_TEST_CASE(throwAnError)
@@ -282,7 +286,7 @@ BOOST_AUTO_TEST_CASE(luaExceptionIsCatchableWithinLua)
 
     lua("result = not pcall(thrower);");
 
-    BOOST_CHECK_EQUAL(lua["result"].as<bool>(), true);
+    BOOST_CHECK_EQUAL(lua["result"].get<bool>(), true);
 }
 
 struct Wrapper {
@@ -350,5 +354,5 @@ BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
 
     worker(42);
     BOOST_CHECK_EQUAL(lua["foo"].typestring(), "number");
-    BOOST_CHECK_EQUAL(lua["foo"].as<int>(), 42);
+    BOOST_CHECK_EQUAL(lua["foo"].get<int>(), 42);
 }

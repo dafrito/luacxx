@@ -31,7 +31,7 @@ struct Getter<QString>
 {
     static QString get(const LuaIndex& index)
     {
-        return QString::fromStdString(lua::get<std::string>(index));
+        return QString::fromUtf8(lua::get<const char*>(index));
     }
 };
 

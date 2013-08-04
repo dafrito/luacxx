@@ -252,7 +252,6 @@ public:
     void to(lua_Number& sink, int pos = -1);
     void to(const char*& sink, int pos = -1);
     void to(std::string& sink, int pos = -1);
-    void to(QString& sink, int pos = -1);
     void to(LuaUserdata*& sink, int pos = -1);
 
     template <class Sink>
@@ -414,6 +413,23 @@ public:
 namespace lua {
 
 /**
+ * Use the specified C++ value as a sink for the Lua value at the
+ * specified stack position. This is especially useful if it doesn't
+ * make sense for an object to be created from nothing, or if the sink
+ * has relevant state that will affect the type of extraction. For
+ * instance, a QVariant's type will be used to retrieve an object of
+ * that type.
+ */
+template <class Sink>
+struct Storer
+{
+    static void store(const LuaIndex& index, Sink& sink)
+    {
+        index.stack().to(sink, index.pos());
+    }
+};
+
+/**
  * Retrieves a C++ value from Lua at the specified stack position.
  *
  * Provide an implementation of this class if you want your types to
@@ -427,24 +443,9 @@ struct Getter
 {
     static Source get(const LuaIndex& index)
     {
-        return index.stack().get<Source>(index.pos());
-    }
-};
-
-/**
- * Use the specified C++ value as a sink for the Lua value at the
- * specified stack position. This is especially useful if it doesn't
- * make sense for an object to be created from nothing, or if the sink
- * has relevant state that will affect the type of extraction. For
- * instance, a QVariant's type will be used to retrieve an object of
- * that type.
- */
-template <class Source>
-struct Storer
-{
-    static void store(const LuaIndex& index, Source& sink)
-    {
-        index.stack().to(sink, index.pos());
+        Source sink;
+        lua::Storer<Source>::store(index, sink);
+        return sink;
     }
 };
 
@@ -492,6 +493,15 @@ namespace {
 #include "stack/userdata.cpp"
 
 namespace lua {
+
+template <class Sink,
+    typename std::enable_if<
+        !isUserdataType<Sink>::value, int
+    >::type = 0>
+void store(const LuaIndex& index, Sink& sink)
+{
+    Storer<Sink>::store(index, sink);
+}
 
 // Push values using a pusher
 template <typename Source,
@@ -650,7 +660,7 @@ LuaStack& operator>>(LuaStack& stack, Sink& sink)
 template <class Sink>
 LuaIndex& operator>>(LuaIndex& index, Sink& sink)
 {
-    sink = lua::get<Sink>(index);
+    lua::store<Sink>(index, sink);
     return ++index;
 }
 
@@ -660,7 +670,7 @@ template <class Sink>
 LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
 {
     LuaIndex realIndex(index);
-    realIndex >> sink;
+    lua::store<Sink>(realIndex, sink);
     return realIndex;
 }
 

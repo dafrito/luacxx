@@ -43,10 +43,7 @@ public:
         return _acceptsStackUserdata;
     }
 
-    void setAcceptsStackUserdata(const bool accepts)
-    {
-        _acceptsStackUserdata = accepts;
-    }
+    void setAcceptsStackUserdata(const bool accepts);
 
     void addModuleLoader(ModuleLoader* const loader);
     void removeModuleLoader(ModuleLoader* const loader);

@@ -183,4 +183,13 @@ namespace lua {
         return get<typename remove_qualifiers<Sink>::type>(index);
     }
 
+    template <class Sink,
+        typename std::enable_if<
+            isUserdataType<Sink>::value, int
+        >::type = 0>
+    void store(const LuaIndex& index, Sink& sink)
+    {
+        sink = get<Sink>(index);
+    }
+
 } // namespace lua

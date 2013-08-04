@@ -77,6 +77,14 @@ LuaEnvironment::LuaEnvironment() :
     table::push((*this)["package"][searchersName], LuaEnvironment::loadModule);
 }
 
+void LuaEnvironment::setAcceptsStackUserdata(const bool accepts)
+{
+    _acceptsStackUserdata = accepts;
+    lua_pushstring(luaState(), "acceptsStackUserdata");
+    lua_pushboolean(luaState(), accepts);
+    lua_settable(luaState(), LUA_REGISTRYINDEX);
+}
+
 LuaReference LuaEnvironment::newReference()
 {
     LuaStack stack(luaState());

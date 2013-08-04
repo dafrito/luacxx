@@ -336,11 +336,6 @@ void LuaStack::to(std::string& sink, int pos)
     sink = str;
 }
 
-void LuaStack::to(QString& sink, int pos)
-{
-    sink = QString::fromUtf8(get<const char*>(pos));
-}
-
 void* LuaStack::pointer(int pos)
 {
     checkPos(pos);
@@ -554,6 +549,8 @@ void LuaStack::push(void* const p, const std::string& type)
     push(LuaUserdata(p, type));
 }
 
+// This should stay in sync with how LuaEnvironment sets this value. It's
+// a wart, admittedly, to have them separated.
 bool environmentAcceptsStackUserdata(lua_State* lua)
 {
     lua_pushstring(lua, "acceptsStackUserdata");

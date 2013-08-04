@@ -3,6 +3,10 @@
 #include "qobject.hpp"
 #include "LuaStackAccessible.hpp"
 
+#include "type/QString.hpp"
+#include "type/QVariant.hpp"
+#include "type/QChar.hpp"
+
 #include <boost/math/constants/constants.hpp>
 using namespace boost::math;
 
@@ -69,7 +73,7 @@ BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
     lua["counter"] = counter;
     lua("bar = counter.value");
 
-    BOOST_REQUIRE_EQUAL(lua["bar"].as<int>(), 42);
+    BOOST_REQUIRE_EQUAL(lua["bar"].get<int>(), 42);
 }
 
 std::shared_ptr<Counter> makeCounter(LuaStack& stack)
@@ -78,9 +82,9 @@ std::shared_ptr<Counter> makeCounter(LuaStack& stack)
     case 0:
         return std::make_shared<Counter>();
     case 1:
-        return std::make_shared<Counter>(stack.as<int>(1));
+        return std::make_shared<Counter>(stack.get<int>(1));
     default:
-        return std::make_shared<Counter>(stack.as<int>(1) + stack.as<int>(2));
+        return std::make_shared<Counter>(stack.get<int>(1) + stack.get<int>(2));
     }
 }
 
@@ -95,7 +99,7 @@ BOOST_AUTO_TEST_CASE(luaDoesntPrematurelyCollectSharedPtrs)
 
     lua("font = Rainback.MakeCounter(42)");
 
-    BOOST_CHECK_EQUAL(lua("return font.value").as<int>(), 42);
+    BOOST_CHECK_EQUAL(lua("return font.value").get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
@@ -156,14 +160,14 @@ BOOST_AUTO_TEST_CASE(luaCanPassBackCxxValues)
     BOOST_CHECK_EQUAL(counter.getValue(), 42);
     lua("receivePtr(counter)");
     BOOST_CHECK_EQUAL(counter.getValue(), 24);
-    BOOST_CHECK_EQUAL(lua("return receiveConstPtr(counter)").as<int>(), 24);
+    BOOST_CHECK_EQUAL(lua("return receiveConstPtr(counter)").get<int>(), 24);
 
     counter.setValue(42);
 
     BOOST_CHECK_EQUAL(counter.getValue(), 42);
     lua("receiveRef(counter)");
     BOOST_CHECK_EQUAL(counter.getValue(), 24);
-    BOOST_CHECK_EQUAL(lua("return receiveConstRef(counter)").as<int>(), 24);
+    BOOST_CHECK_EQUAL(lua("return receiveConstRef(counter)").get<int>(), 24);
 }
 
 BOOST_AUTO_TEST_CASE(throwLuaExceptionOnLuaProblems)
@@ -376,15 +380,15 @@ BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
         stack.set("y", point.y());
     });
 
-    lua::qvariantStorer(QVariant::Point, [](LuaIndex& index, QVariant& sink)
+    lua::qvariantStorer(QVariant::Point, [](const LuaIndex& index, QVariant& sink)
     {
         // TODO Make this more concise
         LuaReference table(index.luaState(),
             LuaReferenceAccessible(index.luaState(), index.stack().save(index.pos()))
         );
         sink.setValue(QPoint(
-            table["x"].as<int>(),
-            table["y"].as<int>()
+            table["x"].get<int>(),
+            table["y"].get<int>()
         ));
     });
 
@@ -410,6 +414,6 @@ BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
 
     counter.setValue(23);
 
-    BOOST_CHECK_EQUAL(lua["foo"]["x"].as<int>(), 85);
-    BOOST_CHECK_EQUAL(lua["foo"]["y"].as<int>(), 34);
+    BOOST_CHECK_EQUAL(lua["foo"]["x"].get<int>(), 85);
+    BOOST_CHECK_EQUAL(lua["foo"]["y"].get<int>(), 34);
 }
