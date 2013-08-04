@@ -837,21 +837,6 @@ LuaIndex& operator>>(LuaIndex& index, std::string& sink)
     return ++index;
 }
 
-LuaIndex& operator>>(LuaIndex& index, QString& sink)
-{
-    sink = QString::fromUtf8(index.stack().get<const char*>(index.pos()));
-    return ++index;
-}
-
-// TODO Reenable QVariant handling
-/*
-LuaIndex& operator>>(LuaIndex& index, QVariant& sink)
-{
-    lua::storeVariant(index, sink);
-    return ++index;
-}
-*/
-
 namespace lua {
 
 void push(LuaStack& stack, void (*callable)(LuaStack&), const int closed)

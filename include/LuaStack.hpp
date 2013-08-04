@@ -8,9 +8,7 @@
 #include <type_traits>
 #include <iostream>
 #include <cassert>
-
-#include <QString>
-#include <QVariant>
+#include <vector>
 
 #include <lua.hpp>
 
@@ -675,8 +673,6 @@ LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
 }
 
 LuaIndex& operator>>(LuaIndex& index, std::string& sink);
-LuaIndex& operator>>(LuaIndex& index, QString& sink);
-//LuaIndex& operator>>(LuaIndex& index, QVariant& sink);
 
 LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
 LuaIndex& operator>>(LuaIndex& index, const char*& sink);
