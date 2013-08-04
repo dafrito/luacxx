@@ -1,8 +1,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([lua-cxx], [1.2.1], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
-AC_SUBST([PACKAGE_RELEASE], [5])
+AC_INIT([lua-cxx], [2.0.0], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
+AC_SUBST([PACKAGE_RELEASE], [6])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/LuaEnvironment.cpp])
 AC_CONFIG_HEADERS([src/config.h])
