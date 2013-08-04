@@ -23,7 +23,7 @@ class LuaEnvironment
 
     void handleLoadValue(const int rv);
 
-    static void loadModule(LuaStack& stack);
+    static void loadModule(LuaEnvironment& lua, LuaStack& stack);
 public:
     LuaEnvironment();
     ~LuaEnvironment();

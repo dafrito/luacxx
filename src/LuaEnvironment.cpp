@@ -74,7 +74,9 @@ LuaEnvironment::LuaEnvironment() :
         searchersName = "loaders";
     #endif
 
-    table::push((*this)["package"][searchersName], LuaEnvironment::loadModule);
+    table::push((*this)["package"][searchersName], std::function<void(LuaStack&)>([this](LuaStack& stack) {
+        LuaEnvironment::loadModule(*this, stack);
+    }));
 }
 
 void LuaEnvironment::setAcceptsStackUserdata(const bool accepts)
@@ -194,14 +196,10 @@ void LuaEnvironment::removeModuleLoader(ModuleLoader* const loader)
     );
 }
 
-void LuaEnvironment::loadModule(LuaStack& stack)
+void LuaEnvironment::loadModule(LuaEnvironment& lua, LuaStack& stack)
 {
     auto moduleName = stack.get<std::string>();
     stack.clear();
-
-    // TODO Fix this module loading
-
-    /*Lua& lua = stack.lua();
 
     for (auto loader : lua._moduleLoaders) {
         if (loader->search(moduleName)) {
@@ -210,7 +208,7 @@ void LuaEnvironment::loadModule(LuaStack& stack)
             }));
             return;
         }
-    }*/
+    }
 
     lua::push(stack, std::string("Unable to find module: ") + moduleName);
 }
