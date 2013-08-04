@@ -670,7 +670,7 @@ template <class Sink>
 LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
 {
     LuaIndex realIndex(index);
-    lua::store<Sink>(realIndex, sink);
+    realIndex >> sink;
     return realIndex;
 }
 
