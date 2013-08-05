@@ -116,8 +116,7 @@ namespace lua
 
     void loadString(LuaStack& stack, const char* input)
     {
-        luaL_loadstring(stack.luaState(), input);
-        // TODO Handle load value
+        handleLoadValue(stack, luaL_loadstring(stack.luaState(), input));
     }
 
     void runDir(LuaStack& stack, const QDir& dir, const bool recurse)
