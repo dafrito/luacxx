@@ -38,12 +38,12 @@ void lua::qobject(LuaStack& stack, QObject& obj)
 
 namespace {
 
-bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
+bool retrieveArgs(LuaStack& stack, LuaUserdata** savedUserdata, QObject** obj, const char** name)
 {
     void* validatingUserdata = stack.pointer(1);
     stack.shift();
 
-    auto userdata = stack.get<LuaUserdata*>(1);
+    LuaUserdata* userdata = *savedUserdata = stack.get<LuaUserdata*>(1);
     if (!userdata) {
         goto fail;
     }
@@ -68,6 +68,7 @@ bool retrieveArgs(LuaStack& stack, QObject** obj, const char** name)
     return true;
 
     fail:
+        *savedUserdata = nullptr;
         *obj = nullptr;
         *name = nullptr;
         stack.clear();
@@ -86,9 +87,17 @@ QString getSignature(const QMetaMethod& method)
 
 void __index(LuaStack& stack)
 {
+    LuaUserdata* userdata;
     QObject* obj;
     const char* name;
-    if (!retrieveArgs(stack, &obj, &name)) {
+    if (!retrieveArgs(stack, &userdata, &obj, &name)) {
+        return;
+    }
+
+    if (userdata->hasMethod(name)) {
+        stack.pushPointer(obj);
+        lua::push(stack, name);
+        lua::push(stack, callMethod, 2);
         return;
     }
 
@@ -133,9 +142,10 @@ void __index(LuaStack& stack)
 
 void __newindex(LuaStack& stack)
 {
+    LuaUserdata* userdata;
     QObject* obj;
     const char* name;
-    if (!retrieveArgs(stack, &obj, &name)) {
+    if (!retrieveArgs(stack, &userdata, &obj, &name)) {
         return;
     }
     QVariant prop = obj->property(name);
