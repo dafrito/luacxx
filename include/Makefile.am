@@ -9,6 +9,8 @@ nobase_pkginclude_HEADERS = \
 	type/QChar.hpp \
 	insertion.hpp \
 	LuaValue.hpp \
+	LuaAccessible.hpp \
+	LuaReferenceAccessible.hpp \
 	LuaGlobalAccessible.hpp \
 	LuaStackAccessible.hpp \
 	LuaTableAccessible.hpp \
