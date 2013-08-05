@@ -136,8 +136,10 @@ public:
         }
 
         return LuaValue<LuaReferenceAccessible>(
-            stack.luaState(),
-            LuaReferenceAccessible(stack.luaState(), stack.saveAndPop())
+            stack.luaState(), LuaReferenceAccessible(
+                stack.luaState(),
+                stack.saveAndPop()
+            )
         );
     }
 
