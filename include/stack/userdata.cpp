@@ -192,4 +192,10 @@ namespace lua {
         sink = get<Sink>(index);
     }
 
+    template <typename Sink>
+    Sink get(LuaStack& stack, const int pos = -1)
+    {
+        return lua::get<Sink>(LuaIndex(stack, pos));
+    }
+
 } // namespace lua
