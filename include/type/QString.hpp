@@ -13,7 +13,7 @@ struct Pusher<QString>
 {
     static void push(LuaStack& stack, const QString& source)
     {
-        lua::push(stack, source.toStdString());
+        lua::push(stack, source.toUtf8().constData());
     }
 };
 
