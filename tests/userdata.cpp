@@ -6,6 +6,7 @@
 #include "type/QString.hpp"
 #include "type/QVariant.hpp"
 #include "type/QChar.hpp"
+#include "type/LuaReference.hpp"
 
 #include <boost/math/constants/constants.hpp>
 using namespace boost::math;
@@ -382,10 +383,7 @@ BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
 
     lua::qvariantStorer(QVariant::Point, [](const LuaIndex& index, QVariant& sink)
     {
-        // TODO Make this more concise
-        LuaReference table(index.luaState(),
-            LuaReferenceAccessible(index.luaState(), index.stack().save(index.pos()))
-        );
+        auto table = lua::get<LuaReference>(index);
         sink.setValue(QPoint(
             table["x"].get<int>(),
             table["y"].get<int>()
