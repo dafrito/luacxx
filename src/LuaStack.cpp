@@ -368,15 +368,24 @@ int LuaStack::save(int pos)
 {
     checkPos(pos);
 
-    pushCopy(pos);
-    auto ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
+    int ref;
+    if (isNil(pos)) {
+        pushPointer(lua::NIL_REFERENCE);
+    } else {
+        pushCopy(pos);
+    }
+
+    // This pops the value at that location, hence the pushed copy
+    ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
 
     return ref;
 }
 
 int LuaStack::saveAndPop()
 {
-    return luaL_ref(luaState(), LUA_REGISTRYINDEX);
+    auto ref = save();
+    pop();
+    return ref;
 }
 
 void LuaStack::to(bool& sink, int pos)

@@ -23,6 +23,8 @@ namespace lua
 {
     typedef std::function<void (LuaStack& stack)> LuaCallable;
 
+    void* const NIL_REFERENCE = reinterpret_cast<void*>(0xdeaddead);
+
     enum class value {
         table,
         nil

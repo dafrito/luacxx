@@ -6,13 +6,12 @@
 #include <lua.hpp>
 
 #include "LuaAccessible.hpp"
+#include "LuaStack.hpp"
 
 class LuaReferenceAccessible : public LuaAccessible
 {
-
     class RawLuaReference
     {
-        constexpr static int NIL_VALUE = 0xdead;
 
         int ref;
         mutable int _type;
@@ -25,23 +24,22 @@ class LuaReferenceAccessible : public LuaAccessible
 
     public:
         RawLuaReference(lua_State* state) :
+            _type(LUA_TNIL),
             _state(state)
         {
-            auto before = lua_gettop(luaState());
+            LuaStack stack(state);
 
-            lua_pushinteger(luaState(), NIL_VALUE);
-            ref = luaL_ref(luaState(), LUA_REGISTRYINDEX);
-            _type = LUA_TNIL;
-            assert(isNil());
-
-            auto after = lua_gettop(luaState());
-            assert(before == after);
+            lua::push(stack, lua::value::nil);
+            ref = stack.save();
         }
 
         RawLuaReference(lua_State* state, int ref) :
             _state(state),
             ref(ref)
         {
+            if (ref < 0) {
+                throw std::logic_error("Invalid reference");
+            }
             lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
             _type = lua_type(luaState(), -1);
             lua_pop(luaState(), 1);
@@ -51,7 +49,7 @@ class LuaReferenceAccessible : public LuaAccessible
         {
             lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
             auto currentType = lua_type(luaState(), -1);
-            if (currentType == LUA_TNUMBER && lua_tonumber(luaState(), -1) == NIL_VALUE && _type == LUA_TNIL) {
+            if (currentType == LUA_TNUMBER && lua_topointer(luaState(), -1) == lua::NIL_REFERENCE && _type == LUA_TNIL) {
                 currentType = LUA_TNIL;
             }
             lua_pop(luaState(), 1);
@@ -76,7 +74,7 @@ class LuaReferenceAccessible : public LuaAccessible
 
         void storeNil() const
         {
-            lua_pushinteger(luaState(), NIL_VALUE);
+            lua_pushlightuserdata(luaState(), lua::NIL_REFERENCE);
             lua_rawseti(luaState(), LUA_REGISTRYINDEX, ref);
             _type = LUA_TNIL;
             assert(isNil());
