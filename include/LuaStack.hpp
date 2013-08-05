@@ -672,8 +672,6 @@ LuaIndex operator>>(const LuaIndex&& index, Sink& sink)
     return realIndex;
 }
 
-LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink);
-
 template <typename... Args>
 void LuaStack::invoke(Args&&... args)
 {

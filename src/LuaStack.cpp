@@ -819,12 +819,6 @@ void LuaStack::pushedInvoke(const int numArgs)
     }
 }
 
-LuaIndex& operator>>(LuaIndex& index, LuaUserdata*& sink)
-{
-    index.stack().to(sink, index.pos());
-    return ++index;
-}
-
 namespace lua {
 
 void push(LuaStack& stack, void (*callable)(LuaStack&), const int closed)
