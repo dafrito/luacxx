@@ -256,6 +256,11 @@ void callMethod(LuaStack& stack)
     QObject* const obj = validatingUserdata;
     stack.shift(2);
 
+    if (userdata->hasMethod(name)) {
+        userdata->invoke(name, stack);
+        return;
+    }
+
     const QMetaObject* const metaObject = obj->metaObject();
 
     // Prefer methods that handle the stack directly.
@@ -265,6 +270,12 @@ void callMethod(LuaStack& stack)
         if (sig == QString(name) + "(LuaStack&)") {
             // The method is capable of handling the Lua stack directly, so invoke it
             metaInvokeLuaCallableMethod(stack, obj, method);
+            userdata->addMethod(
+                name,
+                lua::LuaCallable([obj, method](LuaStack& stack) {
+                    metaInvokeLuaCallableMethod(stack, obj, method);
+                })
+            );
             return;
         }
     }
@@ -276,6 +287,12 @@ void callMethod(LuaStack& stack)
         if (sig.endsWith("(LuaStack&)") && sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
             // The method is capable of handling the Lua stack directly, so invoke it
             metaInvokeLuaCallableMethod(stack, obj, method);
+            userdata->addMethod(
+                name,
+                lua::LuaCallable([obj, method](LuaStack& stack) {
+                    metaInvokeLuaCallableMethod(stack, obj, method);
+                })
+            );
             return;
         }
     }
@@ -286,6 +303,12 @@ void callMethod(LuaStack& stack)
         QString sig = getSignature(method);
         if (sig.startsWith(QString(name) + "(")) {
             metaInvokeDirectMethod(stack, obj, method);
+            userdata->addMethod(
+                name,
+                lua::LuaCallable([obj, method](LuaStack& stack) {
+                    metaInvokeDirectMethod(stack, obj, method);
+                })
+            );
             return;
         }
     }
@@ -296,6 +319,12 @@ void callMethod(LuaStack& stack)
         QString sig = getSignature(method);
         if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
             metaInvokeDirectMethod(stack, obj, method);
+            userdata->addMethod(
+                name,
+                lua::LuaCallable([obj, method](LuaStack& stack) {
+                    metaInvokeDirectMethod(stack, obj, method);
+                })
+            );
             return;
         }
     }

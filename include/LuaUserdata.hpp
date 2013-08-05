@@ -61,6 +61,8 @@ public:
     }
 
     void addMethod(const std::string& name, const lua::LuaCallable& method);
+    bool hasMethod(const std::string& name) const;
+    void invoke(const std::string& name, LuaStack& stack);
 
     /**
      * For userdata that map to a native C++ object, this should return

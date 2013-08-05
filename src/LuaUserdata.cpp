@@ -28,3 +28,12 @@ void LuaUserdata::addMethod(const std::string& name, const lua::LuaCallable& met
     _methods[name] = method;
 }
 
+bool LuaUserdata::hasMethod(const std::string& name) const
+{
+    return _methods.find(name) != _methods.end();
+}
+
+void LuaUserdata::invoke(const std::string& name, LuaStack& stack)
+{
+    _methods[name](stack);
+}
