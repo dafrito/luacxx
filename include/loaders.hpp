@@ -15,10 +15,12 @@ namespace {
         int funcLoc = stack.top();
         stack.invoke();
         if (stack.top() >= funcLoc) {
-            return LuaReference(
+            auto result = LuaReference(
                 stack.luaState(),
                 LuaReferenceAccessible(stack.luaState(), stack.save(funcLoc))
             );
+            stack.remove(funcLoc);
+            return result;
         }
         return LuaReference(
             stack.luaState(),

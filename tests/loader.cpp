@@ -10,6 +10,24 @@ BOOST_AUTO_TEST_CASE(testLuaCanLoadAFileStreamIntoItsEnvironment)
     lua::runFile(lua, LUA_DIR "simple.lua");
 }
 
+BOOST_AUTO_TEST_CASE(testLuaCleansUpItsRanValueWithPrimitives)
+{
+    LuaEnvironment lua;
+    LuaStack stack(lua);
+    lua::runString(stack, "return 42");
+    BOOST_CHECK_EQUAL(stack.size(), 0);
+}
+
+BOOST_AUTO_TEST_CASE(testLuaCleansUpItsRanValue)
+{
+    LuaEnvironment lua;
+    LuaStack stack(lua);
+    auto worker = lua::runString(stack, "return function() end");
+    BOOST_CHECK_EQUAL(stack.size(), 0);
+    worker(2);
+    BOOST_CHECK_EQUAL(stack.size(), 0);
+}
+
 BOOST_AUTO_TEST_CASE(testLuaSupportsQFile)
 {
     LuaEnvironment lua;
