@@ -199,8 +199,15 @@ LuaIndex LuaStack::at(const int pos, const int direction)
 void LuaStack::pop(unsigned int count)
 {
     assertUnlocked();
-    if(count > size())
-        throw std::out_of_range("Refusing to pop elements not managed by this stack");
+    if(count > size()) {
+        std::stringstream str;
+        if (!empty()) {
+            str << "I was asked to pop " << count << " element(s), but I only manage " << size() << std::endl;
+        } else {
+            str << "I was asked to pop " << count << " element(s), but I don't manage any" << std::endl;
+        }
+        throw std::out_of_range(str.str());
+    }
     lua_pop(luaState(), count);
 }
 
