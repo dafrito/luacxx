@@ -8,6 +8,8 @@
 #include "type/QChar.hpp"
 #include "type/LuaReference.hpp"
 
+#include "loaders.hpp"
+
 #include <boost/math/constants/constants.hpp>
 using namespace boost::math;
 
@@ -282,7 +284,7 @@ BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
 {
     LuaEnvironment lua;
     QFile file(LUA_DIR "anim.lua");
-    lua(file);
+    lua::runFile(lua, file);
 
     auto square = new Square;
 

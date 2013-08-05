@@ -196,7 +196,7 @@ BOOST_AUTO_TEST_CASE(closuresHandleStringsProperly)
     s << "getValue";
     s.push(receive, 1);
     s.setGlobal("foo");
-    lua("foo(2)");
+    lua::runString(s, "foo(2)");
 }
 
 BOOST_AUTO_TEST_CASE(stackSetsATableValue)
@@ -218,7 +218,7 @@ BOOST_AUTO_TEST_CASE(stackSetsATableValue)
 BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
 {
     LuaEnvironment lua;
-    lua("c = {f = 42};");
+    lua::runString(lua, "c = {f = 42};");
     LuaStack stack(lua);
     BOOST_REQUIRE_EQUAL(stack.global("c").get("f").get<int>(), 42);
 }

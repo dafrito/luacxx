@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_TYPE_LUAREFERENCE_HPP
 #define LUA_CXX_TYPE_LUAREFERENCE_HPP
 
-#include "LuaValue.hpp"
+#include "../LuaValue.hpp"
 
 namespace lua {
 

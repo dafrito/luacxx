@@ -7,7 +7,7 @@ BOOST_AUTO_TEST_CASE(testLuaCanLoadAFileStreamIntoItsEnvironment)
 {
     LuaEnvironment lua;
     lua["No"] = "Time";
-    lua::loadFile(lua, LUA_DIR "simple.lua");
+    lua::runFile(lua, LUA_DIR "simple.lua");
 }
 
 BOOST_AUTO_TEST_CASE(testLuaSupportsQFile)
@@ -15,19 +15,19 @@ BOOST_AUTO_TEST_CASE(testLuaSupportsQFile)
     LuaEnvironment lua;
     lua["No"] = "Time";
     QFile file(LUA_DIR "simple.lua");
-    lua(file);
+    lua::runFile(lua, file);
 }
 
 BOOST_AUTO_TEST_CASE(testLuaThrowsOnInvalidFilename)
 {
     LuaEnvironment lua;
-    BOOST_CHECK_THROW(lua::loadFile(lua, "foosdfsdfsd.lua"), std::runtime_error);
+    BOOST_CHECK_THROW(lua::runFile(lua, "somemissingfile.lua"), std::runtime_error);
 }
 
 BOOST_AUTO_TEST_CASE(luaSupportsDirectories)
 {
     LuaEnvironment lua;
-    lua::loadDir(lua, QDir(LUA_DIR "bin"), true);
+    lua::runDir(lua, QDir(LUA_DIR "bin"), true);
     BOOST_REQUIRE_EQUAL((int)lua["a"], 42);
     BOOST_REQUIRE_EQUAL((const char*)lua["b"], "foo");
 }

@@ -3,10 +3,10 @@
 
 #include <QChar>
 
-#include "LuaStack.hpp"
-#include "LuaIndex.hpp"
+#include "../LuaStack.hpp"
+#include "../LuaIndex.hpp"
 
-#include "type/QString.hpp"
+#include "QString.hpp"
 
 namespace lua {
 

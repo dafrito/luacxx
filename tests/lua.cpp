@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(testLuaOffersSubscriptSupportForGlobalValues)
 BOOST_AUTO_TEST_CASE(testLuaRunsStringsDirectly)
 {
     LuaEnvironment lua;
-    lua::loadString(lua, "_G['No']='Foo'");
+    lua("_G['No']='Foo'");
     BOOST_REQUIRE_EQUAL((const char*)lua["No"], "Foo");
 }
 
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE(testLuaCallsACFunction)
     std::string name("luaAdd");
     lua[name] = luaAdd;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::loadString(lua, std::string("Bar = ") + name + "(2, 2)");
+    lua(std::string("Bar = ") + name + "(2, 2)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 4);
 }
 
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(testLuaCallsAZeroParamFunction)
     std::string name("getMagicNumber");
     lua[name] = getMagicNumber;
     BOOST_CHECK_EQUAL("function", lua[name].typestring().c_str());
-    lua::loadString(lua, std::string("Bar = ") + name + "()");
+    lua(std::string("Bar = ") + name + "()");
     BOOST_CHECK_EQUAL(lua["Bar"].get<int>(), 42);
 }
 
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(testLuaCallsAOneParameterFunction)
     std::string name("addToMagicNumber");
     lua[name] = addToMagicNumber;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::loadString(lua, std::string("Bar = ") + name + "(2)");
+    lua(std::string("Bar = ") + name + "(2)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 44);
 }
 
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(testLuaCallsATwoParameterFunction)
     std::string name("addNumbers");
     lua[name] = addNumbers;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::loadString(lua, std::string("Bar = ") + name + "(2, 3)");
+    lua(std::string("Bar = ") + name + "(2, 3)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 5);
 }
 
@@ -127,7 +127,7 @@ BOOST_AUTO_TEST_CASE(testLuaCallsABonanza)
     std::string name("addBonanza");
     lua[name] = addBonanza;
     BOOST_REQUIRE_EQUAL("function", lua[name].typestring().c_str());
-    lua::loadString(lua, std::string("Bar = ") + name + "(2, 3, 4, 5, 6)");
+    lua(std::string("Bar = ") + name + "(2, 3, 4, 5, 6)");
     BOOST_REQUIRE_EQUAL((int)lua["Bar"], 2+3+4+5+6);
 }
 
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(testLuaStackCallsAVoidFunction)
     std::string name("doNothing");
     lua[name] = doNothing;
     BOOST_REQUIRE("function" == lua[name].typestring());
-    lua::loadString(lua, std::string("Bar = ") + name + "(2)");
+    lua(std::string("Bar = ") + name + "(2)");
 }
 
 BOOST_AUTO_TEST_CASE(testLuaCanPushClosures)
@@ -218,8 +218,8 @@ BOOST_AUTO_TEST_CASE(dualReturnValuesUseTheFirst)
 {
     LuaEnvironment lua;
     QFile falseFile(LUA_DIR "returnfalse.lua");
-    BOOST_CHECK_EQUAL(lua(falseFile).get<bool>(), false);
+    BOOST_CHECK_EQUAL(lua::runFile(lua, falseFile).get<bool>(), false);
 
     QFile trueFile(LUA_DIR "returntrue.lua");
-    BOOST_CHECK_EQUAL(lua(trueFile).get<bool>(), true);
+    BOOST_CHECK_EQUAL(lua::runFile(lua, trueFile).get<bool>(), true);
 }

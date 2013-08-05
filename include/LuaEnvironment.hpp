@@ -4,12 +4,12 @@
 #include <string>
 #include <istream>
 #include <lua.hpp>
-#include <QFile>
 #include <vector>
 
 #include "LuaStack.hpp"
 #include "values.hpp"
 #include "qobject.hpp"
+#include "loaders.hpp"
 
 class ModuleLoader;
 
@@ -21,8 +21,6 @@ class LuaEnvironment
 
     std::vector<ModuleLoader*> _moduleLoaders;
 
-    void handleLoadValue(const int rv);
-
     static void loadModule(LuaEnvironment& lua, LuaStack& stack);
 public:
     LuaEnvironment();
@@ -30,13 +28,14 @@ public:
 
     LuaReference newReference();
 
+    template<class Input>
+    LuaReference operator()(Input input)
+    {
+        return lua::runString(*this, input);
+    }
+
     LuaGlobal operator[](const char* key);
     LuaGlobal operator[](const std::string& key);
-
-    LuaReference operator()(const char* runnable);
-    LuaReference operator()(const std::string& runnable);
-    LuaReference operator()(std::istream& stream, const std::string& name);
-    LuaReference operator()(QFile& file);
 
     bool acceptsStackUserdata() const
     {

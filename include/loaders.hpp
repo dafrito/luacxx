@@ -2,24 +2,78 @@
 #define LOADERS_HPP
 
 #include <string>
-#include "LuaEnvironment.hpp"
+#include <QFile>
+
+#include "LuaStack.hpp"
+#include "values.hpp"
 
 class QDir;
 
+namespace {
+    LuaReference innerInvoke(LuaStack& stack)
+    {
+        int funcLoc = stack.top();
+        stack.invoke();
+        if (stack.top() >= funcLoc) {
+            return LuaReference(
+                stack.luaState(),
+                LuaReferenceAccessible(stack.luaState(), stack.save(funcLoc))
+            );
+        }
+        return LuaReference(
+            stack.luaState(),
+            LuaReferenceAccessible(stack.luaState())
+        );
+    }
+}
+
 namespace lua
 {
-    void loadFile(LuaEnvironment& lua, const std::string& file);
-    void loadFile(LuaEnvironment& lua, const char* file);
+    void loadFile(LuaStack& stack, QFile& file);
+    void loadFile(LuaStack& stack, const std::string& file);
+    void loadFile(LuaStack& stack, const char* file);
+    void loadFile(LuaStack& stack, std::istream& stream, const std::string& name);
 
-    void loadString(LuaEnvironment& lua, const std::string& input);
-    void loadString(LuaEnvironment& lua, const char* input);
+    void loadString(LuaStack& stack, const std::string& input);
+    void loadString(LuaStack& stack, const char* input);
 
     /**
-     * Load every file in the directory, with optional recursion. If
+     * Runs every file in the directory, with optional recursion. If
      * you want to filter the files, specify a filter list on the directory
      * itself.
      */
-    void loadDir(LuaEnvironment& lua, const QDir& dir, const bool recurse);
-}
+    void runDir(LuaStack& stack, const QDir& dir, const bool recurse);
+
+    void runDir(LuaEnvironment& lua, const QDir& dir, const bool recurse);
+
+    template <class Input>
+    LuaReference runString(LuaStack& stack, Input& runnable)
+    {
+        loadString(stack, runnable);
+        return innerInvoke(stack);
+    }
+
+    template <class Input>
+    LuaReference runFile(LuaStack& stack, Input& runnable)
+    {
+        loadFile(stack, runnable);
+        return innerInvoke(stack);
+    }
+
+    template <class Input>
+    LuaReference runString(LuaEnvironment& lua, Input& runnable)
+    {
+        LuaStack stack(lua);
+        return runString(stack, runnable);
+    }
+
+    template <class Input>
+    LuaReference runFile(LuaEnvironment& lua, Input& runnable)
+    {
+        LuaStack stack(lua);
+        return runFile(stack, runnable);
+    }
+
+} // namespace lua
 
 #endif // LOADERS_HPP

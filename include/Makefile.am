@@ -7,6 +7,7 @@ nobase_pkginclude_HEADERS = \
 	type/QVariant.hpp \
 	type/QString.hpp \
 	type/QChar.hpp \
+	type/LuaReference.hpp \
 	insertion.hpp \
 	LuaValue.hpp \
 	LuaAccessible.hpp \

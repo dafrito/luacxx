@@ -3,8 +3,8 @@
 
 #include <QString>
 
-#include "LuaStack.hpp"
-#include "LuaIndex.hpp"
+#include "../LuaStack.hpp"
+#include "../LuaIndex.hpp"
 
 namespace lua {
 

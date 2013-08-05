@@ -4,8 +4,8 @@
 #include <functional>
 #include <QVariant>
 
-#include "LuaStack.hpp"
-#include "LuaIndex.hpp"
+#include "../LuaStack.hpp"
+#include "../LuaIndex.hpp"
 
 namespace lua {
 
