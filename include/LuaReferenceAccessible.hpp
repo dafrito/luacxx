@@ -42,6 +42,9 @@ class LuaReferenceAccessible : public LuaAccessible
             }
             lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
             _type = lua_type(luaState(), -1);
+            if (_type == LUA_TLIGHTUSERDATA && lua_topointer(luaState(), -1) == lua::NIL_REFERENCE) {
+                _type = LUA_TNIL;
+            }
             lua_pop(luaState(), 1);
         }
 
@@ -49,7 +52,7 @@ class LuaReferenceAccessible : public LuaAccessible
         {
             lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
             auto currentType = lua_type(luaState(), -1);
-            if (currentType == LUA_TNUMBER && lua_topointer(luaState(), -1) == lua::NIL_REFERENCE && _type == LUA_TNIL) {
+            if (currentType == LUA_TLIGHTUSERDATA && lua_topointer(luaState(), -1) == lua::NIL_REFERENCE && _type == LUA_TNIL) {
                 currentType = LUA_TNIL;
             }
             lua_pop(luaState(), 1);
@@ -70,6 +73,7 @@ class LuaReferenceAccessible : public LuaAccessible
                 return;
             }
             lua_rawgeti(luaState(), LUA_REGISTRYINDEX, ref);
+            assert(lua_topointer(luaState(), -1) != lua::NIL_REFERENCE);
         }
 
         void storeNil() const
