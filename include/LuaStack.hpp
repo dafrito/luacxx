@@ -88,14 +88,14 @@ private:
      * Assert that the specified position is within
      * bounds of this LuaStack.
      */
-    void checkPos(int pos) const;
+    int absPos(const int pos) const;
 
     /**
      * Returns whether the stack position is special to
      * Lua. The globals table and the references table
      * are examples of two magical stack positions.
      */
-    bool isMagicalPos(const int& pos) const;
+    bool isMagicalPos(const int pos) const;
 
     /**
      * Forcibly change the offset value of this instance.
@@ -122,16 +122,23 @@ public:
 
     /**
      * Return the number of stack values that are
-     * controlled by this stack.
+     * managed by this stack.
      *
-     * A "controlled" value means that LuaStack is
+     * A "managed" value means that LuaStack is
      * responsible for it. It was pushed using this
      * instance, and it will be popped once this
      * instance is destroyed.
      */
     unsigned int size() const;
 
+    /**
+     * Returns the aboslute bottom of this stack.
+     */
     int bottom() const;
+
+    /**
+     * Returns the absolute top of this stack.
+     */
     int top() const;
 
     /**
@@ -199,18 +206,18 @@ public:
      *
      * The topmost element will be popped.
      */
-    void replace(int pos);
+    void replace(const int pos);
 
-    void remove(int pos);
+    void remove(const int pos);
 
-    void insert(int pos);
+    void insert(const int pos);
 
     /**
      * Swaps the values at the two specified indices.
      */
-    void swap(int a = -1, int b = -2);
+    void swap(int a = -2, int b = -1);
 
-    void pushCopy(int pos = -1);
+    void pushCopy(const int pos = -1);
 
     /**
      * Pops all values that have been pushed onto
@@ -224,45 +231,45 @@ public:
      * Returns the type of the Lua stack value at the
      * specified stack position.
      */
-    lua::type type(int pos = -1) const;
+    lua::type type(const int pos = -1) const;
 
     /**
      * Returns the human-readable type name of the Lua
      * value at the specified stack position.
      */
-    std::string typestring(int pos = -1) const;
+    std::string typestring(const int pos = -1) const;
 
     /**
      * Assigns to the specified sink value, the Lua value
      * at the specified stack position.
      */
-    void to(bool& sink, int pos = -1);
-    void to(char& sink, int pos = -1);
-    void to(short& sink, int pos = -1);
-    void to(int& sink, int pos = -1);
-    void to(unsigned int& sink, int pos = -1);
-    void to(long& sink, int pos = -1);
-    void to(float& sink, int pos = -1);
-    void to(lua_Number& sink, int pos = -1);
-    void to(const char*& sink, int pos = -1);
-    void to(std::string& sink, int pos = -1);
-    void to(LuaUserdata*& sink, int pos = -1);
+    void to(bool& sink, const int pos = -1);
+    void to(char& sink, const int pos = -1);
+    void to(short& sink, const int pos = -1);
+    void to(int& sink, const int pos = -1);
+    void to(unsigned int& sink, const int pos = -1);
+    void to(long& sink, const int pos = -1);
+    void to(float& sink, const int pos = -1);
+    void to(lua_Number& sink, const int pos = -1);
+    void to(const char*& sink, const int pos = -1);
+    void to(std::string& sink, const int pos = -1);
+    void to(LuaUserdata*& sink, const int pos = -1);
 
     template <class Sink>
-    Sink get(int pos = -1);
+    Sink get(const int pos = -1);
 
-    void* pointer(int pos);
+    void* pointer(const int pos);
 
     /**
      * Returns the length of the table at the specified index, or
      * 0 if the value at the index is not a table.
      */
-    int length(int pos = -1);
+    int length(const int pos = -1);
 
     /**
      * Saves the value at the specified position as a reference.
      */
-    int save(int pos = -1);
+    int save(const int pos = -1);
 
     /**
      * Saves and removes the topmost value.
@@ -336,7 +343,7 @@ public:
     template <typename... Args>
     void invoke(Args&&... args);
 
-    void pushedInvoke(const int numArgs);
+    void pushedInvoke(int numArgs);
 
     template <typename Arg, typename... Rest>
     void pushedInvoke(const int numArgs, Arg&& arg, Rest&&... rest);
@@ -345,35 +352,35 @@ public:
      * Pushes a value from the specified table, using the topmost stack
      * value as the key.
      */
-    void pushedGet(int tablePos = -1);
+    void pushedGet(int pos = -1);
 
     /**
      * Pushes the table value within the specified table onto this stack.
      *
-     * The table must be at the stack position specified by tablePos.
+     * The table must be at the stack position specified by pos.
      */
     template <typename K>
-    LuaStack& get(K key, int tablePos = -1);
+    LuaStack& get(K key, int pos = -1);
 
     /**
      * Sets the table value for the specified table.
      *
      * t[k] = v
      *
-     * Where tablePos specifies the location of t,
+     * Where pos specifies the location of t,
      * k is just below the top (position -2)
      * and v is at the top (position -1)
      */
-    void pushedSet(int tablePos);
+    void pushedSet(int pos);
 
     /**
      * Sets the table value for the specified key to the value on top
      * of this stack.
      *
-     * The table must be at the stack position specified by tablePos.
+     * The table must be at the stack position specified by pos.
      */
     template <typename K>
-    void pushedSet(K key, int tablePos);
+    void pushedSet(K key, int pos);
 
     /**
      * Set the table value with the specified key name
@@ -382,7 +389,7 @@ public:
      * The table must be at the stack position specified.
      */
     template <typename K, typename V>
-    void set(K key, const V& value, int tablePos = -1);
+    void set(K key, const V& value, int pos = -1);
 
     /**
      * Set the global with the specified name to the
@@ -635,7 +642,7 @@ void pushAll(LuaStack& stack, Arg&& arg, Values&&... values)
 } // namespace lua
 
 template <class Sink>
-Sink LuaStack::get(int pos)
+Sink LuaStack::get(const int pos)
 {
     return lua::get<Sink>(LuaIndex(*this, pos));
 }
@@ -685,15 +692,12 @@ void LuaStack::invoke(Args&&... args)
 }
 
 template <typename K, typename V>
-void LuaStack::set(K key, const V& value, int tablePos)
+void LuaStack::set(K key, const V& value, const int pos)
 {
-    checkPos(tablePos);
     lua::push(*this, value);
-    // Since we inserted a value, we may need to relocate tablePos
+    // Since we inserted a value, we may need to relocate pos
     // so it still points to the table.
-    if (!isMagicalPos(tablePos) && tablePos < 0)
-        --tablePos;
-    pushedSet(key, tablePos);
+    pushedSet(key, pos < 0 ? pos - 1 : pos);
 }
 
 template <typename V>
@@ -713,30 +717,22 @@ void LuaStack::error(const Message& message)
 }
 
 template <typename K>
-LuaStack& LuaStack::get(K key, int tablePos)
+LuaStack& LuaStack::get(K key, const int pos)
 {
-    checkPos(tablePos);
     lua::push(*this, key);
-    if (!isMagicalPos(tablePos) && tablePos < 0)
-        --tablePos;
-    pushedGet(tablePos);
+    pushedGet(pos < 0 ? pos - 1 : pos);
     return *this;
 }
 
 template <typename K>
-void LuaStack::pushedSet(K key, int tablePos)
+void LuaStack::pushedSet(K key, const int pos)
 {
-    checkPos(tablePos);
     lua::push(*this, key);
 
     // Stack is now [..., t, value, key], so we need to swap
     swap();
 
-    // Adjust tablePos since we pushed a key onto the
-    // stack.
-    if (!isMagicalPos(tablePos) && tablePos < 0)
-        --tablePos;
-    pushedSet(tablePos);
+    pushedSet(pos < 0 ? pos - 1 : pos);
 }
 
 #endif // LUA_CXX_LUASTACK_HPP

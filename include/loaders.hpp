@@ -15,13 +15,15 @@ namespace {
         int funcLoc = stack.top();
         stack.invoke();
         if (stack.top() >= funcLoc) {
+            // A value was returned, so store it in a reference
             auto result = LuaReference(
                 stack.luaState(),
-                LuaReferenceAccessible(stack.luaState(), stack.save(funcLoc))
+                LuaReferenceAccessible(stack.luaState(), stack.save(funcLoc - stack.offset()))
             );
-            stack.remove(funcLoc);
+            stack.remove(funcLoc - stack.offset());
             return result;
         }
+        // No value was returned, so just create a new nil reference.
         return LuaReference(
             stack.luaState(),
             LuaReferenceAccessible(stack.luaState())
