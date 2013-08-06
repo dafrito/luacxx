@@ -4,6 +4,13 @@
 #include "type/QVariant.hpp"
 #include "type/QChar.hpp"
 
+BOOST_AUTO_TEST_CASE(testLuaStackIsSane)
+{
+    LuaEnvironment lua;
+    LuaStack stack(lua);
+    lua::push(stack, 42);
+}
+
 BOOST_AUTO_TEST_CASE(testLuaStackManagesItOwnStack)
 {
     LuaEnvironment lua;
