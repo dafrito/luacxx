@@ -126,6 +126,13 @@ public:
     LuaValue<LuaReferenceAccessible> operator()(Args&&... args)
     {
         LuaStack stack(_lua);
+        if (type() != lua::type::function) {
+            throw std::logic_error(
+                std::string("This LuaValue contains a ")
+                    + typestring()
+                    + " which is not an invokable function"
+            );
+        }
         push(stack);
         stack.invoke(args...);
 
