@@ -65,12 +65,6 @@ namespace lua
  * It's pretty complicated, and it's not really that necessary in practice.
  * However, I'd prefer it if we could offer some guarantees of behavior
  * in the face of clients using stacks out-of-order.
- *
- * FIXME A lot of these methods assume that stack positions are
- * always going to be negative. This is not the case. The support
- * for positive indices is extremely spotty, so I recommend using
- * negative indices until test cases are written to establish
- * reliability.
  */
 class LuaStack
 {
