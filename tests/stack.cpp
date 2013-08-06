@@ -341,6 +341,27 @@ BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
     bar(lua["foo"]);
 }
 
+BOOST_AUTO_TEST_CASE(luaHandlesStrangeStackCase)
+{
+    LuaEnvironment lua;
+
+    LuaStack stack(lua);
+
+    lua::loadString(stack, "return 2 + 2");
+    BOOST_CHECK_EQUAL(stack.size(), 1);
+    BOOST_CHECK(stack.type(1) == lua::type::function);
+    BOOST_CHECK(stack.type(-1) == lua::type::function);
+
+    stack.disown();
+
+    LuaStack second(lua);
+    lua::push(second, 42);
+
+    BOOST_CHECK_EQUAL(second.bottom(), 2);
+    BOOST_CHECK_EQUAL(second.top(), 2);
+    BOOST_CHECK_EQUAL(second.typestring(1), "number");
+}
+
 BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
 {
     LuaEnvironment lua;
