@@ -38,15 +38,13 @@ BOOST_AUTO_TEST_CASE(testLuaStackCanSwapValues)
 {
     LuaEnvironment lua;
     LuaStack s(lua);
-    s << 1 << 2;
-    // Stack is now [1, 2]
+    s << "First" << "Second";
+    // Stack is now ["First", "Second"]
 
     s.swap();
-    // Stack is now [2, 1]
-    BOOST_REQUIRE_EQUAL(s.get<int>(), 1);
-    s.pop();
-    BOOST_REQUIRE_EQUAL(s.get<int>(), 2);
-    s.pop();
+    // Stack is now ["Second", "First"]
+    BOOST_CHECK_EQUAL(s.get<std::string>(1), "Second");
+    BOOST_CHECK_EQUAL(s.get<std::string>(2), "First");
 }
 
 BOOST_AUTO_TEST_CASE(testLuaStackCanSetGlobalValues)
