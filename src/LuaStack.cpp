@@ -324,7 +324,8 @@ std::string LuaStack::traceback(const int topLevel)
         pop();
         return rv;
     #else
-        return lua()["debug"]["traceback"]("", topLevel).get<std::string>().substr(1);
+        auto getter = lua::runString(*this, "return debug.traceback");
+        return getter("", topLevel).get<std::string>().substr(1);
     #endif
 }
 
