@@ -1,8 +1,11 @@
 #include "type/QVariant.hpp"
 #include "type/QChar.hpp"
 #include "type/QString.hpp"
+#include "type/LuaReference.hpp"
+#include "values.hpp"
 
 #include <unordered_map>
+#include <QStringList>
 
 namespace std {
     template<>
@@ -55,6 +58,18 @@ void lua::pushVariant(LuaStack& stack, const QVariant& variant)
     case QVariant::String:
         lua::push(stack, variant.toString());
         break;
+    case QVariant::StringList:
+        {
+        auto list = variant.toStringList();
+
+        lua::push(stack, lua::value::table);
+        for (int i = 0; i < list.size(); ++i) {
+            stack.set(i + 1, list[i]);
+        }
+
+        }
+
+        break;
     default:
         auto converter = variantPushers.find(variant.type());
         if (converter != variantPushers.end()) {
@@ -88,6 +103,18 @@ void lua::storeVariant(const LuaIndex& index, QVariant& sink)
         break;
     case QVariant::String:
         sink.setValue(stack.get<QString>(pos));
+        break;
+    case QVariant::StringList:
+        {
+        auto list = lua::get<LuaReference>(index);
+
+        QStringList items;
+        for (int i = 1; i <= list.length(); ++i) {
+            items << list[i].get<QString>();
+        }
+        sink.setValue(items);
+
+        }
         break;
     default:
         auto converter = variantStorers.find(sink.type());
