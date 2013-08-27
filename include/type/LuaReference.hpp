@@ -8,7 +8,7 @@ namespace lua {
 template <>
 struct Getter<LuaValue<LuaReferenceAccessible>>
 {
-    static LuaReference get(const LuaIndex& index)
+    static LuaValue<LuaReferenceAccessible> get(const LuaIndex& index)
     {
         return LuaValue<LuaReferenceAccessible>(
             index.stack().luaState(),
