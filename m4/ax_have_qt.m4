@@ -14,6 +14,8 @@
 #   AX_HAVE_QT_TEST
 #   AX_HAVE_QT_XML
 #   AX_HAVE_QT_MOC
+#   AX_HAVE_QT_WEBKIT
+#   AX_HAVE_QT_DBUS
 #
 #   The following macros are not yet implemented:
 #   AX_HAVE_QT_UIC
@@ -33,6 +35,8 @@
 #   have_qt_sql
 #   have_qt_test
 #   have_qt_xml
+#   have_qt_webkit
+#   have_qt_dbus
 #
 #   have_qt_moc
 #   have_qt_uic
@@ -277,6 +281,7 @@ AC_DEFUN([AX_HAVE_QT_OPENGL], [
   AC_REQUIRE([AC_PATH_XTRA])
   AC_REQUIRE([AX_HAVE_OPENGL])
   AC_REQUIRE([AX_HAVE_QT_GUI])
+  AC_REQUIRE([AX_HAVE_QT_WIDGETS])
   _AX_HAVE_QT_ADD_MODULE(
     [OpenGL],
     [QApplication QGLWidget],
@@ -290,6 +295,48 @@ AC_DEFUN([AX_HAVE_QT_OPENGL], [
     ], [
     AC_MSG_RESULT([no])
     have_qt_opengl=no
+  ])
+])
+
+AC_DEFUN([AX_HAVE_QT_WEBKIT], [
+  AC_MSG_CHECKING([QtWebKit])
+  AC_REQUIRE([AC_PATH_X])
+  AC_REQUIRE([AC_PATH_XTRA])
+  AC_REQUIRE([AX_HAVE_OPENGL])
+  AC_REQUIRE([AX_HAVE_QT_GUI])
+  AC_REQUIRE([AX_HAVE_QT_WIDGETS])
+  AC_REQUIRE([AX_HAVE_QT_NETWORK])
+  _AX_HAVE_QT_ADD_MODULE(
+    [WebKit],
+    [QApplication QWebView],
+    _AX_HAVE_QT_GUI_PROGRAM([QWebView]),
+    [$X_CFLAGS $GL_CFLAGS],
+    [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS],
+    [
+      AC_DEFINE([HAVE_QT_WEBKIT],,[define if the QtWebKit module is available])
+      AC_MSG_RESULT([yes])
+      have_qt_webkit=yes
+    ], [
+    AC_MSG_RESULT([no])
+    have_qt_webkit=no
+  ])
+])
+
+AC_DEFUN([AX_HAVE_QT_DBUS], [
+  AC_MSG_CHECKING([QtDBus])
+  _AX_HAVE_QT_ADD_MODULE(
+    [DBus],
+    [QCoreApplication QDBusArgument],
+    _AX_HAVE_QT_CORE_PROGRAM([QDBusArgument]),
+    , dnl CXXFLAGS
+    , dnl LIBS
+    [
+      AC_MSG_RESULT([yes])
+      AC_DEFINE([HAVE_QT_DBUS],,[define if the QtDBus module is available])
+      have_qt_dbus=yes
+    ], [
+    AC_MSG_RESULT([no])
+    have_qt_dbus=no
   ])
 ])
 
