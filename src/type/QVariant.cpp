@@ -58,6 +58,18 @@ void lua::pushVariant(LuaStack& stack, const QVariant& variant)
     case QVariant::String:
         lua::push(stack, variant.toString());
         break;
+    case QVariant::Hash:
+        {
+        auto hash = variant.toHash();
+
+        lua::push(stack, lua::value::table);
+        for (auto i = hash.begin(); i != hash.end(); ++i) {
+            stack.set(i.key(), i.value());
+        }
+
+        }
+
+        break;
     case QVariant::StringList:
         {
         auto list = variant.toStringList();
@@ -114,6 +126,27 @@ void lua::storeVariant(const LuaIndex& index, QVariant& sink)
         }
         sink.setValue(items);
 
+        }
+        break;
+    case QVariant::Hash:
+        {
+        // XXX If pos is negative, then this won't work
+        assert(index.pos() > 0);
+
+        QHash<QString, QVariant> hash;
+
+        // Push a nil to begin iteration
+        lua::push(index.stack(), lua::value::nil);
+
+        while (lua_next(index.stack().luaState(), index.pos()) != 0) {
+            auto key = lua::get<QString>(index.stack(), -2);
+            auto value = lua::get<QVariant>(index.stack(), -1);
+
+            hash[key] = value;
+
+            stack.pop();
+        }
+        sink.setValue(hash);
         }
         break;
     default:
