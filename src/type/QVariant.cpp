@@ -126,4 +126,3 @@ void lua::storeVariant(const LuaIndex& index, QVariant& sink)
     }
 
 }
-#include "type/QVariant.hpp"
