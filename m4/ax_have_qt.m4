@@ -120,8 +120,10 @@ AC_DEFUN([_AX_QT_BASE],
 ])dnl AX_QT_BASE
 
 AC_DEFUN([AX_HAVE_QT_CORE], [
+  AC_CACHE_CHECK([for QtCore],
+  ax_cv_have_qt_core,
+  [
   AC_REQUIRE([_AX_QT_BASE])
-  AC_MSG_CHECKING([QtCore])
   _AX_HAVE_QT_ADD_MODULE(
     [Core],
     [QCoreApplication],
@@ -133,17 +135,24 @@ AC_DEFUN([AX_HAVE_QT_CORE], [
     , dnl CXXFLAGS
     , dnl LIBS
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_core=yes
+    ], [
+    ax_cv_have_qt_core=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_core" = xyes; then
       AC_DEFINE([HAVE_QT_CORE],,[define if the QtCore module is available])
       have_qt_core=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_core=no
-  ])
+  else
+      have_qt_core=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_GUI], [
-  AC_MSG_CHECKING([QtGui])
+  AC_CACHE_CHECK([for QtGui],
+  ax_cv_have_qt_gui,
+  [
   AC_REQUIRE([AC_PATH_X])
   AC_REQUIRE([AC_PATH_XTRA])
   AC_REQUIRE([AX_HAVE_QT_CORE])
@@ -158,17 +167,24 @@ AC_DEFUN([AX_HAVE_QT_GUI], [
     [$X_CFLAGS],
     [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS],
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_gui=yes
+    ], [
+    ax_cv_have_qt_gui=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_gui" = xyes; then
       AC_DEFINE([HAVE_QT_GUI],,[define if the QtGui module is available])
       have_qt_gui=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_gui=no
-  ])
+  else
+      have_qt_gui=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_WIDGETS], [
-  AC_MSG_CHECKING([QtWidgets])
+  AC_CACHE_CHECK([for QtWidgets],
+  ax_cv_have_qt_widgets,
+  [
   AC_REQUIRE([AC_PATH_X])
   AC_REQUIRE([AC_PATH_XTRA])
   AC_REQUIRE([AX_HAVE_QT_CORE])
@@ -184,17 +200,24 @@ AC_DEFUN([AX_HAVE_QT_WIDGETS], [
     [$X_CFLAGS],
     [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS],
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_widgets=yes
+    ], [
+      ax_cv_have_qt_widgets=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_widgets" = xyes; then
       AC_DEFINE([HAVE_QT_WIDGETS],,[define if the QtWidgets module is available])
       have_qt_widgets=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_widgets=no
-  ])
+  else
+      have_qt_widgets=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_TEST], [
-  AC_MSG_CHECKING([QtTest])
+  AC_CACHE_CHECK([for QtTest],
+  ax_cv_have_qt_test,
+  [
   AC_REQUIRE([AX_HAVE_QT_CORE])
   AC_REQUIRE([AX_HAVE_QT_MOC])
   _AX_HAVE_QT_ADD_MODULE(
@@ -209,17 +232,24 @@ AC_DEFUN([AX_HAVE_QT_TEST], [
     , dnl CXXFLAGS
     , dnl LIBS
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_test=yes
+    ], [
+      ax_cv_have_qt_test=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_test" = xyes; then
       AC_DEFINE([HAVE_QT_TEST],,[define if the QtTest module is available])
       have_qt_test=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_test=no
-  ])
+  else
+      have_qt_test=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_SQL], [
-  AC_MSG_CHECKING([QtSql])
+  AC_CACHE_CHECK([for QtSql],
+  ax_cv_have_qt_sql,
+  [
   AC_REQUIRE([AX_HAVE_QT_CORE])
   _AX_HAVE_QT_ADD_MODULE(
     [Sql],
@@ -228,17 +258,24 @@ AC_DEFUN([AX_HAVE_QT_SQL], [
     , dnl CXXFLAGS
     , dnl LIBS
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_sql=yes
+    ], [
+      ax_cv_have_qt_sql=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_sql" = xyes; then
       AC_DEFINE([HAVE_QT_SQL],,[define if the QtSql module is available])
       have_qt_sql=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_sql=no
-  ])
+  else
+      have_qt_sql=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_NETWORK], [
-  AC_MSG_CHECKING([QtNetwork])
+  AC_CACHE_CHECK([for QtNetwork],
+  ax_cv_have_qt_network,
+  [
   AC_REQUIRE([AX_HAVE_QT_CORE])
   _AX_HAVE_QT_ADD_MODULE(
     [Network],
@@ -247,17 +284,24 @@ AC_DEFUN([AX_HAVE_QT_NETWORK], [
     , dnl CXXFLAGS
     , dnl LIBS
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_network=yes
+    ], [
+      ax_cv_have_qt_network=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_network" = xyes; then
       AC_DEFINE([HAVE_QT_NETWORK],,[define if the QtNetwork module is available])
       have_qt_network=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_network=no
-  ])
+  else
+      have_qt_network=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_XML], [
-  AC_MSG_CHECKING([QtXml])
+  AC_CACHE_CHECK([for QtXml],
+  ax_cv_have_qt_xml,
+  [
   AC_REQUIRE([AX_HAVE_QT_CORE])
   _AX_HAVE_QT_ADD_MODULE(
     [Xml],
@@ -266,17 +310,24 @@ AC_DEFUN([AX_HAVE_QT_XML], [
     , dnl CXXFLAGS
     , dnl LIBS
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_xml=yes
+    ], [
+      ax_cv_have_qt_xml=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_xml" = xyes; then
       AC_DEFINE([HAVE_QT_XML],,[define if the QtXml module is available])
       have_qt_xml=yes
-    ], [
-    AC_MSG_RESULT([no])
+  else
       have_qt_xml=no
-  ])
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_OPENGL], [
-  AC_MSG_CHECKING([QtOpenGL])
+  AC_CACHE_CHECK([for QtOpenGL],
+  ax_cv_have_qt_opengl,
+  [
   AC_REQUIRE([AC_PATH_X])
   AC_REQUIRE([AC_PATH_XTRA])
   AC_REQUIRE([AX_HAVE_OPENGL])
@@ -289,17 +340,24 @@ AC_DEFUN([AX_HAVE_QT_OPENGL], [
     [$X_CFLAGS $GL_CFLAGS],
     [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS $GL_LIBS],
     [
-      AC_DEFINE([HAVE_QT_OPENGL],,[define if the QtOpenGL module is available])
-      AC_MSG_RESULT([yes])
-      have_qt_opengl=yes
+      ax_cv_have_qt_opengl=yes
     ], [
-    AC_MSG_RESULT([no])
-    have_qt_opengl=no
-  ])
+      ax_cv_have_qt_opengl=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_opengl" = xyes; then
+      AC_DEFINE([HAVE_QT_OPENGL],,[define if the QtOpenGL module is available])
+      have_qt_opengl=yes
+  else
+      have_qt_opengl=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_WEBKIT], [
-  AC_MSG_CHECKING([QtWebKit])
+  AC_CACHE_CHECK([for QtWebKit],
+  ax_cv_have_qt_webkit,
+  [
   AC_REQUIRE([AC_PATH_X])
   AC_REQUIRE([AC_PATH_XTRA])
   AC_REQUIRE([AX_HAVE_OPENGL])
@@ -307,23 +365,30 @@ AC_DEFUN([AX_HAVE_QT_WEBKIT], [
   AC_REQUIRE([AX_HAVE_QT_WIDGETS])
   AC_REQUIRE([AX_HAVE_QT_NETWORK])
   _AX_HAVE_QT_ADD_MODULE(
-    [WebKit],
+    [WebKitWidgets],
     [QApplication QWebView],
     _AX_HAVE_QT_GUI_PROGRAM([QWebView]),
     [$X_CFLAGS $GL_CFLAGS],
     [$X_PRE_LIBS $X_LIBS $X_EXTRA_LIBS],
     [
-      AC_DEFINE([HAVE_QT_WEBKIT],,[define if the QtWebKit module is available])
-      AC_MSG_RESULT([yes])
-      have_qt_webkit=yes
+      ax_cv_have_qt_webkit=yes
     ], [
-    AC_MSG_RESULT([no])
-    have_qt_webkit=no
-  ])
+      ax_cv_have_qt_webkit=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_webkit" = xyes; then
+      AC_DEFINE([HAVE_QT_WEBKIT],,[define if the QtWebKit module is available])
+      have_qt_webkit=yes
+  else
+      have_qt_webkit=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_DBUS], [
-  AC_MSG_CHECKING([QtDBus])
+  AC_CACHE_CHECK([for QtDBus],
+  ax_cv_have_qt_dbus,
+  [
   _AX_HAVE_QT_ADD_MODULE(
     [DBus],
     [QCoreApplication QDBusArgument],
@@ -331,19 +396,24 @@ AC_DEFUN([AX_HAVE_QT_DBUS], [
     , dnl CXXFLAGS
     , dnl LIBS
     [
-      AC_MSG_RESULT([yes])
+      ax_cv_have_qt_dbus=yes
+    ], [
+      ax_cv_have_qt_dbus=no
+  ])dnl _AX_HAVE_QT_ADD_MODULE
+  ])dnl AC_CACHE_CHECK
+
+  if test x"$ax_cv_have_qt_dbus" = xyes; then
       AC_DEFINE([HAVE_QT_DBUS],,[define if the QtDBus module is available])
       have_qt_dbus=yes
-    ], [
-    AC_MSG_RESULT([no])
-    have_qt_dbus=no
-  ])
+  else
+      have_qt_dbus=no
+  fi;
 ])
 
 AC_DEFUN([AX_HAVE_QT_MOC], [
   AC_REQUIRE([AX_HAVE_QT_CORE])
   QT_MOC=
-  AC_PATH_PROGS([QT_MOC], [moc moc-qt4], [], [$QT_DIR/bin:$PATH])
+  AC_PATH_PROGS([QT_MOC], [moc-qt5 moc-qt4 moc], [], [$QT_DIR/bin:$PATH])
 ])
 
 AC_DEFUN([_AX_HAVE_QT_CHECK_MOC], [
@@ -401,26 +471,34 @@ AC_DEFUN([_AX_HAVE_QT_ADD_MODULE], [
   # Action if successful 6
   # Action if failed     7
 
-  # Search for specified headers in relevant directories
-  for ax_qt_header_name in $ax_qt_module_headers; do
-    ax_qt_module_include_dir=
-    _AX_HAVE_QT_FOR_EACH_DIR([ax_dir_root], [
-      for ax_dir in $ax_dir_root $ax_dir_root/include; do
-        if test -r "$ax_dir/$ax_qt_header_name"; then
-          ax_qt_module_include_dir="$ax_dir"
+  if pkg-config --silence-errors --exists Qt5$ax_qt_module; then
+    ax_qt_module_CXXFLAGS="$ax_qt_module_CXXFLAGS `pkg-config --cflags Qt5$ax_qt_module`"
+    ax_qt_module_LIBS="$ax_qt_module_LIBS `pkg-config --libs Qt5$ax_qt_module`"
+  elif pkg-config --silence-errors --exists Qt$ax_qt_module; then
+    ax_qt_module_CXXFLAGS="$ax_qt_module_CXXFLAGS `pkg-config --cflags Qt$ax_qt_module`"
+    ax_qt_module_LIBS="$ax_qt_module_LIBS `pkg-config --libs Qt$ax_qt_module`"
+  else
+    # Search for specified headers in relevant directories
+    for ax_qt_header_name in $ax_qt_module_headers; do
+      ax_qt_module_include_dir=
+      _AX_HAVE_QT_FOR_EACH_DIR([ax_dir_root], [
+        for ax_dir in $ax_dir_root $ax_dir_root/include; do
+          if test -r "$ax_dir/$ax_qt_header_name"; then
+            ax_qt_module_include_dir="$ax_dir"
+            break;
+          elif test -r "$ax_dir/Qt$ax_qt_module/$ax_qt_header_name"; then
+            _AX_HAVE_QT_INSERT([ax_qt_module_CXXFLAGS], [-I"$ax_dir"])
+            ax_qt_module_include_dir="$ax_dir/Qt$ax_qt_module"
+            break;
+          fi;
+        done;
+        if test x"$ax_qt_module_include_dir" != x; then
+          _AX_HAVE_QT_INSERT([ax_qt_module_CXXFLAGS], [-I"$ax_qt_module_include_dir"])
           break;
-        elif test -r "$ax_dir/Qt$ax_qt_module/$ax_qt_header_name"; then
-          _AX_HAVE_QT_INSERT([ax_qt_module_CXXFLAGS], [-I"$ax_dir"])
-          ax_qt_module_include_dir="$ax_dir/Qt$ax_qt_module"
-          break;
-        fi;
-      done;
-      if test x"$ax_qt_module_include_dir" != x; then
-        _AX_HAVE_QT_INSERT([ax_qt_module_CXXFLAGS], [-I"$ax_qt_module_include_dir"])
-        break;
-      fi
-    ])
-  done;
+        fi
+      ])
+    done;
+  fi;
 
   # Construct a prologue from the specified headers
   ax_qt_module_prologue=
@@ -497,8 +575,8 @@ AC_DEFUN([_AX_HAVE_QT_COMPILE], [
   ax_save_CXXFLAGS="$CXXFLAGS"
       ax_save_LIBS="$LIBS"
 
-  CXXFLAGS="$QT_CXXFLAGS $ax_qt_compile_CXXFLAGS"
-      LIBS="$QT_LIBS     $ax_qt_compile_LIBS"
+  CXXFLAGS="$QT_CXXFLAGS $ax_qt_compile_CXXFLAGS -fPIC"
+      LIBS="$QT_LIBS $ax_qt_compile_LIBS"
 
   AC_TRY_LINK(
     [$ax_qt_module_prologue],
@@ -511,7 +589,13 @@ AC_DEFUN([_AX_HAVE_QT_COMPILE], [
     # global arguments and call the client-provided code
 
     _AX_HAVE_QT_INSERT([QT_CXXFLAGS], [$ax_qt_compile_CXXFLAGS])
-    _AX_HAVE_QT_INSERT([QT_LIBS],     [$ax_qt_compile_LIBS])
+
+    ax_qt_compile_reversed_LIBS=
+    for ax_qt_temp_lib in $ax_qt_compile_LIBS; do
+      ax_qt_compile_reversed_LIBS="$ax_qt_temp_lib $ax_qt_compile_reversed_LIBS"
+    done;
+
+    _AX_HAVE_QT_INSERT([QT_LIBS], [$ax_qt_compile_reversed_LIBS], [yes])
 
     $5
   ], [
@@ -625,9 +709,9 @@ AC_DEFUN([_AX_HAVE_QT_FOR_EACH_DIR],[
     /Developer;
   do
     for $1 in \
-      "$ax_for_each_dir_root" \
       `ls -dr $ax_dir_root/qt* 2>/dev/null` \
-      `ls -dr $ax_dir_root/Qt* 2>/dev/null`;
+      `ls -dr $ax_dir_root/Qt* 2>/dev/null` \
+      "$ax_for_each_dir_root";
     do
       ax_continue_flag=
       $2
