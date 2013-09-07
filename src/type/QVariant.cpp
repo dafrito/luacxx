@@ -21,24 +21,24 @@ namespace std {
 
 namespace {
 
-static std::unordered_map<QVariant::Type, std::function<void(LuaStack&, const QVariant&)>> variantPushers;
-static std::unordered_map<QVariant::Type, std::function<void(const LuaIndex&, QVariant&)>> variantStorers;
+static std::unordered_map<int, std::function<void(LuaStack&, const QVariant&)>> variantPushers;
+static std::unordered_map<int, std::function<void(const LuaIndex&, QVariant&)>> variantStorers;
 
 }
 
-void lua::qvariantPusher(const QVariant::Type& type, const std::function<void(LuaStack&, const QVariant&)>& mapper)
+void lua::qvariantPusher(const int& type, const std::function<void(LuaStack&, const QVariant&)>& mapper)
 {
     variantPushers[type] = mapper;
 }
 
-void lua::qvariantStorer(const QVariant::Type& type, const std::function<void(const LuaIndex&, QVariant&)>& mapper)
+void lua::qvariantStorer(const int& type, const std::function<void(const LuaIndex&, QVariant&)>& mapper)
 {
     variantStorers[type] = mapper;
 }
 
 void lua::pushVariant(LuaStack& stack, const QVariant& variant)
 {
-    switch (variant.type()) {
+    switch (variant.userType()) {
     case QVariant::Invalid:
         lua::push(stack, lua::value::nil);
         break;
@@ -71,7 +71,7 @@ void lua::pushVariant(LuaStack& stack, const QVariant& variant)
 
         break;
     default:
-        auto converter = variantPushers.find(variant.type());
+        auto converter = variantPushers.find(variant.userType());
         if (converter != variantPushers.end()) {
             converter->second(stack, variant);
         } else {
@@ -84,7 +84,7 @@ void lua::storeVariant(const LuaIndex& index, QVariant& sink)
 {
     auto pos = index.pos();
     LuaStack& stack = index.stack();
-    switch (sink.type()) {
+    switch (sink.userType()) {
     case QVariant::Invalid:
         sink.clear();
         break;

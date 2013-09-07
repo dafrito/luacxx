@@ -9,8 +9,8 @@
 
 namespace lua {
 
-void qvariantPusher(const QVariant::Type& type, const std::function<void(LuaStack&, const QVariant&)>& mapper);
-void qvariantStorer(const QVariant::Type& type, const std::function<void(const LuaIndex&, QVariant&)>& mapper);
+void qvariantPusher(const int& type, const std::function<void(LuaStack&, const QVariant&)>& mapper);
+void qvariantStorer(const int& type, const std::function<void(const LuaIndex&, QVariant&)>& mapper);
 
 void pushVariant(LuaStack& stack, const QVariant& source);
 void storeVariant(const LuaIndex& index, QVariant& sink);
