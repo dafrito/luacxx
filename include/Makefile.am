@@ -15,6 +15,7 @@ nobase_pkginclude_HEADERS = \
 	LuaGlobalAccessible.hpp \
 	LuaStackAccessible.hpp \
 	LuaTableAccessible.hpp \
+	LuaProxyAccessible.hpp \
 	values.hpp \
 	ModuleLoader.hpp \
 	DirectoryModuleLoader.hpp \

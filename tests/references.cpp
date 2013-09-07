@@ -1,6 +1,7 @@
 #include "init.hpp"
 
 #include "LuaGlobalAccessible.hpp"
+#include "LuaProxyAccessible.hpp"
 
 BOOST_AUTO_TEST_CASE(testLuaHandlesReferencesProperly)
 {
@@ -44,4 +45,15 @@ BOOST_AUTO_TEST_CASE(testLuaValueGetsALength)
     LuaEnvironment lua;
     lua("foo = {42, 42, 42}");
     BOOST_REQUIRE_EQUAL(lua["foo"].length(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(testLuaProxy)
+{
+    LuaEnvironment lua;
+
+    LuaGlobal foo = lua["foo"];
+    lua["foo"] = 42;
+    LuaProxy fooCopy = foo;
+
+    BOOST_CHECK_EQUAL(42, fooCopy.get<int>());
 }

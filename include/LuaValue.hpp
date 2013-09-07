@@ -17,21 +17,29 @@ class LuaValue
 
     Accessible _accessible;
 
-    LuaAccessible& accessor()
-    {
-        return lua::retrieveAccessor(_accessible);
-    }
-
-    const LuaAccessible& accessor() const
-    {
-        return lua::retrieveAccessor(_accessible);
-    }
-
 public:
+
+    template <class T>
+    LuaValue(const LuaValue<T>& obj) :
+        _lua(obj.luaState()),
+        _accessible(obj.accessor())
+    {
+    }
+
     LuaValue(lua_State* const lua, const Accessible& accessible) :
         _lua(lua),
         _accessible(accessible)
     {}
+
+    Accessible accessor()
+    {
+        return lua::retrieveAccessor(_accessible);
+    }
+
+    const Accessible accessor() const
+    {
+        return lua::retrieveAccessor(_accessible);
+    }
 
     lua_State* luaState() const
     {
@@ -72,7 +80,11 @@ public:
         stack >> sink;
     }
 
-    template<typename T>
+    template<typename T,
+        typename std::enable_if<
+            !std::is_constructible<LuaValue<Accessible>, T>::value, int
+        >::type = 0
+    >
     operator T() const
     {
         return get<T>();

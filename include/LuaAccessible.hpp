@@ -40,9 +40,23 @@ public:
 };
 
 namespace lua {
-    const LuaAccessible& retrieveAccessor(const LuaAccessible& accessible);
-    LuaAccessible& retrieveAccessor(LuaAccessible& accessible);
-    const LuaAccessible& retrieveAccessor(const std::shared_ptr<LuaAccessible>& accessible);
+    template <class Accessor>
+    Accessor& retrieveAccessor(Accessor& accessible)
+    {
+        return accessible;
+    }
+
+    template <class Accessor>
+    const Accessor& retrieveAccessor(const Accessor& accessible)
+    {
+        return accessible;
+    }
+
+    template <class Accessor>
+    const Accessor& retrieveAccessor(const std::shared_ptr<Accessor>& accessible)
+    {
+        return *accessible;
+    }
 } // namespace lua
 
 #endif // HEADER_LUAACCESSIBLE_HPP

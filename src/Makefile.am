@@ -16,7 +16,6 @@ liblua_cxx_la_SOURCES = \
 	LuaIndex.cpp \
 	DirectoryModuleLoader.cpp \
 	qobject.cpp \
-	LuaAccessible.cpp \
 	LuaReferenceAccessible.cpp \
 	LuaGlobalAccessible.cpp \
 	LuaUserdata.cpp \
