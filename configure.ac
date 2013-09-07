@@ -46,6 +46,7 @@ fi
 # Check for Qt
 AX_HAVE_QT_CORE
 AX_HAVE_QT_MOC
+QT_CXXFLAGS="$QT_CXXFLAGS -fPIC"
 
 if test x"$have_qt_core" = xno || test x"$have_qt_gui" = xno || test x"$have_qt_moc" = xno; then
     AC_MSG_ERROR([Qt is required to build lua-cxx])
