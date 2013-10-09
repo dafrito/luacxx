@@ -4,7 +4,6 @@
 #include "LuaStack.hpp"
 #include <QObject>
 
-class LuaStack;
 class QObject;
 
 namespace lua {
