@@ -5,7 +5,7 @@ AC_INIT([lua-cxx], [2.1], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.co
 AC_SUBST([PACKAGE_RELEASE], [1])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/LuaEnvironment.cpp])
-AC_CONFIG_HEADERS([src/config.h])
+AC_CONFIG_HEADERS([include/config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # Check for build programs
