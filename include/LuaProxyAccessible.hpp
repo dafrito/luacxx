@@ -16,6 +16,11 @@ public:
     {
     }
 
+    LuaProxyAccessible(LuaProxyAccessible& other) :
+        _data(other._data)
+    {
+    }
+
     template <
         class T,
         typename std::enable_if<
