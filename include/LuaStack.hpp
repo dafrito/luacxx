@@ -85,12 +85,6 @@ private:
     bool _acceptsStackUserdata;
 
     /**
-     * Assert that the specified position is within
-     * bounds of this LuaStack.
-     */
-    int absPos(const int pos) const;
-
-    /**
      * Returns whether the stack position is special to
      * Lua. The globals table and the references table
      * are examples of two magical stack positions.
@@ -119,6 +113,12 @@ public:
     LuaStack(LuaStack& stack);
 
     lua_State* luaState() const;
+
+    /**
+     * Assert that the specified position is within
+     * bounds of this LuaStack.
+     */
+    int absPos(const int pos) const;
 
     bool isValid(int pos) const;
 
