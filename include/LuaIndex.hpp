@@ -22,6 +22,8 @@ public:
     LuaIndex& operator++();
     LuaIndex operator--(int);
     LuaIndex& operator--();
+
+    explicit operator bool() const;
 };
 
 #endif // LUAINDEX_HEADER

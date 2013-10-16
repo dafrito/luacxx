@@ -50,3 +50,8 @@ LuaIndex& LuaIndex::operator--()
     _pos -= _direction;
     return *this;
 }
+
+LuaIndex::operator bool() const
+{
+    return stack().isValid(pos());
+}

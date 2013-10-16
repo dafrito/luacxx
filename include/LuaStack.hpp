@@ -120,6 +120,8 @@ public:
 
     lua_State* luaState() const;
 
+    bool isValid(int pos) const;
+
     /**
      * Return the number of stack values that are
      * managed by this stack.

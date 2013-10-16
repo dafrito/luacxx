@@ -217,6 +217,23 @@ void LuaStack::shift(unsigned int count)
     }
 }
 
+bool LuaStack::isValid(int pos) const
+{
+    if (isMagicalPos(pos)) {
+        return true;
+    }
+    if (pos == 0 || empty()) {
+        return false;
+    }
+    // Convert relative positions to absolute ones.
+    if (pos < 0) {
+        pos += top() + 1;
+    } else {
+        pos += offset();
+    }
+    return pos >= offset() && pos <= top();
+}
+
 int LuaStack::absPos(int pos) const
 {
     if (isMagicalPos(pos)) {
