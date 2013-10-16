@@ -382,3 +382,21 @@ BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
     BOOST_CHECK_EQUAL(lua["foo"].typestring(), "number");
     BOOST_CHECK_EQUAL(lua["foo"].get<int>(), 42);
 }
+
+BOOST_AUTO_TEST_CASE(stackCanRetrieveMultipleArgumentsAtOnce)
+{
+    LuaEnvironment lua;
+    LuaStack stack(lua);
+
+    lua::push(stack, 1);
+    lua::push(stack, 2);
+    lua::push(stack, 3);
+    lua::push(stack, 4);
+
+    auto results = lua::getAll<int>(stack);
+    BOOST_REQUIRE_EQUAL(4, results.size());
+    BOOST_CHECK_EQUAL(1, results[0]);
+    BOOST_CHECK_EQUAL(2, results[1]);
+    BOOST_CHECK_EQUAL(3, results[2]);
+    BOOST_CHECK_EQUAL(4, results[3]);
+}

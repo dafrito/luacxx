@@ -50,6 +50,28 @@ namespace lua {
         return Getter<Sink>::get(index);
     }
 
+    template <typename Sink>
+    std::vector<Sink> getAll(LuaIndex index)
+    {
+        std::vector<Sink> results;
+        while (index) {
+            results.push_back(lua::get<Sink>(index++));
+        }
+        return results;
+    }
+
+    template <typename Sink>
+    std::vector<Sink> getAll(LuaStack& stack)
+    {
+        return getAll<Sink>(stack.begin());
+    }
+
+    template <typename Sink>
+    std::vector<Sink> getAll(LuaStack& stack, int pos)
+    {
+        return getAll<Sink>(LuaIndex(stack, pos));
+    }
+
     template <typename Sink, typename std::enable_if<
         std::is_same<typename std::remove_reference<Sink>::type, LuaStack>::value, int>::type = 0>
     LuaStack& get(const LuaIndex& index)
