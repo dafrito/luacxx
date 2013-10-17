@@ -253,6 +253,7 @@ public:
     void to(int& sink, const int pos = -1);
     void to(unsigned int& sink, const int pos = -1);
     void to(long& sink, const int pos = -1);
+    void to(long long int& sink, const int pos = -1);
     void to(float& sink, const int pos = -1);
     void to(lua_Number& sink, const int pos = -1);
     void to(const char*& sink, const int pos = -1);
