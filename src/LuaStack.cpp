@@ -419,15 +419,39 @@ void LuaStack::to(lua_Number& sink, const int pos)
     sink = lua_tonumber(luaState(), absPos(pos));
 }
 
+void LuaStack::to(unsigned char& sink, const int pos)
+{
+    if (type(pos) == lua::type::string) {
+        size_t len = 1;
+        sink = *lua_tolstring(luaState(), absPos(pos), &len);
+    } else {
+        sink = lua_tonumber(luaState(), absPos(pos));
+    }
+}
+
 void LuaStack::to(char& sink, const int pos)
 {
-    size_t len = 1;
-    sink = *lua_tolstring(luaState(), absPos(pos), &len);
+    if (type(pos) == lua::type::string) {
+        size_t len = 1;
+        sink = *lua_tolstring(luaState(), absPos(pos), &len);
+    } else {
+        sink = lua_tonumber(luaState(), absPos(pos));
+    }
+}
+
+void LuaStack::to(unsigned short& sink, const int pos)
+{
+    sink = lua_tointeger(luaState(), absPos(pos));
 }
 
 void LuaStack::to(short& sink, const int pos)
 {
     sink = lua_tointeger(luaState(), absPos(pos));
+}
+
+void LuaStack::to(unsigned int& sink, const int pos)
+{
+    sink = lua_tonumber(luaState(), absPos(pos));
 }
 
 void LuaStack::to(int& sink, const int pos)
@@ -436,11 +460,6 @@ void LuaStack::to(int& sink, const int pos)
 }
 
 void LuaStack::to(long& sink, const int pos)
-{
-    sink = lua_tonumber(luaState(), absPos(pos));
-}
-
-void LuaStack::to(unsigned int& sink, const int pos)
 {
     sink = lua_tonumber(luaState(), absPos(pos));
 }

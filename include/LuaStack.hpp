@@ -247,7 +247,9 @@ public:
      */
     void to(bool& sink, const int pos = -1);
     void to(char& sink, const int pos = -1);
+    void to(unsigned char& sink, const int pos = -1);
     void to(short& sink, const int pos = -1);
+    void to(unsigned short& sink, const int pos = -1);
     void to(int& sink, const int pos = -1);
     void to(unsigned int& sink, const int pos = -1);
     void to(long& sink, const int pos = -1);
