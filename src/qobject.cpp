@@ -246,6 +246,9 @@ void callMethod(LuaStack& stack)
     stack.shift();
 
     auto name = stack.get<const char*>(1);
+    if (stack.size() < 2) {
+        throw LuaException("Method must be invoked with a valid userdata");
+    }
     auto userdata = stack.get<LuaUserdata*>(2);
     if (!userdata) {
         throw LuaException("Method must be invoked with a valid userdata");
