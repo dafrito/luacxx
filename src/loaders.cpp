@@ -12,14 +12,24 @@ namespace {
     {
         std::istream& stream;
         char buffer[4096];
-        LuaReadingData(std::istream& stream) : stream(stream) {}
+        bool atStart;
+        LuaReadingData(std::istream& stream) :
+            stream(stream),
+            atStart(true)
+        {
+        }
     };
 
     struct QtReadingData
     {
         QTextStream stream;
         QByteArray chunk;
-        QtReadingData(QFile& file) : stream(&file) {}
+        bool atStart;
+        QtReadingData(QFile& file) :
+            stream(&file),
+            atStart(true)
+        {
+        }
     };
 
     const int CHUNKSIZE = 4096;
@@ -27,6 +37,23 @@ namespace {
     const char* readStdStream(lua_State *, void *data, size_t *size)
     {
         LuaReadingData* d = static_cast<LuaReadingData*>(data);
+        if (d->atStart) {
+            d->atStart = false;
+            d->stream.read(d->buffer, 2);
+            if (d->stream.eof()) {
+                // This can occur if insufficient characters were read
+                return NULL;
+            }
+            d->buffer[2] = '\0';
+            if (std::string(d->buffer) == "#!") {
+                // Shebang, so ignore the rest of the line
+                std::string shebangLine;
+                std::getline(d->stream, shebangLine);
+            } else {
+                // Nothing found, so head back to the start of the file
+                d->stream.seekg(0);
+            }
+        }
         if (d->stream.eof()) {
             return NULL;
         }
@@ -41,8 +68,20 @@ namespace {
     const char* readQtStream(lua_State*, void *pstream, size_t *size)
     {
         QtReadingData* d = static_cast<QtReadingData*>(pstream);
-        if(d->stream.atEnd())
+        if (d->atStart) {
+            d->atStart = false;
+            auto firstTwo = d->stream.read(2);
+            if (firstTwo == "#!") {
+                // Shebang, so ignore the rest of the line
+                d->stream.readLine();
+            } else {
+                // Nothing found, so head back to the start of the file
+                d->stream.seek(0);
+            }
+        }
+        if (d->stream.atEnd()) {
             return NULL;
+        }
         d->chunk = d->stream.read(CHUNKSIZE).toUtf8();
         *size = d->chunk.size();
         return d->chunk.constData();
