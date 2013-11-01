@@ -758,6 +758,14 @@ bool LuaStack::isNil(const int pos) const
     return lua_isnil(luaState(), absPos(pos)) == 1;
 }
 
+void LuaStack::error()
+{
+    clear();
+    lua::push(*this, "");
+    disown();
+    lua_error(luaState());
+}
+
 LuaStack::~LuaStack()
 {
     for (auto userdata : _rawUserdata) {

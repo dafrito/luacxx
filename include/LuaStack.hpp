@@ -341,6 +341,8 @@ public:
     template <class Message>
     void error(const Message& message);
 
+    void error();
+
     bool hasMetatable(const int pos = -1);
     void pushMetatable(const int pos = -1);
     void setMetatable(const int pos = -2);
