@@ -93,7 +93,7 @@ void LuaEnvironment::loadModule(LuaEnvironment& lua, LuaStack& stack)
         }
     }
 
-    lua::push(stack, std::string("Unable to find module: ") + moduleName);
+    lua::push(stack, std::string("\n\tUnable to find module: ") + moduleName);
 }
 
 int LuaEnvironment::internalStackSize() const
