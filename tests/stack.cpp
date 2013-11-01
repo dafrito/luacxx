@@ -400,3 +400,15 @@ BOOST_AUTO_TEST_CASE(stackCanRetrieveMultipleArgumentsAtOnce)
     BOOST_CHECK_EQUAL(3, results[2]);
     BOOST_CHECK_EQUAL(4, results[3]);
 }
+
+BOOST_AUTO_TEST_CASE(stackCanReturnADouble)
+{
+    LuaEnvironment lua;
+    LuaStack stack(lua);
+
+    lua["GetTime"] = std::function<int(LuaStack&)>([](LuaStack& stack) {
+        return 42;
+    });
+
+    BOOST_CHECK_EQUAL(42, lua["GetTime"]().get<int>());
+}
