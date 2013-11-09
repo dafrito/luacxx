@@ -33,6 +33,7 @@ namespace {
     };
 
     const int CHUNKSIZE = 4096;
+    const char EMPTY_LINE = '\n';
 
     const char* readStdStream(lua_State *, void *data, size_t *size)
     {
@@ -49,6 +50,10 @@ namespace {
                 // Shebang, so ignore the rest of the line
                 std::string shebangLine;
                 std::getline(d->stream, shebangLine);
+
+                // Return a newline so line counts are correct
+                *size = 1;
+                return &EMPTY_LINE;
             } else {
                 // Nothing found, so head back to the start of the file
                 d->stream.seekg(0);
@@ -74,6 +79,10 @@ namespace {
             if (firstTwo == "#!") {
                 // Shebang, so ignore the rest of the line
                 d->stream.readLine();
+
+                // Return a newline so line counts are correct
+                *size = 1;
+                return &EMPTY_LINE;
             } else {
                 // Nothing found, so head back to the start of the file
                 d->stream.seek(0);
