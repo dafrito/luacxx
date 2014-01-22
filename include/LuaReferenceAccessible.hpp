@@ -34,8 +34,8 @@ class LuaReferenceAccessible : public LuaAccessible
         }
 
         RawLuaReference(lua_State* state, int ref) :
-            _state(state),
-            ref(ref)
+            ref(ref),
+            _state(state)
         {
             if (ref < 0) {
                 throw std::logic_error("Invalid reference");
