@@ -6,7 +6,7 @@ Release:	@PACKAGE_RELEASE@%{?dist}
 Summary:	Bridge between Lua and C++
 
 Group:		Applications/Internet
-License:	Proprietary
+License:	MIT
 URL:		@PACKAGE_URL@
 Source0:	@PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
