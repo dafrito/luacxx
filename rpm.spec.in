@@ -21,6 +21,8 @@ TODO Add longer description
 %setup -q
 
 %build
+export CXX=g++
+export CC=gcc
 %configure
 make %{?_smp_mflags}
 
