@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = liblua-cxx.la
 liblua_cxx_la_CPPFLAGS = @QT_CXXFLAGS@ @LUA_INCLUDE@ -I$(top_srcdir)/include
 liblua_cxx_la_LIBADD = @QT_LIBS@ @LUA_LIB@
-liblua_cxx_la_LDFLAGS = -version-info 0:0:0
+liblua_cxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 # moc-generated source files
 liblua_cxx_la_MOC_SOURCES = \
