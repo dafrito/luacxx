@@ -40,4 +40,3 @@ mostlyclean-local:
 
 moc_%.cpp: %.hpp
 	@QT_MOC@ -o $@ $<
-
