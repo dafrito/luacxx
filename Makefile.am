@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src tests include
+SUBDIRS = src src/tests
 
 pkgdata_DATA = \
 	lua-cxx.m4
@@ -10,10 +10,10 @@ pkgconfig_DATA = lua-cxx.pc
 export RPMDIR ?= $$HOME/rpmbuild
 
 checkdebug: $(TESTS)
-	cd tests && gdb .libs/lt-runtest
+	cd src/tests && gdb .libs/lt-runtest
 
 checkvalgrind:
-	cd tests && valgrind -v --leak-check=full .libs/lt-runtest
+	cd src/tests && valgrind -v --leak-check=full .libs/lt-runtest
 
 debug: $(TESTS)
 	cd src && gdb lua-cxx
