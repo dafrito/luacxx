@@ -15,7 +15,7 @@ Requires:	qt
 BuildRequires: make automake autoconf libtool gcc-c++ boost-test boost-devel qt-devel
 
 %description
-TODO Add longer description
+Lua-cxx is a template-based binding between C++11 and Lua 5.2.
 
 %prep
 %setup -q
