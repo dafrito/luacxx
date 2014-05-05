@@ -20,6 +20,7 @@ pkginclude_HEADERS = \
 	exception.hpp \
 	load.hpp \
 	algorithm.hpp \
+	link.hpp \
 	module/DirectoryModuleLoader.hpp \
 	module/ModuleLoader.hpp \
 	stack.hpp

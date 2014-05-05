@@ -2,6 +2,7 @@
 #define LUA_CXX_GLOBAL_HEADER
 
 #include "stack.hpp"
+#include "link.hpp"
 #include <string>
 
 namespace lua {
@@ -41,6 +42,12 @@ public:
         lua::store(*this, lua::push(_state, source));
         lua_pop(_state, 1);
         return *this;
+    }
+
+    template <class T>
+    lua::link<lua::global, T> operator[](T&& name) const
+    {
+        return lua::link<lua::global, T>(*this, name);
     }
 };
 
