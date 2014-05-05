@@ -6,11 +6,11 @@
 
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 namespace lua {
 
 std::string traceback(lua::state* const state, const int toplevel);
-
 std::string dump(lua::state* const state);
 
 lua::index invoke(const lua::index& callable);
@@ -41,6 +41,14 @@ void pop(lua::state* const state, const int num);
 
 void swap(const lua::index& a, const lua::index& b);
 lua::index copy(const lua::index& source);
+
+template <class T>
+void get_all(std::vector<T>& results, lua::index index)
+{
+    while (index) {
+        results.push_back(lua::get<T>(index++));
+    }
+}
 
 template <class T>
 lua::index global(lua::state* const state, const T&& name)
