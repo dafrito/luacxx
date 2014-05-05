@@ -1,12 +1,12 @@
-#ifndef LUA_CXX_QOBJECTOBSERVER_HEADER
-#define LUA_CXX_QOBJECTOBSERVER_HEADER
+#ifndef LUA_CXX_QOBJECTMONITOR_HEADER
+#define LUA_CXX_QOBJECTMONITOR_HEADER
 
 #include <QObject>
 #include "LuaStack.hpp"
 
 namespace lua {
 
-class QObjectObserver : public QObject
+class QObjectMonitor : public QObject
 {
     Q_OBJECT
 
@@ -14,11 +14,11 @@ class QObjectObserver : public QObject
     LuaUserdata* userdata;
     bool _destroyOnGC;
 public:
-    QObjectObserver(const QObject* const object, LuaUserdata* const userdata);
+    QObjectMonitor(const QObject* const object, LuaUserdata* const userdata);
 
     void setDestroyOnGC(const bool destroy);
 
-    ~QObjectObserver();
+    ~QObjectMonitor();
 
 public slots:
     void destroyedFromLua();
@@ -27,6 +27,6 @@ public slots:
 
 } // namespace lua
 
-#endif // LUA_CXX_QOBJECTOBSERVER_HEADER
+#endif // LUA_CXX_QOBJECTMONITOR_HEADER
 
 // vim: set ts=4 sw=4 :

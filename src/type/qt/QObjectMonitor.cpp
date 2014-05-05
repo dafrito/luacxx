@@ -1,11 +1,11 @@
-#include "QObjectObserver.hpp"
+#include "QObjectMonitor.hpp"
 
 #include <iostream>
 #include <cassert>
 
 namespace lua {
 
-QObjectObserver::QObjectObserver(
+QObjectMonitor::QObjectMonitor(
         const QObject* const object,
         LuaUserdata* const userdata) :
     object(object),
@@ -23,7 +23,7 @@ QObjectObserver::QObjectObserver(
     userdata->setManager([this]() { destroyedFromLua(); });
 }
 
-void QObjectObserver::destroyedFromC()
+void QObjectMonitor::destroyedFromC()
 {
     if (!userdata) {
         // Already destroyed from Lua
@@ -39,7 +39,7 @@ void QObjectObserver::destroyedFromC()
     }
 }
 
-void QObjectObserver::destroyedFromLua()
+void QObjectMonitor::destroyedFromLua()
 {
     if (!object) {
         // Already destroyed from C++
@@ -55,7 +55,7 @@ void QObjectObserver::destroyedFromLua()
     }
 }
 
-void QObjectObserver::setDestroyOnGC(const bool destroy)
+void QObjectMonitor::setDestroyOnGC(const bool destroy)
 {
     _destroyOnGC = destroy;
     if (!userdata) {
@@ -63,7 +63,7 @@ void QObjectObserver::setDestroyOnGC(const bool destroy)
     }
 }
 
-QObjectObserver::~QObjectObserver()
+QObjectMonitor::~QObjectMonitor()
 {
     destroyedFromC();
 }
