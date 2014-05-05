@@ -125,8 +125,6 @@ lua::index get(Table source, Key key)
     return lua::index(table.state(), -1);
 }
 
-
-
 } // namespace table
 
 } // namespace lua
