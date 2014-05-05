@@ -174,6 +174,15 @@ lua::index push(lua::state* const state, T value)
     return lua::index(state, -1);
 }
 
+// Allows noop invocations from variadic templates
+lua::index push(lua::state* const state);
+
+template <class Source>
+lua::index push(Source source)
+{
+    return lua::push(source.state(), source);
+}
+
 template <class T, class... Rest>
 lua::index push(lua::state* const state, T value, Rest&&... values)
 {

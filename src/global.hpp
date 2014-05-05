@@ -63,15 +63,11 @@ struct Store<lua::global>
     }
 };
 
-lua::index push(const lua::global& source)
-{
-    return lua::push(source.state(), source);
-}
-
 template <class T>
-T get(const lua::global& source)
+typename std::remove_const<typename std::remove_reference<T>::type>::type
+get(const lua::global& source)
 {
-    T destination;
+    typename std::remove_const<typename std::remove_reference<T>::type>::type destination;
     auto global_value = lua::push(source);
     lua::store(destination, global_value);
     return destination;
