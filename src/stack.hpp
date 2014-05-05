@@ -233,9 +233,9 @@ void store(T& destination, const lua::index& source)
 }
 
 template <class T>
-T get(const lua::index& source)
+typename std::remove_const<typename std::remove_reference<T>::type>::type get(const lua::index& source)
 {
-    T destination;
+    typename std::remove_const<typename std::remove_reference<T>::type>::type destination;
     lua::store(destination, source);
     return destination;
 }
