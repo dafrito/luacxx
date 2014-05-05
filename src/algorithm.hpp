@@ -68,6 +68,59 @@ RV call(Callable source, Args&&... args)
     return lua::get<RV>(lua::invoke(callable));
 }
 
+template <typename Callable, typename... Args>
+void call(Callable source, Args&&... args)
+{
+    lua::index callable(lua::push(source.state(), source));
+    if (!callable.type().function()) {
+        throw std::logic_error(
+            std::string("A function must be at the top of the stack, not a ") + callable.type().name()
+        );
+    }
+    lua::push(callable.state(), args...);
+    lua::invoke(callable);
+}
+
+namespace table {
+
+template <typename Table, typename Value>
+void insert(Table destination, Value value)
+{
+    lua::index table(lua::push(destination.state(), destination));
+    if (!table.type().table()) {
+        throw std::logic_error(
+            std::string("A table must be provided")
+        );
+    }
+
+    lua::push(table.state(), lua::size(table) + 1);
+    lua::push(table.state(), value);
+    lua_settable(table.state(), table.pos());
+
+    lua_pop(table.state(), 1);
+}
+
+template <typename Table, typename Key>
+lua::index get(Table source, Key key)
+{
+    lua::index table(lua::push(source.state(), source));
+    if (!table.type().table()) {
+        throw std::logic_error(
+            std::string("A table must be provided")
+        );
+    }
+
+    lua::push(table.state(), key);
+    lua_gettable(table.state(), table.pos());
+    lua_replace(table.state(), table.pos());
+
+    return lua::index(table.state(), -1);
+}
+
+
+
+} // namespace table
+
 } // namespace lua
 
 #endif // LUA_CXX_ALGORITHM_HEADER
