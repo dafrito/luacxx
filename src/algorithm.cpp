@@ -10,17 +10,16 @@
 
 static int on_error(lua::state* const state)
 {
-    std::string error("An error occurred within Lua");
-    if (!lua::empty(state)) {
-        error = lua::get<std::string>(lua::top(state));
+    if (lua::size(state) > 0 && !lua::index(state, 1).type().userdata()) {
+        lua::exception ex(lua::get<const char*>(state, 1));
+        lua::clear(state);
+        lua::push(state, ex);
+    } else {
+        lua::push(state, lua::exception("An error occurred within Lua"));
     }
-    if (error.find("\nstack traceback:\n") == std::string::npos) {
-        error += "\n";
-        error += lua::traceback(state, 2);
-    }
+    auto ex = lua::get<lua::exception*>(state, 1);
+    ex->set_traceback(lua::traceback(state, 2));
 
-    lua::clear(state);
-    lua::push(state, error);
     return 1;
 }
 
@@ -51,17 +50,9 @@ lua::index lua::invoke(const lua::index& callable)
         case LUA_ERRERR:
             throw std::runtime_error("Lua error within error handler");
         case LUA_ERRRUN:
-            auto fullError = lua::get<std::string>(state, -1);
-            auto sep = fullError.find("\nstack traceback:\n");
-            if (sep != std::string::npos) {
-                auto reason = fullError.substr(0, sep);
-                auto traceback = fullError.substr(sep + 1);
-                lua::exception ex(reason);
-                ex.set_traceback(traceback);
-                throw ex;
-            } else {
-                throw lua::exception(fullError);
-            }
+            std::cerr << "Error propagated during run\n";
+            auto ex = lua::get<lua::exception*>(state, -1);
+            throw *ex;
     }
 
     std::stringstream str;

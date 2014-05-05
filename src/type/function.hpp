@@ -135,7 +135,13 @@ struct Store<lua::function>
 static int invoke_callable(lua::state* const state)
 {
     auto callable = lua::get<lua::callable*>(lua::index(state, lua_upvalueindex(1)));
-    return (*callable)(state);
+    try {
+        return (*callable)(state);
+    } catch (lua::exception& ex) {
+        lua::push(state, ex);
+        lua_error(state);
+        throw std::runtime_error("lua_error should throw");
+    }
 }
 
 template <>
