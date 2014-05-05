@@ -1,6 +1,6 @@
 #include "DirectoryModuleLoader.hpp"
-#include "LuaValue.hpp"
-#include "loaders.hpp"
+
+#include "load.hpp"
 
 void DirectoryModuleLoader::resolve(QFile& file, const std::string& module)
 {
@@ -21,7 +21,7 @@ bool DirectoryModuleLoader::search(const std::string& module)
     return moduleFile.exists();
 }
 
-void DirectoryModuleLoader::load(LuaEnvironment& lua, const std::string& module)
+void DirectoryModuleLoader::load(lua::state* const state, const std::string& module)
 {
     QFile moduleFile;
     resolve(moduleFile, module);
@@ -30,6 +30,6 @@ void DirectoryModuleLoader::load(LuaEnvironment& lua, const std::string& module)
             std::string("Module name '") + module + "' must resolve to an existing file"
         );
     }
-    LuaStack stack(lua);
-    lua::runFile(stack, moduleFile);
+
+    lua::run_file(state, moduleFile);
 }

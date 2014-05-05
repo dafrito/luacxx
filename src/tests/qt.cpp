@@ -1,17 +1,234 @@
-#include "init.hpp"
-
-#include "qobject.hpp"
-#include "LuaStackAccessible.hpp"
+/*#include "qt/qobject.hpp"
+#include "load.hpp"
 
 #include "type/QString.hpp"
 #include "type/QVariant.hpp"
 #include "type/QChar.hpp"
 #include "type/LuaReference.hpp"
 
-#include "loaders.hpp"
-
 #include <boost/math/constants/constants.hpp>
 using namespace boost::math;
+
+void acceptShared(std::shared_ptr<Counter> ptr)
+{
+}
+
+void acceptSharedRef(const std::shared_ptr<Counter>& ptr)
+{
+}
+
+BOOST_AUTO_TEST_CASE(sharedPtrsCanBePassedToCxxFunctions)
+{
+    LuaEnvironment lua;
+    auto obj = std::shared_ptr<QObject>(new Counter(42));
+    lua["c"] = obj;
+
+    lua["acceptShared"] = acceptShared;
+    lua["acceptSharedRef"] = acceptSharedRef;
+}
+
+BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)
+{
+    LuaEnvironment lua;
+    auto obj = std::shared_ptr<QObject>(new Counter(42));
+    lua["c"] = obj;
+
+    BOOST_CHECK_THROW(lua("c.someValue = 24"), LuaException);
+}
+
+BOOST_AUTO_TEST_CASE(luaCanCallQObjectMethods)
+{
+    LuaEnvironment lua;
+    lua["c"] = std::shared_ptr<QObject>(new Counter(42));
+    lua("foo = c:getValue()");
+    BOOST_REQUIRE(lua["foo"] == 42);
+}
+
+BOOST_AUTO_TEST_CASE(luaCanPassValuesToQObjectMethods)
+{
+    LuaEnvironment lua;
+    Counter* counter = new Counter;
+    lua["c"] = std::shared_ptr<QObject>(counter);
+
+    lua("c:setValue(24)");
+    BOOST_REQUIRE_EQUAL(counter->getValue(), 24);
+}
+
+BOOST_AUTO_TEST_CASE(luaCanPassTwoValuesToQObjectMethods)
+{
+    LuaEnvironment lua;
+    Counter* counter = new Counter;
+    lua["c"] = std::shared_ptr<QObject>(counter);
+
+    lua("c:setAddedValue(3, 6)");
+    BOOST_REQUIRE_EQUAL(counter->getValue(), 9);
+}
+
+BOOST_AUTO_TEST_CASE(methodsCanUseTheStackDirectly)
+{
+    LuaEnvironment lua;
+    Counter* counter = new Counter(2);
+    lua["c"] = std::shared_ptr<QObject>(counter);
+
+    lua("c:addAll(1, 2, 3)");
+    BOOST_REQUIRE_EQUAL(counter->getValue(), 8);
+}
+
+BOOST_AUTO_TEST_CASE(methodsCanStillReturnValues)
+{
+    LuaEnvironment lua;
+    lua["c"] = std::shared_ptr<QObject>(new Counter(0));
+
+    BOOST_REQUIRE_EQUAL((int)lua("return c:summed(1, 2, 3)"), 6);
+}
+
+BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
+{
+    LuaEnvironment lua;
+    QFile file(LUA_DIR "anim.lua");
+    lua::runFile(lua, file);
+
+    auto square = new Square;
+
+    int old = square->getX();
+    lua["Tick"](std::shared_ptr<QObject>(square), constants::pi<double>());
+    BOOST_REQUIRE(square->getX() != old);
+}
+
+BOOST_AUTO_TEST_CASE(testLuaHandlesInterestingCharValues)
+{
+    LuaEnvironment lua;
+    LuaStack s(lua);
+    char c = 'c';
+    s.push(&c, 1);
+    std::string sink;
+    s >> sink;
+    BOOST_REQUIRE(sink == "c");
+}
+
+BOOST_AUTO_TEST_CASE(testLuaHandlesQString)
+{
+    LuaEnvironment lua;
+    LuaStack s(lua);
+    QString i('c');
+    s << i;
+    QString o;
+    s >> o;
+    BOOST_CHECK(o == QString("c"));
+}
+
+BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
+{
+    LuaEnvironment lua;
+    LuaStack s(lua);
+    QChar i('c');
+    s << i;
+    QChar o(s.get<char>());
+
+    BOOST_CHECK_EQUAL(o.toLatin1(), i.toLatin1());
+    BOOST_CHECK(i == o);
+}
+
+BOOST_AUTO_TEST_CASE(testLuaHandlesQVariants)
+{
+    LuaEnvironment lua;
+    lua["foo"] = QVariant(42);
+    BOOST_REQUIRE(lua["foo"] == 42);
+}
+
+BOOST_AUTO_TEST_CASE(luaCrashesWhenHandlingNonQVariantTypes)
+{
+    LuaEnvironment lua;
+
+    lua(
+    "function work(a, b)"
+    "   a:set(b);"
+    "end;");
+
+    Counter a(42);
+    BOOST_CHECK_THROW(lua["work"](a, Counter(53)), std::logic_error);
+}
+
+
+BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
+{
+    LuaEnvironment lua;
+    lua.setAcceptsStackUserdata(true);
+
+    Counter counter(42);
+    Counter flag(10);
+
+    lua(
+    "function work(counter, flag)"
+    "    remover = counter:connect('valueChanged', function(newNum)"
+    "        flag.value = newNum;"
+    "    end);"
+    "end;");
+
+    lua["work"](counter, flag);
+
+    counter.setValue(50);
+    BOOST_CHECK_EQUAL(flag.getValue(), 50);
+
+    // Invoke twice to ensure the removal process is idempotent
+    lua("remover()");
+    lua("remover()");
+
+    flag.setValue(30);
+
+    counter.setValue(60);
+
+    BOOST_CHECK_EQUAL(flag.getValue(), 30);
+}
+
+BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
+{
+    LuaEnvironment lua;
+    lua.setAcceptsStackUserdata(true);
+
+    lua::qvariantPusher(QVariant::Point, [](LuaStack& stack, const QVariant& source)
+    {
+        auto point = source.toPoint();
+        lua::push(stack, lua::value::table);
+
+        stack.set("x", point.x());
+        stack.set("y", point.y());
+    });
+
+    lua::qvariantStorer(QVariant::Point, [](const LuaIndex& index, QVariant& sink)
+    {
+        auto table = lua::get<LuaReference>(index);
+        sink.setValue(QPoint(
+            table["x"].get<int>(),
+            table["y"].get<int>()
+        ));
+    });
+
+    lua(
+    "function work(counter)"
+    "    counter.point = {x = 2, y = 4};"
+    "end;");
+
+    Counter counter(42);
+    counter.setPoint(QPoint(36, 54));
+    lua["work"](counter);
+    BOOST_CHECK_EQUAL(counter.getPoint().x(), 2);
+
+    counter.setPoint(QPoint(85, 34));
+
+    lua(
+    "function work(counter)"
+    "    remover = counter:connect('pointEmitted', function(point)"
+    "        foo = point;"
+    "    end);"
+    "end;");
+    lua["work"](counter);
+
+    counter.setValue(23);
+
+    BOOST_CHECK_EQUAL(lua["foo"]["x"].get<int>(), 85);
+    BOOST_CHECK_EQUAL(lua["foo"]["y"].get<int>(), 34);
+}
 
 BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
 {
@@ -207,92 +424,6 @@ BOOST_AUTO_TEST_CASE(luaCanPassUserdataByValue)
     lua("receiveConstValue(blank)");
 }
 
-void acceptShared(std::shared_ptr<Counter> ptr)
-{
-}
-
-void acceptSharedRef(const std::shared_ptr<Counter>& ptr)
-{
-}
-
-BOOST_AUTO_TEST_CASE(sharedPtrsCanBePassedToCxxFunctions)
-{
-    LuaEnvironment lua;
-    auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["c"] = obj;
-
-    lua["acceptShared"] = acceptShared;
-    lua["acceptSharedRef"] = acceptSharedRef;
-}
-
-BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)
-{
-    LuaEnvironment lua;
-    auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["c"] = obj;
-
-    BOOST_CHECK_THROW(lua("c.someValue = 24"), LuaException);
-}
-
-BOOST_AUTO_TEST_CASE(luaCanCallQObjectMethods)
-{
-    LuaEnvironment lua;
-    lua["c"] = std::shared_ptr<QObject>(new Counter(42));
-    lua("foo = c:getValue()");
-    BOOST_REQUIRE(lua["foo"] == 42);
-}
-
-BOOST_AUTO_TEST_CASE(luaCanPassValuesToQObjectMethods)
-{
-    LuaEnvironment lua;
-    Counter* counter = new Counter;
-    lua["c"] = std::shared_ptr<QObject>(counter);
-
-    lua("c:setValue(24)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 24);
-}
-
-BOOST_AUTO_TEST_CASE(luaCanPassTwoValuesToQObjectMethods)
-{
-    LuaEnvironment lua;
-    Counter* counter = new Counter;
-    lua["c"] = std::shared_ptr<QObject>(counter);
-
-    lua("c:setAddedValue(3, 6)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 9);
-}
-
-BOOST_AUTO_TEST_CASE(methodsCanUseTheStackDirectly)
-{
-    LuaEnvironment lua;
-    Counter* counter = new Counter(2);
-    lua["c"] = std::shared_ptr<QObject>(counter);
-
-    lua("c:addAll(1, 2, 3)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 8);
-}
-
-BOOST_AUTO_TEST_CASE(methodsCanStillReturnValues)
-{
-    LuaEnvironment lua;
-    lua["c"] = std::shared_ptr<QObject>(new Counter(0));
-
-    BOOST_REQUIRE_EQUAL((int)lua("return c:summed(1, 2, 3)"), 6);
-}
-
-BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
-{
-    LuaEnvironment lua;
-    QFile file(LUA_DIR "anim.lua");
-    lua::runFile(lua, file);
-
-    auto square = new Square;
-
-    int old = square->getX();
-    lua["Tick"](std::shared_ptr<QObject>(square), constants::pi<double>());
-    BOOST_REQUIRE(square->getX() != old);
-}
-
 BOOST_AUTO_TEST_CASE(stackAcceptsRawPointers)
 {
     LuaEnvironment lua;
@@ -323,97 +454,4 @@ BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
     lua["work"](&a, a);
     lua["work"](a, &a);
 }
-
-BOOST_AUTO_TEST_CASE(luaCrashesWhenHandlingNonQVariantTypes)
-{
-    LuaEnvironment lua;
-
-    lua(
-    "function work(a, b)"
-    "   a:set(b);"
-    "end;");
-
-    Counter a(42);
-    BOOST_CHECK_THROW(lua["work"](a, Counter(53)), std::logic_error);
-}
-
-
-BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-
-    Counter counter(42);
-    Counter flag(10);
-
-    lua(
-    "function work(counter, flag)"
-    "    remover = counter:connect('valueChanged', function(newNum)"
-    "        flag.value = newNum;"
-    "    end);"
-    "end;");
-
-    lua["work"](counter, flag);
-
-    counter.setValue(50);
-    BOOST_CHECK_EQUAL(flag.getValue(), 50);
-
-    // Invoke twice to ensure the removal process is idempotent
-    lua("remover()");
-    lua("remover()");
-
-    flag.setValue(30);
-
-    counter.setValue(60);
-
-    BOOST_CHECK_EQUAL(flag.getValue(), 30);
-}
-
-BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-
-    lua::qvariantPusher(QVariant::Point, [](LuaStack& stack, const QVariant& source)
-    {
-        auto point = source.toPoint();
-        lua::push(stack, lua::value::table);
-
-        stack.set("x", point.x());
-        stack.set("y", point.y());
-    });
-
-    lua::qvariantStorer(QVariant::Point, [](const LuaIndex& index, QVariant& sink)
-    {
-        auto table = lua::get<LuaReference>(index);
-        sink.setValue(QPoint(
-            table["x"].get<int>(),
-            table["y"].get<int>()
-        ));
-    });
-
-    lua(
-    "function work(counter)"
-    "    counter.point = {x = 2, y = 4};"
-    "end;");
-
-    Counter counter(42);
-    counter.setPoint(QPoint(36, 54));
-    lua["work"](counter);
-    BOOST_CHECK_EQUAL(counter.getPoint().x(), 2);
-
-    counter.setPoint(QPoint(85, 34));
-
-    lua(
-    "function work(counter)"
-    "    remover = counter:connect('pointEmitted', function(point)"
-    "        foo = point;"
-    "    end);"
-    "end;");
-    lua["work"](counter);
-
-    counter.setValue(23);
-
-    BOOST_CHECK_EQUAL(lua["foo"]["x"].get<int>(), 85);
-    BOOST_CHECK_EQUAL(lua["foo"]["y"].get<int>(), 34);
-}
+*/

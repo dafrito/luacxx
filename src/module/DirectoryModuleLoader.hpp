@@ -2,6 +2,7 @@
 #define DIRECTORYMODULELOADER_HEADER
 
 #include "ModuleLoader.hpp"
+
 #include <QDir>
 #include <QFile>
 #include <string>
@@ -27,7 +28,7 @@ public:
     }
 
     bool search(const std::string& module);
-    void load(LuaEnvironment& lua, const std::string& module);
+    void load(lua::state* const state, const std::string& module);
 };
 
 #endif // DIRECTORYMODULELOADER_HEADER

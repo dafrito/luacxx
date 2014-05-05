@@ -1,10 +1,10 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([lua-cxx], [2.1], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
+AC_INIT([lua-cxx], [3.0], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AM_INIT_AUTOMAKE([-Wall foreign])
-AC_CONFIG_SRCDIR([src/LuaEnvironment.cpp])
+AC_CONFIG_SRCDIR([src/state.hpp])
 AC_CONFIG_HEADERS([src/config.hpp])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -27,13 +27,7 @@ AC_TYPE_SIZE_T
 AX_CXX_COMPILE_STDCXX_11([noext],[AM_CXXFLAGS])
 AC_SUBST([AM_CXXFLAGS])
 
-# Check for Boost
-AX_BOOST_BASE([], [:], [
-    AC_MSG_ERROR([Boost is required to build lua-cxx])
-])
-AX_BOOST_UNIT_TEST_FRAMEWORK
-
-# Check for Lua
+# Check for Lua itself
 AC_SUBST(LUA_INCLUDE)
 AC_SUBST(LUA_LIB)
 if pkg-config --print-errors --exists 'lua >= 5.0'; then
@@ -43,14 +37,14 @@ else
     AC_MSG_ERROR([Lua is required to build lua-cxx])
 fi
 
+# Check for Boost
+AX_BOOST_BASE([], [:], [:])
+AX_BOOST_UNIT_TEST_FRAMEWORK
+
 # Check for Qt
 AX_HAVE_QT_CORE
 AX_HAVE_QT_MOC
 QT_CXXFLAGS="$QT_CXXFLAGS -fPIC"
-
-if test x"$have_qt_core" = xno || test x"$have_qt_gui" = xno || test x"$have_qt_moc" = xno; then
-    AC_MSG_ERROR([Qt is required to build lua-cxx])
-fi;
 
 AC_CONFIG_FILES([lua-cxx.m4 lua-cxx.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
 AC_OUTPUT

@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE lua-cxx
-#include "init.hpp"
+#include "core.hpp"
 
 #include <QCoreApplication>
 

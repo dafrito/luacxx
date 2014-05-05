@@ -1,11 +1,11 @@
-#include "loaders.hpp"
+#include "load.hpp"
+#include "exception.hpp"
+
 #include <fstream>
 #include <sstream>
 #include <QDir>
 #include <QFile>
 #include <QTextStream>
-
-#include "LuaValue.hpp"
 
 namespace {
     struct LuaReadingData
@@ -35,7 +35,7 @@ namespace {
     const int CHUNKSIZE = 4096;
     const char EMPTY_LINE = '\n';
 
-    const char* readStdStream(lua_State *, void *data, size_t *size)
+    const char* readStdStream(lua::state* const, void* data, size_t* size)
     {
         LuaReadingData* d = static_cast<LuaReadingData*>(data);
         if (d->atStart) {
@@ -96,97 +96,89 @@ namespace {
         return d->chunk.constData();
     }
 
-    void handleLoadValue(LuaStack& stack, const int rv)
+    lua::index do_post_load(lua::state* const state, const int rv)
     {
-        auto state = stack.luaState();
         switch (rv) {
             case LUA_ERRSYNTAX:
-                throw LuaException(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
+                throw lua::exception(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
             case LUA_ERRMEM:
                 throw std::runtime_error(std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
         }
+        return lua::index(state, -1);
     }
 
 } // namespace anonymous
 
-namespace lua
+lua::index lua::load_file(lua::state* const state, QFile& file)
 {
-    void loadFile(LuaStack& stack, QFile& file)
+    if (!file.open(QIODevice::ReadOnly)) {
+        throw std::runtime_error(
+            (QString("Cannot open file ") + file.fileName() + ": " + file.errorString()).toStdString()
+        );
+    }
+    QtReadingData d(file);
+
+    return do_post_load(state, lua_load(state, &readQtStream, &d, file.fileName().toUtf8().constData()
+        #if LUA_VERSION_NUM >= 502
+            // Account for the extra mode parameter introduced in 5.2
+            , NULL
+        #endif
+    ));
+}
+
+lua::index lua::load_file(lua::state* const state, const std::string& file)
+{
+    std::ifstream stream(file, std::ios::in);
+    if (!stream) {
+        throw std::runtime_error(std::string("File stream could not be opened for '") + file + "'");
+    }
+
+    return lua::load_file(state, stream, file);
+}
+
+lua::index lua::load_file(lua::state* const state, std::istream& stream, const std::string& name)
+{
+    LuaReadingData d(stream);
+    if (!stream) {
+        throw std::runtime_error(std::string("Input stream is invalid for '") + name + "'");
+    }
+
+    return do_post_load(state, lua_load(state, &readStdStream, &d, name.c_str()
+        #if LUA_VERSION_NUM >= 502
+            // Account for the extra mode parameter introduced in 5.2
+            , NULL
+        #endif
+    ));
+}
+
+lua::index lua::load_file(lua::state* const state, const char* file)
+{
+    return lua::load_file(state, std::string(file));
+}
+
+lua::index lua::load_string(lua::state* const state, const std::string& input)
+{
+    return lua::load_string(state, input.c_str());
+}
+
+lua::index lua::load_string(lua::state* const state, const char* input)
+{
+    do_post_load(state, luaL_loadstring(state, input));
+    return lua::index(state, -1);
+}
+
+void lua::run_dir(lua::state* const state, const QDir& dir, const bool recurse)
+{
+    foreach(QFileInfo info, dir.entryInfoList(
+        (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot,
+        QDir::Name
+        ))
     {
-        if (!file.open(QIODevice::ReadOnly)) {
-            throw std::runtime_error(
-                (QString("Cannot open file ") + file.fileName() + ": " + file.errorString()).toStdString()
-            );
+        if (info.isFile()) {
+            QFile file(info.filePath());
+            lua::run_file(state, file);
+        } else if (recurse && info.isDir()) {
+            lua::run_dir(state, info.filePath(), recurse);
         }
-        QtReadingData d(file);
-
-        handleLoadValue(stack, lua_load(stack.luaState(), &readQtStream, &d, file.fileName().toUtf8().constData()
-            #if LUA_VERSION_NUM >= 502
-                // Account for the extra mode parameter introduced in 5.2
-                , NULL
-            #endif
-        ));
     }
-
-    void loadFile(LuaStack& stack, const std::string& file)
-    {
-        std::ifstream stream(file, std::ios::in);
-        if (!stream) {
-            throw std::runtime_error(std::string("File stream could not be opened for '") + file + "'");
-        }
-        loadFile(stack, stream, file);
-    }
-
-    void loadFile(LuaStack& stack, std::istream& stream, const std::string& name)
-    {
-        LuaReadingData d(stream);
-        if (!stream) {
-            throw std::runtime_error(std::string("Input stream is invalid for '") + name + "'");
-        }
-
-        handleLoadValue(stack, lua_load(stack.luaState(), &readStdStream, &d, name.c_str()
-            #if LUA_VERSION_NUM >= 502
-                // Account for the extra mode parameter introduced in 5.2
-                , NULL
-            #endif
-        ));
-    }
-
-    void loadFile(LuaStack& stack, const char* file)
-    {
-        loadFile(stack, std::string(file));
-    }
-
-    void loadString(LuaStack& stack, const std::string& input)
-    {
-        loadString(stack, input.c_str());
-    }
-
-    void loadString(LuaStack& stack, const char* input)
-    {
-        handleLoadValue(stack, luaL_loadstring(stack.luaState(), input));
-    }
-
-    void runDir(LuaStack& stack, const QDir& dir, const bool recurse)
-    {
-        foreach(QFileInfo info, dir.entryInfoList(
-            (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot,
-            QDir::Name
-            ))
-        {
-            if (info.isFile()) {
-                QFile file(info.filePath());
-                runFile(stack, file);
-            } else if (recurse && info.isDir()) {
-                runDir(stack, info.filePath(), recurse);
-            }
-        }
-    }
-
-    void runDir(LuaEnvironment& lua, const QDir& dir, const bool recurse)
-    {
-        LuaStack stack(lua);
-        runDir(stack, dir, recurse);
-    }
-
-} // namespace lua
+}
