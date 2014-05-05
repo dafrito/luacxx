@@ -115,7 +115,7 @@ public:
         return lua::type(lua_type(state(), pos()));
     }
 
-    operator bool() const
+    explicit operator bool() const
     {
         return _pos >= 1 && _pos <= lua_gettop(_state);
     }
