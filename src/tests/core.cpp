@@ -77,6 +77,40 @@ BOOST_AUTO_TEST_CASE(push_and_store)
     BOOST_CHECK_EQUAL(env[3].type().string(), true);
 }
 
+BOOST_AUTO_TEST_CASE(table)
+{
+    lua::thread env;
+    luaL_openlibs(env);
+
+    env["foo"] = lua::value::table;
+    lua::table::insert(env["foo"], 42);
+
+    auto foo_index = lua::table::get(env["foo"], 1);
+    BOOST_CHECK_EQUAL(lua::get<int>(foo_index), 42);
+
+    lua::table::insert(env["foo"], addNumbers);
+    BOOST_CHECK_EQUAL(4, lua::get<int>(
+        lua::run_string(env, "return foo[2](2, 2)")
+    ));
+
+    env["Rainback"] = lua::value::table;
+    env["Rainback"]["Font"] = getMagicNumber;
+
+    BOOST_CHECK_EQUAL(env["Rainback"]["Font"].type().name(), "function");
+
+    lua::run_string(env, "foo = {bar = 42}");
+    BOOST_CHECK_EQUAL(env["foo"]["bar"].type().name(), "number");
+
+    lua::run_string(env, "c = {f = 42};");
+    BOOST_CHECK_EQUAL(lua::get<int>(env["c"]["f"]), 42);
+
+    lua::run_string(env, "d = {e = {f = 68} }");
+    BOOST_CHECK_EQUAL(lua::get<int>(env["d"]["e"]["f"]), 68);
+
+    lua::run_string(env, "c = {d = {e = {f = 96} } };");
+    BOOST_CHECK_EQUAL(lua::get<int>(env["c"]["d"]["e"]["f"]), 96);
+}
+
 BOOST_AUTO_TEST_CASE(run_string)
 {
     lua::thread env;
@@ -249,6 +283,15 @@ BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
     env["Adder"] = pushed;
     BOOST_CHECK_EQUAL(env["Adder"].type().name(), "function");
     lua::run_string(env, "assert(Adder(22, 44) == 66)");
+
+    env["bar"] = std::function<const char*()>([&]() {
+        return "bar";
+    });
+
+    env["foo"] = std::function<std::string(const std::string&)>([&](const std::string& internal) {
+        return internal + std::string("foo") + lua::call<std::string>(env["bar"]);
+    });
+    BOOST_CHECK_EQUAL(lua::get<const char*>(lua::run_string(env, "return foo('lua')")), "luafoobar");
 }
 
 BOOST_AUTO_TEST_CASE(call_lua_from_cpp)
@@ -264,6 +307,33 @@ BOOST_AUTO_TEST_CASE(call_lua_from_cpp)
 
     auto result = lua::call<int>(env["foo"], 42, "24");
     BOOST_CHECK_EQUAL(result, 66);
+
+    env["foo"] = lua::value::table;
+    auto bar = lua::run_string(env,
+        "return function(a) table.insert(a, 42); end;"
+    );
+
+    BOOST_CHECK_EQUAL(0, lua::size(env["foo"]));
+    lua::call<void>(bar, env["foo"]);
+    BOOST_CHECK_EQUAL(1, lua::size(env["foo"]));
+}
+
+BOOST_AUTO_TEST_CASE(call_lua_from_cpp_with_extra_arguments)
+{
+    lua::thread env;
+
+    lua::push(env, "An extra argument to ensure the stack doesn't just return the 'second' argument");
+
+    auto worker = lua::run_string(env, ""
+    "return function(value)"
+    "    foo = value;"
+    "end;"
+    "");
+    lua::call(worker, 42);
+
+    auto foo = env["foo"];
+    BOOST_CHECK_EQUAL(foo.type().number(), true);
+    BOOST_CHECK_EQUAL(lua::get<int>(foo), 42);
 }
 
 BOOST_AUTO_TEST_CASE(index_and_global)
@@ -310,58 +380,6 @@ BOOST_AUTO_TEST_CASE(index_algorithms)
     BOOST_CHECK_EQUAL(lua::size(env["foo"]), 3);
 }
 
-/*
-
-BOOST_AUTO_TEST_CASE(nestedInvocations)
-{
-    LuaEnvironment lua;
-
-    lua["bar"] = std::function<const char*()>([&]() {
-        return "bar";
-    });
-
-    lua["foo"] = std::function<QString(const QString&)>([&](const QString& internal) {
-        return internal + QString("foo") + lua["bar"]().get<QString>();
-    });
-
-    BOOST_REQUIRE_EQUAL(lua("return foo('lua')").get<const char*>(), "luafoobar");
-}
-
-BOOST_AUTO_TEST_CASE(throwAnError)
-{
-    LuaEnvironment lua;
-
-    bool errored = false;
-
-    try {
-        lua("function foo()"
-        "   someUnknownFunction();"
-        "end");
-
-        lua["foo"]();
-    } catch(LuaException& ex) {
-        errored = true;
-    }
-
-    BOOST_REQUIRE(errored);
-}
-
-void immediatelyThrow()
-{
-    throw LuaException("Intentional");
-}
-
-BOOST_AUTO_TEST_CASE(luaExceptionIsCatchableWithinLua)
-{
-    LuaEnvironment lua;
-
-    lua["thrower"] = immediatelyThrow;
-
-    lua("result = not pcall(thrower);");
-
-    BOOST_CHECK_EQUAL(lua["result"].get<bool>(), true);
-}
-
 struct Wrapper {
     int& alive;
 
@@ -376,200 +394,62 @@ struct Wrapper {
     }
 };
 
-BOOST_AUTO_TEST_CASE(luaIsBuiltWithExceptionSupport)
+BOOST_AUTO_TEST_CASE(lua_exception_support)
 {
-    LuaEnvironment lua;
+    lua::thread env;
 
     int value = 0;
-    lua["call"] = std::function<void(bool)>([&](bool shouldErr) {
+    env["call"] = lua::push_function<void(bool)>(env, [&](bool shouldErr) {
         Wrapper wrapper(value);
 
         if (shouldErr) {
-            LuaStack(lua).error("Intentional");
+            throw lua::exception("Intentional");
         }
     });
 
-    lua["call"](false);
+    lua::call<void>(env["call"], false);
     BOOST_CHECK_EQUAL(value, 2);
 
     try {
-        lua["call"](true);
-    } catch (LuaException& ex) {
+        lua::call<void>(env["call"], true);
+    } catch (lua::exception& ex) {
         // pass through
     }
     BOOST_CHECK_EQUAL(value, 4);
 }
 
-BOOST_AUTO_TEST_CASE(luaValuesCanBePassedIntoLua)
+void immediatelyThrow()
 {
-    LuaEnvironment lua;
-
-    lua("foo = {}");
-    auto bar = lua("return function(a) end;");
-    bar(lua["foo"]);
+    throw lua::exception("Intentional");
 }
 
-BOOST_AUTO_TEST_CASE(stackSavedTheRightReturnedValue)
+BOOST_AUTO_TEST_CASE(exceptions)
 {
     lua::thread env;
+    luaL_openlibs(env);
 
-    lua::push(env, "An extra argument to ensure the stack doesn't just return the 'second' argument");
+    bool errored = false;
 
-    auto worker = lua(""
-    "return function(value)"
-    "    foo = value;"
-    "end;"
-    "");
-    lua::call(worker, 42);
+    try {
+        lua::run_string(env,
+        "function foo()"
+        "   someUnknownFunction();"
+        "end");
+        lua::call<void>(env["foo"]);
+    } catch(lua::exception& ex) {
+        errored = true;
+    }
+    BOOST_CHECK(errored);
 
-    auto foo = env["foo"];
-    BOOST_CHECK_EQUAL(foo.type().number(), true);
-    BOOST_CHECK_EQUAL(lua::get<int>(foo), 42);
+    env["thrower"] = immediatelyThrow;
+    auto rv = lua::run_string(env, "return not pcall(thrower);");
+    BOOST_CHECK_EQUAL(lua::get<bool>(rv), true);
 }
 
-BOOST_AUTO_TEST_CASE(stackCanRetrieveMultipleArgumentsAtOnce)
+BOOST_AUTO_TEST_CASE(directory_module_loader)
 {
-    LuaEnvironment lua;
-    LuaStack stack(lua);
-
-    lua::push(stack, 1);
-    lua::push(stack, 2);
-    lua::push(stack, 3);
-    lua::push(stack, 4);
-
-    auto results = lua::getAll<int>(stack);
-    BOOST_REQUIRE_EQUAL(4, results.size());
-    BOOST_CHECK_EQUAL(1, results[0]);
-    BOOST_CHECK_EQUAL(2, results[1]);
-    BOOST_CHECK_EQUAL(3, results[2]);
-    BOOST_CHECK_EQUAL(4, results[3]);
-}
-
-// Extraction/Insertion operators
-
-BOOST_AUTO_TEST_CASE(testLuaStackSupportsExtractionOperators)
-{
-    LuaEnvironment lua;
-    LuaStack s(lua);
-    s << 42 << 34;
-    int a, b;
-    s >> a;
-    BOOST_REQUIRE(a == 34);
-    s >> b;
-    BOOST_REQUIRE(b == 34);
-}
-
-BOOST_AUTO_TEST_CASE(testStackSupportsIndexing)
-{
-    LuaEnvironment lua;
-    LuaStack s(lua);
-    s << 5 << 6 << 7;
-
-    int a;
-    int b;
-    int c;
-    s.begin() >> a >> b >> c;
-    BOOST_REQUIRE_EQUAL(a, 5);
-    BOOST_REQUIRE_EQUAL(b, 6);
-    BOOST_REQUIRE_EQUAL(c, 7);
-}
-
-// Table manipulation
-
-static void receive(LuaStack& stack)
-{
-    BOOST_REQUIRE_EQUAL(stack.get<const char*>(1), "getValue");
-    BOOST_REQUIRE_EQUAL(stack.get<int>(2), 2);
-}
-
-BOOST_AUTO_TEST_CASE(stackSetsATableValue)
-{
-    LuaEnvironment lua;
-    lua("c = {}");
-    LuaStack stack(lua);
-    stack.global("c").set("a", 42);
-    stack.global("c").set("b", true);
-
-    // We don't repush global because that table should
-    // already be at the top of the stack; only the key
-    // and value were removed
-    BOOST_REQUIRE_EQUAL(42, stack.get("a").get<int>());
-    stack.pop();
-    BOOST_REQUIRE_EQUAL(true, stack.get("b").get<bool>());
-}
-
-BOOST_AUTO_TEST_CASE(cRetrievesBasicProperties)
-{
-    LuaEnvironment lua;
-    lua::runString(lua, "c = {f = 42};");
-    LuaStack stack(lua);
-    BOOST_REQUIRE_EQUAL(stack.global("c").get("f").get<int>(), 42);
-}
-
-BOOST_AUTO_TEST_CASE(cRetrievesNestedPropertiesWithLuaStack)
-{
-    LuaEnvironment lua;
-    lua("d = {e = {f = 42} };");
-    LuaStack stack(lua);
-    BOOST_REQUIRE_EQUAL(stack.global("d").get("e").get("f").get<int>(), 42);
-}
-
-BOOST_AUTO_TEST_CASE(cRetrievesDeeplyNestedPropertiesWithLuaStack)
-{
-    LuaEnvironment lua;
-    lua("c = {d = {e = {f = 42} } };");
-    LuaStack stack(lua);
-    BOOST_REQUIRE_EQUAL(stack.global("c").get("d").get("e").get("f").get<int>(), 42);
-}
-
-BOOST_AUTO_TEST_CASE(testPushWithInteger)
-{
-    LuaEnvironment lua;
-    LuaStack stack(lua);
-
-    lua("foo = {}");
-
-    table::push(lua["foo"], 42);
-
-    BOOST_REQUIRE_EQUAL((int)lua["foo"][1], 42);
-}
-
-BOOST_AUTO_TEST_CASE(testPushWithFunction)
-{
-    LuaEnvironment lua;
-    LuaStack stack(lua);
-
-    lua("foo = {}");
-
-    table::push(lua["foo"], addNumbers);
-
-    BOOST_REQUIRE_EQUAL((int)lua("return foo[1](2, 2)"), 4);
-}
-
-BOOST_AUTO_TEST_CASE(tablesCanBeSetWhileNested)
-{
-    LuaEnvironment lua;
-
-    lua["Rainback"] = lua::value::table;
-    lua["Rainback"]["Font"] = returnMagic;
-
-    lua("assert(Rainback.Font)");
-}
-
-BOOST_AUTO_TEST_CASE(tableReferences)
-{
-    LuaEnvironment lua;
-
-    lua("foo = {bar = 42}");
-
-    BOOST_REQUIRE_EQUAL(lua["foo"]["bar"].typestring(), std::string("number"));
-}
-
-// Module loading
-
-BOOST_AUTO_TEST_CASE(testDirectoryModuleLoader)
-{
-    LuaEnvironment lua;
+    lua::thread env;
+    luaL_openlibs(env);
 
     DirectoryModuleLoader loader;
     loader.setRoot(QDir(LUA_DIR "testlib"));
@@ -581,48 +461,64 @@ BOOST_AUTO_TEST_CASE(testDirectoryModuleLoader)
     #endif
 
     std::string module;
-    table::push(lua["package"][searchersName],
-        std::function< std::function<void()>(const std::string&) >(
+    lua::table::insert(env["package"][searchersName],
+        std::function<std::function<void()>(const std::string&) >(
             [&](const std::string& arg) {
                 module = arg;
                 return [&]() {
-                    loader.load(lua, module);
+                    loader.load(env, module);
                 };
             }
         )
     );
 
-    lua["foo"] = std::function<int(int, int)>( [](int a, int b) {
+    env["foo"] = lua::push_function<int(int, int)>(env, [](int a, int b) {
         return a + b;
     });
 
-    lua("require 'testlib/Library';"
+    lua::run_string(env, "require 'testlib/Library';"
         ""
         "bar = Curry(foo, 40);"
     );
 
-    BOOST_REQUIRE_EQUAL((int)lua["bar"](2), 42);
+    BOOST_CHECK_EQUAL(lua::call<int>(env["bar"], 2), 42);
 }
 
-BOOST_AUTO_TEST_CASE(testModuleLoaderUtility)
+BOOST_AUTO_TEST_CASE(get_all)
 {
-    LuaEnvironment lua;
+    lua::thread env;
 
-    DirectoryModuleLoader loader;
-    loader.setRoot(QDir(LUA_DIR "testlib"));
-    loader.setPrefix("testlib/");
+    lua::push(env, 1, 2, 3, 4);
 
-    lua.addModuleLoader(&loader);
-
-    lua["foo"] = std::function<int(int, int)>( [](int a, int b) {
-        return a + b;
-    });
-
-    lua("require 'testlib/Library';"
-        ""
-        "bar = Curry(foo, 40);"
-    );
-
-    BOOST_REQUIRE_EQUAL((int)lua["bar"](2), 42);
+    std::vector<int> results;
+    lua::get_all(results, lua::index(env, 1));
+    BOOST_REQUIRE_EQUAL(4, results.size());
+    BOOST_CHECK_EQUAL(1, results[0]);
+    BOOST_CHECK_EQUAL(2, results[1]);
+    BOOST_CHECK_EQUAL(3, results[2]);
+    BOOST_CHECK_EQUAL(4, results[3]);
 }
-*/
+
+BOOST_AUTO_TEST_CASE(extraction_and_insertion)
+{
+    lua::thread env;
+
+    /*
+    s << 42 << 34;
+    int a, b;
+    s >> a;
+    BOOST_CHECK_EQUAL(a, 34);
+    s >> b;
+    BOOST_CHECK_EQUAL(b, 34);
+
+    s << 5 << 6 << 7;
+
+    int a;
+    int b;
+    int c;
+    s.begin() >> a >> b >> c;
+    BOOST_REQUIRE_EQUAL(a, 5);
+    BOOST_REQUIRE_EQUAL(b, 6);
+    BOOST_REQUIRE_EQUAL(c, 7);
+    */
+}
