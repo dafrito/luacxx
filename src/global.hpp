@@ -47,6 +47,13 @@ public:
     }
 
     template <class T>
+    void operator>>(T& destination)
+    {
+        lua::push(_state, *this) >> destination;
+        lua_pop(_state, 1);
+    }
+
+    template <class T>
     lua::link<lua::global, T> operator[](T&& name) const
     {
         return lua::link<lua::global, T>(*this, name);

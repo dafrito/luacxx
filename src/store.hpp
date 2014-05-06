@@ -107,4 +107,18 @@ T get(lua::state* const state, const int pos)
 
 } // namespace lua
 
+template <class T>
+lua::index& operator>>(lua::index& source, T& destination)
+{
+    lua::store(destination, source);
+    return ++source;
+}
+
+template <class T>
+lua::index operator>>(const lua::index& source, T& destination)
+{
+    lua::store(destination, source);
+    return ++lua::index(source);
+}
+
 #endif // LUA_CXX_STORE_HEADER
