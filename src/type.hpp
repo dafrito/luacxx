@@ -3,17 +3,29 @@
 
 #include <lua.hpp>
 
-namespace lua
-{
-    class type;
-}
+namespace lua {
 
-class lua::type
+class type_info;
+
+enum class type {
+    nil = LUA_TNIL,
+    boolean = LUA_TBOOLEAN,
+    number = LUA_TNUMBER,
+    string = LUA_TSTRING,
+    table = LUA_TTABLE,
+    function = LUA_TFUNCTION,
+    userdata = LUA_TUSERDATA,
+    lightuserdata = LUA_TLIGHTUSERDATA,
+    thread = LUA_TTHREAD
+};
+
+class type_info
 {
-    int _value;
+    lua::type _value;
 
 public:
-    type(const int value) :
+
+    type_info(lua::type value) :
         _value(value)
     {
     }
@@ -24,73 +36,86 @@ public:
         // they're usually just used for debugging purposes.
 
         switch (get()) {
-            case LUA_TNIL:           return "nil";
-            case LUA_TBOOLEAN:       return "boolean";
-            case LUA_TNUMBER:        return "number";
-            case LUA_TSTRING:        return "string";
-            case LUA_TTABLE:         return "table";
-            case LUA_TFUNCTION:      return "function";
-            case LUA_TTHREAD:        return "thread";
-            case LUA_TUSERDATA:      return "userdata";
-            case LUA_TLIGHTUSERDATA: return "lightuserdata";
-            default:                 return "";
+            case lua::type::nil:           return "nil";
+            case lua::type::boolean:       return "boolean";
+            case lua::type::number:        return "number";
+            case lua::type::string:        return "string";
+            case lua::type::table:         return "table";
+            case lua::type::function:      return "function";
+            case lua::type::thread:        return "thread";
+            case lua::type::userdata:      return "userdata";
+            case lua::type::lightuserdata: return "lightuserdata";
+            default:                       return "";
         }
     }
 
-    bool operator==(const lua::type& other) const
+    bool operator==(const lua::type_info& other) const
     {
         return get() == other.get();
     }
 
+    bool operator==(const lua::type& other) const
+    {
+        return get() == other;
+    }
+
+    template <class Type>
+    bool operator!=(const Type& other) const
+    {
+        return !(*this == other);
+    }
+
     bool nil() const
     {
-        return get() == LUA_TNIL;
+        return get() == lua::type::nil;
     }
 
     bool boolean() const
     {
-        return get() == LUA_TBOOLEAN;
+        return get() == lua::type::boolean;
     }
 
     bool string() const
     {
-        return get() == LUA_TSTRING;
+        return get() == lua::type::string;
     }
 
     bool number() const
     {
-        return get() == LUA_TNUMBER;
+        return get() == lua::type::number;
     }
 
     bool table() const
     {
-        return get() == LUA_TTABLE;
+        return get() == lua::type::table;
     }
 
     bool function() const
     {
-        return get() == LUA_TFUNCTION;
+        return get() == lua::type::function;
     }
 
     bool userdata() const
     {
-        return get() == LUA_TUSERDATA;
+        return get() == lua::type::userdata;
     }
 
     bool thread() const
     {
-        return get() == LUA_TTHREAD;
+        return get() == lua::type::thread;
     }
 
     bool lightuserdata() const
     {
-        return get() == LUA_TLIGHTUSERDATA;
+        return get() == lua::type::lightuserdata;
     }
 
-    const int get() const
+    const lua::type get() const
     {
         return _value;
     }
 };
+
+} // namespace lua
 
 #endif // LUA_CXX_TYPE_HEADER

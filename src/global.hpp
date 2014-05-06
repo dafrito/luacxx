@@ -1,8 +1,10 @@
 #ifndef LUA_CXX_GLOBAL_HEADER
 #define LUA_CXX_GLOBAL_HEADER
 
-#include "stack.hpp"
+#include "push.hpp"
+#include "store.hpp"
 #include "link.hpp"
+
 #include <string>
 
 namespace lua {
@@ -29,7 +31,7 @@ public:
         return _name;
     }
 
-    lua::type type() const
+    lua::type_info type() const
     {
         auto rv = lua::push(_state, *this).type();
         lua_pop(_state, 1);
@@ -37,7 +39,7 @@ public:
     }
 
     template <class T>
-    global& operator=(T source)
+    global& operator=(T&& source)
     {
         lua::store(*this, lua::push(_state, source));
         lua_pop(_state, 1);

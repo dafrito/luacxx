@@ -1,7 +1,8 @@
 #ifndef LUA_CXX_TYPE_STANDARD_HEADER
 #define LUA_CXX_TYPE_STANDARD_HEADER
 
-#include "../stack.hpp"
+#include "../push.hpp"
+#include "../store.hpp"
 
 #include <string>
 #include <iostream>
@@ -165,6 +166,15 @@ struct Store<std::string>
 };
 
 template <>
+struct Get<const std::string&>
+{
+    static std::string get(const lua::index& source)
+    {
+        return lua::Get<std::string>::get(source);
+    }
+};
+
+template <>
 struct Push<void*>
 {
     static void push(lua::state* const state, void* const source)
@@ -187,7 +197,7 @@ struct Push<char>
 {
     static void push(lua::state* const state, char& source)
     {
-        lua::push(state, &source);
+        lua_pushlstring(state, &source, 1);
     }
 };
 

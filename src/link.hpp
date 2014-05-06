@@ -1,7 +1,8 @@
 #ifndef LUA_CXX_LINK_HEADER
 #define LUA_CXX_LINK_HEADER
 
-#include "stack.hpp"
+#include "push.hpp"
+#include "store.hpp"
 
 namespace lua {
 
@@ -38,7 +39,7 @@ public:
         return lua::link<lua::link<Source, Name>, T>(*this, name);
     }
 
-    lua::type type() const
+    lua::type_info type() const
     {
         auto rv = lua::push(state(), *this).type();
         lua_pop(state(), 1);

@@ -20,7 +20,7 @@ struct Store<int>
     static void store(int& destination, const lua::index& source)
     {
         lua_Integer sink;
-        lua::store<lua_Integer>(sink, source);
+        lua::store(sink, source);
         destination = sink;
     }
 };
@@ -40,7 +40,7 @@ struct Store<unsigned int>
     static void store(unsigned int& destination, const lua::index& source)
     {
         lua_Integer sink;
-        lua::store<lua_Integer>(sink, source);
+        lua::store(sink, source);
         destination = sink;
     }
 };
@@ -60,7 +60,7 @@ struct Store<short>
     static void store(short& destination, const lua::index& source)
     {
         lua_Integer sink;
-        lua::store<lua_Integer>(sink, source);
+        lua::store(sink, source);
         destination = sink;
     }
 };
@@ -80,7 +80,7 @@ struct Store<unsigned short>
     static void store(unsigned short& destination, const lua::index& source)
     {
         lua_Integer sink;
-        lua::store<lua_Integer>(sink, source);
+        lua::store(sink, source);
         destination = sink;
     }
 };
@@ -90,7 +90,7 @@ struct Push<long long>
 {
     static void push(lua::state* const state, const long long& value)
     {
-        lua::push<lua_Integer>(state, static_cast<lua_Integer>(value));
+        lua::push(state, static_cast<lua_Integer>(value));
     }
 };
 
@@ -100,7 +100,7 @@ struct Store<long long>
     static void store(long long& destination, const lua::index& source)
     {
         lua_Integer sink;
-        lua::store<lua_Integer>(sink, source);
+        lua::store(sink, source);
         destination = sink;
     }
 };
@@ -110,7 +110,7 @@ struct Push<float>
 {
     static void push(lua::state* const state, const float& value)
     {
-        lua::push<lua_Number>(state, value);
+        lua::push(state, value);
     }
 };
 
@@ -120,7 +120,7 @@ struct Store<float>
     static void store(float& destination, const lua::index& source)
     {
         lua_Number sink;
-        lua::store<lua_Number>(sink, source);
+        lua::store(sink, source);
         destination = static_cast<float>(sink);
     }
 };

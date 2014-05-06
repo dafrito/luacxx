@@ -1,9 +1,8 @@
-#ifndef LUA_CXX_STACK_HEADER
-#define LUA_CXX_STACK_HEADER
+#ifndef LUA_CXX_PUSH_HEADER
+#define LUA_CXX_PUSH_HEADER
 
 #include <new>
 #include <type_traits>
-#include <iostream>
 
 #include "type.hpp"
 #include "state.hpp"
@@ -66,7 +65,7 @@ static void push_userdata(lua::state* const state, const T& orig)
 template <class T>
 struct Push
 {
-    static void push(lua::state* const state, const T& orig)
+    static void push(lua::state* const state, T orig)
     {
         push_userdata(state, orig);
     }
@@ -110,9 +109,11 @@ public:
         _pos = other.pos();
     }
 
-    lua::type type() const
+    lua::type_info type() const
     {
-        return lua::type(lua_type(state(), pos()));
+        return lua::type_info(
+            static_cast<lua::type>(lua_type(state(), pos()))
+        );
     }
 
     explicit operator bool() const
@@ -126,14 +127,6 @@ public:
         lua::Push<T>::push(state(), source);
         lua_replace(state(), pos());
         return *this;
-    }
-
-    template <class T>
-    index operator[](T&& name) const
-    {
-        lua::Push<T>::push(state(), name);
-        lua_gettable(state(), pos());
-        return lua::index(state(), -1);
     }
 
     // Postfix (e.g. i++)
@@ -184,80 +177,12 @@ lua::index push(Source source)
 }
 
 template <class T, class... Rest>
-lua::index push(lua::state* const state, T value, Rest&&... values)
+lua::index push(lua::state* const state, T value, Rest... values)
 {
     lua::Push<T>::push(state, value);
     return push(state, values...);
 }
 
-template <typename T, typename std::enable_if<std::is_pointer<T>::value, int>::type = 0>
-static void inner_store(T& destination, lua::userdata* userdata, char* data)
-{
-    if (userdata->storage_type == userdata_storage::pointer) {
-        destination = *reinterpret_cast<T*>(data);
-    } else {
-        destination = reinterpret_cast<T>(data);
-    }
-}
-
-template <typename T, typename std::enable_if<!std::is_pointer<T>::value, int>::type = 0>
-static void inner_store(T& destination, lua::userdata* userdata, char* data)
-{
-    if (userdata->storage_type == userdata_storage::pointer) {
-        destination = **reinterpret_cast<typename std::remove_reference<T>::type**>(data);
-    } else {
-        destination = *reinterpret_cast<typename std::remove_reference<T>::type*>(data);
-    }
-}
-
-template <typename T>
-static void store_userdata(T& destination, const lua::index& source)
-{
-    char* block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
-
-    /*if (!userdata->is_type(value, name)) {
-        throw lua::exception("Unrecognized type name");
-    }*/
-
-    inner_store(
-        destination,
-        reinterpret_cast<lua::userdata*>(block),
-        block + sizeof(lua::userdata)
-    );
-}
-
-template <typename T>
-struct Store
-{
-    static void store(T& destination, const lua::index& source)
-    {
-        store_userdata(destination, source);
-    }
-};
-
-template <class T>
-void store(T& destination, const lua::index& source)
-{
-    lua::Store<T>::store(destination, source);
-}
-
-template <class T>
-typename std::remove_const<typename std::remove_reference<T>::type>::type get(const lua::index& source)
-{
-    typename std::remove_const<typename std::remove_reference<T>::type>::type destination;
-    lua::store(destination, source);
-    return destination;
-}
-
-template <>
-void get<void>(const lua::index& source);
-
-template <class T>
-T get(lua::state* const state, const int pos)
-{
-    return lua::get<T>(lua::index(state, pos));
-}
-
 } // namespace lua
 
-#endif // LUA_CXX_STACK_HEADER
+#endif // LUA_CXX_PUSH_HEADER

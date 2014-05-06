@@ -7,7 +7,8 @@
 #include "algorithm.hpp"
 #include "state.hpp"
 #include "exception.hpp"
-#include "stack.hpp"
+#include "push.hpp"
+#include "store.hpp"
 
 // All this stuff involves calling C++ from Lua. This means pushing C++
 // functions into Lua, and creating the infrastructure to invoke them reliably.
@@ -16,22 +17,22 @@ namespace {
 
 struct ArgStop {};
 
-template <typename Callee, typename RV, typename Arg, typename... Remaining>
+template <typename Callee, typename RV, typename Arg, typename... Parameters>
 struct Invoke
 {
-    template <typename... Rest>
-    static void invoke(lua::index& index, const Callee& func, Rest... rest)
+    template <typename... Arguments>
+    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
-        static_assert(
+        /*static_assert(
                     // Non-references are fine
                     !std::is_reference<Arg>::value ||
                     // References to references are fine
                     std::is_reference<decltype(lua::get<Arg>(index++))>::value ||
                     // References to const are fine
                     std::is_const<typename std::remove_reference<Arg>::type>::value,
-            "Provided function must not use non-const lvalue references to refer to temporary objects");
-        Invoke<Callee, RV, Remaining...>::template invoke<Rest..., Arg>(
-            index, func, rest..., lua::get<Arg>(index++)
+            "Provided function must not use non-const lvalue references to refer to temporary objects");*/
+        Invoke<Callee, RV, Parameters...>::template invoke<Arguments..., Arg>(
+            func, index, arguments..., lua::get<Arg>(index++)
         );
     }
 };
@@ -39,22 +40,22 @@ struct Invoke
 template <typename Callee, typename RV>
 struct Invoke<Callee, RV, ArgStop>
 {
-    template <typename... FullArgs>
-    static void invoke(lua::index& index, const Callee& func, FullArgs... args)
+    template <typename... Arguments>
+    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
         lua::clear(index.state());
-        lua::push(index.state(), func(args...));
+        lua::push(index.state(), func(arguments...));
     }
 };
 
 template <typename Callee>
 struct Invoke<Callee, void, ArgStop>
 {
-    template <typename... FullArgs>
-    static void invoke(lua::index& index, const Callee& func, FullArgs... args)
+    template <typename... Arguments>
+    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
         lua::clear(index.state());
-        func(args...);
+        func(arguments...);
     }
 };
 
@@ -77,7 +78,7 @@ class wrap_call
     std::function<RV(Args...)> wrapped;
 
 public:
-    wrap_call(std::function<RV(Args...)> wrapped) :
+    wrap_call(const std::function<RV(Args...)>& wrapped) :
         wrapped(wrapped)
     {}
 
@@ -101,8 +102,8 @@ public:
             throw lua::exception(msg.str());
         }
 
-        lua::index arg(state, 1);
-        Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(arg, wrapped);
+        lua::index index(state, 1);
+        Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(wrapped, index);
         return 1;
     }
 };
@@ -189,36 +190,34 @@ static lua::index push_function(lua::state* const state, std::function<Function>
     return lua::push(state, callable);
 }
 
+template <typename RV>
+struct Push<RV(*)(lua::state* const)>
+{
+    static void push(lua::state* const state, RV(*func)(lua::state* const))
+    {
+        lua::push(state, lua::callable([=](lua::state* const state) {
+            lua::push(state, func(state));
+            lua_replace(state, 1);
+            lua_settop(state, 1);
+            return 1;
+        }));
+    }
+};
+
+template <typename RV>
+struct Push<std::function<RV(lua::state* const)>>
+{
+    static void push(lua::state* const state, const std::function<RV(lua::state* const)>& func)
+    {
+        lua::push(state, lua::callable([=](lua::state* const state) {
+            lua::push(state, func(state));
+            lua_replace(state, 1);
+            lua_settop(state, 1);
+            return 1;
+        }));
+    }
+};
+
 } // namespace lua
-
-/*
-
-// Raw LuaCallables that return useful values
-template <class RV,
-    typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
-void push(LuaStack& stack, RV (*p)(LuaStack&), const int closed = 0)
-{
-    //std::cout << "Pushing raw LuaCallable with return value" << std::endl;
-    lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
-        RV sink(p(stack));
-        stack.clear();
-        lua::push(stack, sink);
-    }), closed);
-}
-
-// C++ LuaCallables that return useful values
-template <class RV,
-    typename std::enable_if<!std::is_same<RV, void>::value, int>::type = 0>
-void push(LuaStack& stack, std::function<RV(LuaStack&)> func, const int closed = 0)
-{
-    //std::cout << "Pushing std::function LuaCallable with return value" << std::endl;
-    lua::push(stack, lua::LuaCallable([=](LuaStack& stack) {
-        RV sink(func(stack));
-        stack.clear();
-        lua::push(stack, sink);
-    }), closed);
-}
-
-*/
 
 #endif // LUA_CXX_TYPE_FUNCTION_HEADER

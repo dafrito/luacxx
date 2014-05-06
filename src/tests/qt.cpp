@@ -1,13 +1,24 @@
-/*#include "qt/qobject.hpp"
-#include "load.hpp"
+#include "qt/type/QString.hpp"
+#include "qt/type/QChar.hpp"
+//#include "qt/type/QVariant.hpp"
 
-#include "type/QString.hpp"
-#include "type/QVariant.hpp"
-#include "type/QChar.hpp"
-#include "type/LuaReference.hpp"
+#include <boost/test/unit_test.hpp>
 
 #include <boost/math/constants/constants.hpp>
 using namespace boost::math;
+
+#include <memory>
+
+#include "mocks.hpp"
+#include "thread.hpp"
+#include "push.hpp"
+#include "store.hpp"
+#include "algorithm.hpp"
+#include "load.hpp"
+#include "reference.hpp"
+#include "type/function.hpp"
+#include "type/standard.hpp"
+#include "type/numeric.hpp"
 
 void acceptShared(std::shared_ptr<Counter> ptr)
 {
@@ -17,74 +28,175 @@ void acceptSharedRef(const std::shared_ptr<Counter>& ptr)
 {
 }
 
-BOOST_AUTO_TEST_CASE(sharedPtrsCanBePassedToCxxFunctions)
+static void receiveValue(Blank blank)
 {
-    LuaEnvironment lua;
-    auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["c"] = obj;
-
-    lua["acceptShared"] = acceptShared;
-    lua["acceptSharedRef"] = acceptSharedRef;
+    BOOST_CHECK_EQUAL(blank.count(), 42);
 }
 
-BOOST_AUTO_TEST_CASE(qobjectDynamicallyAddsPropertiesWhenNonexistent)
+static void receiveConstValue(const Blank blank)
 {
-    LuaEnvironment lua;
-    auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["c"] = obj;
-
-    BOOST_CHECK_THROW(lua("c.someValue = 24"), LuaException);
+    BOOST_CHECK_EQUAL(blank.count(), 42);
 }
 
-BOOST_AUTO_TEST_CASE(luaCanCallQObjectMethods)
+static void receivePtr(Counter* const counter)
 {
-    LuaEnvironment lua;
-    lua["c"] = std::shared_ptr<QObject>(new Counter(42));
-    lua("foo = c:getValue()");
-    BOOST_REQUIRE(lua["foo"] == 42);
+    counter->setValue(24);
 }
 
-BOOST_AUTO_TEST_CASE(luaCanPassValuesToQObjectMethods)
+static int receiveConstPtr(const Counter* counter)
 {
-    LuaEnvironment lua;
-    Counter* counter = new Counter;
-    lua["c"] = std::shared_ptr<QObject>(counter);
-
-    lua("c:setValue(24)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 24);
+    return counter->getValue();
 }
 
-BOOST_AUTO_TEST_CASE(luaCanPassTwoValuesToQObjectMethods)
+static void receiveRef(Counter& counter)
 {
-    LuaEnvironment lua;
-    Counter* counter = new Counter;
-    lua["c"] = std::shared_ptr<QObject>(counter);
-
-    lua("c:setAddedValue(3, 6)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 9);
+    counter.setValue(24);
 }
 
-BOOST_AUTO_TEST_CASE(methodsCanUseTheStackDirectly)
+static int receiveConstRef(const Counter& counter)
 {
-    LuaEnvironment lua;
-    Counter* counter = new Counter(2);
-    lua["c"] = std::shared_ptr<QObject>(counter);
-
-    lua("c:addAll(1, 2, 3)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 8);
+    return counter.getValue();
 }
 
-BOOST_AUTO_TEST_CASE(methodsCanStillReturnValues)
+BOOST_AUTO_TEST_CASE(shared_ptr)
 {
-    LuaEnvironment lua;
-    lua["c"] = std::shared_ptr<QObject>(new Counter(0));
+    lua::thread env;
+    env["c"] = std::shared_ptr<QObject>(new Counter(42));
 
-    BOOST_REQUIRE_EQUAL((int)lua("return c:summed(1, 2, 3)"), 6);
+    env["acceptShared"] = acceptShared;
+    env["acceptSharedRef"] = acceptSharedRef;
+
+    auto orig = std::shared_ptr<QObject>(new QObject);
+    lua::push(env, orig);
+
+    auto other = lua::get<std::shared_ptr<QObject>>(env, 1);
+    BOOST_CHECK_EQUAL(other.get(), orig.get());
 }
 
-BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
+BOOST_AUTO_TEST_CASE(callables_with_userdata)
 {
-    LuaEnvironment lua;
+    lua::thread env;
+
+    Counter counter(42);
+    env["counter"] = &counter;
+    env["receiveValue"] = receiveValue;
+    lua::push_function<void(Counter* count)>(env, receivePtr);
+    env["receivePtr"] = receivePtr;
+    env["receiveRef"] = receiveRef;
+    env["receiveConstRef"] = receiveConstRef;
+    env["receiveConstPtr"] = receiveConstPtr;
+
+    BOOST_CHECK_EQUAL(counter.getValue(), 42);
+    lua::run_string(env, "receivePtr(counter)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 24);
+    BOOST_CHECK_EQUAL(lua::get<int>(
+        lua::run_string(env, "return receiveConstPtr(counter)")),
+        24
+    );
+
+    counter.setValue(42);
+
+    BOOST_CHECK_EQUAL(counter.getValue(), 42);
+    lua::run_string(env, "receiveRef(counter)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 24);
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return receiveConstRef(counter)"), 24);
+
+    // Runtime error
+    BOOST_CHECK_THROW(lua::run_string(env, "foo.y.z = 42"), lua::exception);
+
+    // Underflow
+    BOOST_CHECK_THROW(lua::run_string(env, "receiveRef()"), lua::exception);
+
+    // Allow extra args
+    BOOST_CHECK_NO_THROW(lua::run_string(env, "receiveRef(counter, 3)"));
+}
+
+BOOST_AUTO_TEST_CASE(userdata_by_value)
+{
+    lua::thread env;
+
+    Blank blank(42);
+    env["blank"] = blank;
+
+    env["receiveValue"] = receiveValue;
+    env["receiveConstValue"] = receiveConstValue;
+
+    lua::run_string(env, "receiveValue(blank)");
+    lua::run_string(env, "receiveConstValue(blank)");
+}
+
+BOOST_AUTO_TEST_CASE(qstring)
+{
+    lua::thread env;
+    lua::push(env, QString("c"));
+    BOOST_CHECK(lua::get<QString>(env, 1) == QString("c"));
+}
+
+BOOST_AUTO_TEST_CASE(qchar)
+{
+    lua::thread env;
+    lua::push(env, QChar('c'));
+    BOOST_CHECK(lua::get<QChar>(env, 1) == QChar('c'));
+}
+
+BOOST_AUTO_TEST_CASE(raw_char)
+{
+    lua::thread env;
+
+    char c = 'c';
+    lua::push(env, c);
+    BOOST_CHECK_EQUAL(lua::get<std::string>(env, 1), "c");
+}
+
+/*
+
+std::shared_ptr<Counter> makeCounter(lua::state* const state)
+{
+    switch (lua::size(state)) {
+        case 0: return std::make_shared<Counter>();
+        case 1: return std::make_shared<Counter>(lua::get<int>(state, 1));
+        default: return std::make_shared<Counter>(lua::get<int>(state, 1) + lua::get<int>(state, 2));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(shared_ptr)
+{
+    lua::thread env;
+
+    env["Rainback"] = lua::value::table;
+    env["Rainback"]["MakeCounter"] = makeCounter;
+
+    lua::run_string(env, "font = Rainback.MakeCounter(42)");
+
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return font.value"), 42);
+}
+
+BOOST_AUTO_TEST_CASE(stack_userdata)
+{
+    lua::thread env;
+
+    Counter counter(42);
+    auto s = lua::push(env, &counter);
+    BOOST_CHECK_EQUAL(s.type().name(), "userdata");
+
+    env["c"] = &counter;
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return c:getValue()"), 42);
+
+    lua::run_string(env, "c:addAll(1, 2, 3)");
+    BOOST_REQUIRE_EQUAL(counter->getValue(), 48);
+
+    lua::run_string(env, "c:setValue(24)");
+    BOOST_CHECK_EQUAL(c.getValue(), 24);
+
+    lua::run_string(env, "c:setAddedValue(2, 4)");
+    BOOST_CHECK_EQUAL(c.getValue(), 30);
+
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return c:summed(1, 2, 3)"), 6);
+}
+
+BOOST_AUTO_TEST_CASE(qobject_properties)
+{
+    lua::thread env;
     QFile file(LUA_DIR "anim.lua");
     lua::runFile(lua, file);
 
@@ -93,67 +205,28 @@ BOOST_AUTO_TEST_CASE(luaSetsPropertiesDirectly)
     int old = square->getX();
     lua["Tick"](std::shared_ptr<QObject>(square), constants::pi<double>());
     BOOST_REQUIRE(square->getX() != old);
+
+    Counter counter(42);
+    lua["counter"] = counter;
+    lua("bar = counter.value");
+
+    BOOST_REQUIRE_EQUAL(lua["bar"].get<int>(), 42);
+
+    Counter counter(42);
+    lua["counter"] = counter;
+    lua("counter.value = 24");
+
+    BOOST_REQUIRE_EQUAL(counter.getValue(), 24);
+
+    auto obj = std::shared_ptr<QObject>(new Counter(42));
+    lua["c"] = obj;
+
+    BOOST_CHECK_THROW(lua("c.someValue = 24"), LuaException);
 }
 
-BOOST_AUTO_TEST_CASE(testLuaHandlesInterestingCharValues)
+BOOST_AUTO_TEST_CASE(qobject_signals)
 {
-    LuaEnvironment lua;
-    LuaStack s(lua);
-    char c = 'c';
-    s.push(&c, 1);
-    std::string sink;
-    s >> sink;
-    BOOST_REQUIRE(sink == "c");
-}
-
-BOOST_AUTO_TEST_CASE(testLuaHandlesQString)
-{
-    LuaEnvironment lua;
-    LuaStack s(lua);
-    QString i('c');
-    s << i;
-    QString o;
-    s >> o;
-    BOOST_CHECK(o == QString("c"));
-}
-
-BOOST_AUTO_TEST_CASE(testLuaHandlesQChar)
-{
-    LuaEnvironment lua;
-    LuaStack s(lua);
-    QChar i('c');
-    s << i;
-    QChar o(s.get<char>());
-
-    BOOST_CHECK_EQUAL(o.toLatin1(), i.toLatin1());
-    BOOST_CHECK(i == o);
-}
-
-BOOST_AUTO_TEST_CASE(testLuaHandlesQVariants)
-{
-    LuaEnvironment lua;
-    lua["foo"] = QVariant(42);
-    BOOST_REQUIRE(lua["foo"] == 42);
-}
-
-BOOST_AUTO_TEST_CASE(luaCrashesWhenHandlingNonQVariantTypes)
-{
-    LuaEnvironment lua;
-
-    lua(
-    "function work(a, b)"
-    "   a:set(b);"
-    "end;");
-
-    Counter a(42);
-    BOOST_CHECK_THROW(lua["work"](a, Counter(53)), std::logic_error);
-}
-
-
-BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
+    lua::thread env;
 
     Counter counter(42);
     Counter flag(10);
@@ -181,10 +254,20 @@ BOOST_AUTO_TEST_CASE(luaCanConnectToQObjectSignals)
     BOOST_CHECK_EQUAL(flag.getValue(), 30);
 }
 
-BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
+BOOST_AUTO_TEST_CASE(qvariant)
 {
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
+    lua::thread env;
+
+    env["foo"] = QVariant(42);
+    BOOST_CHECK_EQUAL(lua::get<int>(env["foo"]), 42);
+
+    lua::run_string(env,
+    "function work(a, b)"
+    "   a:set(b);"
+    "end;");
+
+    Counter a(42);
+    BOOST_CHECK_THROW(lua["work"](a, Counter(53)), std::logic_error);
 
     lua::qvariantPusher(QVariant::Point, [](LuaStack& stack, const QVariant& source)
     {
@@ -230,228 +313,4 @@ BOOST_AUTO_TEST_CASE(customQVariantTypesAreSupported)
     BOOST_CHECK_EQUAL(lua["foo"]["y"].get<int>(), 34);
 }
 
-BOOST_AUTO_TEST_CASE(testLuaHandleQObjects)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-    LuaStack s(lua);
-
-    QObject obj;
-    s.push(&obj, "QObject");
-
-    LuaUserdata* returned;
-    s >> returned;
-
-    BOOST_REQUIRE(returned->rawData() == &obj);
-}
-
-BOOST_AUTO_TEST_CASE(testLuaHandleQObjectsWithMinimalSemantics)
-{
-    LuaEnvironment lua;
-    LuaStack stack(lua);
-
-    auto orig = std::shared_ptr<QObject>(new QObject);
-    stack << orig;
-
-    std::shared_ptr<QObject> other;
-    stack >> other;
-
-    BOOST_REQUIRE(other.get() == orig.get());
-}
-
-namespace lua {
-
-template<>
-struct UserdataType<Counter>
-{
-    constexpr static const char* name = "Counter";
-
-    static void initialize(LuaStack& stack, QObject& obj)
-    {
-        UserdataType<QObject>::initialize(stack, obj);
-    }
-};
-
-template<>
-struct UserdataType<Blank>
-{
-    constexpr static const char* name = "Blank";
-
-    static void initialize(LuaStack& stack, Blank& obj)
-    {
-    }
-};
-
-} // namespace lua
-
-BOOST_AUTO_TEST_CASE(luaRetrievesQObjectProperties)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-
-    Counter counter(42);
-    lua["counter"] = counter;
-    lua("bar = counter.value");
-
-    BOOST_REQUIRE_EQUAL(lua["bar"].get<int>(), 42);
-}
-
-std::shared_ptr<Counter> makeCounter(LuaStack& stack)
-{
-    switch (stack.size()) {
-    case 0:
-        return std::make_shared<Counter>();
-    case 1:
-        return std::make_shared<Counter>(stack.get<int>(1));
-    default:
-        return std::make_shared<Counter>(stack.get<int>(1) + stack.get<int>(2));
-    }
-}
-
-BOOST_AUTO_TEST_CASE(luaDoesntPrematurelyCollectSharedPtrs)
-{
-    LuaEnvironment lua;
-
-    LuaStack stack(lua);
-
-    lua["Rainback"] = lua::value::table;
-    lua["Rainback"]["MakeCounter"] = makeCounter;
-
-    lua("font = Rainback.MakeCounter(42)");
-
-    BOOST_CHECK_EQUAL(lua("return font.value").get<int>(), 42);
-}
-
-BOOST_AUTO_TEST_CASE(luaCanSetQObjectProperties)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-
-    Counter counter(42);
-    lua["counter"] = counter;
-    lua("counter.value = 24");
-
-    BOOST_REQUIRE_EQUAL(counter.getValue(), 24);
-}
-
-static void receiveValue(Blank blank)
-{
-    BOOST_CHECK_EQUAL(blank.count(), 42);
-}
-
-static void receiveConstValue(const Blank blank)
-{
-    BOOST_CHECK_EQUAL(blank.count(), 42);
-}
-
-static void receivePtr(Counter* const counter)
-{
-    counter->setValue(24);
-}
-
-static int receiveConstPtr(const Counter* counter)
-{
-    return counter->getValue();
-}
-
-static void receiveRef(Counter& counter)
-{
-    counter.setValue(24);
-}
-
-static int receiveConstRef(const Counter& counter)
-{
-    return counter.getValue();
-}
-
-BOOST_AUTO_TEST_CASE(luaCanPassBackCxxValues)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-
-    Counter counter(42);
-    lua["counter"] = counter;
-    lua["receiveValue"] = receiveValue;
-    lua["receivePtr"] = receivePtr;
-    lua["receiveRef"] = receiveRef;
-    lua["receiveConstRef"] = receiveConstRef;
-    lua["receiveConstPtr"] = receiveConstPtr;
-
-    BOOST_CHECK_EQUAL(counter.getValue(), 42);
-    lua("receivePtr(counter)");
-    BOOST_CHECK_EQUAL(counter.getValue(), 24);
-    BOOST_CHECK_EQUAL(lua("return receiveConstPtr(counter)").get<int>(), 24);
-
-    counter.setValue(42);
-
-    BOOST_CHECK_EQUAL(counter.getValue(), 42);
-    lua("receiveRef(counter)");
-    BOOST_CHECK_EQUAL(counter.getValue(), 24);
-    BOOST_CHECK_EQUAL(lua("return receiveConstRef(counter)").get<int>(), 24);
-}
-
-BOOST_AUTO_TEST_CASE(throwLuaExceptionOnLuaProblems)
-{
-    LuaEnvironment lua;
-    lua["receiveRef"] = receiveRef;
-    lua.setAcceptsStackUserdata(true);
-
-    Counter counter(42);
-    lua["counter"] = counter;
-
-    // Syntax error
-    BOOST_CHECK_THROW(lua("foo.bar.baz = 42"), LuaException);
-
-    // Underflow
-    BOOST_CHECK_THROW(lua("receiveRef()"), LuaException);
-
-    // Allow extra args
-    BOOST_CHECK_NO_THROW(lua("receiveRef(counter, 3)"));
-}
-
-BOOST_AUTO_TEST_CASE(luaCanPassUserdataByValue)
-{
-    LuaEnvironment lua;
-    lua.setAcceptsStackUserdata(true);
-
-    Blank blank(42);
-    lua["blank"] = blank;
-
-    lua["receiveValue"] = receiveValue;
-    lua["receiveConstValue"] = receiveConstValue;
-
-    lua("receiveValue(blank)");
-    lua("receiveConstValue(blank)");
-}
-
-BOOST_AUTO_TEST_CASE(stackAcceptsRawPointers)
-{
-    LuaEnvironment lua;
-
-    Counter counter;
-    LuaStack stack(lua);
-    stack.setAcceptsStackUserdata(true);
-    stack << counter;
-    BOOST_REQUIRE_EQUAL(stack.typestring().c_str(), "userdata");
-}
-
-BOOST_AUTO_TEST_CASE(stackAllocatedObjectsAreAccepted)
-{
-    LuaEnvironment lua;
-
-    lua(
-    "function work(a, b)"
-    "   a.value = 50;"
-    "   if b then b.value = 42; end;"
-    "end;");
-
-    Counter a(42);
-    lua["work"](a, Counter(53));
-    lua["work"](a, a);
-    lua["work"](Counter(53), a);
-    lua["work"](Counter(53), Counter(42));
-    lua["work"](&a, Counter(42));
-    lua["work"](&a, a);
-    lua["work"](a, &a);
-}
 */

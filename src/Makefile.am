@@ -11,19 +11,27 @@ nodist_liblua_cxx_la_SOURCES = $(liblua_cxx_la_MOC_SOURCES)
 
 liblua_cxx_la_SOURCES = \
 	load.cpp \
-	stack.cpp \
+	push.cpp \
+	store.cpp \
 	algorithm.cpp \
+	thread.cpp \
+	assert.cpp \
 	module/DirectoryModuleLoader.cpp
 
 pkginclude_HEADERS = \
+	assert.hpp \
+	push.hpp \
+	store.hpp \
 	state.hpp \
 	exception.hpp \
+	iteration.hpp \
 	load.hpp \
 	algorithm.hpp \
 	link.hpp \
 	module/DirectoryModuleLoader.hpp \
 	module/ModuleLoader.hpp \
-	stack.hpp
+	qt/type/QString.hpp \
+	qt/type/QChar.hpp
 
 mostlyclean-local:
 	rm -f $(liblua_cxx_la_MOC_SOURCES)

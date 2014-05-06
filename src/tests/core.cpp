@@ -1,7 +1,8 @@
 #include "core.hpp"
 
 #include "thread.hpp"
-#include "stack.hpp"
+#include "push.hpp"
+#include "store.hpp"
 #include "algorithm.hpp"
 #include "load.hpp"
 #include "reference.hpp"
@@ -291,7 +292,7 @@ BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
     env["foo"] = std::function<std::string(const std::string&)>([&](const std::string& internal) {
         return internal + std::string("foo") + lua::call<std::string>(env["bar"]);
     });
-    BOOST_CHECK_EQUAL(lua::get<const char*>(lua::run_string(env, "return foo('lua')")), "luafoobar");
+    BOOST_CHECK_EQUAL(lua::evaluate<const char*>(env, "return foo('lua')"), "luafoobar");
 }
 
 BOOST_AUTO_TEST_CASE(call_lua_from_cpp)

@@ -37,6 +37,15 @@ namespace lua
         return lua::invoke(lua::load_file(state, runnable));
     }
 
+    template <class Value, class Input>
+    Value evaluate(lua::state* const state, Input& runnable)
+    {
+        auto rv = lua::run_string(state, runnable);
+        Value destination(lua::get<Value>(rv));
+        lua_pop(state, 1);
+        return destination;
+    }
+
 } // namespace lua
 
 #endif // LUA_CXX_LOADERS_HEADER

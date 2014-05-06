@@ -1,7 +1,8 @@
 #ifndef LUA_CXX_ALGORITHM_HEADER
 #define LUA_CXX_ALGORITHM_HEADER
 
-#include "stack.hpp"
+#include "push.hpp"
+#include "store.hpp"
 #include "type/standard.hpp"
 
 #include <stdexcept>
@@ -64,7 +65,7 @@ lua::index global(lua::state* const state, const T&& name)
 // converting the returned value into something useful.
 
 template <typename RV, typename Callable, typename... Args>
-RV call(Callable source, Args&&... args)
+RV call(Callable source, Args... args)
 {
     lua::index callable(lua::push(source.state(), source));
     if (!callable.type().function()) {
@@ -77,7 +78,7 @@ RV call(Callable source, Args&&... args)
 }
 
 template <typename Callable, typename... Args>
-void call(Callable source, Args&&... args)
+void call(Callable source, Args... args)
 {
     lua::index callable(lua::push(source.state(), source));
     if (!callable.type().function()) {

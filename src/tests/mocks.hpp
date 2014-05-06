@@ -3,8 +3,8 @@
 
 #include <QObject>
 #include <QPoint>
-#include "LuaEnvironment.hpp"
-#include "LuaStack.hpp"
+
+#include "iteration.hpp"
 
 class Blank
 {
@@ -13,6 +13,10 @@ class Blank
 public:
     Blank(const int count) :
         _count(count)
+    {}
+
+    Blank() :
+        _count()
     {}
 
     int count() const
@@ -95,21 +99,21 @@ public slots:
         setValue(other.getValue());
     }
 
-    void addAll(LuaStack& stack)
+    int addAll(lua::state* const state)
     {
-        while (!stack.empty()) {
-            value += stack.get<decltype(value)>(1);
-            stack.shift();
+        for (auto i : lua::range<decltype(value)>(state)) {
+            value += i;
         }
+        return 0;
     }
 
-    int summed(LuaStack& stack)
+    int summed(lua::state* const state)
     {
         // Be sure not to touch the stack here, so we can ensure
         // our caller cleans everything up for us.
         auto total = getValue();
-        for (unsigned int i = 0; i < stack.size(); ++i) {
-            total += stack.get<int>(i + 1);
+        for (auto value : lua::range<int>(state)) {
+            total += value;
         }
         return total;
     }

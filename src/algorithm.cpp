@@ -10,10 +10,12 @@
 
 static int on_error(lua::state* const state)
 {
-    if (lua::size(state) > 0 && !lua::index(state, 1).type().userdata()) {
-        lua::exception ex(lua::get<const char*>(state, 1));
-        lua::clear(state);
-        lua::push(state, ex);
+    if (lua::size(state) > 0) {
+        if (!lua::index(state, 1).type().userdata()) {
+            lua::exception ex(lua::get<const char*>(state, 1));
+            lua::clear(state);
+            lua::push(state, ex);
+        }
     } else {
         lua::push(state, lua::exception("An error occurred within Lua"));
     }
@@ -50,7 +52,6 @@ lua::index lua::invoke(const lua::index& callable)
         case LUA_ERRERR:
             throw std::runtime_error("Lua error within error handler");
         case LUA_ERRRUN:
-            std::cerr << "Error propagated during run\n";
             auto ex = lua::get<lua::exception*>(state, -1);
             throw *ex;
     }

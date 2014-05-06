@@ -8,6 +8,10 @@ runtest_CXXFLAGS = $(AM_CXXFLAGS) @QT_CXXFLAGS@ @LUA_INCLUDE@ -I$(top_srcdir)/sr
 
 runtest_LDADD = ../liblua-cxx.la @QT_LIBS@ @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
+# moc-generated source files
+runtest_MOC_SOURCES = \
+	moc_mocks.cpp
+
 runtest_SOURCES = \
 	core.cpp \
 	qt.cpp \

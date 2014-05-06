@@ -1,7 +1,8 @@
 #ifndef LUACXX_THREAD_HEADER
 #define LUACXX_THREAD_HEADER
 
-#include "stack.hpp"
+#include "push.hpp"
+#include "store.hpp"
 #include "global.hpp"
 
 namespace lua {
@@ -20,7 +21,7 @@ public:
     {
     }
 
-    lua::state* const state()
+    lua::state* const state() const
     {
         return _state;
     }
@@ -58,10 +59,7 @@ struct Store<lua::thread>
     static void store(lua::thread& destination, lua::index& index)=delete;
 };
 
-int size(lua::thread& env)
-{
-    return lua_gettop(env.state());
-}
+int size(const lua::thread& env);
 
 } // namespace lua
 
