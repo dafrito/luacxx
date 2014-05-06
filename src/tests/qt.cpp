@@ -221,7 +221,7 @@ BOOST_AUTO_TEST_CASE(qobject_properties)
     auto obj = std::shared_ptr<QObject>(new Counter(42));
     lua["c"] = obj;
 
-    BOOST_CHECK_THROW(lua("c.someValue = 24"), LuaException);
+    BOOST_CHECK_THROW(lua("c.someValue = 24"), lua::exception);
 }
 
 BOOST_AUTO_TEST_CASE(qobject_signals)
