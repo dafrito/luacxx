@@ -10,14 +10,12 @@ namespace lua {
 class thread
 {
     lua::state* _state;
+    bool _owner;
+
 public:
     thread(lua::state* const state) :
-        _state(state)
-    {
-    }
-
-    thread() :
-        thread(luaL_newstate())
+        _state(state),
+        _owner(false)
     {
     }
 
@@ -36,16 +34,64 @@ public:
         return lua::global(_state, name);
     }
 
+    thread& operator=(lua::thread& other)
+    {
+        _state = other._state;
+        other._owner = false;
+        _owner = true;
+
+        return *this;
+    }
+
+    thread& operator=(const lua::thread& other)
+    {
+        _state = other._state;
+        _owner = false;
+        return *this;
+    }
+
+    void set_as_owner()
+    {
+        _owner = true;
+    }
+
+    void clear_owner()
+    {
+        _owner = false;
+    }
+
+    bool is_owner()
+    {
+        return _owner;
+    }
+
     operator lua::state*()
     {
         return _state;
     }
 
+    template <class T>
+    lua::thread& operator<<(T value)
+    {
+        lua::push(_state, value);
+        return *this;
+    }
+
+    template <class T>
+    lua::index operator>>(T& destination)
+    {
+        return lua::index(_state, 1) >> destination;
+    }
+
     ~thread()
     {
-        lua_close(_state);
+        if (_owner) {
+            lua_close(_state);
+        }
     }
 };
+
+lua::thread create();
 
 template <>
 struct Push<lua::thread>

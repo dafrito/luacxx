@@ -29,7 +29,7 @@ double addNumbers(int a, int b)
 
 double addBonanza(int a, long b, float c, double d, short e)
 {
-    return a+b+c+d+e;
+    return a + b + c + d + e;
 }
 
 int luaAdd(lua::state* const state)
@@ -55,24 +55,24 @@ void noop(int)
 
 BOOST_AUTO_TEST_CASE(push_and_store)
 {
-    lua::thread env;
+    auto env = lua::create();
 
-    lua::push(env, 42);
+    env << 42;
     BOOST_CHECK_EQUAL(lua::get<int>(env[1]), 42);
 
     int foo = 1;
-    lua::store(foo, env[1]);
+    env[1] >> foo;
     BOOST_CHECK_EQUAL(foo, 42);
 
     bool flag = true;
-    lua::push(env, flag);
+    env << flag;
     BOOST_CHECK_EQUAL(lua::get<bool>(env[2]), true);
 
     env[1] = 44;
     BOOST_CHECK_EQUAL(lua::get<int>(env[1]), 44);
 
     lua::clear(env);
-    lua::push(env, true, 42, "No time");
+    env << true << 42 << "No time";
     BOOST_CHECK_EQUAL(env[1].type().boolean(), true);
     BOOST_CHECK_EQUAL(env[2].type().number(), true);
     BOOST_CHECK_EQUAL(env[3].type().string(), true);
@@ -80,14 +80,15 @@ BOOST_AUTO_TEST_CASE(push_and_store)
 
 BOOST_AUTO_TEST_CASE(table)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     env["foo"] = lua::value::table;
     lua::table::insert(env["foo"], 42);
 
-    auto foo_index = lua::table::get(env["foo"], 1);
-    BOOST_CHECK_EQUAL(lua::get<int>(foo_index), 42);
+    auto inserted = lua::table::get(env["foo"], 1);
+    BOOST_CHECK_EQUAL(inserted.type().name(), "number");
+
+    BOOST_CHECK_EQUAL(lua::table::get<int>(env["foo"], 1), 42);
 
     lua::table::insert(env["foo"], addNumbers);
     BOOST_CHECK_EQUAL(4, lua::get<int>(
@@ -114,8 +115,7 @@ BOOST_AUTO_TEST_CASE(table)
 
 BOOST_AUTO_TEST_CASE(run_string)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     lua::load_string(env, "return 2 + 2");
 
@@ -137,8 +137,7 @@ BOOST_AUTO_TEST_CASE(run_string)
 
 BOOST_AUTO_TEST_CASE(run_file)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     QFile file(LUA_DIR "simple.lua");
     lua::run_string(env, "No = 'Time'");
@@ -159,7 +158,7 @@ BOOST_AUTO_TEST_CASE(run_file)
 
 BOOST_AUTO_TEST_CASE(run_dir)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     lua::run_dir(env, QDir(LUA_DIR "bin"), true);
     BOOST_CHECK_EQUAL(lua::get<int>(env["a"]), 42);
@@ -168,12 +167,12 @@ BOOST_AUTO_TEST_CASE(run_dir)
 
 BOOST_AUTO_TEST_CASE(reference)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     lua::reference ref(lua::push(env, "No Time"));
     BOOST_CHECK_EQUAL(lua::size(env), 1);
 
-    lua::push(env, ref);
+    env << ref;
     BOOST_CHECK_EQUAL(lua::get<const char*>(env, -1), "No Time");
 }
 
@@ -204,10 +203,10 @@ public:
 
 BOOST_AUTO_TEST_CASE(pointer_userdata)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     auto point = new Point<int>(2, 3);
-    lua::push(env, point);
+    env << point;
 
     auto copy = lua::get<Point<int>*>(env, -1);
     BOOST_CHECK_EQUAL(copy->x, 2);
@@ -217,7 +216,7 @@ BOOST_AUTO_TEST_CASE(pointer_userdata)
     BOOST_CHECK_EQUAL(point->x, 8);
 
     lua::clear(env);
-    lua::push(env, point);
+    env << point;
 
     auto value = lua::get<Point<int>>(env, -1);
     BOOST_CHECK_EQUAL(value.x, 8);
@@ -226,9 +225,9 @@ BOOST_AUTO_TEST_CASE(pointer_userdata)
 
 BOOST_AUTO_TEST_CASE(value_userdata)
 {
-    lua::thread env;
+    auto env = lua::create();
 
-    lua::push<Point<int>>(env, Point<int>(2, 3));
+    env << Point<int>(2, 3);
 
     auto point = lua::get<Point<int>*>(env, -1);
     BOOST_CHECK_EQUAL(point->x, 2);
@@ -240,8 +239,7 @@ BOOST_AUTO_TEST_CASE(value_userdata)
 
 BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     env["luaAdd"] = luaAdd;
     BOOST_CHECK_EQUAL(env["luaAdd"].type().name(), "function");
@@ -297,8 +295,7 @@ BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
 
 BOOST_AUTO_TEST_CASE(call_lua_from_cpp)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     lua::run_string(env, "function foo(a, b)\n"
     "    return a + b\n"
@@ -321,9 +318,9 @@ BOOST_AUTO_TEST_CASE(call_lua_from_cpp)
 
 BOOST_AUTO_TEST_CASE(call_lua_from_cpp_with_extra_arguments)
 {
-    lua::thread env;
+    auto env = lua::create();
 
-    lua::push(env, "An extra argument to ensure the stack doesn't just return the 'second' argument");
+    env << "An extra argument to ensure the stack doesn't just return the 'second' argument";
 
     auto worker = lua::run_string(env, ""
     "return function(value)"
@@ -339,8 +336,7 @@ BOOST_AUTO_TEST_CASE(call_lua_from_cpp_with_extra_arguments)
 
 BOOST_AUTO_TEST_CASE(index_and_global)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     env["foo"] = 42;
     BOOST_CHECK_EQUAL(lua::size(env), 0);
@@ -362,8 +358,7 @@ BOOST_AUTO_TEST_CASE(index_and_global)
 
 BOOST_AUTO_TEST_CASE(index_algorithms)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     auto first = lua::push(env, 2);
     auto second = lua::push(env, 3);
@@ -397,7 +392,7 @@ struct Wrapper {
 
 BOOST_AUTO_TEST_CASE(lua_exception_support)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     int value = 0;
     env["call"] = lua::push_function<void(bool)>(env, [&](bool shouldErr) {
@@ -426,8 +421,7 @@ void immediatelyThrow()
 
 BOOST_AUTO_TEST_CASE(exceptions)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     bool errored = false;
 
@@ -449,8 +443,7 @@ BOOST_AUTO_TEST_CASE(exceptions)
 
 BOOST_AUTO_TEST_CASE(directory_module_loader)
 {
-    lua::thread env;
-    luaL_openlibs(env);
+    auto env = lua::create();
 
     DirectoryModuleLoader loader;
     loader.setRoot(QDir(LUA_DIR "testlib"));
@@ -487,7 +480,7 @@ BOOST_AUTO_TEST_CASE(directory_module_loader)
 
 BOOST_AUTO_TEST_CASE(get_all)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     lua::push(env, 1, 2, 3, 4);
 
@@ -502,24 +495,21 @@ BOOST_AUTO_TEST_CASE(get_all)
 
 BOOST_AUTO_TEST_CASE(extraction_and_insertion)
 {
-    lua::thread env;
+    auto env = lua::create();
 
-    /*
-    s << 42 << 34;
+    env << 42 << 34;
     int a, b;
-    s >> a;
-    BOOST_CHECK_EQUAL(a, 34);
-    s >> b;
+    env >> a >> b;
+    BOOST_CHECK_EQUAL(a, 42);
     BOOST_CHECK_EQUAL(b, 34);
+    lua::clear(env);
 
-    s << 5 << 6 << 7;
-
-    int a;
-    int b;
-    int c;
-    s.begin() >> a >> b >> c;
-    BOOST_REQUIRE_EQUAL(a, 5);
-    BOOST_REQUIRE_EQUAL(b, 6);
-    BOOST_REQUIRE_EQUAL(c, 7);
-    */
+    env << 5 << 6 << 7;
+    int d;
+    int e;
+    int f;
+    env >> d >> e >> f;
+    BOOST_CHECK_EQUAL(d, 5);
+    BOOST_CHECK_EQUAL(e, 6);
+    BOOST_CHECK_EQUAL(f, 7);
 }

@@ -3,6 +3,9 @@
 #include "qt/type/QString.hpp"
 #include "algorithm.hpp"
 
+#include "type/standard.hpp"
+#include "type/numeric.hpp"
+
 #include <unordered_map>
 #include <QStringList>
 
@@ -18,15 +21,12 @@ namespace std {
     };
 }
 
-namespace {
-static std::unordered_map<int, std::function<void(lua::state* const, const QVariant&)>> qvariant_push_handler;
-static std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>> qvariant_store_handler;
-}
-
 void lua::push_qvariant(lua::state* const state, const QVariant& value)
 {
+    std::cerr << "push_qvariant\n";
     switch (value.userType()) {
         case QVariant::Invalid:
+            std::cout << "Pushing nil\n";
             lua::push(state, lua::value::nil);
             break;
         case QVariant::Bool:
@@ -36,8 +36,13 @@ void lua::push_qvariant(lua::state* const state, const QVariant& value)
             lua::push(state, value.toChar());
             break;
         case QVariant::Int:
-            lua::push(state, value.toInt());
+        {
+            std::cerr << "Pushing int " << lua::size(state) << '\n';
+            auto rv = lua::push(state, value.toInt());
+            std::cerr << "int pushed " << lua::size(state) << " " << rv.type().name() << '\n';
+            lua::assert_type("push_qvariant", lua::type::number, rv);
             break;
+        }
         case QVariant::Double:
         case QVariant::UInt:
             lua::push(state, value.toDouble());
@@ -81,8 +86,10 @@ void lua::push_qvariant(lua::state* const state, const QVariant& value)
 
 void lua::store_qvariant(QVariant& destination, const lua::index& source)
 {
+    std::cerr << "Storing qvariant\n";
     switch (destination.userType()) {
         case QVariant::Invalid:
+            throw lua::exception("A QVariant must have a valid type");
             destination.clear();
             break;
         case QVariant::Bool:
@@ -93,6 +100,7 @@ void lua::store_qvariant(QVariant& destination, const lua::index& source)
             break;
         case QVariant::Int:
         case QVariant::UInt:
+            std::cerr << "00 INT\n";
             destination.setValue(lua::get<int>(source));
             break;
         case QVariant::Double:

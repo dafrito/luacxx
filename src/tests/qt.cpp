@@ -28,6 +28,36 @@ void acceptSharedRef(const std::shared_ptr<Counter>& ptr)
 {
 }
 
+std::shared_ptr<Counter> makeCounter(lua::state* const state)
+{
+    switch (lua::size(state)) {
+        case 0: return std::make_shared<Counter>();
+        case 1: return std::make_shared<Counter>(lua::get<int>(state, 1));
+        default: return std::make_shared<Counter>(lua::get<int>(state, 1) + lua::get<int>(state, 2));
+    }
+}
+
+BOOST_AUTO_TEST_CASE(shared_ptr)
+{
+    auto env = lua::create();
+
+    env["acceptShared"] = acceptShared;
+    env["acceptSharedRef"] = acceptSharedRef;
+
+    auto orig = std::shared_ptr<QObject>(new QObject);
+    lua::push(env, orig);
+
+    auto other = lua::get<std::shared_ptr<QObject>>(env, 1);
+    BOOST_CHECK_EQUAL(other.get(), orig.get());
+
+    env["Rainback"] = lua::value::table;
+    env["Rainback"]["MakeCounter"] = makeCounter;
+
+    lua::run_string(env, "font = Rainback.MakeCounter(42)");
+
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return font.value"), 42);
+}
+
 static void receiveValue(Blank blank)
 {
     BOOST_CHECK_EQUAL(blank.count(), 42);
@@ -58,24 +88,9 @@ static int receiveConstRef(const Counter& counter)
     return counter.getValue();
 }
 
-BOOST_AUTO_TEST_CASE(shared_ptr)
-{
-    lua::thread env;
-    env["c"] = std::shared_ptr<QObject>(new Counter(42));
-
-    env["acceptShared"] = acceptShared;
-    env["acceptSharedRef"] = acceptSharedRef;
-
-    auto orig = std::shared_ptr<QObject>(new QObject);
-    lua::push(env, orig);
-
-    auto other = lua::get<std::shared_ptr<QObject>>(env, 1);
-    BOOST_CHECK_EQUAL(other.get(), orig.get());
-}
-
 BOOST_AUTO_TEST_CASE(callables_with_userdata)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     Counter counter(42);
     env["counter"] = &counter;
@@ -113,7 +128,7 @@ BOOST_AUTO_TEST_CASE(callables_with_userdata)
 
 BOOST_AUTO_TEST_CASE(userdata_by_value)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     Blank blank(42);
     env["blank"] = blank;
@@ -127,190 +142,146 @@ BOOST_AUTO_TEST_CASE(userdata_by_value)
 
 BOOST_AUTO_TEST_CASE(qstring)
 {
-    lua::thread env;
+    auto env = lua::create();
+
     lua::push(env, QString("c"));
     BOOST_CHECK(lua::get<QString>(env, 1) == QString("c"));
 }
 
 BOOST_AUTO_TEST_CASE(qchar)
 {
-    lua::thread env;
+    auto env = lua::create();
+
     lua::push(env, QChar('c'));
     BOOST_CHECK(lua::get<QChar>(env, 1) == QChar('c'));
 }
 
 BOOST_AUTO_TEST_CASE(raw_char)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     char c = 'c';
     lua::push(env, c);
     BOOST_CHECK_EQUAL(lua::get<std::string>(env, 1), "c");
 }
 
-/*
-
-std::shared_ptr<Counter> makeCounter(lua::state* const state)
-{
-    switch (lua::size(state)) {
-        case 0: return std::make_shared<Counter>();
-        case 1: return std::make_shared<Counter>(lua::get<int>(state, 1));
-        default: return std::make_shared<Counter>(lua::get<int>(state, 1) + lua::get<int>(state, 2));
-    }
-}
-
-BOOST_AUTO_TEST_CASE(shared_ptr)
-{
-    lua::thread env;
-
-    env["Rainback"] = lua::value::table;
-    env["Rainback"]["MakeCounter"] = makeCounter;
-
-    lua::run_string(env, "font = Rainback.MakeCounter(42)");
-
-    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return font.value"), 42);
-}
-
-BOOST_AUTO_TEST_CASE(stack_userdata)
-{
-    lua::thread env;
-
-    Counter counter(42);
-    auto s = lua::push(env, &counter);
-    BOOST_CHECK_EQUAL(s.type().name(), "userdata");
-
-    env["c"] = &counter;
-    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return c:getValue()"), 42);
-
-    lua::run_string(env, "c:addAll(1, 2, 3)");
-    BOOST_REQUIRE_EQUAL(counter->getValue(), 48);
-
-    lua::run_string(env, "c:setValue(24)");
-    BOOST_CHECK_EQUAL(c.getValue(), 24);
-
-    lua::run_string(env, "c:setAddedValue(2, 4)");
-    BOOST_CHECK_EQUAL(c.getValue(), 30);
-
-    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return c:summed(1, 2, 3)"), 6);
-}
-
-BOOST_AUTO_TEST_CASE(qobject_properties)
-{
-    lua::thread env;
-    QFile file(LUA_DIR "anim.lua");
-    lua::runFile(lua, file);
-
-    auto square = new Square;
-
-    int old = square->getX();
-    lua["Tick"](std::shared_ptr<QObject>(square), constants::pi<double>());
-    BOOST_REQUIRE(square->getX() != old);
-
-    Counter counter(42);
-    lua["counter"] = counter;
-    lua("bar = counter.value");
-
-    BOOST_REQUIRE_EQUAL(lua["bar"].get<int>(), 42);
-
-    Counter counter(42);
-    lua["counter"] = counter;
-    lua("counter.value = 24");
-
-    BOOST_REQUIRE_EQUAL(counter.getValue(), 24);
-
-    auto obj = std::shared_ptr<QObject>(new Counter(42));
-    lua["c"] = obj;
-
-    BOOST_CHECK_THROW(lua("c.someValue = 24"), lua::exception);
-}
-
-BOOST_AUTO_TEST_CASE(qobject_signals)
-{
-    lua::thread env;
-
-    Counter counter(42);
-    Counter flag(10);
-
-    lua(
-    "function work(counter, flag)"
-    "    remover = counter:connect('valueChanged', function(newNum)"
-    "        flag.value = newNum;"
-    "    end);"
-    "end;");
-
-    lua["work"](counter, flag);
-
-    counter.setValue(50);
-    BOOST_CHECK_EQUAL(flag.getValue(), 50);
-
-    // Invoke twice to ensure the removal process is idempotent
-    lua("remover()");
-    lua("remover()");
-
-    flag.setValue(30);
-
-    counter.setValue(60);
-
-    BOOST_CHECK_EQUAL(flag.getValue(), 30);
-}
-
 BOOST_AUTO_TEST_CASE(qvariant)
 {
-    lua::thread env;
+    auto env = lua::create();
 
     env["foo"] = QVariant(42);
     BOOST_CHECK_EQUAL(lua::get<int>(env["foo"]), 42);
 
-    lua::run_string(env,
-    "function work(a, b)"
-    "   a:set(b);"
-    "end;");
-
-    Counter a(42);
-    BOOST_CHECK_THROW(lua["work"](a, Counter(53)), std::logic_error);
-
-    lua::qvariantPusher(QVariant::Point, [](LuaStack& stack, const QVariant& source)
-    {
+    lua::qvariant_push_handler[QVariant::Point] = [](lua::state* const state, const QVariant& source) {
         auto point = source.toPoint();
-        lua::push(stack, lua::value::table);
+        auto table = lua::push(state, lua::value::table);
 
-        stack.set("x", point.x());
-        stack.set("y", point.y());
-    });
+        lua::table::set(table, "x", point.x());
+        lua::table::set(table, "y", point.x());
+    };
 
-    lua::qvariantStorer(QVariant::Point, [](const LuaIndex& index, QVariant& sink)
-    {
-        auto table = lua::get<LuaReference>(index);
-        sink.setValue(QPoint(
-            table["x"].get<int>(),
-            table["y"].get<int>()
+    lua::qvariant_store_handler[QVariant::Point] = [](QVariant& destination, const lua::index& source) {
+        destination.setValue(QPoint(
+            lua::table::get<int>(source, "x"),
+            lua::table::get<int>(source, "y")
         ));
-    });
 
-    lua(
+    };
+
+    lua::run_string(env,
     "function work(counter)"
     "    counter.point = {x = 2, y = 4};"
     "end;");
 
     Counter counter(42);
     counter.setPoint(QPoint(36, 54));
-    lua["work"](counter);
+    lua::call(env["work"], &counter);
     BOOST_CHECK_EQUAL(counter.getPoint().x(), 2);
 
     counter.setPoint(QPoint(85, 34));
 
-    lua(
+    lua::run_string(env,
     "function work(counter)"
     "    remover = counter:connect('pointEmitted', function(point)"
     "        foo = point;"
     "    end);"
     "end;");
-    lua["work"](counter);
+    lua::call(env["work"], &counter);
 
     counter.setValue(23);
 
-    BOOST_CHECK_EQUAL(lua["foo"]["x"].get<int>(), 85);
-    BOOST_CHECK_EQUAL(lua["foo"]["y"].get<int>(), 34);
+    BOOST_CHECK_EQUAL(lua::get<int>(env["foo"]["x"]), 85);
+    BOOST_CHECK_EQUAL(lua::get<int>(env["foo"]["y"]), 34);
 }
 
-*/
+BOOST_AUTO_TEST_CASE(stack_userdata)
+{
+    auto env = lua::create();
+
+    Counter counter(42);
+    BOOST_CHECK_EQUAL(lua::push(env, &counter).type().name(), "userdata");
+
+    env["counter"] = &counter;
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return counter:getValue()"), 42);
+
+    lua::run_string(env, "counter:addAll(1, 2, 3)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 48);
+
+    lua::run_string(env, "counter:setValue(24)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 24);
+
+    lua::run_string(env, "counter:setAddedValue(2, 4)");
+    BOOST_CHECK_EQUAL(counter.getValue(), 30);
+
+    BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return counter:summed(1, 2, 3)"), 6);
+}
+
+BOOST_AUTO_TEST_CASE(qobject_properties)
+{
+    auto env = lua::create();
+
+    QFile file(LUA_DIR "anim.lua");
+    lua::run_file(env, file);
+
+    auto square = new Square;
+    int old = square->getX();
+    lua::call(env["Tick"], std::shared_ptr<QObject>(square), constants::pi<double>());
+    BOOST_CHECK(square->getX() != old);
+
+    Counter counter(42);
+    env["counter"] = &counter;
+
+    lua::run_string(env, "bar = counter.value");
+    BOOST_CHECK_EQUAL(lua::get<int>(env["bar"]), 42);
+
+    lua::run_string(env, "counter.value = 24");
+    BOOST_CHECK_EQUAL(counter.getValue(), 24);
+
+    auto obj = std::shared_ptr<QObject>(new Counter(42));
+    env["c"] = obj;
+
+    BOOST_CHECK_THROW(lua::run_string(env, "c.someValue = 24"), lua::exception);
+}
+
+BOOST_AUTO_TEST_CASE(qobject_signals)
+{
+    auto env = lua::create();
+
+    Counter counter(42);
+    Counter flag(10);
+
+    lua::run_string(env,
+    "function work(counter, flag)"
+    "    remover = counter:connect('valueChanged', function(newNum)"
+    "        flag.value = newNum;"
+    "    end);"
+    "end;");
+    lua::call(env["work"], &counter, &flag);
+
+    counter.setValue(50);
+    BOOST_CHECK_EQUAL(flag.getValue(), 50);
+
+    // Invoke twice to ensure the removal process is idempotent
+    lua::run_string(env, "remover()");
+    lua::run_string(env, "remover()");
+}
