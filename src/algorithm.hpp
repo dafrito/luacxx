@@ -113,11 +113,7 @@ template <typename Table, typename Key>
 lua::index get(Table source, Key key)
 {
     lua::index table(lua::push(source.state(), source));
-    if (!table.type().table()) {
-        throw std::logic_error(
-            std::string("A table must be provided")
-        );
-    }
+    lua::assert_type("table::set", lua::type::table, table);
 
     lua::push(table.state(), key);
     lua_gettable(table.state(), table.pos());
