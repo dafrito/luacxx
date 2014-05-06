@@ -165,31 +165,3 @@ void lua::clear(lua::state* const state)
 {
     lua_settop(state, 0);
 }
-
-/*
-bool LuaStack::hasMetatable(const int pos)
-{
-    bool hasMeta = lua_getmetatable(luaState(), absPos(pos)) != 0;
-    if (hasMeta) {
-        pop();
-    }
-    return hasMeta;
-}
-
-void LuaStack::pushMetatable(const int pos)
-{
-    assertUnlocked();
-    bool hasMeta = lua_getmetatable(luaState(), absPos(pos)) != 0;
-    if (!hasMeta) {
-        push(lua::value::table);
-        // Offset to ensure the position is set correctly
-        setMetatable(pos > 0 ? pos : pos - 1);
-    }
-}
-
-void LuaStack::setMetatable(const int pos)
-{
-    assertUnlocked();
-    lua_setmetatable(luaState(), absPos(pos));
-}
-*/
