@@ -122,6 +122,19 @@ lua::index get(Table source, Key key)
     return lua::index(table.state(), -1);
 }
 
+template <typename Table, typename Key, typename Value>
+void set(Table source, Key key, Value value)
+{
+    lua::index table(lua::push(source.state(), source));
+    lua::assert_type("table::set", lua::type::table, table);
+
+    lua::push(table.state(), key);
+    lua::push(table.state(), value);
+    lua_settable(table.state(), table.pos());
+
+    lua_pop(table.state(), 1);
+}
+
 } // namespace table
 
 } // namespace lua
