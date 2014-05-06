@@ -28,8 +28,9 @@ static int on_error(lua::state* const state)
 lua::index lua::invoke(const lua::index& callable)
 {
     auto state = callable.state();
-    int numArgs = lua::top(callable.state()).pos() - callable.pos();
-    assert(callable.type().function());
+    int nargs = lua::top(callable.state()).pos() - callable.pos();
+
+    lua::assert_type("invoke", lua::type::function, callable);
 
     // Call Lua function. LUA_MULTRET ensures all arguments are returned
     // Subtract one from the size to ignore the function itself and pass
@@ -37,7 +38,7 @@ lua::index lua::invoke(const lua::index& callable)
     lua::push(state, on_error);
     lua_insert(state, callable.pos());
 
-    int result = lua_pcall(state, numArgs, LUA_MULTRET, callable.pos());
+    int result = lua_pcall(state, nargs, LUA_MULTRET, callable.pos());
 
     // Be sure to remove the error handler
     lua_remove(state, callable.pos());
