@@ -16,6 +16,7 @@ liblua_cxx_la_SOURCES = \
 	algorithm.cpp \
 	thread.cpp \
 	assert.cpp \
+	qt/type/QVariant.cpp \
 	module/DirectoryModuleLoader.cpp
 
 pkginclude_HEADERS = \
@@ -31,6 +32,7 @@ pkginclude_HEADERS = \
 	module/DirectoryModuleLoader.hpp \
 	module/ModuleLoader.hpp \
 	qt/type/QString.hpp \
+	qt/type/QVariant.hpp \
 	qt/type/QChar.hpp
 
 mostlyclean-local:
