@@ -1,6 +1,6 @@
 #include "qt/type/QString.hpp"
 #include "qt/type/QChar.hpp"
-//#include "qt/type/QVariant.hpp"
+#include "qt/type/QVariant.hpp"
 
 #include <boost/test/unit_test.hpp>
 

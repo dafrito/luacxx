@@ -4,41 +4,38 @@
 #include <functional>
 #include <QVariant>
 
-#include "../LuaStack.hpp"
-#include "../LuaIndex.hpp"
+#include "push.hpp"
+#include "store.hpp"
 
 namespace lua {
 
-void qvariantPusher(const int& type, const std::function<void(LuaStack&, const QVariant&)>& mapper);
-void qvariantStorer(const int& type, const std::function<void(const LuaIndex&, QVariant&)>& mapper);
-
-void pushVariant(LuaStack& stack, const QVariant& source);
-void storeVariant(const LuaIndex& index, QVariant& sink);
+void push_qvariant(lua::state* const state, const QVariant& value);
+void store_qvariant(QVariant& destination, const lua::index& source);
 
 template<>
-struct Pusher<QVariant>
+struct Push<QVariant>
 {
-    static void push(LuaStack& stack, const QVariant& variant)
+    static void push(lua::state* const state, const QVariant& value)
     {
-        pushVariant(stack, variant);
+        push_qvariant(state, value);
     }
 };
 
 template<>
-struct Storer<QVariant>
+struct Store<QVariant>
 {
-    static void store(const LuaIndex& index, QVariant& sink)
+    static void store(QVariant& destination, const lua::index& index)
     {
-        storeVariant(index, sink);
+        store_qvariant(destination, index);
     }
 };
 
 template<>
-struct Getter<QVariant>
+struct Get<QVariant>
 {
-    static QVariant get(const LuaIndex& index)
+    static QVariant get(const lua::index& index)
     {
-        throw LuaException("Extracting QVariants is not yet allowed");
+        throw lua::exception("Extracting QVariants is not yet allowed");
     }
 };
 
