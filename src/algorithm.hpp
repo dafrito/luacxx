@@ -108,6 +108,21 @@ void insert(Table destination, Value value)
     lua_pop(table.state(), 1);
 }
 
+template <typename Value, typename Table, typename Key>
+Value get(Table source, Key key)
+{
+    lua::index table(lua::push(source.state(), source));
+    lua::assert_type("table::set", lua::type::table, table);
+
+    lua::push(table.state(), key);
+    lua_gettable(table.state(), table.pos());
+    lua_replace(table.state(), table.pos());
+
+    auto rv = lua::get<Value>(table.state(), -1);
+    lua_pop(table.state(), 1);
+    return rv;
+}
+
 template <typename Table, typename Key>
 lua::index get(Table source, Key key)
 {
