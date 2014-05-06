@@ -138,17 +138,11 @@ int lua::length(const lua::index& index)
 
 void lua::swap(const lua::index& a, const lua::index& b)
 {
-    auto copy = lua::copy(a);
-    lua::store(a, b);
-    lua::store(b, copy);
+    auto copy = lua::push(a.state(), a);
+    a = b;
+    b = copy;
 
     lua::pop(a.state(), 1);
-}
-
-lua::index lua::copy(const lua::index& source)
-{
-    lua_pushvalue(source.state(), source.pos());
-    return lua::index(source.state(), -1);
 }
 
 void lua::remove(const lua::index& target)

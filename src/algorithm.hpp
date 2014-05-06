@@ -41,7 +41,6 @@ void clear(lua::state* const state);
 void pop(lua::state* const state, const int num);
 
 void swap(const lua::index& a, const lua::index& b);
-lua::index copy(const lua::index& source);
 
 template <class T>
 void get_all(std::vector<T>& results, lua::index index)
