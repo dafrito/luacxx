@@ -80,39 +80,44 @@ std::string lua::dump(lua::state* const state)
 {
     std::stringstream str;
 
-    str << "Stack (" << lua::size(state) << " ";
+    str << "Lua stack (" << lua::size(state) << " ";
     if (lua::size(state) == 1) {
         str << "item";
     } else {
         str << "items";
     }
 
-    str << ") [";
+    str << "): ";
 
     for (lua::index iter(state, 1); iter; ++iter) {
-        str << iter.type().name();
-        std::string info;
-        if (iter.type().boolean()) {
-            info = lua::get<bool>(iter) ? "true" : "false";
-        } else if (iter.type().string() || iter.type().number()) {
-            info = lua::get<std::string>(iter);
-        }
-        if (info.size()) {
-            str << "(";
-            if (info.size() > 30) {
-                info = info.substr(0, 30);
-                str << info << "...";
-            } else  {
-                str << info;
+        switch (iter.type().get()) {
+        case lua::type::boolean:
+            str << (lua::get<bool>(iter) ? "true" : "false");
+            break;
+        case lua::type::string:
+        {
+            auto value = lua::get<std::string>(iter);
+            if (value.size() > 30) {
+                str << '"' << value.substr(0, 30) << "\"...";
+            } else {
+                str << '"' << value << '"';
             }
-            str << ")";
+            break;
+        }
+        case lua::type::number:
+            str << lua::get<std::string>(iter);
+            break;
+        case lua::type::userdata:
+        case lua::type::table:
+            str << iter.type().name() << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
+            break;
+        default:
+            str << iter.type().name();
         }
         if (iter.pos() != lua::top(state).pos()) {
             str << ", ";
         }
     }
-
-    str << "]";
 
     return str.str();
 }
