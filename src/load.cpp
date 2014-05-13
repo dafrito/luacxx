@@ -1,11 +1,9 @@
 #include "load.hpp"
 #include "error.hpp"
 
+#include "config.hpp"
 #include <fstream>
 #include <sstream>
-#include <QDir>
-#include <QFile>
-#include <QTextStream>
 
 namespace {
     struct LuaReadingData
@@ -15,18 +13,6 @@ namespace {
         bool atStart;
         LuaReadingData(std::istream& stream) :
             stream(stream),
-            atStart(true)
-        {
-        }
-    };
-
-    struct QtReadingData
-    {
-        QTextStream stream;
-        QByteArray chunk;
-        bool atStart;
-        QtReadingData(QFile& file) :
-            stream(&file),
             atStart(true)
         {
         }
@@ -70,32 +56,6 @@ namespace {
         return d->buffer;
     }
 
-    const char* readQtStream(lua_State*, void *pstream, size_t *size)
-    {
-        QtReadingData* d = static_cast<QtReadingData*>(pstream);
-        if (d->atStart) {
-            d->atStart = false;
-            auto firstTwo = d->stream.read(2);
-            if (firstTwo == "#!") {
-                // Shebang, so ignore the rest of the line
-                d->stream.readLine();
-
-                // Return a newline so line counts are correct
-                *size = 1;
-                return &EMPTY_LINE;
-            } else {
-                // Nothing found, so head back to the start of the file
-                d->stream.seek(0);
-            }
-        }
-        if (d->stream.atEnd()) {
-            return NULL;
-        }
-        d->chunk = d->stream.read(CHUNKSIZE).toUtf8();
-        *size = d->chunk.size();
-        return d->chunk.constData();
-    }
-
     lua::index do_post_load(lua::state* const state, const int rv)
     {
         switch (rv) {
@@ -108,23 +68,6 @@ namespace {
     }
 
 } // namespace anonymous
-
-lua::index lua::load_file(lua::state* const state, QFile& file)
-{
-    if (!file.open(QIODevice::ReadOnly)) {
-        throw std::runtime_error(
-            (QString("Cannot open file ") + file.fileName() + ": " + file.errorString()).toStdString()
-        );
-    }
-    QtReadingData d(file);
-
-    return do_post_load(state, lua_load(state, &readQtStream, &d, file.fileName().toUtf8().constData()
-        #if LUA_VERSION_NUM >= 502
-            // Account for the extra mode parameter introduced in 5.2
-            , NULL
-        #endif
-    ));
-}
 
 lua::index lua::load_file(lua::state* const state, const std::string& file)
 {
@@ -167,6 +110,71 @@ lua::index lua::load_string(lua::state* const state, const char* input)
     return lua::index(state, -1);
 }
 
+#ifdef HAVE_QT_CORE
+
+#include <QDir>
+#include <QFile>
+#include <QTextStream>
+
+namespace {
+
+struct QtReadingData
+{
+    QTextStream stream;
+    QByteArray chunk;
+    bool atStart;
+    QtReadingData(QFile& file) :
+        stream(&file),
+        atStart(true)
+    {
+    }
+};
+
+const char* readQtStream(lua_State*, void *pstream, size_t *size)
+{
+    QtReadingData* d = static_cast<QtReadingData*>(pstream);
+    if (d->atStart) {
+        d->atStart = false;
+        auto firstTwo = d->stream.read(2);
+        if (firstTwo == "#!") {
+            // Shebang, so ignore the rest of the line
+            d->stream.readLine();
+
+            // Return a newline so line counts are correct
+            *size = 1;
+            return &EMPTY_LINE;
+        } else {
+            // Nothing found, so head back to the start of the file
+            d->stream.seek(0);
+        }
+    }
+    if (d->stream.atEnd()) {
+        return NULL;
+    }
+    d->chunk = d->stream.read(CHUNKSIZE).toUtf8();
+    *size = d->chunk.size();
+    return d->chunk.constData();
+}
+
+} // namespace anonymous
+
+lua::index lua::load_file(lua::state* const state, QFile& file)
+{
+    if (!file.open(QIODevice::ReadOnly)) {
+        throw std::runtime_error(
+            (QString("Cannot open file ") + file.fileName() + ": " + file.errorString()).toStdString()
+        );
+    }
+    QtReadingData d(file);
+
+    return do_post_load(state, lua_load(state, &readQtStream, &d, file.fileName().toUtf8().constData()
+        #if LUA_VERSION_NUM >= 502
+            // Account for the extra mode parameter introduced in 5.2
+            , NULL
+        #endif
+    ));
+}
+
 void lua::run_dir(lua::state* const state, const QDir& dir, const bool recurse)
 {
     foreach(QFileInfo info, dir.entryInfoList(
@@ -182,3 +190,5 @@ void lua::run_dir(lua::state* const state, const QDir& dir, const bool recurse)
         }
     }
 }
+
+#endif // HAVE_QT_CORE

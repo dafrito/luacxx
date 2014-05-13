@@ -2,11 +2,11 @@
 #define LUA_CXX_LOADERS_HEADER
 
 #include <string>
-#include <QFile>
 
 #include "algorithm.hpp"
 
 class QDir;
+class QFile;
 
 namespace lua
 {

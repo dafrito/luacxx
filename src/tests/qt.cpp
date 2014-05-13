@@ -9,6 +9,9 @@ using namespace boost::math;
 
 #include <memory>
 
+#include "module/DirectoryModuleLoader.hpp"
+#include <QDir>
+
 #include "mocks.hpp"
 #include "thread.hpp"
 #include "push.hpp"
@@ -284,4 +287,71 @@ BOOST_AUTO_TEST_CASE(qobject_signals)
     // Invoke twice to ensure the removal process is idempotent
     lua::run_string(env, "remover()");
     lua::run_string(env, "remover()");
+}
+
+BOOST_AUTO_TEST_CASE(run_file)
+{
+    auto env = lua::create();
+
+    QFile file(LUA_DIR "simple.lua");
+    lua::run_string(env, "No = 'Time'");
+    lua::run_file(env, file);
+
+    // run_file throws on a missing file
+    BOOST_CHECK_THROW(
+        lua::run_file(env, "somemissingfile.lua"),
+        std::runtime_error
+    );
+
+    QFile falseFile(LUA_DIR "returnfalse.lua");
+    BOOST_CHECK_EQUAL(lua::get<bool>(lua::run_file(env, falseFile)), false);
+
+    QFile trueFile(LUA_DIR "returntrue.lua");
+    BOOST_CHECK_EQUAL(lua::get<bool>(lua::run_file(env, trueFile)), true);
+}
+
+BOOST_AUTO_TEST_CASE(run_dir)
+{
+    auto env = lua::create();
+
+    lua::run_dir(env, QDir(LUA_DIR "bin"), true);
+    BOOST_CHECK_EQUAL(lua::get<int>(env["a"]), 42);
+    BOOST_CHECK_EQUAL(lua::get<const char*>(env["b"]), "foo");
+}
+
+BOOST_AUTO_TEST_CASE(directory_module_loader)
+{
+    auto env = lua::create();
+
+    DirectoryModuleLoader loader;
+    loader.setRoot(QDir(LUA_DIR "testlib"));
+    loader.setPrefix("testlib/");
+
+    const char* searchersName = "searchers";
+    #if LUA_VERSION_NUM < 502
+        searchersName = "loaders";
+    #endif
+
+    std::string module;
+    lua::table::insert(env["package"][searchersName],
+        std::function<std::function<void()>(const std::string&) >(
+            [&](const std::string& arg) {
+                module = arg;
+                return [&]() {
+                    loader.load(env, module);
+                };
+            }
+        )
+    );
+
+    env["foo"] = lua::push_function<int(int, int)>(env, [](int a, int b) {
+        return a + b;
+    });
+
+    lua::run_string(env, "require 'testlib/Library';"
+        ""
+        "bar = Curry(foo, 40);"
+    );
+
+    BOOST_CHECK_EQUAL(lua::call<int>(env["bar"], 2), 42);
 }

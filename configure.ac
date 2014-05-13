@@ -45,6 +45,7 @@ AX_BOOST_UNIT_TEST_FRAMEWORK
 AX_HAVE_QT_CORE
 AX_HAVE_QT_MOC
 QT_CXXFLAGS="$QT_CXXFLAGS -fPIC"
+AM_CONDITIONAL([BUILD_QT], [test x$HAVE_QT_CORE = xyes])
 
 AC_CONFIG_FILES([lua-cxx.m4 lua-cxx.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
 AC_OUTPUT

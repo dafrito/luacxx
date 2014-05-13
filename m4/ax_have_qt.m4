@@ -28,8 +28,8 @@
 #   set to either "yes" or "no" (depending on which libraries were found) to
 #   help you determine exactly what was found.
 #
-#   have_qt_core
-#   have_qt_gui
+#   HAVE_QT_CORE
+#   HAVE_QT_GUI
 #   have_qt_network
 #   have_qt_opengl
 #   have_qt_sql
@@ -143,9 +143,7 @@ AC_DEFUN([AX_HAVE_QT_CORE], [
 
   if test x"$ax_cv_have_qt_core" = xyes; then
       AC_DEFINE([HAVE_QT_CORE],,[define if the QtCore module is available])
-      have_qt_core=yes
-  else
-      have_qt_core=no
+      HAVE_QT_CORE=yes
   fi;
 ])
 
@@ -175,9 +173,7 @@ AC_DEFUN([AX_HAVE_QT_GUI], [
 
   if test x"$ax_cv_have_qt_gui" = xyes; then
       AC_DEFINE([HAVE_QT_GUI],,[define if the QtGui module is available])
-      have_qt_gui=yes
-  else
-      have_qt_gui=no
+      HAVE_QT_GUI=yes
   fi;
 ])
 
@@ -208,9 +204,7 @@ AC_DEFUN([AX_HAVE_QT_WIDGETS], [
 
   if test x"$ax_cv_have_qt_widgets" = xyes; then
       AC_DEFINE([HAVE_QT_WIDGETS],,[define if the QtWidgets module is available])
-      have_qt_widgets=yes
-  else
-      have_qt_widgets=no
+      HAVE_QT_WIDGETS=yes
   fi;
 ])
 
@@ -240,9 +234,7 @@ AC_DEFUN([AX_HAVE_QT_TEST], [
 
   if test x"$ax_cv_have_qt_test" = xyes; then
       AC_DEFINE([HAVE_QT_TEST],,[define if the QtTest module is available])
-      have_qt_test=yes
-  else
-      have_qt_test=no
+      HAVE_QT_TEST=yes
   fi;
 ])
 
@@ -266,9 +258,7 @@ AC_DEFUN([AX_HAVE_QT_SQL], [
 
   if test x"$ax_cv_have_qt_sql" = xyes; then
       AC_DEFINE([HAVE_QT_SQL],,[define if the QtSql module is available])
-      have_qt_sql=yes
-  else
-      have_qt_sql=no
+      HAVE_QT_SQL=yes
   fi;
 ])
 
@@ -292,9 +282,7 @@ AC_DEFUN([AX_HAVE_QT_NETWORK], [
 
   if test x"$ax_cv_have_qt_network" = xyes; then
       AC_DEFINE([HAVE_QT_NETWORK],,[define if the QtNetwork module is available])
-      have_qt_network=yes
-  else
-      have_qt_network=no
+      HAVE_QT_NETWORK=yes
   fi;
 ])
 
@@ -318,9 +306,7 @@ AC_DEFUN([AX_HAVE_QT_XML], [
 
   if test x"$ax_cv_have_qt_xml" = xyes; then
       AC_DEFINE([HAVE_QT_XML],,[define if the QtXml module is available])
-      have_qt_xml=yes
-  else
-      have_qt_xml=no
+      HAVE_QT_XML=yes
   fi;
 ])
 
@@ -348,9 +334,7 @@ AC_DEFUN([AX_HAVE_QT_OPENGL], [
 
   if test x"$ax_cv_have_qt_opengl" = xyes; then
       AC_DEFINE([HAVE_QT_OPENGL],,[define if the QtOpenGL module is available])
-      have_qt_opengl=yes
-  else
-      have_qt_opengl=no
+      HAVE_QT_OPENGL=yes
   fi;
 ])
 
@@ -379,9 +363,7 @@ AC_DEFUN([AX_HAVE_QT_WEBKIT], [
 
   if test x"$ax_cv_have_qt_webkit" = xyes; then
       AC_DEFINE([HAVE_QT_WEBKIT],,[define if the QtWebKit module is available])
-      have_qt_webkit=yes
-  else
-      have_qt_webkit=no
+      HAVE_QT_WEBKIT=yes
   fi;
 ])
 
@@ -404,9 +386,7 @@ AC_DEFUN([AX_HAVE_QT_DBUS], [
 
   if test x"$ax_cv_have_qt_dbus" = xyes; then
       AC_DEFINE([HAVE_QT_DBUS],,[define if the QtDBus module is available])
-      have_qt_dbus=yes
-  else
-      have_qt_dbus=no
+      HAVE_QT_DBUS=yes
   fi;
 ])
 

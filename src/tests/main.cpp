@@ -1,6 +1,8 @@
 #define BOOST_TEST_MODULE lua-cxx
 #include "core.hpp"
 
+#ifdef HAVE_QT_CORE
+
 #include <QCoreApplication>
 
 struct QCoreApplicationFixture
@@ -26,5 +28,7 @@ public:
 };
 
 BOOST_GLOBAL_FIXTURE(QCoreApplicationFixture);
+
+#endif // HAVE_QT_CORE
 
 // vim: set ts=4 sw=4 :
