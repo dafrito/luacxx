@@ -3,6 +3,7 @@
 
 #include "../push.hpp"
 #include "../store.hpp"
+#include "../error.hpp"
 
 #include <string>
 #include <sstream>

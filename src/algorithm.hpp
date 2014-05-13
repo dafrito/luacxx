@@ -3,6 +3,7 @@
 
 #include "push.hpp"
 #include "store.hpp"
+#include "assert.hpp"
 #include "type/standard.hpp"
 
 #include <stdexcept>
@@ -66,11 +67,7 @@ template <typename RV, typename Callable, typename... Args>
 RV call(Callable source, Args... args)
 {
     lua::index callable(lua::push(source.state(), source));
-    if (!callable.type().function()) {
-        throw std::logic_error(
-            std::string("A function must be at the top of the stack, not a ") + callable.type().name()
-        );
-    }
+    lua::assert_type("lua::call", lua::type::function, callable);
     lua::push(callable.state(), args...);
     return lua::get<RV>(lua::invoke(callable));
 }
@@ -79,11 +76,7 @@ template <typename Callable, typename... Args>
 void call(Callable source, Args... args)
 {
     lua::index callable(lua::push(source.state(), source));
-    if (!callable.type().function()) {
-        throw std::logic_error(
-            std::string("A function must be at the top of the stack, not a ") + callable.type().name()
-        );
-    }
+    lua::assert_type("lua::call", lua::type::function, callable);
     lua::push(callable.state(), args...);
     lua::invoke(callable);
 }
@@ -91,18 +84,15 @@ void call(Callable source, Args... args)
 namespace table {
 
 int length(const lua::index& index);
+
 template <typename Table, typename Value>
 void insert(Table destination, Value value)
 {
-    lua::index table(lua::push(destination.state(), destination));
-    if (!table.type().table()) {
-        throw std::logic_error(
-            std::string("A table must be provided")
-        );
-    }
-
-    lua::push(table.state(), lua::size(table) + 1);
+    auto table = lua::push(destination);
+    lua::assert_type("lua::table::insert", lua::type::table, table);
+    lua::push(table.state(), lua::table::length(table) + 1);
     lua::push(table.state(), value);
+
     lua_settable(table.state(), table.pos());
 
     lua_pop(table.state(), 1);
@@ -111,8 +101,8 @@ void insert(Table destination, Value value)
 template <typename Value, typename Table, typename Key>
 Value get(Table source, Key key)
 {
-    lua::index table(lua::push(source.state(), source));
-    lua::assert_type("table::set", lua::type::table, table);
+    auto table = lua::push(source);
+    lua::assert_type("lua::table::get", lua::type::table, table);
 
     lua::push(table.state(), key);
     lua_gettable(table.state(), table.pos());
@@ -126,8 +116,8 @@ Value get(Table source, Key key)
 template <typename Table, typename Key>
 lua::index get(Table source, Key key)
 {
-    lua::index table(lua::push(source.state(), source));
-    lua::assert_type("table::set", lua::type::table, table);
+    auto table = lua::push(source);
+    lua::assert_type("lua::table::get", lua::type::table, table);
 
     lua::push(table.state(), key);
     lua_gettable(table.state(), table.pos());
@@ -139,8 +129,8 @@ lua::index get(Table source, Key key)
 template <typename Table, typename Key, typename Value>
 void set(Table source, Key key, Value value)
 {
-    lua::index table(lua::push(source.state(), source));
-    lua::assert_type("table::set", lua::type::table, table);
+    auto table = lua::push(source);
+    lua::assert_type("lua::table::set", lua::type::table, table);
 
     lua::push(table.state(), key);
     lua::push(table.state(), value);
