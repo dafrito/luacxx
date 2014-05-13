@@ -125,8 +125,4 @@ public:
     Counter(int value = 0) : value(value) {}
 };
 
-namespace lua {
-
-} // namespace lua
-
 #endif // LUA_CXX_TESTS_MOCKS_HEADER
