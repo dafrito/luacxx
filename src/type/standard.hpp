@@ -5,6 +5,7 @@
 #include "../store.hpp"
 
 #include <string>
+#include <sstream>
 
 namespace lua {
 
@@ -92,7 +93,14 @@ struct Store<lua_Integer>
 {
     static void store(lua_Integer& destination, const lua::index& source)
     {
-        destination = lua_tointeger(source.state(), source.pos());
+        int isnum;
+        destination = lua_tointegerx(source.state(), source.pos(), &isnum);
+        if (!isnum) {
+            std::stringstream str;
+            str << "lua::store<lua_Integer>: Numeric conversion failed for Lua stack value at index: ";
+            str << source.type().name();
+            throw lua::error(str.str());
+        }
     }
 };
 

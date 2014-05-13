@@ -28,7 +28,6 @@ int size(T reference)
     lua_pop(reference.state(), 1);
     return rv;
 }
-int length(const lua::index& index);
 
 template <class T>
 bool empty(T value)
@@ -91,6 +90,7 @@ void call(Callable source, Args... args)
 
 namespace table {
 
+int length(const lua::index& index);
 template <typename Table, typename Value>
 void insert(Table destination, Value value)
 {
