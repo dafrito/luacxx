@@ -98,8 +98,8 @@ struct Store<lua_Integer>
         destination = lua_tointegerx(source.state(), source.pos(), &isnum);
         if (!isnum) {
             std::stringstream str;
-            str << "lua::store<lua_Integer>: Numeric conversion failed for Lua stack value at index: ";
-            str << source.type().name();
+            str << "lua::store<lua_Integer>: Numeric conversion failed for ";
+            str << source.type().name() << " value at Lua stack index " << source.pos();
             throw lua::error(str.str());
         }
     }

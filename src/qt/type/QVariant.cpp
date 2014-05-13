@@ -23,10 +23,8 @@ namespace std {
 
 void lua::push_qvariant(lua::state* const state, const QVariant& value)
 {
-    std::cerr << "push_qvariant\n";
     switch (value.userType()) {
         case QVariant::Invalid:
-            std::cout << "Pushing nil\n";
             lua::push(state, lua::value::nil);
             break;
         case QVariant::Bool:
@@ -37,9 +35,7 @@ void lua::push_qvariant(lua::state* const state, const QVariant& value)
             break;
         case QVariant::Int:
         {
-            std::cerr << "Pushing int " << lua::size(state) << '\n';
             auto rv = lua::push(state, value.toInt());
-            std::cerr << "int pushed " << lua::size(state) << " " << rv.type().name() << '\n';
             lua::assert_type("push_qvariant", lua::type::number, rv);
             break;
         }
@@ -86,7 +82,6 @@ void lua::push_qvariant(lua::state* const state, const QVariant& value)
 
 void lua::store_qvariant(QVariant& destination, const lua::index& source)
 {
-    std::cerr << "Storing qvariant\n";
     switch (destination.userType()) {
         case QVariant::Invalid:
             throw lua::error("A QVariant must have a valid type");
@@ -100,7 +95,6 @@ void lua::store_qvariant(QVariant& destination, const lua::index& source)
             break;
         case QVariant::Int:
         case QVariant::UInt:
-            std::cerr << "00 INT\n";
             destination.setValue(lua::get<int>(source));
             break;
         case QVariant::Double:
