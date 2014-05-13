@@ -58,24 +58,25 @@ BOOST_AUTO_TEST_CASE(push_and_store)
     auto env = lua::create();
 
     env << 42;
-    BOOST_CHECK_EQUAL(lua::get<int>(env[1]), 42);
+    BOOST_CHECK_EQUAL(lua::get<int>(env, 1), 42);
 
     int foo = 1;
-    env[1] >> foo;
+    lua::index(env, 1) >> foo;
     BOOST_CHECK_EQUAL(foo, 42);
 
     bool flag = true;
     env << flag;
-    BOOST_CHECK_EQUAL(lua::get<bool>(env[2]), true);
+    BOOST_CHECK_EQUAL(lua::get<bool>(env, 2), true);
 
-    env[1] = 44;
-    BOOST_CHECK_EQUAL(lua::get<int>(env[1]), 44);
+    auto pushed = lua::push(env, 44);
+    pushed >> foo;
+    BOOST_CHECK_EQUAL(lua::get<int>(env, -1), 44);
 
     lua::clear(env);
     env << true << 42 << "No time";
-    BOOST_CHECK_EQUAL(env[1].type().boolean(), true);
-    BOOST_CHECK_EQUAL(env[2].type().number(), true);
-    BOOST_CHECK_EQUAL(env[3].type().string(), true);
+    BOOST_CHECK_EQUAL(lua::index(env, 1).type().boolean(), true);
+    BOOST_CHECK_EQUAL(lua::index(env, 2).type().number(), true);
+    BOOST_CHECK_EQUAL(lua::index(env, 3).type().string(), true);
 }
 
 BOOST_AUTO_TEST_CASE(table)
@@ -365,9 +366,6 @@ BOOST_AUTO_TEST_CASE(index_algorithms)
     lua::swap(first, second);
     BOOST_CHECK_EQUAL(lua::get<int>(first), 3);
     BOOST_CHECK_EQUAL(lua::get<int>(second), 2);
-
-    second = 5;
-    BOOST_CHECK_EQUAL(lua::get<int>(second), 5);
 
     auto nil_value = lua::push(env, lua::value::nil);
     BOOST_CHECK_EQUAL(nil_value.type().name(), "nil");

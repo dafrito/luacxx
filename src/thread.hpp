@@ -24,12 +24,7 @@ public:
         return _state;
     }
 
-    lua::index operator[](const int pos)
-    {
-        return lua::index(_state, pos);
-    }
-
-    global operator[](const std::string& name)
+    lua::global operator[](const std::string& name)
     {
         return lua::global(_state, name);
     }

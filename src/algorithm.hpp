@@ -51,7 +51,7 @@ void get_all(std::vector<T>& results, lua::index index)
 }
 
 template <class T>
-lua::index global(lua::state* const state, const T&& name)
+lua::index push_global(lua::state* const state, const T&& name)
 {
     auto globals = lua::push(state, lua::value::globals);
     auto rv = globals[name];
