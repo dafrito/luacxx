@@ -1,5 +1,5 @@
-#ifndef MOCKS_HPP
-#define MOCKS_HPP
+#ifndef LUA_CXX_TESTS_MOCKS_HEADER
+#define LUA_CXX_TESTS_MOCKS_HEADER
 
 #include <QObject>
 #include <QPoint>
@@ -125,4 +125,8 @@ public:
     Counter(int value = 0) : value(value) {}
 };
 
-#endif // MOCKS_HPP
+namespace lua {
+
+} // namespace lua
+
+#endif // LUA_CXX_TESTS_MOCKS_HEADER

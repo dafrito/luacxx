@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_TYPE_QVARIANT_HPP
-#define LUA_CXX_TYPE_QVARIANT_HPP
+#ifndef LUA_CXX_TYPE_QVARIANT_HEADER
+#define LUA_CXX_TYPE_QVARIANT_HEADER
 
 #include <functional>
 #include <unordered_map>
@@ -46,5 +46,4 @@ struct Get<QVariant>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_QVARIANT_HPP
-
+#endif // LUA_CXX_TYPE_QVARIANT_HEADER

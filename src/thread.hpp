@@ -1,5 +1,5 @@
-#ifndef LUACXX_THREAD_HEADER
-#define LUACXX_THREAD_HEADER
+#ifndef LUA_CXX_THREAD_HEADER
+#define LUA_CXX_THREAD_HEADER
 
 #include "push.hpp"
 #include "store.hpp"
@@ -109,4 +109,4 @@ int size(const lua::thread& env);
 
 } // namespace lua
 
-#endif // LUACXX_THREAD_HEADER
+#endif // LUA_CXX_THREAD_HEADER

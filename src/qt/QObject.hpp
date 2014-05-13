@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_QOBJECT_HPP
-#define LUA_CXX_QOBJECT_HPP
+#ifndef LUA_CXX_QOBJECT_HEADER
+#define LUA_CXX_QOBJECT_HEADER
 
 #include "LuaStack.hpp"
 #include <QObject>
@@ -23,4 +23,4 @@ struct UserdataType<QObject>
 
 } // namespace lua
 
-#endif // LUA_CXX_QOBJECT_HPP
+#endif // LUA_CXX_QOBJECT_HEADER

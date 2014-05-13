@@ -1,5 +1,5 @@
-#ifndef QOBJECTSLOT_HEADER
-#define QOBJECTSLOT_HEADER
+#ifndef LUA_CXX_QOBJECTSLOT_HEADER
+#define LUA_CXX_QOBJECTSLOT_HEADER
 
 #include <QObject>
 #include <QMetaObject>
@@ -31,4 +31,4 @@ public:
 
 } // namespace lua
 
-#endif // QOBJECTSLOT_HEADER
+#endif // LUA_CXX_QOBJECTSLOT_HEADER

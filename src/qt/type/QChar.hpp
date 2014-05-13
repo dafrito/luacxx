@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_TYPE_QCHAR_HPP
-#define LUA_CXX_TYPE_QCHAR_HPP
+#ifndef LUA_CXX_TYPE_QCHAR_HEADER
+#define LUA_CXX_TYPE_QCHAR_HEADER
 
 #include <QChar>
 
@@ -28,5 +28,4 @@ struct Store<QChar>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_QCHAR_HPP
-
+#endif // LUA_CXX_TYPE_QCHAR_HEADER

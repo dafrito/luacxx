@@ -5,7 +5,6 @@
 #include "../store.hpp"
 
 #include <string>
-#include <iostream>
 
 namespace lua {
 

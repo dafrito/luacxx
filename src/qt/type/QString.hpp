@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_TYPE_QSTRING_HPP
-#define LUA_CXX_TYPE_QSTRING_HPP
+#ifndef LUA_CXX_TYPE_QSTRING_HEADER
+#define LUA_CXX_TYPE_QSTRING_HEADER
 
 #include <QString>
 
@@ -27,5 +27,4 @@ struct Store<QString>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_QSTRING_HPP
-
+#endif // LUA_CXX_TYPE_QSTRING_HEADER

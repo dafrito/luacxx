@@ -3,7 +3,6 @@
 
 #include "push.hpp"
 #include "assert.hpp"
-#include <iostream>
 
 namespace lua {
 
