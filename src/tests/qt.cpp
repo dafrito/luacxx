@@ -57,7 +57,6 @@ BOOST_AUTO_TEST_CASE(shared_ptr)
     env["Rainback"]["MakeCounter"] = makeCounter;
 
     lua::run_string(env, "font = Rainback.MakeCounter(42)");
-
     BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return font.value"), 42);
 }
 
