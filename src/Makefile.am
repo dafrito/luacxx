@@ -15,18 +15,18 @@ liblua_cxx_la_SOURCES = \
 	store.cpp \
 	algorithm.cpp \
 	thread.cpp \
-	assert.cpp \
 	qt/type/QVariant.cpp \
 	module/DirectoryModuleLoader.cpp
 
 pkginclude_HEADERS = \
+	type.hpp \
+	state.hpp \
 	index.hpp \
 	error.hpp \
 	assert.hpp \
 	push.hpp \
 	store.hpp \
 	range.hpp \
-	state.hpp \
 	load.hpp \
 	algorithm.hpp \
 	link.hpp \
