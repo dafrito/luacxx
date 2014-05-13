@@ -66,9 +66,9 @@ static void push_userdata(lua::state* const state, const T& orig)
 template <class T>
 struct Push
 {
-    static void push(lua::state* const state, T orig)
+    static void push(lua::state* const state, T value)
     {
-        push_userdata(state, orig);
+        push_userdata(state, value);
     }
 };
 
@@ -82,10 +82,10 @@ lua::index push(lua::state* const state, T value)
 // Allows noop invocations from variadic templates
 lua::index push(lua::state* const state);
 
-template <class Source>
-lua::index push(Source source)
+template <class Value>
+lua::index push(Value value)
 {
-    return lua::push(source.state(), source);
+    return lua::push(value.state(), value);
 }
 
 template <class T, class... Rest>
