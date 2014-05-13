@@ -3,9 +3,10 @@
 
 #include "ModuleLoader.hpp"
 
+#include <string>
+
 #include <QDir>
 #include <QFile>
-#include <string>
 
 class DirectoryModuleLoader : public ModuleLoader
 {
