@@ -24,8 +24,8 @@ pkginclude_HEADERS = \
 	assert.hpp \
 	push.hpp \
 	store.hpp \
+	range.hpp \
 	state.hpp \
-	iteration.hpp \
 	load.hpp \
 	algorithm.hpp \
 	link.hpp \

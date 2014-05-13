@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_ITERATION_HEADER
-#define LUA_CXX_ITERATION_HEADER
+#ifndef LUA_CXX_RANGE_HEADER
+#define LUA_CXX_RANGE_HEADER
 
 #include "push.hpp"
 #include "store.hpp"
@@ -116,4 +116,4 @@ public:
 
 } // namespace lua
 
-#endif // LUA_CXX_ITERATION_HEADER
+#endif // LUA_CXX_RANGE_HEADER

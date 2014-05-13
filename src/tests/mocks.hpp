@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QPoint>
 
-#include "iteration.hpp"
+#include "range.hpp"
 
 class Blank
 {
