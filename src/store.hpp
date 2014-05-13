@@ -1,7 +1,8 @@
 #ifndef LUA_CXX_STORE_HEADER
 #define LUA_CXX_STORE_HEADER
 
-#include "push.hpp"
+#include "index.hpp"
+#include "userdata.hpp"
 #include "assert.hpp"
 
 namespace lua {
