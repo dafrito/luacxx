@@ -7,9 +7,6 @@
 #include <memory>
 #include <unordered_set>
 
-#include "LuaStack.hpp"
-#include "LuaEnvironment.hpp"
-#include "LuaValue.hpp"
 #include "qobject.hpp"
 
 namespace lua {
@@ -17,9 +14,9 @@ namespace lua {
 class QObjectSlot : public QObject
 {
     QMetaMethod _signal;
-    LuaReference _slot;
+    lua::reference _slot;
 public:
-    QObjectSlot(QObject* const parent, const QMetaMethod& signal, const LuaReference& slot);
+    QObjectSlot(QObject* const parent, const QMetaMethod& signal, const lua::reference& slot);
 
     int qt_metacall(QMetaObject::Call call, int id, void **arguments);
 
