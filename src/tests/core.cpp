@@ -88,6 +88,9 @@ BOOST_AUTO_TEST_CASE(table)
     BOOST_CHECK_EQUAL(lua::table::get<int>(env["foo"], 1), 42);
 
     lua::table::insert(env["foo"], addNumbers);
+    BOOST_CHECK_EQUAL(2, lua::size(env["foo"]));
+    lua::assert_type("table", lua::type::function, lua::push(env["foo"][2]));
+
     BOOST_CHECK_EQUAL(4, lua::get<int>(
         lua::run_string(env, "return foo[2](2, 2)")
     ));
