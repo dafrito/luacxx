@@ -9,10 +9,11 @@
 namespace lua {
 
 enum class value {
-    nil,
-    table,
-    globals,
-    thread
+    nil = LUA_TNIL,
+    table = LUA_TTABLE,
+    globals = LUA_RIDX_MAINTHREAD,
+    thread = LUA_TTHREAD,
+    registry = LUA_REGISTRYINDEX
 };
 
 template <>
@@ -32,6 +33,9 @@ struct Push<lua::value>
                 break;
             case lua::value::thread:
                 lua_newthread(state);
+                break;
+            case lua::value::registry:
+                lua_pushvalue(state, LUA_REGISTRYINDEX);
                 break;
         }
     }
