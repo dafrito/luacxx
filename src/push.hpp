@@ -1,12 +1,10 @@
 #ifndef LUA_CXX_PUSH_HEADER
 #define LUA_CXX_PUSH_HEADER
 
-#include <new>
-#include <type_traits>
-
-#include "type.hpp"
-#include "state.hpp"
 #include "index.hpp"
+
+#include <type_traits>
+#include <new>
 
 namespace lua {
 
