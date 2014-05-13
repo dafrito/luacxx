@@ -190,6 +190,14 @@ static lua::index push_function(lua::state* const state, std::function<Function>
     return lua::push(state, callable);
 }
 
+template <typename... Upvalues>
+static lua::index push_closure(lua::state* const state, lua::function callable, Upvalues... upvalues)
+{
+    lua::push(state, upvalues...);
+    lua_pushcclosure(state, callable, sizeof...(Upvalues));
+    return lua::index(state, -1);
+}
+
 template <typename RV>
 struct Push<RV(*)(lua::state* const)>
 {
