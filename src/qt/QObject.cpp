@@ -162,32 +162,32 @@ void connectSlot(LuaStack& stack)
 
     auto userdata = stack.get<LuaUserdata*>(1);
     if (!userdata) {
-        throw lua::exception("Method must be invoked with a valid userdata");
+        throw lua::error("Method must be invoked with a valid userdata");
     }
     if (userdata->rawData() != validatingUserdata) {
         if (!userdata->data()) {
-            throw lua::exception("Userdata must have an associated internal object");
+            throw lua::error("Userdata must have an associated internal object");
         }
         if (userdata->dataType() != "QObject") {
-            throw lua::exception(
+            throw lua::error(
                 QString("Userdata must be of type QObject, but was given: '%1'")
                     .arg(userdata->dataType().c_str())
                     .toStdString()
             );
         }
-        throw lua::exception("Userdata provided with method call must match the userdata used to access that method");
+        throw lua::error("Userdata provided with method call must match the userdata used to access that method");
     }
     QObject* const obj = validatingUserdata;
     stack.shift();
 
     if (stack.size() != 2) {
-        throw lua::exception(
+        throw lua::error(
             QString("Exactly 2 arguments must be provided. Given %1").arg(stack.size()).toStdString()
         );
     }
 
     if (stack.typestring(1) != "string") {
-        throw lua::exception("signal must be a string");
+        throw lua::error("signal must be a string");
     }
     auto signal = stack.get<std::string>(1);
     stack.shift();
@@ -198,7 +198,7 @@ void connectSlot(LuaStack& stack)
         LuaReferenceAccessible(stack.luaState(), stack.saveAndPop())
     );
     if (slot.typestring() != "function") {
-        throw lua::exception("Provided slot must be a function");
+        throw lua::error("Provided slot must be a function");
     }
 
     const QMetaObject* const metaObject = obj->metaObject();
@@ -213,14 +213,14 @@ void connectSlot(LuaStack& stack)
         for (int i = 0; i < metaObject->methodCount(); ++i) {
             if (getSignature(metaObject->method(i)).startsWith(signal.c_str())) {
                 if (signalId != -1) {
-                    throw lua::exception(std::string("Ambiguous signal name: ") + signal);
+                    throw lua::error(std::string("Ambiguous signal name: ") + signal);
                 }
                 signalId = i;
             }
         }
     }
     if (signalId == -1) {
-        throw lua::exception(std::string("No signal for name: ") + signal);
+        throw lua::error(std::string("No signal for name: ") + signal);
     }
 
     auto slotWrapper = new lua::QObjectSlot(
@@ -246,24 +246,24 @@ void callMethod(LuaStack& stack)
 
     auto name = stack.get<const char*>(1);
     if (stack.size() < 2) {
-        throw lua::exception("Method must be invoked with a valid userdata");
+        throw lua::error("Method must be invoked with a valid userdata");
     }
     auto userdata = stack.get<LuaUserdata*>(2);
     if (!userdata) {
-        throw lua::exception("Method must be invoked with a valid userdata");
+        throw lua::error("Method must be invoked with a valid userdata");
     }
     if (userdata->rawData() != validatingUserdata) {
         if (!userdata->data()) {
-            throw lua::exception("Userdata must have an associated internal object");
+            throw lua::error("Userdata must have an associated internal object");
         }
         if (userdata->dataType() != "QObject") {
-            throw lua::exception(
+            throw lua::error(
                 QString("Userdata must be of type QObject, but was given: '%1'")
                     .arg(userdata->dataType().c_str())
                     .toStdString()
             );
         }
-        throw lua::exception("Userdata provided with method call must match the userdata used to access that method");
+        throw lua::error("Userdata provided with method call must match the userdata used to access that method");
     }
     QObject* const obj = validatingUserdata;
     stack.shift(2);
@@ -341,7 +341,7 @@ void callMethod(LuaStack& stack)
         }
     }
 
-    throw lua::exception(QString("No method found with name '%1'").arg(name).toStdString());
+    throw lua::error(QString("No method found with name '%1'").arg(name).toStdString());
 }
 
 void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)

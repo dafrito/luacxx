@@ -390,7 +390,7 @@ struct Wrapper {
     }
 };
 
-BOOST_AUTO_TEST_CASE(lua_exception_support)
+BOOST_AUTO_TEST_CASE(lua_error_support)
 {
     auto env = lua::create();
 
@@ -399,7 +399,7 @@ BOOST_AUTO_TEST_CASE(lua_exception_support)
         Wrapper wrapper(value);
 
         if (shouldErr) {
-            throw lua::exception("Intentional");
+            throw lua::error("Intentional");
         }
     });
 
@@ -408,7 +408,7 @@ BOOST_AUTO_TEST_CASE(lua_exception_support)
 
     try {
         lua::call<void>(env["call"], true);
-    } catch (lua::exception& ex) {
+    } catch (lua::error& ex) {
         // pass through
     }
     BOOST_CHECK_EQUAL(value, 4);
@@ -416,10 +416,10 @@ BOOST_AUTO_TEST_CASE(lua_exception_support)
 
 void immediatelyThrow()
 {
-    throw lua::exception("Intentional");
+    throw lua::error("Intentional");
 }
 
-BOOST_AUTO_TEST_CASE(exceptions)
+BOOST_AUTO_TEST_CASE(errors)
 {
     auto env = lua::create();
 
@@ -431,7 +431,7 @@ BOOST_AUTO_TEST_CASE(exceptions)
         "   someUnknownFunction();"
         "end");
         lua::call<void>(env["foo"]);
-    } catch(lua::exception& ex) {
+    } catch(lua::error& ex) {
         errored = true;
     }
     BOOST_CHECK(errored);

@@ -6,7 +6,7 @@
 
 #include "algorithm.hpp"
 #include "state.hpp"
-#include "exception.hpp"
+#include "error.hpp"
 #include "push.hpp"
 #include "store.hpp"
 
@@ -99,7 +99,7 @@ public:
             } else {
                 msg << " but none were given";
             }
-            throw lua::exception(msg.str());
+            throw lua::error(msg.str());
         }
 
         lua::index index(state, 1);
@@ -138,10 +138,10 @@ static int invoke_callable(lua::state* const state)
     auto callable = lua::get<lua::callable*>(lua::index(state, lua_upvalueindex(1)));
     try {
         return (*callable)(state);
-    } catch (lua::exception& ex) {
+    } catch (lua::error& ex) {
         lua::push(state, ex);
         lua_error(state);
-        throw std::runtime_error("lua_error should throw");
+        throw std::logic_error("lua_error must never return");
     }
 }
 

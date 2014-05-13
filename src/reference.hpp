@@ -1,7 +1,6 @@
 #ifndef LUA_CXX_REFERENCE_HEADER
 #define LUA_CXX_REFERENCE_HEADER
 
-#include "exception.hpp"
 #include "algorithm.hpp"
 #include "type/standard.hpp"
 
@@ -21,7 +20,7 @@ public:
         _state(value.state())
     {
         if (state() == nullptr) {
-            throw lua::exception("Reference state must not be null");
+            throw std::runtime_error("Reference state must not be null");
         }
         if (value.type().nil()) {
             lua::push(value.state(), NIL_REFERENCE);

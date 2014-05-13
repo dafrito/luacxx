@@ -89,7 +89,7 @@ void lua::store_qvariant(QVariant& destination, const lua::index& source)
     std::cerr << "Storing qvariant\n";
     switch (destination.userType()) {
         case QVariant::Invalid:
-            throw lua::exception("A QVariant must have a valid type");
+            throw lua::error("A QVariant must have a valid type");
             destination.clear();
             break;
         case QVariant::Bool:

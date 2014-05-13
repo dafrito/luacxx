@@ -20,11 +20,11 @@ liblua_cxx_la_SOURCES = \
 	module/DirectoryModuleLoader.cpp
 
 pkginclude_HEADERS = \
+	error.hpp \
 	assert.hpp \
 	push.hpp \
 	store.hpp \
 	state.hpp \
-	exception.hpp \
 	iteration.hpp \
 	load.hpp \
 	algorithm.hpp \

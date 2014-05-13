@@ -34,7 +34,7 @@ static void store_userdata(T& destination, const lua::index& source)
     auto block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
 
     /*if (!userdata->is_type(value, name)) {
-        throw lua::exception("Unrecognized type name");
+        throw lua::error("Unrecognized type name");
     }*/
 
     inner_store(

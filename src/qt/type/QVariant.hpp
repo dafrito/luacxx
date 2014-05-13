@@ -40,7 +40,7 @@ struct Get<QVariant>
 {
     static QVariant get(const lua::index& index)
     {
-        throw lua::exception("Extracting QVariants is not yet allowed");
+        throw std::logic_error("Extracting QVariants is not yet allowed");
     }
 };
 

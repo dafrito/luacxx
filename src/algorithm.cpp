@@ -1,6 +1,6 @@
 #include "algorithm.hpp"
 
-#include "exception.hpp"
+#include "error.hpp"
 #include "type/standard.hpp"
 #include "type/function.hpp"
 
@@ -12,14 +12,14 @@ static int on_error(lua::state* const state)
 {
     if (lua::size(state) > 0) {
         if (!lua::index(state, 1).type().userdata()) {
-            lua::exception ex(lua::get<const char*>(state, 1));
+            lua::error ex(lua::get<const char*>(state, 1));
             lua::clear(state);
             lua::push(state, ex);
         }
     } else {
-        lua::push(state, lua::exception("An error occurred within Lua"));
+        lua::push(state, lua::error("An unspecified runtime error occurred during the execution of Lua code"));
     }
-    auto ex = lua::get<lua::exception*>(state, 1);
+    auto ex = lua::get<lua::error*>(state, 1);
     ex->set_traceback(lua::traceback(state, 2));
 
     return 1;
@@ -53,7 +53,7 @@ lua::index lua::invoke(const lua::index& callable)
         case LUA_ERRERR:
             throw std::runtime_error("Lua error within error handler");
         case LUA_ERRRUN:
-            auto ex = lua::get<lua::exception*>(state, -1);
+            auto ex = lua::get<lua::error*>(state, -1);
             throw *ex;
     }
 

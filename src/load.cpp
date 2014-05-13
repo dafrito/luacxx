@@ -1,5 +1,5 @@
 #include "load.hpp"
-#include "exception.hpp"
+#include "error.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -100,7 +100,7 @@ namespace {
     {
         switch (rv) {
             case LUA_ERRSYNTAX:
-                throw lua::exception(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
+                throw std::runtime_error(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
             case LUA_ERRMEM:
                 throw std::runtime_error(std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
         }

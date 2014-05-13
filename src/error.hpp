@@ -1,19 +1,19 @@
-#ifndef LUA_EXCEPTION_HEADER
-#define LUA_EXCEPTION_HEADER
+#ifndef LUA_CXX_ERROR_HEADER
+#define LUA_CXX_ERROR_HEADER
 
 #include <stdexcept>
 #include <string>
 
 namespace lua {
 
-class exception : public std::runtime_error
+class error : public std::runtime_error
 {
     std::string _what;
     std::string _traceback;
 
 public:
-    exception(const std::string& reason) :
-        std::runtime_error("lua::exception"),
+    error(const std::string& reason) :
+        std::runtime_error("lua::error"),
         _what(reason),
         _traceback()
     {
@@ -40,4 +40,4 @@ public:
 
 } // namespace lua
 
-#endif // LUA_EXCEPTION_HEADER
+#endif // LUA_ERROR_HEADER

@@ -117,10 +117,10 @@ BOOST_AUTO_TEST_CASE(callables_with_userdata)
     BOOST_CHECK_EQUAL(lua::evaluate<int>(env, "return receiveConstRef(counter)"), 24);
 
     // Runtime error
-    BOOST_CHECK_THROW(lua::run_string(env, "foo.y.z = 42"), lua::exception);
+    BOOST_CHECK_THROW(lua::run_string(env, "foo.y.z = 42"), lua::error);
 
     // Underflow
-    BOOST_CHECK_THROW(lua::run_string(env, "receiveRef()"), lua::exception);
+    BOOST_CHECK_THROW(lua::run_string(env, "receiveRef()"), lua::error);
 
     // Allow extra args
     BOOST_CHECK_NO_THROW(lua::run_string(env, "receiveRef(counter, 3)"));
@@ -260,7 +260,7 @@ BOOST_AUTO_TEST_CASE(qobject_properties)
     auto obj = std::shared_ptr<QObject>(new Counter(42));
     env["c"] = obj;
 
-    BOOST_CHECK_THROW(lua::run_string(env, "c.someValue = 24"), lua::exception);
+    BOOST_CHECK_THROW(lua::run_string(env, "c.someValue = 24"), lua::error);
 }
 
 BOOST_AUTO_TEST_CASE(qobject_signals)

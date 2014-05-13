@@ -27,8 +27,8 @@ int lua::QObjectSlot::qt_metacall(QMetaObject::Call call, int id, void **argumen
 
     try {
         stack.pushedInvoke(params.count());
-    } catch(lua::exception& ex) {
-        std::cerr << "A Lua exception occurred while invoking a Qt slot:\n\t" << ex.what() << std::endl;
+    } catch (lua::error& ex) {
+        std::cerr << "lua::QObjectSlot::qt_metacall: Error caught during slot invocation: " << ex.what() << std::endl;
     }
 
     return -1;
