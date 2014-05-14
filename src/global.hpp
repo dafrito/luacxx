@@ -39,7 +39,7 @@ public:
     }
 
     template <class T>
-    global& operator=(T&& source)
+    global& operator=(T source)
     {
         lua::store(*this, lua::push(_state, source));
         lua_pop(_state, 1);
