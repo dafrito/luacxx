@@ -50,8 +50,7 @@ void lua::push_qvariant(lua::state* const state, const QVariant& value)
             break;
         case QVariant::Int:
         {
-            auto rv = lua::push(state, value.toInt());
-            lua::assert_type("push_qvariant", lua::type::number, rv);
+            lua::push(state, value.toInt());
             break;
         }
         case QVariant::Double:
