@@ -135,7 +135,16 @@ lua::index get(Table source, Key key)
     return lua::index(table.state(), -1);
 }
 
-template <typename Table, typename Key, typename Value>
+template <typename Table, typename Key>
+lua::type_info get_type(Table source, Key key)
+{
+    auto value = lua::table::get(source, key);
+    auto rv = value.type();
+    lua_pop(value.state(), 1);
+    return rv;
+}
+
+template <typename Value, typename Key, typename Table>
 void set(Table source, Key key, Value value)
 {
     auto table = lua::push(source);
