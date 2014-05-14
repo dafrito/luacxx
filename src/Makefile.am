@@ -4,7 +4,7 @@ liblua_cxx_la_CPPFLAGS = $(QT_CXXFLAGS) @LUA_INCLUDE@ -I$(top_srcdir)/src
 liblua_cxx_la_LIBADD = $(QT_LIBS) @LUA_LIB@
 liblua_cxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
-pkginclude_HEADERS = \
+nobase_pkginclude_HEADERS = \
 	algorithm.hpp \
 	assert.hpp \
 	error.hpp \
@@ -19,7 +19,10 @@ pkginclude_HEADERS = \
 	store.hpp \
 	thread.hpp \
 	type.hpp \
-	userdata.hpp
+	userdata.hpp \
+	type/function.hpp \
+	type/numeric.hpp \
+	type/standard.hpp \
 	module/DirectoryModuleLoader.hpp \
 	module/ModuleLoader.hpp \
 	qt/QObject.hpp \
