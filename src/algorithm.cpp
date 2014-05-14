@@ -25,7 +25,7 @@ static int on_error(lua::state* const state)
     return 1;
 }
 
-lua::index lua::invoke(const lua::index& callable)
+void lua::invoke(const lua::index& callable)
 {
     auto state = callable.state();
     int nargs = lua::top(callable.state()).pos() - callable.pos();
@@ -45,7 +45,7 @@ lua::index lua::invoke(const lua::index& callable)
 
     switch (result) {
         case LUA_OK:
-            return callable;
+            return;
         case LUA_ERRGCMM:
             throw std::runtime_error("Lua garbage collector error");
         case LUA_ERRMEM:

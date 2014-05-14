@@ -15,7 +15,7 @@ namespace lua {
 std::string traceback(lua::state* const state, const int toplevel);
 std::string dump(lua::state* const state);
 
-lua::index invoke(const lua::index& callable);
+void invoke(const lua::index& callable);
 
 lua::index top(lua::state* const state);
 
