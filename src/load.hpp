@@ -25,27 +25,39 @@ namespace lua
      */
     void run_dir(lua::state* const state, const QDir& dir, const bool recurse);
 
-    template <class Input>
-    lua::index run_string(lua::state* const state, Input& runnable)
+    template <class RV, class Input>
+    RV run_string(lua::state* const state, Input& runnable)
     {
-        return lua::invoke(lua::load_string(state, runnable));
+        lua::index rv(state, lua_gettop(state) + 1);
+        lua::invoke(lua::load_string(state, runnable));
+        if (!rv) {
+            throw lua::error("lua::run_string: The invoked callable did not return a value");
+        }
+        return lua::get<RV>(rv);
     }
 
     template <class Input>
-    lua::index run_file(lua::state* const state, Input& runnable)
+    void run_string(lua::state* const state, Input& runnable)
     {
-        return lua::invoke(lua::load_file(state, runnable));
+        lua::invoke(lua::load_string(state, runnable));
     }
 
-    template <class Value, class Input>
-    Value evaluate(lua::state* const state, Input& runnable)
+    template <class RV, class Input>
+    RV run_file(lua::state* const state, Input& runnable)
     {
-        auto rv = lua::run_string(state, runnable);
-        Value destination(lua::get<Value>(rv));
-        lua_pop(state, 1);
-        return destination;
+        lua::index rv(state, lua_gettop(state) + 1);
+        lua::invoke(lua::load_file(state, runnable));
+        if (!rv) {
+            throw lua::error("lua::run_file: The invoked callable did not return a value");
+        }
+        return lua::get<RV>(rv);
     }
 
+    template <class Input>
+    void run_file(lua::state* const state, Input& runnable)
+    {
+        lua::invoke(lua::load_file(state, runnable));
+    }
 } // namespace lua
 
 #endif // LUA_CXX_LOADERS_HEADER
