@@ -2,58 +2,162 @@
 #define LUA_CXX_PUSH_HEADER
 
 #include "index.hpp"
+#include "userdata.hpp"
 
+#include "config.hpp"
 #include <type_traits>
 #include <new>
+#include <memory>
+#include <string>
+#include <stdexcept>
+
+#include <iostream>
+
+class QObject;
 
 namespace lua {
 
-enum class userdata_storage {
-    value,
-    pointer
+template <class T>
+struct Metatable
+{
+    static constexpr const char* name = "";
+
+    static bool metatable(const lua::index& table, T* value)
+    {
+        #ifdef HAVE_QT_CORE
+        return Metatable<typename std::conditional<
+            std::is_base_of<QObject, T>::value,
+            QObject,
+            void
+        >::type>::metatable(table, value);
+        #else
+        return false;
+        #endif
+    }
 };
 
-struct userdata {
-    const userdata_storage storage_type;
-    bool(*is_type)(void* const, const char* const);
-    void(*destroy)(void* const);
+template <>
+struct Metatable<void>
+{
+    static constexpr const char* name = "";
 
-public:
-    userdata(bool is_pointer) :
-        userdata(is_pointer ? userdata_storage::pointer : userdata_storage::value)
+    static bool metatable(const lua::index& table, void* const value)
     {
-    }
-
-    userdata(userdata_storage storage) :
-        storage_type(storage)
-    {
+        return false;
     }
 };
 
 int __gc(lua::state* const state);
 
-template <class T>
-static void push_userdata(lua::state* const state, const T& orig)
+template <class Stored>
+int destroy(lua::state* const state)
 {
-    char* block = static_cast<char*>(lua_newuserdata(state, sizeof(lua::userdata) + sizeof(T)));
-    auto userdata = new (block) lua::userdata(std::is_pointer<T>::value);
-    auto value = new (block + sizeof(lua::userdata)) T(orig);
+    char* block = static_cast<char*>(lua_touserdata(state, 1));
+    auto value = reinterpret_cast<Stored*>(block + sizeof(lua::userdata_block));
+    if (value != nullptr) {
+        value->~Stored();
+    }
+    return 0;
+}
 
-    userdata->is_type = [](void* const, const char* const) {
-        return true;
-    };
+template <class T, class Stored = T>
+void push_metatable(lua::state* const state, T* const value)
+{
+    auto class_name = Metatable<T>::name;
+    if (std::char_traits<char>::length(class_name) > 0) {
+        lua_getfield(state, LUA_REGISTRYINDEX, class_name);
+    } else {
+        lua_pushnil(state);
+    }
+    lua::index mt(state, -1);
+    if (mt.type() != lua::type::nil) {
+        // Use the cached value if we have one
+        return;
+    }
 
-    userdata->destroy = [](void* const block) {
-        auto value = static_cast<T*>(block);
-        value->~T();
-    };
-
+    // Otherwise, clean up
+    lua_pop(state, 1);
     lua_newtable(state);
+
+    // And set up how we destroy the object
     lua_pushstring(state, "__gc");
     lua_pushcclosure(state, __gc, 0);
-    lua_settable(state, -3);
-    lua_setmetatable(state, -2);
+    lua_settable(state, mt.pos());
+
+    lua_pushstring(state, "Destroy");
+    lua_pushcfunction(state, destroy<Stored>);
+    lua_settable(state, mt.pos());
+
+    // Use the metatable as the index
+    auto set_metatable_as_default_table_for = [&](const char* name) {
+        lua_pushstring(state, name);
+        lua_pushvalue(state, mt.pos());
+        lua_settable(state, mt.pos());
+    };
+    set_metatable_as_default_table_for("__index");
+    set_metatable_as_default_table_for("__newindex");
+
+    // Let downstream set up their type-specific metatable.
+    if (Metatable<T>::metatable(mt, value) && std::char_traits<char>::length(class_name) > 0) {
+        // Cache it for the future
+        lua_pushvalue(state, mt.pos());
+        lua_setfield(state, LUA_REGISTRYINDEX, class_name);
+    }
 }
+
+template <class Value, lua::userdata_storage storage = lua::userdata_storage::value>
+struct Construct
+{
+    static void construct(lua::state* const state, const Value& original)
+    {
+        // Create the userdata components: our metadata, followed by the value itself.
+        char* block = static_cast<char*>(lua_newuserdata(state,
+            sizeof(lua::userdata_block) + sizeof original
+        ));
+        auto userdata = new (block) lua::userdata_block(storage);
+        auto value = new (block + sizeof(lua::userdata_block)) Value(original);
+
+        // Get the metatable for this type and set it for our userdata.
+        lua::push_metatable<Value, Value>(state, value);
+        lua_setmetatable(state, -2);
+    }
+};
+
+template <class Value>
+struct Construct<Value, lua::userdata_storage::pointer>
+{
+    static void construct(lua::state* const state, Value* original)
+    {
+        // Create the userdata components: our metadata, followed by the value itself.
+        char* block = static_cast<char*>(lua_newuserdata(state,
+            sizeof(lua::userdata_block) + sizeof original
+        ));
+        auto userdata = new (block) lua::userdata_block(lua::userdata_storage::pointer);
+        auto value = new (block + sizeof(lua::userdata_block)) Value*(original);
+
+        // Get the metatable for this type and set it for our userdata.
+        lua::push_metatable<Value, Value*>(state, *value);
+        lua_setmetatable(state, -2);
+    }
+};
+
+template <class Value>
+struct Construct<Value, lua::userdata_storage::shared_ptr>
+{
+    static void construct(lua::state* const state, const std::shared_ptr<Value>& original)
+    {
+        // Create the userdata components: our metadata, followed by the value itself.
+        char* block = static_cast<char*>(lua_newuserdata(state,
+            sizeof(lua::userdata_block) + sizeof original
+        ));
+        auto userdata = new (block) lua::userdata_block(lua::userdata_storage::shared_ptr);
+        auto value = new (block + sizeof(lua::userdata_block)) std::shared_ptr<Value>(original);
+
+        // Get the metatable for this type and set it for our userdata.
+        lua::push_metatable<Value, std::shared_ptr<Value>>(state, value->get());
+        lua_setmetatable(state, -2);
+    }
+};
 
 /**
  * Pushes the specified C++ value onto the Lua stack.
@@ -66,7 +170,25 @@ struct Push
 {
     static void push(lua::state* const state, T value)
     {
-        push_userdata(state, value);
+        Construct<T>::construct(state, value);
+    }
+};
+
+template <class T>
+struct Push<T*>
+{
+    static void push(lua::state* const state, T* value)
+    {
+        Construct<T, lua::userdata_storage::pointer>::construct(state, value);
+    }
+};
+
+template <class T>
+struct Push<std::shared_ptr<T>>
+{
+    static void push(lua::state* const state, const std::shared_ptr<T>& value)
+    {
+        Construct<T, lua::userdata_storage::shared_ptr>::construct(state, value);
     }
 };
 

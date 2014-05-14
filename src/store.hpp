@@ -5,42 +5,69 @@
 #include "userdata.hpp"
 #include "assert.hpp"
 
+#include <memory>
+
 namespace lua {
 
-template <typename T, typename std::enable_if<std::is_pointer<T>::value, int>::type = 0>
-static void inner_store(T& destination, lua::userdata* userdata, char* data)
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::value, int>::type = 0>
+static void inner_store_userdata(T& destination, lua::userdata_block* userdata, void* data)
 {
-    if (userdata->storage_type == userdata_storage::pointer) {
+    switch (userdata->storage) {
+    case lua::userdata_storage::value:
+        destination = *static_cast<T*>(data);
+        break;
+    case lua::userdata_storage::pointer:
+        destination = **static_cast<T**>(data);
+        break;
+    case lua::userdata_storage::shared_ptr:
+        destination = **static_cast<std::shared_ptr<T>*>(data);
+        break;
+    }
+}
+
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::pointer, int>::type = 0>
+static void inner_store_userdata(T*& destination, lua::userdata_block* userdata, void* data)
+{
+    switch (userdata->storage) {
+    case lua::userdata_storage::value:
+        destination = static_cast<T*>(data);
+        break;
+    case lua::userdata_storage::pointer:
+        destination = *static_cast<T**>(data);
+        break;
+    case lua::userdata_storage::shared_ptr:
+        destination = static_cast<std::shared_ptr<T>*>(data)->get();
+        break;
+    }
+}
+
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::shared_ptr, int>::type = 0>
+static void inner_store_userdata(T& destination, lua::userdata_block* userdata, void* data)
+{
+    switch (userdata->storage) {
+    case lua::userdata_storage::shared_ptr:
+    {
         destination = *reinterpret_cast<T*>(data);
-    } else {
-        destination = reinterpret_cast<T>(data);
+        break;
+    }
+    case lua::userdata_storage::pointer:
+    case lua::userdata_storage::value:
+        throw lua::error("The provided Lua userdata does not hold a shared_ptr");
     }
 }
 
-template <typename T, typename std::enable_if<!std::is_pointer<T>::value, int>::type = 0>
-static void inner_store(T& destination, lua::userdata* userdata, char* data)
-{
-    if (userdata->storage_type == userdata_storage::pointer) {
-        destination = **reinterpret_cast<typename std::remove_reference<T>::type**>(data);
-    } else {
-        destination = *reinterpret_cast<typename std::remove_reference<T>::type*>(data);
-    }
-}
-
-template <typename T>
+template <lua::userdata_storage storage, class T>
 static void store_userdata(T& destination, const lua::index& source)
 {
     lua::assert_type("store_userdata", lua::type::userdata, source);
     auto block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
-
-    /*if (!userdata->is_type(value, name)) {
-        throw lua::error("Unrecognized type name");
-    }*/
-
-    inner_store(
+    inner_store_userdata<storage>(
         destination,
-        reinterpret_cast<lua::userdata*>(block),
-        block + sizeof(lua::userdata)
+        reinterpret_cast<lua::userdata_block*>(block),
+        block + sizeof(lua::userdata_block)
     );
 }
 
@@ -49,7 +76,25 @@ struct Store
 {
     static void store(T& destination, const lua::index& source)
     {
-        store_userdata(destination, source);
+        store_userdata<lua::userdata_storage::value>(destination, source);
+    }
+};
+
+template <typename T>
+struct Store<T*>
+{
+    static void store(T*& destination, const lua::index& source)
+    {
+        store_userdata<lua::userdata_storage::pointer>(destination, source);
+    }
+};
+
+template <typename T>
+struct Store<std::shared_ptr<T>>
+{
+    static void store(std::shared_ptr<T>& destination, const lua::index& source)
+    {
+        store_userdata<lua::userdata_storage::shared_ptr>(destination, source);
     }
 };
 

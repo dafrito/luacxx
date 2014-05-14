@@ -150,7 +150,7 @@ struct Push<lua::callable>
 {
     static void push(lua::state* const state, const lua::callable& callable)
     {
-        lua::push_userdata(state, callable);
+        Construct<lua::callable>::construct(state, callable);
         lua_pushcclosure(state, invoke_callable, 1);
     }
 };
@@ -161,7 +161,7 @@ struct Store<lua::callable>
     static void store(lua::callable& destination, const lua::index& source)
     {
         lua_getupvalue(source.state(), source.pos(), 1);
-        lua::store_userdata(destination, lua::index(source.state(), -1));
+        lua::store_userdata<lua::userdata_storage::value>(destination, lua::index(source.state(), -1));
         lua_pop(source.state(), 1);
     }
 };

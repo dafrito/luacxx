@@ -7,6 +7,7 @@
 
 #include <string>
 #include <sstream>
+#include <memory>
 
 namespace lua {
 
@@ -224,6 +225,22 @@ struct Store<char>
         } else {
             destination = lua_tonumber(source.state(), source.pos());
         }
+    }
+};
+
+template <class T>
+struct Metatable<std::shared_ptr<T>>
+{
+    static constexpr const char* name = Metatable<T>::name;
+
+    static bool metatable(const lua::index& mt, std::shared_ptr<T>* const source)
+    {
+        if (source != nullptr) {
+            Metatable<T>::metatable(mt, source->get());
+        } else {
+            Metatable<T>::metatable(mt, nullptr);
+        }
+        return false;
     }
 };
 
