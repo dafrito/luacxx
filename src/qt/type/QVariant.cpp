@@ -123,7 +123,7 @@ void lua::store_qvariant(QVariant& destination, const lua::index& source)
             QStringList items;
 
             auto length = lua_rawlen(state, source.pos());
-            for (int i = 1; i <= length; ++i) {
+            for (unsigned int i = 1; i <= length; ++i) {
                 lua::push(state, i);
                 lua_gettable(state, source.pos());
                 items << lua::get<QString>(state, -1);

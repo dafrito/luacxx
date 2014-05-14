@@ -83,7 +83,8 @@ template <class T>
 typename std::remove_const<typename std::remove_reference<T>::type>::type
 get(const lua::global& source)
 {
-    typename std::remove_const<typename std::remove_reference<T>::type>::type destination;
+    typedef typename std::remove_const<typename std::remove_reference<T>::type>::type source_type;
+    auto destination = source_type();
     auto global_value = lua::push(source);
     lua::store(destination, global_value);
     return destination;

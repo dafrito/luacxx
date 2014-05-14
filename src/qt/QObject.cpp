@@ -116,7 +116,7 @@ int __index(lua::state* const state)
     // Properties
     QVariant propValue = obj->property(name);
     if (propValue.isValid()) {
-        auto rv = lua::push(state, propValue);
+        lua::push(state, propValue);
         return 1;
     }
 

@@ -109,7 +109,7 @@ struct Get
 {
     static T get(const lua::index& source)
     {
-        T destination;
+        T destination = T();
         lua::store(destination, source);
         return destination;
     }
@@ -129,7 +129,7 @@ struct Get<T&>
 {
     static T& get(const lua::index& source)
     {
-        typename std::remove_reference<T>::type* destination;
+        T* destination = nullptr;
         lua::store(destination, source);
         return *destination;
     }

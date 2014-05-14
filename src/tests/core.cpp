@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(value_userdata)
     BOOST_CHECK_EQUAL(42, lua::run_string<int>(env, "return receiveConstValue(counter)"));
 
     // Can counters be created from Lua?
-    Counter copy = lua::get<Counter>(env["counter"]);
+    lua::get<Counter>(env["counter"]);
 
 }
 

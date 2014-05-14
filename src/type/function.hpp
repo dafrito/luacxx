@@ -84,10 +84,7 @@ public:
 
     int operator()(lua::state* const state)
     {
-        #pragma clang diagnostic push
-        #pragma clang diagnostic ignored "-Wtautological-compare"
         if (lua::size(state) < sizeof...(Args)) {
-        #pragma clang diagnostic pop
             std::stringstream msg;
             msg << "Function expects at least "
                 << sizeof...(Args)
