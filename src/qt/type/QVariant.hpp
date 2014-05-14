@@ -11,8 +11,8 @@
 
 namespace lua {
 
-static std::unordered_map<int, std::function<void(lua::state* const, const QVariant&)>> qvariant_push_handler;
-static std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>> qvariant_store_handler;
+void set_qvariant_push_handler(const int type, const std::function<void(lua::state* const, const QVariant&)>& handler);
+void set_qvariant_store_handler(const int type, const std::function<void(QVariant&, const lua::index&)>& handler);
 
 void push_qvariant(lua::state* const state, const QVariant& value);
 void store_qvariant(QVariant& destination, const lua::index& source);

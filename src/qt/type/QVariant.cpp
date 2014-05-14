@@ -9,6 +9,11 @@
 #include <unordered_map>
 #include <QStringList>
 
+namespace {
+std::unordered_map<int, std::function<void(lua::state* const, const QVariant&)>> qvariant_push_handler;
+std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>> qvariant_store_handler;
+}
+
 namespace std {
     template<>
     class hash<QVariant::Type>
@@ -19,6 +24,16 @@ namespace std {
             return static_cast<int>(value);
         }
     };
+}
+
+void lua::set_qvariant_push_handler(const int type, const std::function<void(lua::state* const, const QVariant&)>& handler)
+{
+    qvariant_push_handler[type] = handler;
+}
+
+void lua::set_qvariant_store_handler(const int type, const std::function<void(QVariant&, const lua::index&)>& handler)
+{
+    qvariant_store_handler[type] = handler;
 }
 
 void lua::push_qvariant(lua::state* const state, const QVariant& value)
