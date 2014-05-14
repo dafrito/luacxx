@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([lua-cxx], [3.0], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
+AC_INIT([lua-cxx], [3.1], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/state.hpp])
