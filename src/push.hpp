@@ -103,17 +103,32 @@ void push_metatable(lua::state* const state, T* const value)
     }
 }
 
+template <class Stored>
+char* construct_userdata(lua::state* const state, lua::userdata_storage storage)
+{
+    // Get and push a chunk of memory from Lua to hold our metadata, as well as
+    // the underlying value.
+    char* block = static_cast<char*>(lua_newuserdata(state,
+        sizeof(lua::userdata_block) + sizeof(Stored)
+    ));
+
+    // Create the metadata
+    new (block) lua::userdata_block(storage);
+
+    // Return a pointer to the data block
+    return block + sizeof(lua::userdata_block);
+}
+
 template <class Value, lua::userdata_storage storage = lua::userdata_storage::value>
 struct Construct
 {
     static void construct(lua::state* const state, const Value& original)
     {
-        // Create the userdata components: our metadata, followed by the value itself.
-        char* block = static_cast<char*>(lua_newuserdata(state,
-            sizeof(lua::userdata_block) + sizeof original
-        ));
-        auto userdata = new (block) lua::userdata_block(storage);
-        auto value = new (block + sizeof(lua::userdata_block)) Value(original);
+        // Create a Lua userdata block
+        auto block = construct_userdata<Value>(state, storage);
+
+        // Create a value in-place
+        auto value = new (block) Value(original);
 
         // Get the metatable for this type and set it for our userdata.
         lua::push_metatable<Value, Value>(state, value);
@@ -126,12 +141,11 @@ struct Construct<Value, lua::userdata_storage::pointer>
 {
     static void construct(lua::state* const state, Value* original)
     {
-        // Create the userdata components: our metadata, followed by the value itself.
-        char* block = static_cast<char*>(lua_newuserdata(state,
-            sizeof(lua::userdata_block) + sizeof original
-        ));
-        auto userdata = new (block) lua::userdata_block(lua::userdata_storage::pointer);
-        auto value = new (block + sizeof(lua::userdata_block)) Value*(original);
+        // Create a Lua userdata block
+        auto block = construct_userdata<Value*>(state, lua::userdata_storage::pointer);
+
+        // Create a value in-place
+        auto value = new (block) Value*(original);
 
         // Get the metatable for this type and set it for our userdata.
         lua::push_metatable<Value, Value*>(state, *value);
@@ -144,12 +158,11 @@ struct Construct<Value, lua::userdata_storage::shared_ptr>
 {
     static void construct(lua::state* const state, const std::shared_ptr<Value>& original)
     {
-        // Create the userdata components: our metadata, followed by the value itself.
-        char* block = static_cast<char*>(lua_newuserdata(state,
-            sizeof(lua::userdata_block) + sizeof original
-        ));
-        auto userdata = new (block) lua::userdata_block(lua::userdata_storage::shared_ptr);
-        auto value = new (block + sizeof(lua::userdata_block)) std::shared_ptr<Value>(original);
+        // Create a Lua userdata block
+        auto block = construct_userdata<std::shared_ptr<Value>>(state, lua::userdata_storage::shared_ptr);
+
+        // Create a value in-place
+        auto value = new (block) std::shared_ptr<Value>(original);
 
         // Get the metatable for this type and set it for our userdata.
         lua::push_metatable<Value, std::shared_ptr<Value>>(state, value->get());
