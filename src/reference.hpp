@@ -34,6 +34,11 @@ public:
         }
     }
 
+    reference(lua::state* const state, int pos) :
+        reference(lua::index(state, pos))
+    {
+    }
+
     lua::state* const state() const
     {
         return _state;
