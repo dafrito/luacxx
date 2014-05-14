@@ -7,8 +7,6 @@
 #include "type/standard.hpp"
 #include "algorithm.hpp"
 
-#include <iostream>
-
 namespace lua {
 
 void qobject_metatable(const lua::index& mt);

@@ -1,6 +1,5 @@
 #include "QObjectMonitor.hpp"
 
-#include <iostream>
 #include <cassert>
 
 namespace lua {
@@ -30,7 +29,6 @@ void QObjectMonitor::destroyedFromC()
         assert(!object);
         return;
     }
-    //std::cout << userdata->dataType() << " destroyed from C++" << std::endl;
     object = nullptr;
     if (userdata) {
         auto tmp = userdata;
@@ -46,7 +44,6 @@ void QObjectMonitor::destroyedFromLua()
         assert(!userdata);
         return;
     }
-    //std::cout << userdata->dataType() << " destroyed from Lua" << std::endl;
     userdata = nullptr;
     if (_destroyOnGC && object) {
         auto tmp = object;

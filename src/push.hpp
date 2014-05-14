@@ -11,8 +11,6 @@
 #include <string>
 #include <stdexcept>
 
-#include <iostream>
-
 class QObject;
 
 namespace lua {
