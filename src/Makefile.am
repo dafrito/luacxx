@@ -5,30 +5,34 @@ liblua_cxx_la_LIBADD = $(QT_LIBS) @LUA_LIB@
 liblua_cxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 pkginclude_HEADERS = \
-	type.hpp \
-	state.hpp \
-	index.hpp \
-	error.hpp \
-	assert.hpp \
-	push.hpp \
-	store.hpp \
-	range.hpp \
-	load.hpp \
 	algorithm.hpp \
+	assert.hpp \
+	error.hpp \
+	global.hpp \
+	index.hpp \
 	link.hpp \
+	load.hpp \
+	push.hpp \
+	range.hpp \
+	reference.hpp \
+	state.hpp \
+	store.hpp \
+	thread.hpp \
+	type.hpp \
+	userdata.hpp
 	module/DirectoryModuleLoader.hpp \
 	module/ModuleLoader.hpp \
-	qt/type/QString.hpp \
-	qt/type/QVariant.hpp \
-	qt/type/QChar.hpp \
 	qt/QObject.hpp \
-	qt/QObjectSlot.hpp
+	qt/QObjectSlot.hpp \
+	qt/type/QChar.hpp \
+	qt/type/QString.hpp \
+	qt/type/QVariant.hpp
 
 liblua_cxx_la_SOURCES = \
+	algorithm.cpp \
 	load.cpp \
 	push.cpp \
 	store.cpp \
-	algorithm.cpp \
 	thread.cpp
 
 if BUILD_QT
