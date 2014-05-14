@@ -111,6 +111,13 @@ std::string lua::dump(lua::state* const state)
         case lua::type::table:
             str << iter.type().name() << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
             break;
+        case lua::type::function:
+        case lua::type::thread:
+        {
+            str << iter.type().name() << "@";
+            str << lua_topointer(iter.state(), iter.pos());
+            break;
+        }
         default:
             str << iter.type().name();
         }
