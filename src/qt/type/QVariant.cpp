@@ -140,7 +140,7 @@ void lua::store_qvariant(QVariant& destination, const lua::index& source)
         }
         default:
         {
-            auto converter = qvariant_store_handler.find(destination.type());
+            auto converter = qvariant_store_handler.find(destination.userType());
             if (converter != qvariant_store_handler.end()) {
                 converter->second(destination, source);
             } else {
