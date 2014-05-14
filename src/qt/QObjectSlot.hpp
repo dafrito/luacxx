@@ -7,7 +7,7 @@
 #include <memory>
 #include <unordered_set>
 
-#include "qobject.hpp"
+#include "reference.hpp"
 
 namespace lua {
 
@@ -16,7 +16,7 @@ class QObjectSlot : public QObject
     QMetaMethod _signal;
     lua::reference _slot;
 public:
-    QObjectSlot(QObject* const parent, const QMetaMethod& signal, const lua::reference& slot);
+    QObjectSlot(QObject* const parent, const QMetaMethod& signal, const lua::index& slot);
 
     int qt_metacall(QMetaObject::Call call, int id, void **arguments);
 

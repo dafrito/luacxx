@@ -20,7 +20,9 @@ pkginclude_HEADERS = \
 	module/ModuleLoader.hpp \
 	qt/type/QString.hpp \
 	qt/type/QVariant.hpp \
-	qt/type/QChar.hpp
+	qt/type/QChar.hpp \
+	qt/QObject.hpp \
+	qt/QObjectSlot.hpp
 
 liblua_cxx_la_SOURCES = \
 	load.cpp \
@@ -33,7 +35,9 @@ if BUILD_QT
 
 liblua_cxx_la_SOURCES += \
 	module/DirectoryModuleLoader.cpp \
-	qt/type/QVariant.cpp
+	qt/type/QVariant.cpp \
+	qt/QObject.cpp \
+	qt/QObjectSlot.cpp
 
 # moc-generated source files
 #liblua_cxx_la_MOC_SOURCES = \

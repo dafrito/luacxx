@@ -1,23 +1,41 @@
 #ifndef LUA_CXX_QOBJECT_HEADER
 #define LUA_CXX_QOBJECT_HEADER
 
-#include "LuaStack.hpp"
 #include <QObject>
 
-class QObject;
+#include "push.hpp"
+#include "type/standard.hpp"
+#include "algorithm.hpp"
+
+#include <iostream>
 
 namespace lua {
 
-void qobject(LuaStack& stack, QObject& obj);
+void qobject_metatable(const lua::index& mt);
 
-template<>
-struct UserdataType<QObject>
+template <>
+struct Metatable<QObject>
 {
-    constexpr static const char* name = "QObject";
+    static constexpr const char* name = "QObject";
 
-    static void initialize(LuaStack& stack, QObject& obj)
+    static bool metatable(const lua::index& mt, QObject* const)
     {
-        lua::qobject(stack, obj);
+        lua::qobject_metatable(mt);
+        return false;
+    }
+};
+
+void qmetamethod_metatable(const lua::index& mt);
+
+template <>
+struct Metatable<QMetaMethod>
+{
+    static constexpr const char* name = "QMetaMethod";
+
+    static bool metatable(const lua::index& mt, QMetaMethod* const)
+    {
+        lua::qmetamethod_metatable(mt);
+        return false;
     }
 };
 

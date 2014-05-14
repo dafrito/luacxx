@@ -3,7 +3,7 @@
 #include <iostream>
 #include "type/QVariant.hpp"
 
-lua::QObjectSlot::QObjectSlot(QObject* const parent, const QMetaMethod& signal, const LuaReference& slot) :
+lua::QObjectSlot::QObjectSlot(QObject* const parent, const QMetaMethod& signal, const lua::index& slot) :
     QObject(parent),
     _signal(signal),
     _slot(slot)
@@ -12,21 +12,19 @@ lua::QObjectSlot::QObjectSlot(QObject* const parent, const QMetaMethod& signal, 
 
 int lua::QObjectSlot::qt_metacall(QMetaObject::Call call, int id, void **arguments)
 {
-    LuaStack stack(_slot.luaState());
-    _slot.push(stack);
-
-    stack.setAcceptsStackUserdata(true);
+    auto state = _slot.state();
+    auto callable = lua::push(state, _slot);
 
     QList<QByteArray> params = _signal.parameterTypes();
     for (int i = 0; i < params.count(); ++i) {
-        lua::push(stack, QVariant(
+        lua::push(state, QVariant(
             QMetaType::type(params.at(i)),
             arguments[1 + i]
         ));
     }
 
     try {
-        stack.pushedInvoke(params.count());
+        lua::invoke(callable);
     } catch (lua::error& ex) {
         std::cerr << "lua::QObjectSlot::qt_metacall: Error caught during slot invocation: " << ex.what() << std::endl;
     }

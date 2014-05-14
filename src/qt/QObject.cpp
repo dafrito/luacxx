@@ -1,78 +1,33 @@
-#include "qobject.hpp"
+#include "qt/QObject.hpp"
+#include "qt/type/QVariant.hpp"
+#include "algorithm.hpp"
+#include "type/function.hpp"
+#include "reference.hpp"
+#include "assert.hpp"
+#include "qt/QObjectSlot.hpp"
 
-#include "type/QVariant.hpp"
-
-#include "LuaStack.hpp"
-#include "LuaValue.hpp"
-#include "QObjectSlot.hpp"
-
+#include <cassert>
 #include <QObject>
 #include <QMetaObject>
 #include <QMetaMethod>
 #include <functional>
 
 namespace {
-    void __index(LuaStack& stack);
-    void __newindex(LuaStack& stack);
+    int __index(lua::state* const state);
+    int __newindex(lua::state* const state);
 
-    void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
-    void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method);
-    void callMethod(LuaStack& stack);
-    void connectSlot(LuaStack& stack);
+    void metaInvokeDirectMethod(lua::state* const state, QObject* const obj, const QMetaMethod& method);
+    void metaInvokeLuaCallableMethod(lua::state* const state, QObject* const obj, const QMetaMethod& method);
+
+    int qobject_connect(lua::state* const state);
 
 } // namespace anonymous
 
-void lua::qobject(LuaStack& stack, QObject& obj)
+void lua::qobject_metatable(const lua::index& mt)
 {
-    stack.pushMetatable();
-    stack.pushPointer(&obj);
-    stack.push(__index, 1);
-    stack.pushedSet("__index", -2);
-
-    stack.pushPointer(&obj);
-    stack.push(__newindex, 1);
-    stack.pushedSet("__newindex", -2);
-    stack.setMetatable();
-}
-
-namespace {
-
-bool retrieveArgs(LuaStack& stack, LuaUserdata** savedUserdata, QObject** obj, const char** name)
-{
-    void* validatingUserdata = stack.pointer(1);
-    stack.shift();
-
-    LuaUserdata* userdata = *savedUserdata = stack.get<LuaUserdata*>(1);
-    if (!userdata) {
-        goto fail;
-    }
-
-    if (!userdata->rawData()) {
-        goto fail;
-    }
-
-    *obj = static_cast<QObject*>(userdata->rawData());
-
-    if (validatingUserdata != *obj) {
-        // The metamethod was not called with the expected userdata object.
-        goto fail;
-    }
-
-    stack.at(2) >> *name;
-    if (!name) {
-        goto fail;
-    }
-    stack.shift(2);
-
-    return true;
-
-    fail:
-        *savedUserdata = nullptr;
-        *obj = nullptr;
-        *name = nullptr;
-        stack.clear();
-        lua::push(stack, lua::value::nil);
-        return false;
+    lua::table::set(mt, "__index", __index);
+    assert(lua::table::get_type(mt, "__index").function());
+    lua::table::set(mt, "__newindex", __newindex);
 }
 
 QString getSignature(const QMetaMethod& method)
@@ -84,326 +39,169 @@ QString getSignature(const QMetaMethod& method)
     #endif
 }
 
-void __index(LuaStack& stack)
+void lua::qmetamethod_metatable(const lua::index& mt)
 {
-    LuaUserdata* userdata;
-    QObject* obj;
-    const char* name;
-    if (!retrieveArgs(stack, &userdata, &obj, &name)) {
-        return;
-    }
+    lua::table::set(mt, "Signature", [](lua::state* const state) {
+        auto method = lua::get<QMetaMethod*>(state, 1);
+        lua::clear(state);
+        lua::push(state, getSignature(*method));
+        return 1;
+    });
 
-    if (userdata->hasMethod(name)) {
-        stack.pushPointer(obj);
-        lua::push(stack, name);
-        lua::push(stack, callMethod, 2);
-        return;
-    }
+    lua::table::set<lua::function>(mt, "__call", [](lua::state* const state) {
+        auto method = lua::get<QMetaMethod&>(state, 1);
+        auto obj = lua::get<QObject*>(state, 2);
 
-    // First, check for properties
-    QVariant propValue = obj->property(name);
-
-    if (propValue.isValid()) {
-        lua::push(stack, propValue);
-        return;
-    }
-
-    if (QString(name) == "connect") {
-        stack.pushPointer(obj);
-        lua::push(stack, connectSlot, 1);
-        return;
-    }
-
-    // Not a property, so look for a method for the given the name.
-    const QMetaObject* const metaObject = obj->metaObject();
-    for(int i = 0; i < metaObject->methodCount(); ++i) {
-        QString sig = getSignature(metaObject->method(i));
-        if (sig.startsWith(QString(name) + "(")) {
-            stack.pushPointer(obj);
-            lua::push(stack, name);
-            lua::push(stack, callMethod, 2);
-            return;
+        QVariant returnValue;
+        auto returnType = QMetaType::type(method.typeName());
+        if (returnType != QMetaType::Void) {
+            returnValue = QVariant(returnType, nullptr);
         }
-    }
+        QList<QVariant> variants;
+        variants << returnType;
 
-    // Still couldn't find anything, so ignore case
-    for(int i = 0; i < metaObject->methodCount(); ++i) {
-        QString sig = getSignature(metaObject->method(i));
-        if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
-            stack.pushPointer(obj);
-            lua::push(stack, name);
-            lua::push(stack, callMethod, 2);
-            return;
+        void* argdata[11];
+        argdata[0] = const_cast<void*>(variants.at(0).data());
+
+        QList<QByteArray> params = method.parameterTypes();
+        if (params.size() == 1 && QString(params.at(0)).startsWith("lua::state*")) {
+            argdata[1] = state;
+        } else {
+            for (int i = 0; i < params.count(); ++i) {
+                int type = QMetaType::type(params.at(i));
+                if (!type) {
+                    std::stringstream str;
+                    str << "lua::QMetaMethod::_call: The parameter type, "
+                        << params.at(i).constData()
+                        << ", does not have a registered strategy to convert into a QVariant, so "
+                        << getSignature(method).toStdString()
+                        << " cannot be invoked.";
+                    throw std::logic_error(str.str());
+                }
+
+                QVariant arg(type, nullptr);
+                lua::store(arg, lua::index(state, i + 3));
+                arg.convert(static_cast<QVariant::Type>(type));
+                variants << arg;
+            }
+            for (int i = 0; i < variants.size(); ++i) {
+                argdata[i] = const_cast<void*>(variants.at(i).data());
+            }
         }
-    }
-    lua::push(stack, lua::value::nil);
-}
 
-void __newindex(LuaStack& stack)
-{
-    LuaUserdata* userdata;
-    QObject* obj;
-    const char* name;
-    if (!retrieveArgs(stack, &userdata, &obj, &name)) {
-        return;
-    }
-    QVariant prop = obj->property(name);
-    if (!prop.isValid()) {
-        throw lua::exception("New properties must not be added to this userdata");
-    }
-    stack.begin() >> prop;
-    obj->setProperty(name, prop);
-}
-
-void connectSlot(LuaStack& stack)
-{
-    QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
-    stack.shift();
-
-    auto userdata = stack.get<LuaUserdata*>(1);
-    if (!userdata) {
-        throw lua::error("Method must be invoked with a valid userdata");
-    }
-    if (userdata->rawData() != validatingUserdata) {
-        if (!userdata->data()) {
-            throw lua::error("Userdata must have an associated internal object");
-        }
-        if (userdata->dataType() != "QObject") {
-            throw lua::error(
-                QString("Userdata must be of type QObject, but was given: '%1'")
-                    .arg(userdata->dataType().c_str())
-                    .toStdString()
-            );
-        }
-        throw lua::error("Userdata provided with method call must match the userdata used to access that method");
-    }
-    QObject* const obj = validatingUserdata;
-    stack.shift();
-
-    if (stack.size() != 2) {
-        throw lua::error(
-            QString("Exactly 2 arguments must be provided. Given %1").arg(stack.size()).toStdString()
+        QMetaObject::metacall(
+            obj,
+            QMetaObject::InvokeMetaMethod,
+            method.methodIndex(),
+            argdata
         );
+
+        if (variants.at(0).isValid()) {
+            lua::push(state, variants.at(0));
+            lua_replace(state, 1);
+            lua_settop(state, 1);
+            return 1;
+        } else {
+            return 0;
+        }
+    });
+}
+
+namespace {
+
+int __index(lua::state* const state)
+{
+    auto obj = lua::get<QObject*>(state, 1);
+    auto name = lua::get<const char*>(state, 2);
+
+    // Properties
+    QVariant propValue = obj->property(name);
+    if (propValue.isValid()) {
+        auto rv = lua::push(state, propValue);
+        return 1;
     }
 
-    if (stack.typestring(1) != "string") {
-        throw lua::error("signal must be a string");
+    // Slot connections
+    if (QString(name) == "connect") {
+        lua::push(state, qobject_connect);
+        return 1;
     }
-    auto signal = stack.get<std::string>(1);
-    stack.shift();
 
-    // TODO Make this use a cleaner function, like, lua::get<LuaReference>
-    LuaReference slot = LuaReference(
-        stack.luaState(),
-        LuaReferenceAccessible(stack.luaState(), stack.saveAndPop())
-    );
-    if (slot.typestring() != "function") {
-        throw lua::error("Provided slot must be a function");
+    // Invokables
+    const QMetaObject* metaObject = obj->metaObject();
+    for (int i = 0; i < metaObject->methodCount(); ++i) {
+        auto method = metaObject->method(i);
+        QString sig = getSignature(method);
+
+        if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
+            lua::push(state, method);
+            return 1;
+        }
     }
+
+    return 0;
+}
+
+int __newindex(lua::state* const state)
+{
+    auto obj = lua::get<QObject*>(state, 1);
+    auto name = lua::get<const char*>(state, 2);
+
+    // Properties
+    QVariant propValue = obj->property(name);
+    if (!propValue.isValid()) {
+        throw lua::error("New properties must not be added to this userdata");
+    }
+
+    lua::store(propValue, lua::index(state, 3));
+    obj->setProperty(name, propValue);
+
+    return 0;
+}
+
+int qobject_connect(lua::state* const state)
+{
+    auto obj = lua::get<QObject*>(state, 1);
+    auto name = lua::get<std::string>(state, 2);
+    lua::index callable(state, 3);
+    lua::assert_type("lua::qobject_connect", lua::type::function, lua::index(state, 3));
 
     const QMetaObject* const metaObject = obj->metaObject();
 
     // Find the signal
-
     int signalId = -1;
-    if (signal.find("(") != std::string::npos) {
-        QByteArray signalSig = QMetaObject::normalizedSignature(signal.c_str());
+    if (name.find("(") != std::string::npos) {
+        QByteArray signalSig = QMetaObject::normalizedSignature(name.c_str());
         signalId = metaObject->indexOfSignal(signalSig);
     } else {
         for (int i = 0; i < metaObject->methodCount(); ++i) {
-            if (getSignature(metaObject->method(i)).startsWith(signal.c_str())) {
+            if (getSignature(metaObject->method(i)).startsWith(name.c_str())) {
                 if (signalId != -1) {
-                    throw lua::error(std::string("Ambiguous signal name: ") + signal);
+                    throw lua::error(std::string("Ambiguous signal name: ") + name);
                 }
                 signalId = i;
             }
         }
     }
     if (signalId == -1) {
-        throw lua::error(std::string("No signal for name: ") + signal);
+        throw lua::error(std::string("No signal for name: ") + name);
     }
 
     auto slotWrapper = new lua::QObjectSlot(
         obj,
         metaObject->method(signalId),
-        slot
+        callable
     );
     lua::QObjectSlot::connect(slotWrapper);
 
     QMetaObject::connect(obj, signalId, slotWrapper, 0);
 
-    stack.clear();
-
-    lua::push(stack, std::function<void()>([=]() {
+    // Return a method to disconnect this slot
+    lua_settop(state, 0);
+    lua::push(state, std::function<void()>([=]() {
         lua::QObjectSlot::disconnect(slotWrapper);
     }));
-}
-
-void callMethod(LuaStack& stack)
-{
-    QObject* validatingUserdata = static_cast<QObject*>(stack.pointer(1));
-    stack.shift();
-
-    auto name = stack.get<const char*>(1);
-    if (stack.size() < 2) {
-        throw lua::error("Method must be invoked with a valid userdata");
-    }
-    auto userdata = stack.get<LuaUserdata*>(2);
-    if (!userdata) {
-        throw lua::error("Method must be invoked with a valid userdata");
-    }
-    if (userdata->rawData() != validatingUserdata) {
-        if (!userdata->data()) {
-            throw lua::error("Userdata must have an associated internal object");
-        }
-        if (userdata->dataType() != "QObject") {
-            throw lua::error(
-                QString("Userdata must be of type QObject, but was given: '%1'")
-                    .arg(userdata->dataType().c_str())
-                    .toStdString()
-            );
-        }
-        throw lua::error("Userdata provided with method call must match the userdata used to access that method");
-    }
-    QObject* const obj = validatingUserdata;
-    stack.shift(2);
-
-    if (userdata->hasMethod(name)) {
-        userdata->invoke(name, stack);
-        return;
-    }
-
-    const QMetaObject* const metaObject = obj->metaObject();
-
-    // Prefer methods that handle the stack directly.
-    for (int i = 0; i < metaObject->methodCount(); ++i) {
-        QMetaMethod method(metaObject->method(i));
-        QString sig = getSignature(method);
-        if (sig == QString(name) + "(LuaStack&)") {
-            // The method is capable of handling the Lua stack directly, so invoke it
-            metaInvokeLuaCallableMethod(stack, obj, method);
-            userdata->addMethod(
-                name,
-                lua::LuaCallable([obj, method](LuaStack& stack) {
-                    metaInvokeLuaCallableMethod(stack, obj, method);
-                })
-            );
-            return;
-        }
-    }
-
-    // Ignore case and perform the above search again
-    for (int i = 0; i < metaObject->methodCount(); ++i) {
-        QMetaMethod method(metaObject->method(i));
-        QString sig = getSignature(method);
-        if (sig.endsWith("(LuaStack&)") && sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
-            // The method is capable of handling the Lua stack directly, so invoke it
-            metaInvokeLuaCallableMethod(stack, obj, method);
-            userdata->addMethod(
-                name,
-                lua::LuaCallable([obj, method](LuaStack& stack) {
-                    metaInvokeLuaCallableMethod(stack, obj, method);
-                })
-            );
-            return;
-        }
-    }
-
-    // Look for any method that matches the requested name
-    for (int i = 0; i < metaObject->methodCount(); ++i) {
-        QMetaMethod method(metaObject->method(i));
-        QString sig = getSignature(method);
-        if (sig.startsWith(QString(name) + "(")) {
-            metaInvokeDirectMethod(stack, obj, method);
-            userdata->addMethod(
-                name,
-                lua::LuaCallable([obj, method](LuaStack& stack) {
-                    metaInvokeDirectMethod(stack, obj, method);
-                })
-            );
-            return;
-        }
-    }
-
-    // Still can't find anything, so ignore case and look again
-    for (int i = 0; i < metaObject->methodCount(); ++i) {
-        QMetaMethod method(metaObject->method(i));
-        QString sig = getSignature(method);
-        if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
-            metaInvokeDirectMethod(stack, obj, method);
-            userdata->addMethod(
-                name,
-                lua::LuaCallable([obj, method](LuaStack& stack) {
-                    metaInvokeDirectMethod(stack, obj, method);
-                })
-            );
-            return;
-        }
-    }
-
-    throw lua::error(QString("No method found with name '%1'").arg(name).toStdString());
-}
-
-void metaInvokeDirectMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
-{
-    QList<QVariant> variants;
-    auto returnType = QMetaType::type(method.typeName());
-    if (returnType != QMetaType::Void) {
-        variants << QVariant(QMetaType::type(method.typeName()), nullptr);
-    }
-    else {
-        variants << QVariant();
-    }
-    QList<QByteArray> params = method.parameterTypes();
-    for (int i = 0; i < params.count(); ++i) {
-        int type = QMetaType::type(params.at(i));
-        if (!type) {
-            std::stringstream str;
-            str << "I don't know how to convert the object type, "
-                << params.at(i).constData()
-                << ", into a QVariant, so I can't directly invoke the method: "
-                << getSignature(method).toStdString();
-            throw std::logic_error(str.str());
-        }
-        QVariant p(type, (void*)0);
-        stack.at(i + 1) >> p;
-        p.convert((QVariant::Type)type);
-        variants << p;
-    }
-    stack.clear();
-    void* vvargs[11];
-    for (int i = 0; i < variants.size(); ++i) {
-        vvargs[i] = const_cast<void*>(variants.at(i).data());
-    }
-    QMetaObject::metacall(
-        obj,
-        QMetaObject::InvokeMetaMethod,
-        method.methodIndex(),
-        vvargs);
-    if (variants.at(0).isValid()) {
-        lua::push(stack, variants.at(0));
-    }
-}
-
-void metaInvokeLuaCallableMethod(LuaStack& stack, QObject* const obj, const QMetaMethod& method)
-{
-    auto returnType = QMetaType::type(method.typeName());
-    QVariant rv;
-    if (returnType != QMetaType::Void) {
-        rv = QVariant(QMetaType::type(method.typeName()), nullptr);
-    }
-    void* vvargs[2];
-    vvargs[0] = const_cast<void*>(rv.data());
-    vvargs[1] = &stack;
-    QMetaObject::metacall(
-        obj,
-        QMetaObject::InvokeMetaMethod,
-        method.methodIndex(),
-        vvargs);
-    if (rv.isValid()) {
-        stack.clear();
-        lua::push(stack, rv);
-    }
+    return 1;
 }
 
 } // namespace anonymous
