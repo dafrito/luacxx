@@ -26,7 +26,6 @@ namespace {
 void lua::qobject_metatable(const lua::index& mt)
 {
     lua::table::set(mt, "__index", __index);
-    assert(lua::table::get_type(mt, "__index").function());
     lua::table::set(mt, "__newindex", __newindex);
 }
 
