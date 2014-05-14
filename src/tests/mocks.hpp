@@ -6,78 +6,142 @@
 
 #include "range.hpp"
 
-class Blank
+class Counter
 {
     int _count;
 
 public:
-    Blank(const int count) :
+    Counter(const int count) :
         _count(count)
     {}
 
-    Blank() :
+    Counter() :
         _count()
     {}
 
-    int count() const
+    int get() const
     {
         return _count;
     }
+
+    void set(const int& value)
+    {
+        _count = value;
+    }
+
+    template <class Exception>
+    void check(const int& expected)
+    {
+        if (_count != expected) {
+            std::stringstream str;
+            str << expected << " expected, but count was " << _count;
+            throw Exception(str.str());
+        }
+    }
 };
 
-class Square : public QObject
+template <class T>
+class Point {
+    T _x;
+    T _y;
+
+public:
+    Point(const T& x, const T& y) :
+        _x(x),
+        _y(y)
+    {
+    }
+
+    Point() :
+        _x(),
+        _y()
+    {
+    }
+
+    void setX(const int x)
+    {
+        _x = x;
+    }
+
+    const int x() const
+    {
+        return _x;
+    }
+
+    void setY(const int y)
+    {
+        _y = y;
+    }
+
+    const int y() const
+    {
+        return _y;
+    }
+
+};
+
+class QtPoint : public QObject
 {
     Q_OBJECT
+
+    int _x;
+    int _y;
 
     Q_PROPERTY(int x READ getX WRITE setX)
     Q_PROPERTY(int y READ getY WRITE setY)
 public:
-    int x, y;
 
-    Square() :
-        x(),
-        y()
+    QtPoint() :
+        _x(),
+        _y()
     {
     }
 
-    void setX(int x)
+    QtPoint(const int x, const int y) :
+        _x(x),
+        _y(y)
     {
-        this->x = x;
     }
-    const int getX() const
+
+    Q_INVOKABLE void setX(const int x)
     {
-        return x;
+        _x = x;
+        emit xChanged();
     }
-    void setY(int y)
+
+    Q_INVOKABLE const int getX() const
     {
-        this->y = y;
+        return _x;
     }
-    const int getY() const
+
+    Q_INVOKABLE void setY(const int y)
     {
-        return y;
+        _y = y;
+        emit yChanged();
     }
+
+    Q_INVOKABLE const int getY() const
+    {
+        return _y;
+    }
+
+signals:
+    void xChanged() const;
+    void yChanged() const;
 };
 
-class Counter : public QObject
+/*
+class Sum : public QObject
 {
     Q_OBJECT
-    int value;
-    QPoint point;
+
+    std::vector<int> _parts;
 
     Q_PROPERTY(int value READ getValue WRITE setValue);
     Q_PROPERTY(QPoint point READ getPoint WRITE setPoint);
 
 public:
-    QPoint getPoint()
-    {
-        return point;
-    }
 
-    void setPoint(const QPoint& point)
-    {
-        this->point = point;
-    }
-public slots:
     void setValue(const int value) {
         if (this->value != value) {
             this->value = value;
@@ -117,12 +181,48 @@ public slots:
         }
         return total;
     }
-signals:
-    void valueChanged(int value) const;
     void stringEmitted(const QString& value) const;
     void pointEmitted(const QPoint& value) const;
 public:
     Counter(int value = 0) : value(value) {}
 };
+*/
+
+namespace {
+
+int addToMagicNumber(int v)
+{
+    return 42 + v;
+}
+
+double addNumbers(int a, int b)
+{
+    return a + b;
+}
+
+double addBonanza(int a, long b, float c, double d, short e)
+{
+    return a + b + c + d + e;
+}
+
+int luaAdd(lua::state* const state)
+{
+    auto a = lua::get<int>(state, 1);
+    auto b = lua::get<int>(state, 2);
+    lua_settop(state, 0);
+    lua::push(state, a + b);
+    return 1;
+}
+
+int getMagicNumber()
+{
+    return 42;
+}
+
+void noop(int)
+{
+}
+
+} // namespace anonymous
 
 #endif // LUA_CXX_TESTS_MOCKS_HEADER

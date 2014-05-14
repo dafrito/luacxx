@@ -10,7 +10,6 @@ runtest_LDADD = ../liblua-cxx.la $(QT_LIBS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNI
 
 runtest_SOURCES = \
 	core.cpp \
-	qt.cpp \
 	main.cpp
 
 EXTRA_DIST = \
@@ -21,8 +20,6 @@ EXTRA_DIST = \
 	lua/testlib/Library.lua
 
 if BUILD_QT
-
-runtest_SOURCES += qt.cpp
 
 runtest_MOC_SOURCES = \
 	moc_mocks.cpp
