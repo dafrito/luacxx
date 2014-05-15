@@ -14,38 +14,71 @@
 #include <functional>
 
 namespace {
-    int __index(lua::state* const state);
-    int __newindex(lua::state* const state);
-
     int qobject_connect(lua::state* const state);
-
-} // namespace anonymous
+    QString getSignature(const QMetaMethod& method);
+}
 
 void lua::qobject_metatable(const lua::index& mt)
 {
-    lua::table::set(mt, "__index", __index);
-    lua::table::set(mt, "__newindex", __newindex);
-}
+    mt["__index"] = lua::function([](lua::state* const state) {
+        auto obj = lua::get<QObject*>(state, 1);
+        auto name = lua::get<const char*>(state, 2);
 
-QString getSignature(const QMetaMethod& method)
-{
-    #if QT_VERSION >= 0x050000
-    return QString::fromLatin1(method.methodSignature());
-    #else
-    return QString::fromLatin1(method.signature());
-    #endif
+        // Properties
+        QVariant propValue = obj->property(name);
+        if (propValue.isValid()) {
+            lua::push(state, propValue);
+            return 1;
+        }
+
+        // Slot connections
+        if (QString(name) == "connect") {
+            lua::push(state, qobject_connect);
+            return 1;
+        }
+
+        // Invokables
+        const QMetaObject* metaObject = obj->metaObject();
+        for (int i = 0; i < metaObject->methodCount(); ++i) {
+            auto method = metaObject->method(i);
+            QString sig = getSignature(method);
+
+            if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
+                lua::push(state, method);
+                return 1;
+            }
+        }
+
+        return 0;
+    });
+
+    mt["__newindex"] = lua::function([](lua::state* const state) {
+        auto obj = lua::get<QObject*>(state, 1);
+        auto name = lua::get<const char*>(state, 2);
+
+        // Properties
+        QVariant propValue = obj->property(name);
+        if (!propValue.isValid()) {
+            throw lua::error("New properties must not be added to this userdata");
+        }
+
+        lua::store(propValue, lua::index(state, 3));
+        obj->setProperty(name, propValue);
+
+        return 0;
+    });
 }
 
 void lua::qmetamethod_metatable(const lua::index& mt)
 {
-    lua::table::set(mt, "Signature", [](lua::state* const state) {
+    mt["Signature"] = lua::function([](lua::state* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
         lua::clear(state);
         lua::push(state, getSignature(*method));
         return 1;
     });
 
-    lua::table::set<lua::function>(mt, "__call", [](lua::state* const state) {
+    mt["__call"] = lua::function([](lua::state* const state) {
         auto method = lua::get<QMetaMethod&>(state, 1);
         auto obj = lua::get<QObject*>(state, 2);
 
@@ -106,54 +139,13 @@ void lua::qmetamethod_metatable(const lua::index& mt)
 
 namespace {
 
-int __index(lua::state* const state)
+QString getSignature(const QMetaMethod& method)
 {
-    auto obj = lua::get<QObject*>(state, 1);
-    auto name = lua::get<const char*>(state, 2);
-
-    // Properties
-    QVariant propValue = obj->property(name);
-    if (propValue.isValid()) {
-        lua::push(state, propValue);
-        return 1;
-    }
-
-    // Slot connections
-    if (QString(name) == "connect") {
-        lua::push(state, qobject_connect);
-        return 1;
-    }
-
-    // Invokables
-    const QMetaObject* metaObject = obj->metaObject();
-    for (int i = 0; i < metaObject->methodCount(); ++i) {
-        auto method = metaObject->method(i);
-        QString sig = getSignature(method);
-
-        if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
-            lua::push(state, method);
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-int __newindex(lua::state* const state)
-{
-    auto obj = lua::get<QObject*>(state, 1);
-    auto name = lua::get<const char*>(state, 2);
-
-    // Properties
-    QVariant propValue = obj->property(name);
-    if (!propValue.isValid()) {
-        throw lua::error("New properties must not be added to this userdata");
-    }
-
-    lua::store(propValue, lua::index(state, 3));
-    obj->setProperty(name, propValue);
-
-    return 0;
+    #if QT_VERSION >= 0x050000
+    return QString::fromLatin1(method.methodSignature());
+    #else
+    return QString::fromLatin1(method.signature());
+    #endif
 }
 
 int qobject_connect(lua::state* const state)
