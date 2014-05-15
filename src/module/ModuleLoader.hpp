@@ -1,7 +1,8 @@
 #ifndef LUA_CXX_MODULE_LOADER_HEADER
 #define LUA_CXX_MODULE_LOADER_HEADER
 
-#include "state.hpp"
+#include "stack.hpp"
+
 #include <string>
 
 class ModuleLoader

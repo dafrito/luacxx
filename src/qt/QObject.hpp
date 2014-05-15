@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "push.hpp"
+#include "stack.hpp"
 #include "type/standard.hpp"
 #include "algorithm.hpp"
 

@@ -1,8 +1,7 @@
 #ifndef LUA_CXX_THREAD_HEADER
 #define LUA_CXX_THREAD_HEADER
 
-#include "push.hpp"
-#include "store.hpp"
+#include "stack.hpp"
 #include "global.hpp"
 
 namespace lua {

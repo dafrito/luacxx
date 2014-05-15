@@ -1,8 +1,7 @@
 #ifndef LUA_CXX_REFERENCE_HEADER
 #define LUA_CXX_REFERENCE_HEADER
 
-#include "algorithm.hpp"
-#include "type/standard.hpp"
+#include "stack.hpp"
 
 namespace {
     void* NIL_REFERENCE = reinterpret_cast<void*>(0xdeaddead);
@@ -23,13 +22,13 @@ public:
             throw std::runtime_error("Reference state must not be null");
         }
         if (value.type().nil()) {
-            lua::push(value.state(), NIL_REFERENCE);
+            lua_pushlightuserdata(state(), NIL_REFERENCE);
             _id = luaL_ref(state(), LUA_REGISTRYINDEX);
 
-            lua::push(state(), lua::value::nil);
+            lua_pushnil(state());
             lua_rawseti(value.state(), LUA_REGISTRYINDEX, _id);
         } else {
-            lua::push(value.state(), value);
+            lua_pushvalue(state(), value.pos());
             _id = luaL_ref(state(), LUA_REGISTRYINDEX);
         }
     }

@@ -1,9 +1,7 @@
 #ifndef LUA_CXX_GLOBAL_HEADER
 #define LUA_CXX_GLOBAL_HEADER
 
-#include "push.hpp"
-#include "store.hpp"
-#include "link.hpp"
+#include "stack.hpp"
 
 #include <string>
 
@@ -58,6 +56,18 @@ public:
     {
         return lua::link<lua::global, T>(*this, name);
     }
+
+    template <class T>
+    operator T() const
+    {
+        return get<T>();
+    }
+
+    template <class T>
+    T get() const
+    {
+        return lua::get<T>(*this);
+    };
 };
 
 template <>

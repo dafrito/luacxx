@@ -1,9 +1,7 @@
 #ifndef LUA_CXX_TYPE_STANDARD_HEADER
 #define LUA_CXX_TYPE_STANDARD_HEADER
 
-#include "../push.hpp"
-#include "../store.hpp"
-#include "../error.hpp"
+#include "../stack.hpp"
 
 #include <string>
 #include <sstream>
@@ -62,6 +60,42 @@ struct Store<const lua::index>
         lua_replace(destination.state(), destination.pos());
     }
 };
+
+template <class Source, class Name>
+struct Push<lua::link<Source, Name>>
+{
+    static void push(lua::state* const state, lua::link<Source, Name>& source)
+    {
+        lua::push(state, source.source());
+        lua::push(state, source.name());
+        lua_gettable(state, -2);
+        lua_replace(state, -2);
+    }
+};
+
+template <class Source, class Name>
+struct Store<lua::link<Source, Name>>
+{
+    static void store(lua::link<Source, Name>& destination, lua::index& source)
+    {
+        auto state = source.state();
+        lua::push(state, destination.source());
+        lua::push(state, destination.name());
+        lua::push(state, source);
+        lua_settable(state, -3);
+        lua_pop(state, 1);
+    }
+};
+
+template <class T, class Source, class Name>
+typename std::remove_const<typename std::remove_reference<T>::type>::type
+get(const lua::link<Source, Name>& source)
+{
+    typename std::remove_const<typename std::remove_reference<T>::type>::type destination;
+    auto link_value = lua::push(source);
+    lua::store(destination, link_value);
+    return destination;
+}
 
 template <>
 struct Push<lua_Number>

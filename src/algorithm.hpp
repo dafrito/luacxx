@@ -1,19 +1,33 @@
 #ifndef LUA_CXX_ALGORITHM_HEADER
 #define LUA_CXX_ALGORITHM_HEADER
 
-#include "push.hpp"
-#include "store.hpp"
-#include "assert.hpp"
+#include "stack.hpp"
 #include "type/standard.hpp"
 
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace lua {
 
 std::string traceback(lua::state* const state, const int toplevel);
 std::string dump(lua::state* const state);
+
+template <class Error = lua::error>
+void assert_type(const char* category, const lua::type& expected, const lua::index& given)
+{
+    if (given.type() == expected) {
+        return;
+    }
+    std::stringstream str;
+    str << category;
+    str << ": ";
+    str << "Lua stack value at index " << given.pos() << " must be a ";
+    str << lua::type_info(expected).name();
+    str << " but a " << given.type().name() << " was given instead.";
+    throw Error(str.str());
+}
 
 void invoke(const lua::index& callable);
 
@@ -158,6 +172,12 @@ void set(Table source, Key key, Value value)
 }
 
 } // namespace table
+
+template <typename Value, typename Key, typename Table>
+void setfield(Table source, Key key, Value value)
+{
+    lua::table::set(source, key, value);
+}
 
 } // namespace lua
 

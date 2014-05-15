@@ -1,8 +1,7 @@
 #ifndef LUA_CXX_RANGE_HEADER
 #define LUA_CXX_RANGE_HEADER
 
-#include "push.hpp"
-#include "store.hpp"
+#include "stack.hpp"
 
 namespace lua {
 

@@ -5,10 +5,7 @@
 #include <sstream>
 
 #include "algorithm.hpp"
-#include "state.hpp"
-#include "error.hpp"
-#include "push.hpp"
-#include "store.hpp"
+#include "stack.hpp"
 
 // All this stuff involves calling C++ from Lua. This means pushing C++
 // functions into Lua, and creating the infrastructure to invoke them reliably.

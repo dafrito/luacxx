@@ -1,6 +1,10 @@
-#include "push.hpp"
-
+#include "stack.hpp"
 #include "algorithm.hpp"
+
+template <>
+void lua::get<void>(const lua::index& source)
+{
+}
 
 // Allow noop invocations from variadic templates
 lua::index lua::push(lua::state* const state)

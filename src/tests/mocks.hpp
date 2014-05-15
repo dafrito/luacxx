@@ -1,10 +1,12 @@
 #ifndef LUA_CXX_TESTS_MOCKS_HEADER
 #define LUA_CXX_TESTS_MOCKS_HEADER
 
+#include "range.hpp"
+
 #include <QObject>
 #include <QPoint>
 
-#include "range.hpp"
+#include <sstream>
 
 class Counter
 {
@@ -129,100 +131,5 @@ signals:
     void xChanged() const;
     void yChanged() const;
 };
-
-/*
-class Sum : public QObject
-{
-    Q_OBJECT
-
-    std::vector<int> _parts;
-
-    Q_PROPERTY(int value READ getValue WRITE setValue);
-    Q_PROPERTY(QPoint point READ getPoint WRITE setPoint);
-
-public:
-
-    void setValue(const int value) {
-        if (this->value != value) {
-            this->value = value;
-            emit valueChanged(value);
-            emit stringEmitted("Hello!");
-            emit pointEmitted(getPoint());
-        }
-    }
-
-    void setAddedValue(const int x, const int y)
-    {
-        setValue(x + y);
-    }
-
-    int getValue() const { return value; }
-
-    void set(const Counter& other)
-    {
-        setValue(other.getValue());
-    }
-
-    int addAll(lua::state* const state)
-    {
-        for (auto i : lua::range<decltype(value)>(state)) {
-            value += i;
-        }
-        return 0;
-    }
-
-    int summed(lua::state* const state)
-    {
-        // Be sure not to touch the stack here, so we can ensure
-        // our caller cleans everything up for us.
-        auto total = getValue();
-        for (auto value : lua::range<int>(state)) {
-            total += value;
-        }
-        return total;
-    }
-    void stringEmitted(const QString& value) const;
-    void pointEmitted(const QPoint& value) const;
-public:
-    Counter(int value = 0) : value(value) {}
-};
-*/
-
-namespace {
-
-int addToMagicNumber(int v)
-{
-    return 42 + v;
-}
-
-double addNumbers(int a, int b)
-{
-    return a + b;
-}
-
-double addBonanza(int a, long b, float c, double d, short e)
-{
-    return a + b + c + d + e;
-}
-
-int luaAdd(lua::state* const state)
-{
-    auto a = lua::get<int>(state, 1);
-    auto b = lua::get<int>(state, 2);
-    lua_settop(state, 0);
-    lua::push(state, a + b);
-    return 1;
-}
-
-int getMagicNumber()
-{
-    return 42;
-}
-
-void noop(int)
-{
-}
-
-} // namespace anonymous
 
 #endif // LUA_CXX_TESTS_MOCKS_HEADER

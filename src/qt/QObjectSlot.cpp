@@ -1,7 +1,9 @@
 #include "QObjectSlot.hpp"
+#include "type/QVariant.hpp"
+
+#include "algorithm.hpp"
 
 #include <iostream>
-#include "type/QVariant.hpp"
 
 lua::QObjectSlot::QObjectSlot(QObject* const parent, const QMetaMethod& signal, const lua::index& slot) :
     QObject(parent),

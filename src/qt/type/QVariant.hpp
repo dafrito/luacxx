@@ -6,8 +6,7 @@
 
 #include <QVariant>
 
-#include "push.hpp"
-#include "store.hpp"
+#include "stack.hpp"
 
 namespace lua {
 

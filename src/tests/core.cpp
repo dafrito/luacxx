@@ -1,8 +1,7 @@
 #include "core.hpp"
 
 #include "thread.hpp"
-#include "push.hpp"
-#include "store.hpp"
+#include "stack.hpp"
 #include "algorithm.hpp"
 #include "load.hpp"
 #include "reference.hpp"
@@ -99,7 +98,7 @@ BOOST_AUTO_TEST_CASE(run_string)
     lua::clear(env);
 
     lua::run_string(env, "No = 'Time'");
-    BOOST_CHECK_EQUAL(lua::get<const char*>(env["No"]), "Time");
+    BOOST_CHECK_EQUAL(env["No"].get<const char*>(), "Time");
     lua::clear(env);
 
     lua::run_string(env, "return function() end");
@@ -177,6 +176,24 @@ BOOST_AUTO_TEST_CASE(reference)
     BOOST_CHECK_EQUAL(lua::get<const char*>(env, -1), "No Time");
 }
 
+BOOST_AUTO_TEST_CASE(link_and_conversions)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, "foo = {a=42}");
+    BOOST_CHECK_EQUAL(env["foo"]["a"].get<int>(), 42);
+}
+
+int sum(lua::state* const state)
+{
+    int sum = 0;
+    for (auto value : lua::range<int>(state)) {
+        sum += value;
+    }
+    lua::push(state, sum);
+    return 1;
+}
+
 BOOST_AUTO_TEST_CASE(table_algorithms)
 {
     auto env = lua::create();
@@ -189,17 +206,12 @@ BOOST_AUTO_TEST_CASE(table_algorithms)
 
     BOOST_CHECK_EQUAL(lua::table::get<int>(env["foo"], 1), 42);
 
-    lua::table::insert(env["foo"], addNumbers);
+    lua::table::insert(env["foo"], sum);
     BOOST_CHECK_EQUAL(2, lua::size(env["foo"]));
     lua::assert_type("table", lua::type::function, lua::push(env["foo"][2]));
 
     lua::run_string(env, "return foo[2](2, 2)");
     BOOST_CHECK_EQUAL(4, lua::get<int>(env, -1));
-
-    env["Rainback"] = lua::value::table;
-    env["Rainback"]["Font"] = getMagicNumber;
-
-    BOOST_CHECK_EQUAL(env["Rainback"]["Font"].type().name(), "function");
 
     lua::run_string(env, "foo = {bar = 42}");
     BOOST_CHECK_EQUAL(env["foo"]["bar"].type().name(), "number");
@@ -267,7 +279,8 @@ BOOST_AUTO_TEST_CASE(value_userdata)
     BOOST_CHECK_EQUAL(42, lua::run_string<int>(env, "return receiveConstValue(counter)"));
 
     // Can counters be created from Lua?
-    lua::get<Counter>(env["counter"]);
+    Counter* foo = env["counter"];
+    BOOST_CHECK_EQUAL(42, foo->get());
 
 }
 
@@ -302,6 +315,7 @@ BOOST_AUTO_TEST_CASE(pointer_userdata)
 
     Counter counter(42);
     env["counter"] = &counter;
+    BOOST_CHECK_EQUAL(&counter, env["counter"].get<Counter*>());
 
     // Can pointers to userdata be passed to C++?
     env["receivePtr"] = receivePtr;
@@ -373,6 +387,43 @@ BOOST_AUTO_TEST_CASE(reference_userdata)
     counter.check<std::runtime_error>(42);
 }
 
+namespace {
+
+int addToMagicNumber(int v)
+{
+    return 42 + v;
+}
+
+double addNumbers(int a, int b)
+{
+    return a + b;
+}
+
+double addBonanza(int a, long b, float c, double d, short e)
+{
+    return a + b + c + d + e;
+}
+
+int luaAdd(lua::state* const state)
+{
+    auto a = lua::get<int>(state, 1);
+    auto b = lua::get<int>(state, 2);
+    lua_settop(state, 0);
+    lua::push(state, a + b);
+    return 1;
+}
+
+int getMagicNumber()
+{
+    return 42;
+}
+
+void noop(int)
+{
+}
+
+} // namespace anonymous
+
 BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
 {
     auto env = lua::create();
@@ -381,31 +432,31 @@ BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
     BOOST_CHECK_EQUAL(env["luaAdd"].type().name(), "function");
 
     lua::run_string(env, "Bar = luaAdd(2, 2)");
-    BOOST_CHECK_EQUAL(lua::get<int>(env["Bar"]), 4);
+    BOOST_CHECK_EQUAL(env["Bar"].get<int>(), 4);
 
     env["getMagicNumber"] = getMagicNumber;
     BOOST_CHECK_EQUAL(env["getMagicNumber"].type().name(), "function");
 
     lua::run_string(env, "Bar = getMagicNumber()");
-    BOOST_CHECK_EQUAL(lua::get<int>(env["Bar"]), 42);
+    BOOST_CHECK_EQUAL(env["Bar"].get<int>(), 42);
 
     env["addToMagicNumber"] = addToMagicNumber;
     BOOST_CHECK_EQUAL(env["addToMagicNumber"].type().name(), "function");
 
     lua::run_string(env, "Bar = addToMagicNumber(2)");
-    BOOST_CHECK_EQUAL(lua::get<int>(env["Bar"]), 44);
+    BOOST_CHECK_EQUAL(env["Bar"].get<int>(), 44);
 
     env["addNumbers"] = addNumbers;
     BOOST_CHECK_EQUAL(env["addNumbers"].type().name(), "function");
 
     lua::run_string(env, "Bar = addNumbers(2, 3)");
-    BOOST_CHECK_EQUAL(lua::get<int>(env["Bar"]), 5);
+    BOOST_CHECK_EQUAL(env["Bar"].get<int>(), 5);
 
     env["addBonanza"] = addBonanza;
     BOOST_CHECK_EQUAL(env["addBonanza"].type().name(), "function");
 
     lua::run_string(env, "Bar = addBonanza(2, 3, 4, 5, 6)");
-    BOOST_CHECK_EQUAL(lua::get<int>(env["Bar"]), 2+3+4+5+6);
+    BOOST_CHECK_EQUAL(env["Bar"].get<int>(), 2+3+4+5+6);
 
     env["noop"] = noop;
     BOOST_CHECK_EQUAL(env["noop"].type().name(), "function");
@@ -468,7 +519,7 @@ BOOST_AUTO_TEST_CASE(call_lua_from_cpp_with_extra_arguments)
 
     auto foo = env["foo"];
     BOOST_CHECK_EQUAL(foo.type().number(), true);
-    BOOST_CHECK_EQUAL(lua::get<int>(foo), 42);
+    BOOST_CHECK_EQUAL(foo.get<int>(), 42);
 }
 
 struct Wrapper {
@@ -542,7 +593,7 @@ BOOST_AUTO_TEST_CASE(qstring)
 {
     auto env = lua::create();
 
-    lua::push(env, QString("c"));
+    env << QString("c");
     BOOST_CHECK(lua::get<QString>(env, 1) == QString("c"));
 }
 
@@ -550,7 +601,7 @@ BOOST_AUTO_TEST_CASE(qchar)
 {
     auto env = lua::create();
 
-    lua::push(env, QChar('c'));
+    env << QChar('c');
     BOOST_CHECK(lua::get<QChar>(env, 1) == QChar('c'));
 }
 
@@ -559,7 +610,7 @@ BOOST_AUTO_TEST_CASE(raw_char)
     auto env = lua::create();
 
     char c = 'c';
-    lua::push(env, c);
+    env << c;
     BOOST_CHECK_EQUAL(lua::get<std::string>(env, 1), "c");
 }
 
@@ -571,7 +622,7 @@ BOOST_AUTO_TEST_CASE(qvariant)
     env["foo"] = QVariant(42);
 
     // Are QVariants automatically converted to numbers?
-    BOOST_CHECK_EQUAL(lua::get<int>(env["foo"]), 42);
+    BOOST_CHECK_EQUAL(env["foo"].get<int>(), 42);
 
     lua::set_qvariant_push_handler(QVariant::Point, [](lua::state* const state, const QVariant& source) {
         auto point = source.toPoint();
@@ -595,7 +646,7 @@ BOOST_AUTO_TEST_CASE(qvariant)
     lua::run_string(env, "point.x = 4; point.y = 6");
 
     QVariant pointVariant(QVariant::Point);
-    lua::store(pointVariant, lua::push(env["point"]));
+    env["point"] >> pointVariant;
     BOOST_CHECK_EQUAL(4, pointVariant.toPoint().x());
     BOOST_CHECK_EQUAL(6, pointVariant.toPoint().y());
 }
@@ -609,7 +660,7 @@ BOOST_AUTO_TEST_CASE(qobject_properties)
 
     // Can QObject properties be accessed from lua?
     lua::run_string(env, "bar = point.x");
-    BOOST_CHECK_EQUAL(lua::get<int>(env["bar"]), 2);
+    BOOST_CHECK_EQUAL(env["bar"].get<int>(), 2);
 
     // Can QObject properties be modified from lua?
     lua::run_string(env, "point.x = 24");
@@ -646,7 +697,7 @@ BOOST_AUTO_TEST_CASE(qobject_signals)
 
     // Are slots actually invoked?
     BOOST_CHECK_NO_THROW(point.setX(3));
-    BOOST_CHECK_EQUAL(lua::get<int>(env["flag"]), 3);
+    BOOST_CHECK_EQUAL(env["flag"].get<int>(), 3);
 
     // Is the remover idempotent?
     lua::run_string(env, "remover()");
@@ -654,7 +705,7 @@ BOOST_AUTO_TEST_CASE(qobject_signals)
 
     // Does the remover actually work?
     BOOST_CHECK_NO_THROW(point.setX(6));
-    BOOST_CHECK_EQUAL(lua::get<int>(env["flag"]), 3);
+    BOOST_CHECK_EQUAL(env["flag"].get<int>(), 3);
 }
 
 BOOST_AUTO_TEST_CASE(qobject_methods)

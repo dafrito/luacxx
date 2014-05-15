@@ -6,20 +6,14 @@ liblua_cxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
 	algorithm.hpp \
-	assert.hpp \
+	stack.hpp \
 	error.hpp \
 	global.hpp \
-	index.hpp \
-	link.hpp \
 	load.hpp \
-	push.hpp \
 	range.hpp \
 	reference.hpp \
-	state.hpp \
-	store.hpp \
 	thread.hpp \
 	type.hpp \
-	userdata.hpp \
 	type/function.hpp \
 	type/numeric.hpp \
 	type/standard.hpp \
@@ -34,8 +28,7 @@ nobase_pkginclude_HEADERS = \
 liblua_cxx_la_SOURCES = \
 	algorithm.cpp \
 	load.cpp \
-	push.cpp \
-	store.cpp \
+	stack.cpp \
 	thread.cpp
 
 if BUILD_QT

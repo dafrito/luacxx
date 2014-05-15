@@ -1,15 +1,16 @@
 #include "qt/QObject.hpp"
-#include "qt/type/QVariant.hpp"
-#include "algorithm.hpp"
-#include "type/function.hpp"
-#include "reference.hpp"
-#include "assert.hpp"
 #include "qt/QObjectSlot.hpp"
+#include "qt/type/QVariant.hpp"
 
-#include <cassert>
 #include <QObject>
 #include <QMetaObject>
 #include <QMetaMethod>
+
+#include "algorithm.hpp"
+#include "reference.hpp"
+#include "type/function.hpp"
+
+#include <cassert>
 #include <functional>
 
 namespace {
