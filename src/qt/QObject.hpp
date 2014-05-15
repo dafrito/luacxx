@@ -19,7 +19,7 @@ struct Metatable<QObject>
     static bool metatable(const lua::index& mt, QObject* const)
     {
         lua::qobject_metatable(mt);
-        return false;
+        return true;
     }
 };
 
@@ -33,7 +33,7 @@ struct Metatable<QMetaMethod>
     static bool metatable(const lua::index& mt, QMetaMethod* const)
     {
         lua::qmetamethod_metatable(mt);
-        return false;
+        return true;
     }
 };
 
