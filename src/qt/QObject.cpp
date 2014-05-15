@@ -16,9 +16,6 @@ namespace {
     int __index(lua::state* const state);
     int __newindex(lua::state* const state);
 
-    void metaInvokeDirectMethod(lua::state* const state, QObject* const obj, const QMetaMethod& method);
-    void metaInvokeLuaCallableMethod(lua::state* const state, QObject* const obj, const QMetaMethod& method);
-
     int qobject_connect(lua::state* const state);
 
 } // namespace anonymous
