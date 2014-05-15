@@ -710,8 +710,6 @@ BOOST_AUTO_TEST_CASE(qobject_signals)
 
 BOOST_AUTO_TEST_CASE(qobject_methods)
 {
-    std::cerr << "qobject_methods\n";
-
     auto env = lua::create();
 
     QtPoint point(2, 3);
@@ -725,8 +723,6 @@ BOOST_AUTO_TEST_CASE(qobject_methods)
 
     lua::run_string(env, "point:setY(point:getY() + 3)");
     BOOST_CHECK_EQUAL(point.getY(), 6);
-
-    std::cerr << "qobject_methods end\n";
 }
 
 BOOST_AUTO_TEST_CASE(directory_module_loader)
