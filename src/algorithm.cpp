@@ -53,8 +53,7 @@ void lua::invoke(const lua::index& callable)
         case LUA_ERRERR:
             throw std::runtime_error("Lua error within error handler");
         case LUA_ERRRUN:
-            auto ex = lua::get<lua::error*>(state, -1);
-            throw *ex;
+            throw lua::get<lua::error>(state, -1);
     }
 
     std::stringstream str;
