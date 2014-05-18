@@ -2,10 +2,10 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src src/tests
 
 pkgdata_DATA = \
-	lua-cxx.m4
+	luacxx.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = lua-cxx.pc
+pkgconfig_DATA = luacxx.pc
 
 export RPMDIR ?= $$HOME/rpmbuild
 
@@ -16,17 +16,17 @@ checkvalgrind:
 	cd src/tests && valgrind -v --leak-check=full .libs/lt-runtest
 
 debug: $(TESTS)
-	cd src && gdb lua-cxx
+	cd src && gdb luacxx
 
 valgrind:
-	cd src && valgrind -v --leak-check=full --trace-children=yes lua-cxx
+	cd src && valgrind -v --leak-check=full --trace-children=yes luacxx
 
 # This is a common typo for me
 cehck: check
 .PHONY: cehck
 
 RPMFLAGS ?= --ba
-SRCRPM=lua-cxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
+SRCRPM=luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
 
 rpm:
 	$(MAKE) dist-gzip $(RPMDIR)
@@ -39,7 +39,7 @@ rpm:
 		[ -e `basename $$filename` ] || ln -s $$filename; \
 	done
 	rm -f $(SRCRPM)
-	ln -s $(RPMDIR)/SRPMS/lua-cxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $(SRCRPM)
+	ln -s $(RPMDIR)/SRPMS/luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $(SRCRPM)
 .PHONY: rpm
 
 $(RPMDIR):

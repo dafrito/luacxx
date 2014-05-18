@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE lua-cxx
+#define BOOST_TEST_MODULE luacxx
 #include "core.hpp"
 
 #ifdef HAVE_QT_CORE
@@ -16,7 +16,7 @@ public:
     QCoreApplicationFixture() :
         argc(1)
     {
-        strcpy(name, "lua-cxx");
+        strcpy(name, "luacxx");
         argv[0] = name;
         app = new QCoreApplication(argc, argv);
     }

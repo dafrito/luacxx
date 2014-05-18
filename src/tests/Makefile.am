@@ -6,7 +6,7 @@ runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) @LUA_INCLUDE@ -I$(top_srcdir)/s
 	-DBOOST_TEST_DYN_LINK \
 	-DLUA_DIR=\"$(srcdir)/lua/\"
 
-runtest_LDADD = ../liblua-cxx.la $(QT_LIBS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
+runtest_LDADD = ../libluacxx.la $(QT_LIBS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 runtest_SOURCES = \
 	core.cpp \

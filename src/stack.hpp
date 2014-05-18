@@ -366,7 +366,7 @@ struct Construct<Value, lua::userdata_storage::shared_ptr>
 /**
  * Pushes the specified C++ value onto the Lua stack.
  *
- * Specialize this template in order to have your types supported by Lua-cxx's
+ * Specialize this template in order to have your types supported by Luacxx's
  * algorithms.
  */
 template <class T>

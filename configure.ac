@@ -1,10 +1,10 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([lua-cxx], [3.1], [dafrito@gmail.com], [lua-cxx], [http://www.dafrito.com])
+AC_INIT([luacxx], [3.1], [dafrito@gmail.com], [luacxx], [http://www.dafrito.com])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AM_INIT_AUTOMAKE([-Wall foreign])
-AC_CONFIG_SRCDIR([src/state.hpp])
+AC_CONFIG_SRCDIR([src/stack.hpp])
 AC_CONFIG_HEADERS([src/config.hpp])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -34,7 +34,7 @@ if pkg-config --print-errors --exists 'lua >= 5.0'; then
     LUA_INCLUDE=`pkg-config --cflags lua`
     LUA_LIB=`pkg-config --libs lua`
 else
-    AC_MSG_ERROR([Lua is required to build lua-cxx])
+    AC_MSG_ERROR([Lua is required to build luacxx])
 fi
 
 # Check for Boost
@@ -47,5 +47,5 @@ AX_HAVE_QT_MOC
 QT_CXXFLAGS="$QT_CXXFLAGS -fPIC"
 AM_CONDITIONAL([BUILD_QT], [test x$HAVE_QT_CORE = xyes])
 
-AC_CONFIG_FILES([lua-cxx.m4 lua-cxx.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
+AC_CONFIG_FILES([luacxx.m4 luacxx.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
 AC_OUTPUT
