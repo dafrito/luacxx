@@ -1,3 +1,11 @@
+%if 0%{?fedora} > 19
+%global luaver 5.2
+%else
+%global luaver 5.1
+%endif
+%global lualibdir %{_libdir}/lua/%{luaver}
+%global luapkgdir %{_datadir}/lua/%{luaver}
+
 Name: @PACKAGE_NAME@
 
 # Change all release values back to 1 when bumping to a new version
@@ -12,6 +20,9 @@ Source0:	@PACKAGE_NAME@-@PACKAGE_VERSION@.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
 BuildArch:	@build_cpu@
 Requires:	qt
+Requires:   lua >= %{luaver}
+BuildRequires: pkgconfig(gobject-introspection-1.0) >= 0.10.8
+BuildRequires: lua-devel >= %{luaver}
 BuildRequires: make automake autoconf libtool gcc-c++ boost-test boost-devel qt-devel
 
 %description
@@ -28,8 +39,11 @@ make %{?_smp_mflags}
 
 %install
 make install DESTDIR=%{buildroot}
+mkdir -p %{buildroot}%{lualibdir}
+ln -s %{_libdir}/lib@PACKAGE_NAME@.so %{buildroot}%{lualibdir}/@PACKAGE_NAME@.so
 
 %files
 %{_libdir}/*
 %{_includedir}/@PACKAGE_NAME@/*
 %{_datadir}/@PACKAGE_NAME@/@PACKAGE_NAME@.m4
+%{lualibdir}/luacxx.so
