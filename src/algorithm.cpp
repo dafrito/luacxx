@@ -59,7 +59,7 @@ void lua::invoke(const lua::index& callable)
 
     std::stringstream str;
     str << "Unexpected Lua pcall result of " << result;
-    throw std::runtime_error(str.str());
+    throw std::logic_error(str.str());
 }
 
 std::string lua::traceback(lua::state* const state, const int toplevel)
