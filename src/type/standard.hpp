@@ -235,7 +235,29 @@ struct Store<void*>
 {
     static void store(void*& destination, const lua::index& source)
     {
-        destination = lua_touserdata(source.state(), source.pos());
+        if (lua_islightuserdata(source.state(), source.pos())) {
+            destination = lua_touserdata(source.state(), source.pos());
+            return;
+        }
+
+        // It's a full userdata, so retrieve the underlying value
+        char* block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
+        if (!block) {
+            destination = nullptr;
+            return;
+        }
+        auto userdata = reinterpret_cast<lua::userdata_block*>(block);
+
+        switch (userdata->storage) {
+        case lua::userdata_storage::value:
+            destination = block + sizeof(lua::userdata_block);
+            break;
+        case lua::userdata_storage::pointer:
+            destination = *reinterpret_cast<void**>(block + sizeof(lua::userdata_block));
+            break;
+        case lua::userdata_storage::shared_ptr:
+            throw std::logic_error("shared_ptr's cannot be safely converted to void pointers");
+        }
     }
 };
 

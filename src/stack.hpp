@@ -473,8 +473,12 @@ const lua::index& lua::index::operator=(const T& source) const
 
 template <lua::userdata_storage storage, class T,
     typename std::enable_if<storage == lua::userdata_storage::value, int>::type = 0>
-static void inner_store_userdata(T& destination, lua::userdata_block* userdata, void* data)
+static void store_full_userdata(T& destination, lua::userdata_block* userdata, void* data)
 {
+    if (!userdata) {
+        throw lua::error("The source userdata is nil, so it cannot be stored.");
+        return;
+    }
     // Carefully retrieve the value from the userdata.
     switch (userdata->storage) {
     case lua::userdata_storage::value:
@@ -491,8 +495,12 @@ static void inner_store_userdata(T& destination, lua::userdata_block* userdata, 
 
 template <lua::userdata_storage storage, class T,
     typename std::enable_if<storage == lua::userdata_storage::pointer, int>::type = 0>
-static void inner_store_userdata(T*& destination, lua::userdata_block* userdata, void* data)
+static void store_full_userdata(T*& destination, lua::userdata_block* userdata, void* data)
 {
+    if (!userdata) {
+        destination = nullptr;
+        return;
+    }
     // Get a pointer to the userdata's value.
     switch (userdata->storage) {
     case lua::userdata_storage::value:
@@ -509,8 +517,12 @@ static void inner_store_userdata(T*& destination, lua::userdata_block* userdata,
 
 template <lua::userdata_storage storage, class T,
     typename std::enable_if<storage == lua::userdata_storage::shared_ptr, int>::type = 0>
-static void inner_store_userdata(T& destination, lua::userdata_block* userdata, void* data)
+static void store_full_userdata(T& destination, lua::userdata_block* userdata, void* data)
 {
+    if (!userdata) {
+        destination.reset();
+        return;
+    }
     // Assign to the shared pointer; fail otherwise.
     switch (userdata->storage) {
     case lua::userdata_storage::shared_ptr:
@@ -524,16 +536,44 @@ static void inner_store_userdata(T& destination, lua::userdata_block* userdata, 
     }
 }
 
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::pointer, int>::type = 0>
+static void store_light_userdata(T*& destination, void* data)
+{
+    destination = static_cast<T*>(data);
+}
+
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::value, int>::type = 0>
+static void store_light_userdata(T& destination, void* data)
+{
+    destination = *static_cast<T*>(data);
+}
+
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::shared_ptr, int>::type = 0>
+static void store_light_userdata(std::shared_ptr<T>& destination, void* data)
+{
+    destination = *static_cast<std::shared_ptr<T>*>(data);
+}
+
 template <lua::userdata_storage storage, class T>
 static void store_userdata(T& destination, const lua::index& source)
 {
-    // Get a userdata value and set up the parameters for the inner procedure.
-    auto block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
-    inner_store_userdata<storage>(
-        destination,
-        reinterpret_cast<lua::userdata_block*>(block),
-        block + sizeof(lua::userdata_block)
-    );
+    if (lua_islightuserdata(source.state(), source.pos())) {
+        store_light_userdata<storage>(
+            destination,
+            lua_touserdata(source.state(), source.pos())
+        );
+    } else {
+        // Get a userdata value and set up the parameters for the inner procedure.
+        auto block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
+        store_full_userdata<storage>(
+            destination,
+            reinterpret_cast<lua::userdata_block*>(block),
+            block + sizeof(lua::userdata_block)
+        );
+    }
 }
 
 template <typename T>
