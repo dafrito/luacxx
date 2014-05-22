@@ -1,12 +1,12 @@
 check_PROGRAMS = runtest
 TESTS = $(check_PROGRAMS)
 
-runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) @LUA_INCLUDE@ -I$(top_srcdir)/src \
+runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ -I$(top_srcdir)/src \
 	@BOOST_CPPFLAGS@ \
 	-DBOOST_TEST_DYN_LINK \
 	-DLUA_DIR=\"$(srcdir)/lua/\"
 
-runtest_LDADD = ../libluacxx.la $(QT_LIBS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
+runtest_LDADD = ../libluacxx.la $(QT_LIBS) $(GIO_CXXFLAGS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 runtest_SOURCES = \
 	core.cpp \

@@ -761,3 +761,22 @@ BOOST_AUTO_TEST_CASE(directory_module_loader)
 
     BOOST_CHECK_EQUAL(lua::call<int>(env["bar"], 2), 42);
 }
+
+#ifdef HAVE_GTK
+
+#include "gtk/require.hpp"
+
+BOOST_AUTO_TEST_CASE(girepository)
+{
+    auto env = lua::create();
+
+    env["package"]["cpath"] = "../.libs/lib?.so";
+    lua::run_string(env, "require 'luacxx.gtk'");
+    lua::run_string(env, "gtk = require 'Gtk'");
+    lua::run_string(env, "return gtk.rgb_to_hsv");
+    lua::run_string(env, "return gtk.Application");
+    lua::run_string(env, "return gtk.Application.new()");
+    lua::run_string(env, "app = gtk.Application.new();");
+}
+
+#endif

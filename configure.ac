@@ -47,5 +47,17 @@ AX_HAVE_QT_MOC
 QT_CXXFLAGS="$QT_CXXFLAGS -fPIC"
 AM_CONDITIONAL([BUILD_QT], [test x$HAVE_QT_CORE = xyes])
 
+# Check for Gtk
+AC_SUBST(GIO_CXXFLAGS)
+AC_SUBST(GIO_LIB)
+if pkg-config --print-errors --exists 'gobject-introspection-no-export-1.0'; then
+    GIO_CXXFLAGS=`pkg-config --cflags gobject-introspection-no-export-1.0`
+    GIO_LIB=`pkg-config --libs gobject-introspection-no-export-1.0`
+    GIO_CXXFLAGS="$GIO_CXXFLAGS -DHAVE_GTK"
+    AM_CONDITIONAL([BUILD_GTK], [true])
+else
+    AM_CONDITIONAL([BUILD_GTK], [false])
+fi
+
 AC_CONFIG_FILES([luacxx.m4 luacxx.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
 AC_OUTPUT

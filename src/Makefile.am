@@ -57,3 +57,13 @@ mostlyclean-local:
 .PHONY: mostlyclean-local
 
 endif
+
+if BUILD_GTK
+
+libluacxx_la_SOURCES += \
+	gtk/GIBaseInfo.cpp \
+	gtk/GObject.cpp \
+	gtk/GIRepository.cpp \
+	gtk/require.cpp
+
+endif

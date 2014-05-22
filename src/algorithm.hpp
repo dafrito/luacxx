@@ -9,6 +9,8 @@
 #include <vector>
 #include <sstream>
 
+#include <iostream>
+
 namespace lua {
 
 std::string traceback(lua::state* const state, const int toplevel);
@@ -115,6 +117,7 @@ void insert(Table destination, Value value)
     lua::assert_type("lua::table::insert", lua::type::table, table);
     lua::push(table.state(), lua::table::length(table) + 1);
     lua::push(table.state(), value);
+    std::cerr << lua::dump(table.state()) << std::endl;
 
     lua_settable(table.state(), table.pos());
 
