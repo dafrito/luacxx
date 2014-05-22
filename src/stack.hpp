@@ -231,6 +231,13 @@ struct Metatable<void>
     }
 };
 
+template <class T>
+inline void call_destructor(T& value)
+{
+    // Isolate the destructor to maximize clarity
+    value.~T();
+}
+
 // Destroy the userdata's value, specified by the template parameter
 template <class Stored>
 int destroy(lua::state* const state)
@@ -243,7 +250,7 @@ int destroy(lua::state* const state)
     {
         auto value = reinterpret_cast<Stored*>(block + sizeof(lua::userdata_block));
         if (value != nullptr) {
-            value->~Stored();
+            call_destructor(*value);
         }
         break;
     }
@@ -255,7 +262,7 @@ int destroy(lua::state* const state)
     case userdata_storage::shared_ptr:
         auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block + sizeof(lua::userdata_block));
         if (value != nullptr) {
-            value->~shared_ptr<Stored>();
+            call_destructor(*value);
         }
         break;
     }
