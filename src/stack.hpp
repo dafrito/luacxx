@@ -205,7 +205,7 @@ struct Metatable
     //
     // Return true if the metatable can be cached for future values (requires
     // the name to be specified).
-    static bool metatable(const lua::index& table, T* value)
+    static bool metatable(const lua::index& mt, T* value)
     {
         #ifdef HAVE_QT_CORE
         // If it's a QObject, then use that metatable
@@ -213,7 +213,7 @@ struct Metatable
             std::is_base_of<QObject, T>::value,
             QObject,
             void
-        >::type>::metatable(table, value);
+        >::type>::metatable(mt, value);
         #else
         return false;
         #endif
