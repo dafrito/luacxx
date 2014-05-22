@@ -327,6 +327,8 @@ BOOST_AUTO_TEST_CASE(pointer_userdata)
     env["receiveConstPtr"] = receiveConstPtr;
     BOOST_CHECK_EQUAL(42, lua::run_string<int>(env, "return receiveConstPtr(counter)"));
     counter.check<std::runtime_error>(42);
+
+    delete point;
 }
 
 template <class T>
