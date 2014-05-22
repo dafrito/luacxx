@@ -1,9 +1,9 @@
 #ifndef LUA_CXX_TYPE_QSTRING_HEADER
 #define LUA_CXX_TYPE_QSTRING_HEADER
 
-#include <QString>
-
 #include "type/standard.hpp"
+
+#include <QString>
 
 namespace lua {
 

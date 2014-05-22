@@ -1,13 +1,14 @@
 #ifndef LUA_CXX_QOBJECTSLOT_HEADER
 #define LUA_CXX_QOBJECTSLOT_HEADER
 
+#include "reference.hpp"
+
 #include <QObject>
 #include <QMetaObject>
 #include <QMetaMethod>
+
 #include <memory>
 #include <unordered_set>
-
-#include "reference.hpp"
 
 namespace lua {
 

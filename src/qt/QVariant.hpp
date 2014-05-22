@@ -1,12 +1,12 @@
 #ifndef LUA_CXX_TYPE_QVARIANT_HEADER
 #define LUA_CXX_TYPE_QVARIANT_HEADER
 
-#include <functional>
-#include <unordered_map>
+#include "stack.hpp"
 
 #include <QVariant>
 
-#include "stack.hpp"
+#include <functional>
+#include <unordered_map>
 
 namespace lua {
 

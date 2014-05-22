@@ -21,9 +21,12 @@ nobase_pkginclude_HEADERS = \
 	module/ModuleLoader.hpp \
 	qt/QObject.hpp \
 	qt/QObjectSlot.hpp \
-	qt/type/QChar.hpp \
-	qt/type/QString.hpp \
-	qt/type/QVariant.hpp \
+	qt/QChar.hpp \
+	qt/QString.hpp \
+	qt/QVariant.hpp \
+	gtk/GObject.hpp \
+	gtk/require.hpp \
+	gtk/GIBaseInfo.hpp \
 	gtk/GIRepository.hpp
 
 libluacxx_la_SOURCES = \
@@ -36,7 +39,7 @@ if BUILD_QT
 
 libluacxx_la_SOURCES += \
 	module/DirectoryModuleLoader.cpp \
-	qt/type/QVariant.cpp \
+	qt/QVariant.cpp \
 	qt/QObject.cpp \
 	qt/QObjectSlot.cpp
 

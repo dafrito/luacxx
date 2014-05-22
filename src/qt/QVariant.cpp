@@ -1,8 +1,8 @@
-#include "qt/type/QVariant.hpp"
-#include "qt/type/QChar.hpp"
-#include "qt/type/QString.hpp"
-#include "algorithm.hpp"
+#include "qt/QVariant.hpp"
 
+#include "qt/QChar.hpp"
+#include "qt/QString.hpp"
+#include "algorithm.hpp"
 #include "type/standard.hpp"
 #include "type/numeric.hpp"
 

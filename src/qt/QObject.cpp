@@ -1,6 +1,6 @@
 #include "qt/QObject.hpp"
 #include "qt/QObjectSlot.hpp"
-#include "qt/type/QVariant.hpp"
+#include "qt/QVariant.hpp"
 
 #include <QObject>
 #include <QMetaObject>

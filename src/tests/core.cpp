@@ -14,9 +14,9 @@
 
 #include <memory>
 
-#include "qt/type/QString.hpp"
-#include "qt/type/QChar.hpp"
-#include "qt/type/QVariant.hpp"
+#include "qt/QString.hpp"
+#include "qt/QChar.hpp"
+#include "qt/QVariant.hpp"
 #include "qt/QObject.hpp"
 
 #include "module/DirectoryModuleLoader.hpp"

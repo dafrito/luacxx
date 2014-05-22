@@ -1,5 +1,5 @@
-#include "QObjectSlot.hpp"
-#include "type/QVariant.hpp"
+#include "qt/QObjectSlot.hpp"
+#include "qt/QVariant.hpp"
 
 #include "algorithm.hpp"
 
