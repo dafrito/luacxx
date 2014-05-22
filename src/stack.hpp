@@ -315,13 +315,14 @@ char* construct_userdata(lua::state* const state, lua::userdata_storage storage)
 template <class Value, lua::userdata_storage storage = lua::userdata_storage::value>
 struct Construct
 {
-    static void construct(lua::state* const state, const Value& original)
+    template <class... Rest>
+    static void construct(lua::state* const state, Rest... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value>(state, storage);
 
         // Create a value in-place
-        auto value = new (block) Value(original);
+        auto value = new (block) Value(args...);
 
         // Get the metatable for this type and set it for our userdata.
         lua::push_metatable<Value, Value>(state, value);
@@ -332,13 +333,14 @@ struct Construct
 template <class Value>
 struct Construct<Value, lua::userdata_storage::pointer>
 {
-    static void construct(lua::state* const state, Value* original)
+    template <class... Rest>
+    static void construct(lua::state* const state, Rest... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value*>(state, lua::userdata_storage::pointer);
 
         // Create a value in-place
-        auto value = new (block) Value*(original);
+        auto value = new (block) Value*(args...);
 
         // Get the metatable for this type and set it for our userdata.
         lua::push_metatable<Value, Value*>(state, *value);
@@ -349,13 +351,14 @@ struct Construct<Value, lua::userdata_storage::pointer>
 template <class Value>
 struct Construct<Value, lua::userdata_storage::shared_ptr>
 {
-    static void construct(lua::state* const state, const std::shared_ptr<Value>& original)
+    template <class... Rest>
+    static void construct(lua::state* const state, Rest... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<std::shared_ptr<Value>>(state, lua::userdata_storage::shared_ptr);
 
         // Create a value in-place
-        auto value = new (block) std::shared_ptr<Value>(original);
+        auto value = new (block) std::shared_ptr<Value>(args...);
 
         // Get the metatable for this type and set it for our userdata.
         lua::push_metatable<Value, std::shared_ptr<Value>>(state, value->get());
@@ -649,6 +652,13 @@ T lua::index::get() const
 {
     return lua::get<T>(*this);
 };
+
+template <class T, class... Args>
+T* make(lua::state* const state, Args... args)
+{
+    Construct<T>::construct(state, args...);
+    return lua::get<T*>(state, -1);
+}
 
 } // namespace lua
 
