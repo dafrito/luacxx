@@ -716,7 +716,7 @@ BOOST_AUTO_TEST_CASE(qobject_methods)
     env["point"] = &point;
     BOOST_CHECK_EQUAL(env["point"].type().name(), "userdata");
 
-    BOOST_CHECK_EQUAL(lua::run_string<int>(env, "print(type(point.getX)); return point:getX()"), 2);
+    BOOST_CHECK_EQUAL(lua::run_string<int>(env, "return point:getX()"), 2);
 
     lua::run_string(env, "point:setX(point:getX() * 2)");
     BOOST_CHECK_EQUAL(point.getX(), 4);
