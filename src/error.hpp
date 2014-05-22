@@ -9,7 +9,7 @@ namespace lua {
 class error : public std::runtime_error
 {
     std::string _what;
-    int _traceback;
+    unsigned int _traceback;
 
 public:
     error(const std::string& what) :
