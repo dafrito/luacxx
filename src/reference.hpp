@@ -15,19 +15,29 @@ class reference
     int _id;
 
 public:
+    reference(lua::state* const $state) :
+        _state($state)
+    {
+        // No initial value, so fake it with nil
+        lua_pushlightuserdata(state(), NIL_REFERENCE);
+        _id = luaL_ref(state(), LUA_REGISTRYINDEX);
+
+        lua_pushnil(state());
+        lua_rawseti(state(), LUA_REGISTRYINDEX, _id);
+    }
+
     reference(const lua::index& value) :
         _state(value.state())
     {
-        if (state() == nullptr) {
-            throw std::runtime_error("Reference state must not be null");
-        }
         if (value.type().nil()) {
+            // No initial value, so fake it with nil
             lua_pushlightuserdata(state(), NIL_REFERENCE);
             _id = luaL_ref(state(), LUA_REGISTRYINDEX);
 
             lua_pushnil(state());
             lua_rawseti(value.state(), LUA_REGISTRYINDEX, _id);
         } else {
+            // The index refers to a non-nil value, so create a reference directly
             lua_pushvalue(state(), value.pos());
             _id = luaL_ref(state(), LUA_REGISTRYINDEX);
         }
