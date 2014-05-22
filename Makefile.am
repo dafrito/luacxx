@@ -21,6 +21,9 @@ debug: $(TESTS)
 valgrind:
 	cd src && valgrind -v --leak-check=full --trace-children=yes luacxx
 
+lua:
+	LUA_CPATH='./src/.libs/lib?.so' lua
+
 # This is a common typo for me
 cehck: check
 .PHONY: cehck
