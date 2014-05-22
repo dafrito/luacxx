@@ -236,10 +236,31 @@ template <class Stored>
 int destroy(lua::state* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
-    auto value = reinterpret_cast<Stored*>(block + sizeof(lua::userdata_block));
-    if (value != nullptr) {
-        value->~Stored();
+    auto userdata = reinterpret_cast<lua::userdata_block*>(block);
+
+    switch (userdata->storage) {
+    case userdata_storage::value:
+    {
+        auto value = reinterpret_cast<Stored*>(block + sizeof(lua::userdata_block));
+        if (value != nullptr) {
+            value->~Stored();
+        }
+        break;
     }
+    case userdata_storage::pointer:
+    {
+        // Don't do anything; pointers are plain data
+        break;
+    }
+    case userdata_storage::shared_ptr:
+        auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block + sizeof(lua::userdata_block));
+        if (value != nullptr) {
+            value->~shared_ptr<Stored>();
+        }
+        break;
+    }
+
+
     return 0;
 }
 
