@@ -387,6 +387,10 @@ struct Push<T*>
 {
     static void push(lua::state* const state, T* value)
     {
+        if (value == nullptr) {
+            lua_pushnil(state);
+            return;
+        }
         // Pointers are pushed by value, with their underlying type used as
         // the object exposed to Lua.
         Construct<T, lua::userdata_storage::pointer>::construct(state, value);
@@ -398,6 +402,10 @@ struct Push<std::shared_ptr<T>>
 {
     static void push(lua::state* const state, const std::shared_ptr<T>& value)
     {
+        if (!value) {
+            lua_pushnil(state);
+            return;
+        }
         // Shared pointers are pushed by value, but their metatable is treated
         // the same as pointers.
         Construct<T, lua::userdata_storage::shared_ptr>::construct(state, value);
