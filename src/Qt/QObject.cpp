@@ -1,28 +1,42 @@
-#include "qt/QObject.hpp"
-#include "qt/QObjectSlot.hpp"
-#include "qt/QVariant.hpp"
+#include "Qt/QObject.hpp"
+#include "Qt/QObjectSlot.hpp"
+#include "Qt/QVariant.hpp"
 
 #include <QObject>
 #include <QMetaObject>
 #include <QMetaMethod>
 
-#include "algorithm.hpp"
-#include "reference.hpp"
-#include "type/function.hpp"
+#include "../algorithm.hpp"
+#include "../reference.hpp"
+#include "../type/function.hpp"
 
 #include <cassert>
 #include <functional>
 
 namespace {
-    int qobject_connect(lua::state* const state);
+    int QObject_connect(lua::state* const state);
     QString getSignature(const QMetaMethod& method);
 }
 
-void lua::qobject_metatable(const lua::index& mt)
+void lua::QObject_metatable(const lua::index& mt)
 {
     mt["__index"] = lua::function([](lua::state* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         auto name = lua::get<const char*>(state, 2);
+
+        // Do we have a cached value?
+        lua_getmetatable(state, 1);
+        lua::push(state, name);
+        lua_rawget(state, -2);
+        if (lua_type(state, -1) != LUA_TNIL) {
+            // We do. Return it directly.
+            lua_replace(state, 1);
+            lua_settop(state, 1);
+            return 1;
+        } else {
+            // Nope, so clean up and move on.
+            lua_pop(state, 2);
+        }
 
         // Properties
         QVariant propValue = obj->property(name);
@@ -33,7 +47,7 @@ void lua::qobject_metatable(const lua::index& mt)
 
         // Slot connections
         if (QString(name) == "connect") {
-            lua::push(state, qobject_connect);
+            lua::push(state, QObject_connect);
             return 1;
         }
 
@@ -148,12 +162,12 @@ QString getSignature(const QMetaMethod& method)
     #endif
 }
 
-int qobject_connect(lua::state* const state)
+int QObject_connect(lua::state* const state)
 {
     auto obj = lua::get<QObject*>(state, 1);
     auto name = lua::get<std::string>(state, 2);
     lua::index callable(state, 3);
-    lua::assert_type("lua::qobject_connect", lua::type::function, lua::index(state, 3));
+    lua::assert_type("lua::QObject_connect", lua::type::function, lua::index(state, 3));
 
     const QMetaObject* const metaObject = obj->metaObject();
 

@@ -3,7 +3,7 @@
 
 #include <QChar>
 
-#include "type/standard.hpp"
+#include "../type/standard.hpp"
 #include "QString.hpp"
 
 namespace lua {

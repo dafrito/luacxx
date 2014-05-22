@@ -4,8 +4,8 @@
 #include <functional>
 #include <sstream>
 
-#include "algorithm.hpp"
-#include "stack.hpp"
+#include "../algorithm.hpp"
+#include "../stack.hpp"
 
 // All this stuff involves calling C++ from Lua. This means pushing C++
 // functions into Lua, and creating the infrastructure to invoke them reliably.

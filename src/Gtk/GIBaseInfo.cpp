@@ -1,6 +1,6 @@
 #include "GIBaseInfo.hpp"
 #include "type/function.hpp"
-#include "gtk/GObject.hpp"
+#include "Gtk/GObject.hpp"
 #include <sstream>
 
 std::string lua::GIInfoType_tostring(GIInfoType info_type)

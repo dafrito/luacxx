@@ -3,13 +3,13 @@
 
 #include <QObject>
 
-#include "stack.hpp"
-#include "type/standard.hpp"
-#include "algorithm.hpp"
+#include "../stack.hpp"
+#include "../algorithm.hpp"
+#include "../type/standard.hpp"
 
 namespace lua {
 
-void qobject_metatable(const lua::index& mt);
+void QObject_metatable(const lua::index& mt);
 
 template <>
 struct Metatable<QObject>
@@ -18,7 +18,7 @@ struct Metatable<QObject>
 
     static bool metatable(const lua::index& mt, QObject* const)
     {
-        lua::qobject_metatable(mt);
+        lua::QObject_metatable(mt);
         return true;
     }
 };

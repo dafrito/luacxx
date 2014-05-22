@@ -1,7 +1,7 @@
-#include "qt/QObjectSlot.hpp"
-#include "qt/QVariant.hpp"
+#include "Qt/QObjectSlot.hpp"
+#include "Qt/QVariant.hpp"
 
-#include "algorithm.hpp"
+#include "../algorithm.hpp"
 
 #include <iostream>
 

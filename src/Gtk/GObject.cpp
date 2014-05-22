@@ -1,7 +1,7 @@
 #include "GObject.hpp"
 #include "type/function.hpp"
 
-#include "gtk/GIBaseInfo.hpp"
+#include "Gtk/GIBaseInfo.hpp"
 
 #include <girepository.h>
 

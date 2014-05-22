@@ -5,6 +5,7 @@ libluacxx_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
+	config.hpp \
 	algorithm.hpp \
 	stack.hpp \
 	error.hpp \
@@ -19,15 +20,15 @@ nobase_pkginclude_HEADERS = \
 	type/standard.hpp \
 	module/DirectoryModuleLoader.hpp \
 	module/ModuleLoader.hpp \
-	qt/QObject.hpp \
-	qt/QObjectSlot.hpp \
-	qt/QChar.hpp \
-	qt/QString.hpp \
-	qt/QVariant.hpp \
-	gtk/GObject.hpp \
-	gtk/require.hpp \
-	gtk/GIBaseInfo.hpp \
-	gtk/GIRepository.hpp
+	Qt/QObject.hpp \
+	Qt/QObjectSlot.hpp \
+	Qt/QChar.hpp \
+	Qt/QString.hpp \
+	Qt/QVariant.hpp \
+	Gtk/GObject.hpp \
+	Gtk/require.hpp \
+	Gtk/GIBaseInfo.hpp \
+	Gtk/GIRepository.hpp
 
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
@@ -39,31 +40,18 @@ if BUILD_QT
 
 libluacxx_la_SOURCES += \
 	module/DirectoryModuleLoader.cpp \
-	qt/QVariant.cpp \
-	qt/QObject.cpp \
-	qt/QObjectSlot.cpp
-
-# moc-generated source files
-#libluacxx_la_MOC_SOURCES = \
-#	qt/moc_QObjectObserver.cpp
-
-nodist_libluacxx_la_SOURCES = $(libluacxx_la_MOC_SOURCES)
-
-qt/moc_%.cpp: $(top_srcdir)/src/%.hpp
-	@QT_MOC@ -o $@ $<
-
-mostlyclean-local:
-	rm -f $(libluacxx_la_MOC_SOURCES)
-.PHONY: mostlyclean-local
+	Qt/QVariant.cpp \
+	Qt/QObject.cpp \
+	Qt/QObjectSlot.cpp
 
 endif
 
 if BUILD_GTK
 
 libluacxx_la_SOURCES += \
-	gtk/GIBaseInfo.cpp \
-	gtk/GObject.cpp \
-	gtk/GIRepository.cpp \
-	gtk/require.cpp
+	Gtk/GIBaseInfo.cpp \
+	Gtk/GObject.cpp \
+	Gtk/GIRepository.cpp \
+	Gtk/require.cpp
 
 endif

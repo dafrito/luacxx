@@ -14,10 +14,10 @@
 
 #include <memory>
 
-#include "qt/QString.hpp"
-#include "qt/QChar.hpp"
-#include "qt/QVariant.hpp"
-#include "qt/QObject.hpp"
+#include "Qt/QString.hpp"
+#include "Qt/QChar.hpp"
+#include "Qt/QVariant.hpp"
+#include "Qt/QObject.hpp"
 
 #include "module/DirectoryModuleLoader.hpp"
 #include <QDir>
@@ -766,14 +766,14 @@ BOOST_AUTO_TEST_CASE(directory_module_loader)
 
 #ifdef HAVE_GTK
 
-#include "gtk/require.hpp"
+#include "Gtk/require.hpp"
 
 BOOST_AUTO_TEST_CASE(girepository)
 {
     auto env = lua::create();
 
     env["package"]["cpath"] = "../.libs/lib?.so";
-    lua::run_string(env, "require 'luacxx.gtk'");
+    lua::run_string(env, "require 'luacxx.Gtk'");
     lua::run_string(env, "gtk = require 'Gtk'");
     lua::run_string(env, "return gtk.rgb_to_hsv");
     lua::run_string(env, "return gtk.Application");

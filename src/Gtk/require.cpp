@@ -1,6 +1,6 @@
-#include "gtk/require.hpp"
-#include "gtk/GIBaseInfo.hpp"
-#include "gtk/GIRepository.hpp"
+#include "Gtk/require.hpp"
+#include "Gtk/GIBaseInfo.hpp"
+#include "Gtk/GIRepository.hpp"
 
 #include "thread.hpp"
 #include "algorithm.hpp"
@@ -121,7 +121,7 @@ int gi_get_loaded_namespaces(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_gtk(lua::state* const state)
+int luaopen_luacxx_Gtk(lua::state* const state)
 {
     lua::table::insert(lua::global(state, "package")["searchers"], gi_search);
     return 0;

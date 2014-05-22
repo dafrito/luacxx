@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QOBJECTMONITOR_HEADER
 #define LUA_CXX_QOBJECTMONITOR_HEADER
 
-#include "stack.hpp"
+#include "../stack.hpp"
 
 #include <QObject>
 

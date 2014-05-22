@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_TYPE_QSTRING_HEADER
 #define LUA_CXX_TYPE_QSTRING_HEADER
 
-#include "type/standard.hpp"
+#include "../type/standard.hpp"
 
 #include <QString>
 

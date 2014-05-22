@@ -1,10 +1,10 @@
-#include "qt/QVariant.hpp"
+#include "Qt/QVariant.hpp"
 
-#include "qt/QChar.hpp"
-#include "qt/QString.hpp"
-#include "algorithm.hpp"
-#include "type/standard.hpp"
-#include "type/numeric.hpp"
+#include "Qt/QChar.hpp"
+#include "Qt/QString.hpp"
+#include "../algorithm.hpp"
+#include "../type/standard.hpp"
+#include "../type/numeric.hpp"
 
 #include <unordered_map>
 #include <QStringList>
