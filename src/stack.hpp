@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_INDEX_HEADER
-#define LUA_CXX_INDEX_HEADER
+#ifndef LUACXX_STACK_HEADER
+#define LUACXX_STACK_HEADER
 
 #include "type.hpp"
 #include "error.hpp"
@@ -14,11 +14,348 @@
 
 class QObject;
 
+/*
+
+=head1 NAME
+
+stack.hpp - core API
+
+=head1 SYNOPSIS
+
+    #include <luacxx/stack.hpp>
+
+    struct Sum {
+        int value;
+
+        Sum(int value) :
+            value(value)
+        {
+        }
+    };
+
+    // Create a new Sum for Lua
+    int sum_new(lua::state* const state)
+    {
+        int initial = 0;
+        if (lua_gettop(state) > 1) {
+            initial = lua_tointeger(state, 2);
+        } else if (lua_gettop(state) == 0) {
+            throw lua::error("Sum metatable must be provided");
+        }
+        lua::make<Sum>(state, initial);
+
+        // Use the Sum table as our metatable
+        lua_pushvalue(state, 1);
+        lua_setmetatable(state, -2);
+
+        // Return the newly created Sum
+        lua_replace(state, 1);
+        lua_settop(state, 1);
+        return 1;
+    }
+
+    // Add all numbers to the given sum
+    int sum_add(lua::state* const state)
+    {
+        // lua::get<T> returns a T
+        auto sum = lua::get<Sum*>(state, 1);
+
+        // Add each value to the sum
+        for (int i = 2; i <= lua_gettop(state); ++i) {
+            sum->value += lua_tointeger(state, i);
+        }
+
+        return 0;
+    }
+
+    // Get the Sum's value
+    int sum_get(lua::state* const state)
+    {
+        auto sum = lua::get<Sum*>(state, 1);
+
+        // Return the value
+        lus_settop(state, 0);
+        lua_pushinteger(state, sum->value);
+        return 1;
+    }
+
+    // Export a module named "Sum" that Lua can require
+    int luaopen_Sum(lua::state* const state)
+    {
+        lua::thread env(state);
+
+        env["Sum"] = lua::value::table;
+
+        // Attach methods
+        env["Sum"]["New"] = sum_new;
+        env["Sum"]["Get"] = sum_get;
+        env["Sum"]["Add"] = sum_add;
+
+        // Don't return anything
+        return 0;
+    }
+
+    // Meanwhile, in Lua...
+
+    require "Sum";
+
+    local sum = Sum:New(2);
+    sum:Add(3);
+    assert(sum:Get() == 5);
+
+=head1 DESCRIPTION
+
+This document will detail both this headers's API as well as the relevant
+Lua C API where necessary, as knowledge of both will better able you to
+decide between their leaner, but less idiomatic, API or this library's
+more powerful, but more complex, extensions.
+
+=head1 Creating and initializing Lua environments
+
+A Lua environment's state is accessed through a lua_State value, and all
+Lua C API functions require you to give a valid pointer to one. However,
+lua_State's member data is private: you must use the Lua C API to make
+changes. Libraries like this one call into the Lua C API, merely
+providing a diferent facade over this common subset of behavior.
+
+*/
+
 namespace lua {
 
 typedef lua_State state;
 
-// Simulates a direct link to a named Lua value
+}
+
+/*
+
+The following methods deal with creating and initializing lua::state
+objects:
+
+=head4 lua::state* luaL_newstate();
+
+Create a fresh new state.
+
+This is the general-purpose function. Internally, it just calls lua_newstate
+with a default allocator. It doesn't install the standard libraries, though -
+you will need to use luaL_openlibs(state) for that.
+
+=head4 lua::state* lua_newstate(lua_Alloc allocator, void* allocator_data);
+
+Create a new lua::state* with a custom allocator (and associated pointer to
+user-defined memory). The allocator is used for all runtime memory allocation.
+The default allocator behaves like the following function:
+
+    void* allocate(
+        void* allocator_data,
+        void* block,
+        size_t orig_size,
+        size_t size)
+    {
+        if (size == 0) {
+            // Requested size is zero, so destroy
+            free(block);
+            return nullptr;
+        }
+
+        // Reallocate memory, or allocate anew if block == nullptr.
+        return realloc(block, size);
+    }
+
+This function is called for all new allocations, all reallocations, and all
+frees. An allocator is global across all threads for this state, so all Lua
+threads share the same memory pool.
+
+I feel compelled to warn you that creating a custom allocator is an advanced
+topic, but the process is actually straight-forward.  The difficulty is finding
+a need to do so.
+
+=head4 lua::state* lua_newthread(lua::state*);
+
+Creates and returns a new Lua thread that uses the same global environment as
+the given thread. The thread is also pushed onto the stack, as it is owned by
+the given state and therefore subject to garbage collection.
+
+To appreciate the power and limitations of Lua threads, examine the coroutine
+library, which offers ways to perform collaborative multithreading within Lua.
+While the Lua facility is rather limited, it provides enough of a foundation
+for real thread support written on the C side. As a result, it is worth
+understanding if you're writing code that would benefit from multithreading.
+
+=head4 void luaL_openlibs(lua::state*);
+
+Load all standard libraries into the state's environment. The Lua 5.2 standard
+library consists of the following modules:
+
+=over 4
+
+=item B<(base)> - globals like print, tonumber, setmetatable, error, assert, ...
+
+=item B<package> - require, package.searchers, ...
+
+=item B<coroutine> - coroutine.create, coroutine.yield, coroutine.resume, ...
+
+=item B<string> - string.gsub, string.char, string.lower, ...
+
+=item B<table> - table.insert, table.pack, table.unpack, ...
+
+=item B<math> - math.sin, math.abs, math.floor, math.pi, ...
+
+=item B<bit32> - bitwise operators like bit32.bor, bit32.lshift, ...
+
+=item B<io> - io.open(filename), file:read, file:seek, ...
+
+=item B<os> - os.date(strftime_pattern), os.execute(command), ...
+
+=item B<debug> - debug.debug(), debug.traceback(), ...
+
+=back
+
+The package module can be used to require() the other libraries, except for
+base, which is not accessible using require(). All of these modules correspond
+to a luaopen_* function included with Lua (e.g. luaopen_io) which is
+accessible as an exported C function.
+
+=head4 void lua_close(state)
+
+Gracefully terminate the Lua state, releasing all dynamic memory and calling
+garbage collection metamethods. If this function is used on a Lua thread, that
+thread's owning state (and all of its threads) will be destroyed. This
+function does not appear to be safe to call from a C function called from Lua.
+
+=head1 Accessing, modifying, and removing Lua stack values
+
+Most of Lua's C API is concerned with pushing and retrieving values from the
+Lua stack. The stack, which actually performs more like a vector, is the space
+used by C to stage values for further manipulation by Lua. I must mention that
+Lua itself uses the stack as well for common tasks, and only a much smaller
+subset works with Lua's internal structures. As a result, this allows code
+written in C to interact with Lua code as quickly as code written in Lua.
+
+Due to C lacking function overloading, much of Lua's API is plainly inferior
+to a version written specifically for C++ users. C++ templates can be used to
+provide custom specializations for new types while retaining essentially all
+of the performance of the C functions.
+
+=head4 std::string lua::dump(state)
+
+Returns a string that describes the current state of the stack. This can be
+useful for debugging:
+
+    #include <luacxx/algorithm.hpp>
+    #include <iostream>
+
+    // Print the stack to stderr
+    std::cerr << lua::dump(state) << std::endl;
+
+=head4 int lua_absindex(state, int index)
+
+Returns the positive integer that represents the given index. Non-absolute
+indices are given as negative numbers, with -1 representing the topmost value,
+-2 representing the value underneath that, and so forth. Zero is never a valid
+index.
+
+Some indices are not absolute or relative. Such implements are called
+pseudo-indices by Lua, but they behave like stack indices that are permanently
+available. Use them in place of indices like they are enumeration constants.
+
+=head4 int lua_upvalueindex(int offset)
+
+Returns the stack index that corresponds to the upvalue at the specified
+offset. Upvalues are used to associate arbitrary Lua data with C functions,
+but are rare to actually need in practice.
+
+=head4 LUA_REGISTRYINDEX
+
+The pseudo-index that corresponds to the registry, a table reserved for use
+solely by C. The registry is better explained along with lua::reference, so
+I will omit further discussion here.
+
+=head4 int lua_gettop(state)
+
+Returns the number of values currently on the stack.
+
+    // Assuming the state isn't empty
+    assert(lua_absindex(state, -1) == lua_gettop(state));
+
+=head4 void lua_settop(state, top)
+
+Sets the index of the topmost value. This has the effect of quickly
+clearing off unwanted values.
+
+    // Blow away all stack values
+    lua_settop(state, 0);
+
+=head4 void lua_replace(state, index)
+
+Replaces the value at the given target index with the topmost value, removing the topmost value.
+
+    lua_pushstring(state, "A");
+    lua_pushstring(state, "B");
+    lua_pushstring(state, "C");
+    // ["A", "B", "C"]
+
+    // Replace "A" with "C"
+    lua_replace(state, 1);
+
+    // Stack is now ["C", "B"]
+
+=head4 void lua_remove(state, index)
+
+Removes the value at the specified index, shifting all values above it downward.
+
+    lua_pushstring(state, "A");
+    lua_pushstring(state, "B");
+    lua_pushstring(state, "C");
+    // ["A", "B", "C"]
+
+    // Remove "B"
+    lua_replace(state, 2);
+
+    // Stack is now ["A", "C"]
+
+This function operates in linear time, which can be rather expensive when
+handling a lot of arguments. Prefer the constant-time methods like
+lua_settop(state, index), or merely incrementing an index, over this function.
+
+If you want to return a single value from a stack of unknown size, the
+following idiom works well to avoid lua_remove:
+
+    // Add "No time" to the top of this state's stack
+    lua_pushstring(state, "No time.");
+
+    // Replace the first value with the topmost one, then clear all values above it.
+    lua_replace(state, 1);
+    lua_settop(state, 1);
+    return 1;
+
+=head4 void lua_pop(state, int n)
+
+Removes n values from the top of the stack.
+
+    // Remove one value
+    lua_pop(state, 1);
+
+=head2 class lua::link<Source, Name>
+
+Plumbing for representing symbolic paths to Lua values.
+
+    // Get a symbolic link to package.searchers
+    auto searchers = lua::make_link(lua::global(state, "package"), "searchers");
+    assert(searchers.type().table());
+
+lua::link is useful solely for its operator[] overloading, which allows
+arbitrary nesting of Lua accesses to retrieve a value. Such nesting occurs
+very naturally when calling Lua, so it's very convenient to have an object
+that represents such addresses. You can use lua::make_link to quickly create a
+link; this function allows the compiler to deduce template parameters.
+
+lua::link's public API mimics that of lua::index, so refer to the
+documentation for that class for more information.
+
+*/
+
+namespace lua {
+
 template <class Source, class Name>
 class link
 {
@@ -79,7 +416,130 @@ lua::link<Source, Name> make_link(const Source& source, const Name& name)
     return lua::link<Source, Name>(source, name);
 }
 
-// Represents an absolute index in the Lua stack.
+}
+
+/*
+
+=head2 class lua::index
+
+A reference to a stack position.
+
+    #include <stack.hpp>
+
+    // Concatenate all strings together
+    int strict_concat(lua::state* const state)
+    {
+        std::stringstream full_string;
+        lua::index value(state, 1);
+
+        while (value) {
+            if (value.type() != lua::type::string) {
+                std::stringstream str;
+                str << "Argument at index "<< value.pos();
+                str << " must be a string, but a ";
+                str << value.type().name() << " was given.";
+
+                throw lua::error(str.str());
+            }
+
+            // Add this value to the working total
+            full_string << lua_tostring(value.state(), value.pos());
+
+            // Go to the next value
+            ++value;
+        }
+
+        // Clear the stack and push the final string
+        lua_settop(state, 0);
+        lua_pushstring(state, full_string.str().c_str());
+        return 1;
+    }
+
+lua::index is a simple class, designed to give a more object-oriented
+approach to working with stack values. This is especially useful if
+you're iterating over the stack or were given a stack value from an
+external source.  The stack value's position is absolute, so external
+changes will not cause the index's value to move. This inflexibilty
+allows the index to optimize for speed.
+
+=head4 lua::state* index.state(), int index.pos()
+
+Return the underlying data for this index.
+
+    lua_replace(index.state(), index.pos());
+
+=head4 lua::type index.type();
+
+Returns the type of the value at this index. Refer to lua::type for
+more information.
+
+    switch (index.type().get()) {
+        case lua::type::nil:
+            // Handle nil
+            break;
+        case lua::type::number:
+        case lua::type::boolean:
+        case lua::type::string:
+            // Handle primitives
+            break;
+        case lua::type::function:
+            // Handle functions
+            break;
+        default:
+            // Handle tables, userdata, and special types
+            break;
+    }
+
+=head4 operator bool(), operator++(), operator--(), ...
+
+The index behaves as a smart pointer. operator bool() will return false
+if the index is out of range of the underlying state. The index is always
+positive, so increment and decrement work as expected.
+
+    #include <luacxx/type/numeric.hpp>
+
+    int sum = 0;
+    while (index) {
+        sum += index.get<int>();
+        ++index;
+    }
+
+=head4 operator=(const T& source);
+
+Replace the value at this index's position with the given value, similar
+to lua_replace.
+
+    #include <luacxx/type/numeric.hpp>
+    #include <luacxx/type/standard.hpp>
+
+    lua_pushnil(state);
+    lua::index index(state, -1);
+    assert(0 == index.get<int>());
+
+    // ... get other_index ...
+    other_index = 42;
+    index = other_index;
+    assert(42 == index.get<int>());
+
+=head4 operator[](T name);
+
+    #include <luacxx/type/numeric.hpp>
+
+    auto id = index["id"];
+    assert(2 == id.get<int>());
+
+Creates a link using this index as a source, and the given value as the
+name. This does not modify the stack.
+
+=head4 T index.get<T>()
+
+Returns the stack value as the specified type. This method uses
+lua::get<T> internally, so refer to that method for more information.
+
+*/
+
+namespace lua {
+
 class index
 {
     lua::state* _state;
@@ -394,12 +854,6 @@ struct Construct<Value, lua::userdata_storage::shared_ptr>
     }
 };
 
-/**
- * Pushes the specified C++ value onto the Lua stack.
- *
- * Specialize this template in order to have your types supported by Luacxx's
- * algorithms.
- */
 template <class T>
 struct Push
 {
@@ -440,6 +894,38 @@ struct Push<std::shared_ptr<T>>
     }
 };
 
+/*
+
+=head2 lua::index push(state, T value, Rest... values)
+
+    #include <luacxx/type/standard.hpp>
+    #include <luacxx/type/numeric.hpp>
+
+    auto table = lua::push(state, lua::value::table);
+    table["Foo"] = 42;
+    table["Bar"] = 24;
+    assert(42 == table["Foo"].get<int>());
+
+Pushes the specified values onto the stack, and returns an index referring to
+the topmost value. Internally, lua::push just calls the Push struct, like so:
+
+    lua::Push<T>::push(state, value);
+
+Specialize the lua::Push struct if you wish for your type to be handled
+specially. For instance, the struct for lua::index looks like this:
+
+    template <>
+    struct Push<lua::index>
+    {
+        static void push(lua::state* const state, const lua::index& source)
+        {
+            // Push a copy of the value stored at source.pos()
+            lua_pushvalue(state, source.pos());
+        }
+    };
+
+*/
+
 template <class T>
 lua::index push(lua::state* const state, T value)
 {
@@ -458,6 +944,17 @@ lua::index push(lua::state* const state, T value, Rest... values)
     lua::Push<T>::push(state, value);
     return push(state, values...);
 }
+
+/*
+
+=head2 lua::index push(T value)
+
+Push a Lua object, like a lua::index, lua::global, or lua::link, onto the stack. This
+is defined as:
+
+    return lua::push(value.state(), value);
+
+*/
 
 template <class Value>
 lua::index push(Value value)
@@ -629,10 +1126,37 @@ struct Store<std::shared_ptr<T>>
 {
     static void store(std::shared_ptr<T>& destination, const lua::index& source)
     {
-        // Retrieve the useredata as a shared pointer
+        // Retrieve the userdata as a shared pointer
         store_userdata<lua::userdata_storage::shared_ptr>(destination, source);
     }
 };
+
+/*
+
+=head2 lua::store(T& destination, const lua::index& source)
+
+Store the value at the given index into the object specified by destination.
+
+    lua::push(state, 42);
+
+    int foo = 0;
+    lua::store(foo, lua::index(state, -1));
+    assert(foo == 42);
+
+Internally, this refers to the lua::Store<T> struct, so behavior can be
+specialized for new types. For instance, this is the definition for
+lua::Store<std::string>:
+
+    template <>
+    struct Store<std::string>
+    {
+        static void store(std::string& destination, const lua::index& source)
+        {
+            destination = lua::get<const char*>(source);
+        }
+    };
+
+*/
 
 template <class T>
 void store(T& destination, const lua::index& source)
@@ -647,6 +1171,20 @@ void lua::link<Source, Name>::operator>>(T& destination)
 {
     lua::store(destination, *this);
 }
+
+/*
+
+=head2 lua::index& operator>>(lua::index& source, T& destination)
+
+Stores the value at source into the value at destination. This is
+useful purely for its clarity of expression.
+
+    lua::index value(state, 1);
+
+    int foo;
+    value >> foo;
+
+*/
 
 template <class T>
 lua::index& operator>>(lua::index& source, T& destination)
@@ -693,6 +1231,17 @@ struct Get<T&>
     }
 };
 
+/*
+
+=head2 T lua::get<T>(Source source)
+
+Retrieves the value at the given source (typically just a lua::index) as
+the specified type.
+
+    int value = lua::get<int>(lua::index(state, 1));
+
+*/
+
 template <class T, class Source>
 T get(Source source)
 {
@@ -729,6 +1278,17 @@ T lua::index::get() const
     return lua::get<T>(*this);
 };
 
+/*
+
+=head2 T* lua::make<T>(state, Args... args)
+
+Create a userdata of type T on the Lua stack, calling T's constructor with the
+specified arguments.
+
+    Sum* sum = lua::make<Sum>(state, lua_tointeger(state, -1));
+
+*/
+
 template <class T, class... Args>
 T* make(lua::state* const state, Args... args)
 {
@@ -738,4 +1298,4 @@ T* make(lua::state* const state, Args... args)
 
 } // namespace lua
 
-#endif // LUA_CXX_INDEX_HEADER
+#endif // LUACXX_STACK_HEADER

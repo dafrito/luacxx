@@ -47,6 +47,7 @@ struct Push<lua::index>
 {
     static void push(lua::state* const state, const lua::index& source)
     {
+        // Push a copy of the value stored at source.pos()
         lua_pushvalue(state, source.pos());
     }
 };
