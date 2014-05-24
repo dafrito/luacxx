@@ -36,6 +36,14 @@ public:
         return _what.size() <= _traceback;
     }
 
+    const std::string message() const
+    {
+        if (!has_traceback()) {
+            return _what;
+        }
+        return _what.substr(0, _traceback);
+    }
+
     const std::string traceback() const
     {
         if (!has_traceback()) {
@@ -49,7 +57,7 @@ public:
         if (!has_traceback()) {
             _what += "\n" + traceback;
         } else {
-            _what = _what.substr(0, _traceback) + "\n" + traceback;
+            _what = message() + "\n" + traceback;
         }
     }
 };
