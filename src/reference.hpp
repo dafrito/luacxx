@@ -3,6 +3,20 @@
 
 #include "stack.hpp"
 
+/*
+
+=head1 NAME
+
+lua::reference - a slot for C to save Lua values
+
+=head1 SYNOPSIS
+
+    #include <luacxx/reference.hpp>
+
+=head1 DESCRIPTION
+
+*/
+
 namespace {
     void* NIL_REFERENCE = reinterpret_cast<void*>(0xdeaddead);
 }
@@ -11,64 +25,99 @@ namespace lua {
 
 class reference
 {
-    lua::state* const _state;
-    int _id;
+
+lua::state* const _state;
+int _id;
 
 public:
-    reference(lua::state* const $state) :
-        _state($state)
-    {
+
+/*
+
+=head4 lua::reference(state)
+
+*/
+
+reference(lua::state* const $state) :
+    _state($state)
+{
+    // No initial value, so fake it with nil
+    lua_pushlightuserdata(state(), NIL_REFERENCE);
+    _id = luaL_ref(state(), LUA_REGISTRYINDEX);
+
+    lua_pushnil(state());
+    lua_rawseti(state(), LUA_REGISTRYINDEX, _id);
+}
+
+/*
+
+=head4 lua::reference(lua::index)
+
+*/
+
+reference(const lua::index& value) :
+    _state(value.state())
+{
+    if (value.type().nil()) {
         // No initial value, so fake it with nil
         lua_pushlightuserdata(state(), NIL_REFERENCE);
         _id = luaL_ref(state(), LUA_REGISTRYINDEX);
 
         lua_pushnil(state());
-        lua_rawseti(state(), LUA_REGISTRYINDEX, _id);
+        lua_rawseti(value.state(), LUA_REGISTRYINDEX, _id);
+    } else {
+        // The index refers to a non-nil value, so create a reference directly
+        lua_pushvalue(state(), value.pos());
+        _id = luaL_ref(state(), LUA_REGISTRYINDEX);
     }
+}
 
-    reference(const lua::index& value) :
-        _state(value.state())
-    {
-        if (value.type().nil()) {
-            // No initial value, so fake it with nil
-            lua_pushlightuserdata(state(), NIL_REFERENCE);
-            _id = luaL_ref(state(), LUA_REGISTRYINDEX);
+/*
 
-            lua_pushnil(state());
-            lua_rawseti(value.state(), LUA_REGISTRYINDEX, _id);
-        } else {
-            // The index refers to a non-nil value, so create a reference directly
-            lua_pushvalue(state(), value.pos());
-            _id = luaL_ref(state(), LUA_REGISTRYINDEX);
-        }
-    }
+=head4 lua::reference(lua::state, int pos)
 
-    reference(lua::state* const state, int pos) :
-        reference(lua::index(state, pos))
-    {
-    }
+*/
 
-    lua::state* const state() const
-    {
-        return _state;
-    }
+reference(lua::state* const state, int pos) :
+    reference(lua::index(state, pos))
+{
+}
 
-    const int id() const
-    {
-        return _id;
-    }
+lua::state* const state() const
+{
+    return _state;
+}
 
-    template <class T>
-    reference& operator=(T source)
-    {
-        lua::store(*this, source);
-        return *this;
-    }
+const int id() const
+{
+    return _id;
+}
 
-    ~reference()
-    {
-        luaL_unref(state(), LUA_REGISTRYINDEX, _id);
-    }
+/*
+
+=head4 operator=(T source)
+
+*/
+
+template <class T>
+reference& operator=(T source)
+{
+    lua::store(*this, source);
+    return *this;
+}
+
+/*
+
+=head4 ~reference()
+
+Unreference this value.
+
+*/
+
+~reference()
+{
+    luaL_unref(state(), LUA_REGISTRYINDEX, _id);
+}
+
 };
 
 template <>

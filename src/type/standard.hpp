@@ -7,6 +7,86 @@
 #include <sstream>
 #include <memory>
 
+/*
+
+=head1 NAME
+
+type/standard.hpp - support for fundamental types
+
+=head1 SYNOPSIS
+
+    #include <luacxx/type/standard.hpp>
+
+=head1 DESCRIPTION
+
+This header provides support for all of the core
+Lua types, like lua::index, lua::value::*, as well
+as the Lua primitive types, like lua_Number and
+const char*.
+
+=head4 lua_pushnil(state), lua::value::nil
+
+Pushes a nil value onto the stack.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua::push(state, lua::value::nil);
+    lua_pushnil(state);
+
+=head4 lua_pushvalue(state, int source), lua::push<lua::index>
+
+Pushes a copy of the stack value at the given source index onto the stack.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua::push(state, lua::index(state, 1));
+    lua_pushvalue(state, 1);
+
+=head4 lua_pushboolean(state, value), lua::push<bool>
+
+Pushes a boolean value onto the stack.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua::push(state, false);
+    lua_pushboolean(state, 0);
+
+=head4 lua_newtable(state), lua::value::table
+
+Pushes a new empty table onto the stack.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua_newtable(state);
+    lua::push(state, lua::value::table);
+
+=head4 lua_pushglobaltable(state), lua::value::globals
+
+Pushes the global environment table onto the stack.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua_pushglobaltable(state);
+    lua::push(state, lua::value::globals);
+
+=head4 lua_pushvalue(state, LUA_REGISTRYINDEX), lua::value::registry
+
+Pushes the registry onto the stack.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua_pushvalue(state, LUA_REGISTRYINDEX);
+    lua::push(state, lua::value::registry);
+
+=head4 lua_pushstring(state, const char*), lua::push<const char*>
+
+    #include <luacxx/type/standard.hpp>
+
+    lua_pushstring(state, "No time");
+    lua::push(state, "No time");
+
+*/
+
 namespace lua {
 
 enum class value {

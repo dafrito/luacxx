@@ -7,8 +7,126 @@
 #include "../algorithm.hpp"
 #include "../stack.hpp"
 
-// All this stuff involves calling C++ from Lua. This means pushing C++
-// functions into Lua, and creating the infrastructure to invoke them reliably.
+/*
+
+=head1 NAME
+
+type/function.hpp - support for C functions
+
+=head1 SYNOPSIS
+
+    #include <luacxx/type/function.hpp>
+    #include <luacxx/type/standard.hpp>
+    #include <luacxx/type/numeric.hpp>
+
+    // Add all arguments
+    int add_several(lua::state* const state)
+    {
+        int sum = 0;
+        for (int i = 1; i <= lua_gettop(state); ++i) {
+            sum += lua::get<int>(state, i);
+        }
+
+        lua::push(state, sum);
+        lua_replace(state, 1);
+        return 1;
+    }
+
+    // Add two directly
+    int add_two(const int a, const int b)
+    {
+        return a + b;
+    }
+
+    // Add two, but have the first come from the upvalues
+    int adder(lua::state* const state)
+    {
+        auto first = lua::get<int>(state, lua_upvalueindex(state, 1));
+        auto second = lua::get<int>(state, 1);
+
+        lua_settop(state, 0);
+        lua::push(state, first + second);
+        return 1;
+    }
+
+    // Create a partial function that adds two values
+    int make_adder(lua::state* const state)
+    {
+        auto first = lua::get<int>(state, 1);
+        lua_settop(state, 0);
+
+        lua::push_closure(state, adder, first);
+        return 1;
+    }
+
+    // Open the "add" module
+    int luaopen_add(lua::state* const state)
+    {
+        lua:thread env(state);
+
+        env["Adder"] = make_adder;
+        env["AddTwo"] = add_two;
+        env["AddSeveral"] = add_several;
+
+        env["AddDelta"] = lua::push_function<int(int)>([](int first) {
+            return first + 3;
+        );
+
+        return 0;
+    }
+
+    // And within Lua
+
+    require "add";
+
+    assert(4 == AddTwo(2, 2));
+    assert(6 == AddSeveral(1, 2, 3));
+    assert(5 == Adder(2)(3));
+    assert(5 == AddDelta(2));
+
+=head1 DESCRIPTION
+
+All this stuff involves calling C++ from Lua. This means pushing C++ functions
+into Lua, and creating the infrastructure to invoke them reliably.
+
+=head4 lua_CFunction, lua::function
+
+The function type that can be called directly from Lua. As a result, these
+can be pushed to Lua and will behave transparently as functions.
+
+    int demo(lua::state* const state)
+    {
+        // Pull arguments
+        auto id = lua::get<int>(state, 1);
+        auto value = lua::get<bool>(state, 2);
+
+        auto result = set_some_inner_value(id, value);
+
+        // Return the result
+        lua_settop(state, 0);
+        lua::push(state, result);
+        return 1;
+    }
+
+=head4 lua_pushcfunction(state, lua::function)
+
+Pushes the given callable C function onto the stack.
+
+    int demo(lua::state* const state)
+    {
+        // ... same as above ...
+    }
+
+    lua::push(state, demo);
+
+*/
+
+namespace lua {
+
+typedef lua_CFunction function;
+typedef std::function<int(lua::state* const)> callable;
+
+}
 
 namespace {
 
@@ -56,16 +174,19 @@ struct Invoke<Callee, void, ArgStop>
     }
 };
 
-/**
- * LuaWrapper enables C++ functions of arbitrary complexity to be called
- * from Lua. Conceptually, the template behaves similarly to a varargs
- * function from C. However, types are preserved using variadic templates.
- * This allows us to automatically generate correct code for each
- * argument.
- *
- * This implementation was based off of:
- * http://dvandyk.wordpress.com/2010/08/15/apply-functions-to-stdtuple/
- */
+/*
+
+=head2 class wrap_call<RV, Args...>
+
+wrap_call is an internal tool for forwarding Lua values into a given C function
+of arbitrary signature. The C function can have any signature as long as each
+parameter is supported by this library. It's highly unlikely that you will
+need to use this class directly.
+
+This implementation was originally based off of
+L<http://dvandyk.wordpress.com/2010/08/15/apply-functions-to-stdtuple/>
+
+*/
 template <typename RV, typename... Args>
 class wrap_call
 {
@@ -104,10 +225,21 @@ public:
 
 } // namespace anonymous
 
-namespace lua {
+/*
 
-typedef lua_CFunction function;
-typedef std::function<int(lua::state* const)> callable;
+=head4 lua_pushcclosure(state, lua::function, int upvalues)
+
+=head4 lua::push_closure(state, callable, upvalues...);
+
+=head4 int lua_upvalueindex(int offset)
+
+Returns the stack index that corresponds to the upvalue at the specified
+offset. Upvalues are used to associate arbitrary Lua data with C functions,
+but are rare to actually need in practice.
+
+*/
+
+namespace lua {
 
 template <>
 struct Push<lua::function>
@@ -178,11 +310,23 @@ struct Push<std::function<RV(Args...)>>
     }
 };
 
-template <typename Function>
-static lua::index push_function(lua::state* const state, std::function<Function> callable)
+/*
+
+=head4 lua::push_function<Signature>(state, callable)
+
+*/
+
+template <typename Signature>
+static lua::index push_function(lua::state* const state, std::function<Signature> callable)
 {
     return lua::push(state, callable);
 }
+
+/*
+
+=head4 lua::push_closure(state, callable, upvalues...);
+
+*/
 
 template <typename... Upvalues>
 static lua::index push_closure(lua::state* const state, lua::function callable, Upvalues... upvalues)

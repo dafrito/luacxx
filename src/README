@@ -1,0 +1,84 @@
+=head1 NAME
+
+lua-cxx, luacxx - Lua toolkit for C++11
+
+=head1 SYNOPSIS
+
+    // Create a new Lua environment to play with.
+    auto env = lua::create();
+
+    // Introduce a global into Lua
+    env["foo"] = "No time";
+
+    // Run some Lua code directly
+    lua::run_string("assert(foo == 'No time')");
+
+    // Retrieve a global
+    auto value = lua::get<std::string>(env["foo"]);
+    assert(value == "No time");
+
+=head1 DESCRIPTION
+
+Lua-cxx is a set of functions and objects designed to bridge
+[Lua](http://www.lua.org/manual/5.2/manual.html) and
+[C++11](http://en.wikipedia.org/wiki/C++11). The Lua C API can be mixed with
+Lua-cxx's facilities as desired.
+
+Lua exposes a comprehensive kit to manipulate its stack. A very common
+operation is to push and get values passed on the stack from Lua through a
+function call, so Lua exposes a set of methods to get various primitive types.
+Lua-cxx provides overloaded template-based wrappers to access these in a common
+form:
+
+=head1 INSTALLATION
+
+Lua-cxx uses Automake as its build system, so the process is conventional:
+
+    git clone https://github.com/dafrito/lua-cxx.git
+    cd lua-cxx
+
+    autoreconf -i
+    ./configure
+    make -j
+    make install
+
+=head1 STYLE
+
+STL conventions are used for naming and case, though not slavishly, to
+infer that a template-heavy C++ dialect is used. However, adherance to Lua's
+conventions is preferred over that of C++. For instance, the lua::state is
+passed as a pointer, even though it should rightfully be a reference.
+
+=head1 THREAD-SAFETY
+
+The thread-safety guarantees provided by Lua shall not be infringed due to the
+use of Lua-cxx.
+
+Lua-cxx does modify global state external to Lua itself such as to support
+custom QVariant types. Thread-safety for these methods has not been determined.
+
+=head1 COMMENTS AND BUG REPORTING
+
+Email dafrito@gmail.com with all your reporting needs.
+
+=head1 LICENSE
+
+Copyright (c) 2013-2014 Aaron Faanes
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.

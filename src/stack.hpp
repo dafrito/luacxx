@@ -258,12 +258,6 @@ Some indices are not absolute or relative. Such implements are called
 pseudo-indices by Lua, but they behave like stack indices that are permanently
 available. Use them in place of indices like they are enumeration constants.
 
-=head4 int lua_upvalueindex(int offset)
-
-Returns the stack index that corresponds to the upvalue at the specified
-offset. Upvalues are used to associate arbitrary Lua data with C functions,
-but are rare to actually need in practice.
-
 =head4 LUA_REGISTRYINDEX
 
 The pseudo-index that corresponds to the registry, a table reserved for use
@@ -284,6 +278,21 @@ clearing off unwanted values.
 
     // Blow away all stack values
     lua_settop(state, 0);
+
+=head4 void lua_copy(state, int source, int dest)
+
+Replace the stack value at dest with the stack value at source, without
+affecting source.
+
+    lua_pushstring(state, "A");
+    lua_pushstring(state, "B");
+    lua_pushstring(state, "C");
+    // ["A", "B", "C"]
+
+    // Copy "A" onto "C"
+    lua_copy(state, 1, 3);
+
+    // Stack is now ["A", "B", "C"]
 
 =head4 void lua_replace(state, index)
 
@@ -327,6 +336,21 @@ following idiom works well to avoid lua_remove:
     lua_replace(state, 1);
     lua_settop(state, 1);
     return 1;
+
+=head4 void lua_insert(state, index)
+
+Moves the topmost value to the specified index, shifting all values at and
+above that index to make room.
+
+    lua_pushstring(state, "A");
+    lua_pushstring(state, "B");
+    lua_pushstring(state, "C");
+    // ["A", "B", "C"]
+
+    // Move "C" to the bottom
+    lua_insert(state, 1);
+
+    // Stack is now ["C", "A", "B"]
 
 =head4 void lua_pop(state, int n)
 
@@ -633,9 +657,55 @@ public:
     }
 };
 
-//
-// Pushing values and userdata
-//
+/*
+
+=head1 Handling userdata
+
+=head4 lua_newuserdata(state, size_t size)
+
+=head4 lua_pushlightuserdata(state, void* p), lua::push<void*>
+
+Pushes a raw pointer onto the stack. The pointer has no metatable, so
+it is only really useful to pass data between C functions, and to quickly
+save C data as upvalues to a C function.
+
+    #include <luacxx/type/standard.hpp>
+
+    lua_pushvalue(state, LUA_REGISTRYINDEX);
+    lua::push(state, lua::value::registry);
+
+=head2 Userdata
+
+Lua-cxx provides two complimentary functions: To call C++ from Lua and to call
+Lua from C++. Both of these functions require:
+
+* translating values as they cross language boundaries
+* synchronizing memory models for non-primitive data
+
+Lua itself provides direct support for pushing strings, numbers, true, false,
+nil, void pointers, and C callbacks. Lua-cxx provides a common interface for
+accessing all of these types. Lua-cxx also supports passing C++ functions of
+arbitrary signature presuming the arguments and return types are supported.
+
+The set of supported types can be extended at compile-time by including a
+template specialization for that type.
+
+Lua employs garbage collection for memory management of its values including
+userdata. When userdata is garbage collected, the underlying C++ value is
+always destroyed. This ensures that changes in Lua always propagate to C++.
+
+Destruction in C++ does not necessarily propagate to Lua. Insufficient
+propagation will cause errors on attempted access, and universal protection
+from these problems is not possible in the C++ memory model. Nevertheless,
+correctness is usually easy to attain.
+
+C and C++ libraries commonly construct their own memory models, usually in the
+form of a crude and idiosyncratic approximation of what could have been better
+done with std::shared_ptr. Lua-cxx has adapters for some of these, as well as
+implicit support for std::shared_ptr, to propagate destruction notification to
+Lua.
+
+*/
 
 // Discriminant for how userdata is stored
 enum class userdata_storage {

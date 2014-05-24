@@ -9,6 +9,21 @@
 #include <vector>
 #include <sstream>
 
+/*
+
+=head1 NAME
+
+algorithm.hpp - common algorithms and functions for Lua
+
+=head1 SYNOPSIS
+
+    #include <luacxx/algorithm.hpp>
+    #include <luacxx/type/numeric.hpp>
+
+=head1 DESCRIPTION
+
+*/
+
 namespace lua {
 
 std::string traceback(lua::state* const state, const int toplevel);

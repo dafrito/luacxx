@@ -3,6 +3,43 @@
 
 #include "type/standard.hpp"
 
+/*
+
+=head1 NAME
+
+type/numeric.hpp - support for C numeric types
+
+=head1 SYNOPSIS
+
+    #include <luacxx/type/numeric.hpp>
+
+=head1 DESCRIPTION
+
+Most of these definitions are straight-forward.
+Suffice it to say that if you want to push numeric
+values onto Lua, you will almost certainly need to
+have this header included.
+
+=head4 lua_pushinteger(state, int), lua::push<int>
+
+Pushes an integer onto the stack.
+
+    #include <luacxx/type/numeric.hpp>
+
+    lua_pushinteger(state, 42);
+    lua::push(state, 42);
+
+=head4 lua_pushnumber(state, float), lua::push<float>
+
+Pushes a floating-point value onto the stack.
+
+    #include <luacxx/type/numeric.hpp>
+
+    lua_pushnumber(state, .5);
+    lua::push(state, .5
+
+*/
+
 namespace lua {
 
 template <>

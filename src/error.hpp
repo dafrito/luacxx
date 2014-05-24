@@ -38,15 +38,15 @@ lua::error - an error thrown from the Lua runtime.
 
 =head1 DESCRIPTION
 
-Luacxx will wrap and rethrow lua::errors as they propagate between the C
+Lua-cxx will wrap and rethrow lua::errors as they propagate between the C
 runtime and the Lua runtime. This object does no manipulation of the Lua state,
 so it's safe to copy and use even when the condition of the Lua state is
 indeterminate.
 
-Aside from the usual what() description method, lua::error allows access to the
-traceback via traceback(). This value must be set manually, though throwing a
-lua::error that is eventually caught by Luacxx will have its traceback set up
-automatically.
+Aside from the usual what() description method typical of C++ exceptions,
+lua::error allows access to the traceback via traceback(). This value must be
+set manually, though throwing a lua::error that is eventually caught by this
+library will have its traceback set up automatically.
 
 */
 
