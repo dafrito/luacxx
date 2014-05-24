@@ -138,14 +138,6 @@ struct Invoke
     template <typename... Arguments>
     static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
-        /*static_assert(
-                    // Non-references are fine
-                    !std::is_reference<Arg>::value ||
-                    // References to references are fine
-                    std::is_reference<decltype(lua::get<Arg>(index++))>::value ||
-                    // References to const are fine
-                    std::is_const<typename std::remove_reference<Arg>::type>::value,
-            "Provided function must not use non-const lvalue references to refer to temporary objects");*/
         Invoke<Callee, RV, Parameters...>::template invoke<Arguments..., Arg>(
             func, index, arguments..., lua::get<Arg>(index++)
         );
