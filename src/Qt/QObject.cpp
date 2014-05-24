@@ -46,7 +46,7 @@ void lua::QObject_metatable(const lua::index& mt)
         }
 
         // Slot connections
-        if (QString(name) == "connect") {
+        if (QString(name).compare("connect", Qt::CaseInsensitive) == 0) {
             lua::push(state, QObject_connect);
             return 1;
         }
