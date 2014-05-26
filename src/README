@@ -19,16 +19,8 @@ lua-cxx, luacxx - Lua toolkit for C++11
 
 =head1 DESCRIPTION
 
-Lua-cxx is a set of functions and objects designed to bridge
-[Lua](http://www.lua.org/manual/5.2/manual.html) and
-[C++11](http://en.wikipedia.org/wiki/C++11). The Lua C API can be mixed with
-Lua-cxx's facilities as desired.
-
-Lua exposes a comprehensive kit to manipulate its stack. A very common
-operation is to push and get values passed on the stack from Lua through a
-function call, so Lua exposes a set of methods to get various primitive types.
-Lua-cxx provides overloaded template-based wrappers to access these in a common
-form:
+Lua-cxx is a set of functions and objects designed to bridge Lua and C++11.
+The Lua C API can be mixed with this project's facilities as desired.
 
 =head1 INSTALLATION
 
@@ -56,6 +48,10 @@ use of Lua-cxx.
 
 Lua-cxx does modify global state external to Lua itself such as to support
 custom QVariant types. Thread-safety for these methods has not been determined.
+
+=head1 SEE ALSO
+
+Lua 5.2 - http://www.lua.org/manual/5.2/manual.html
 
 =head1 COMMENTS AND BUG REPORTING
 
