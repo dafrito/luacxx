@@ -14,7 +14,7 @@ lua-cxx, luacxx - Lua toolkit for C++11
     lua::run_string("assert(foo == 'No time')");
 
     // Retrieve a global
-    auto value = lua::get<std::string>(env["foo"]);
+    auto value = env["foo"].get<std::string>();
     assert(value == "No time");
 
 =head1 DESCRIPTION
@@ -27,8 +27,8 @@ The Lua C API can be mixed with this project's facilities as desired.
 Lua-cxx uses Automake as its build system, so the process is conventional:
 
     git clone https://github.com/dafrito/lua-cxx.git
-    cd lua-cxx
 
+    cd lua-cxx
     autoreconf -i
     ./configure
     make -j

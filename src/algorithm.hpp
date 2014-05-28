@@ -29,6 +29,15 @@ namespace lua {
 std::string traceback(lua::state* const state, const int toplevel);
 std::string dump(lua::state* const state);
 
+/*
+
+=head4 lua::assert_type<Error>(const char* category, lua::type expected, lua::index)
+
+Asserts that the stack value at the given index is of the expected type. If
+not, then an error of given type is thrown with a provided message.
+
+*/
+
 template <class Error = lua::error>
 void assert_type(const char* category, const lua::type& expected, const lua::index& given)
 {
