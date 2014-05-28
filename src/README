@@ -1,6 +1,6 @@
 =head1 NAME
 
-lua-cxx, luacxx - Lua toolkit for C++11
+lua-cxx, luacxx - C++11 API for creating Lua bindings
 
 =head1 SYNOPSIS
 
