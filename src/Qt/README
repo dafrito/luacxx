@@ -1,0 +1,62 @@
+=head1 NAME
+
+Lua-cxx Qt support
+
+=head1 SYNOPSIS
+
+    #include <luacxx/stack.hpp>
+    #include <luacxx/type/standard.hpp>
+    #include <luacxx/type/function.hpp>
+
+    #include <QWindow>
+
+    int QWindow_new(lua::state* const state)
+    {
+        if (lua_gettop(state) > 1) {
+            auto parent = lua::get<QObject*>(state, 2);
+            lua_settop(state, 0);
+
+            if (parent) {
+                if (parent->inherits("QWindow")) {
+                    lua::make<QWindow>(state, static_cast<QWindow*>(parent));
+                } else {
+                    lua::make<QWindow>(state, static_cast<QScreen*>(parent));
+                }
+                return 1;
+            }
+
+            // Otherwise, fall through
+        }
+
+        // Create a QWindow within Lua
+        lua::make<QWindow>(state, static_cast<QWindow*>(nullptr));
+        return 1;
+    }
+
+    int luaopen_QWindow(lua::state* const state)
+    {
+        lua::thread env(state);
+
+        env["QWindow"] = lua::value::table;
+        env["QWindow"]["new"] = QWindow_new;
+
+        return 1;
+    }
+
+    // Within Lua
+
+    require "QWindow";
+
+    local window = QWindow:new();
+    window.width = 300;
+    window.height = 300;
+    window.title = "Hello, world";
+    window:show();
+
+=head1 DESCRIPTION
+
+This subdirectory provides full support for Qt QObjet introspection
+system. This allows all objects that derive from QObject to automatically
+expose their properties, signals, and slots, as well as any methods
+prefixed with Q_INVOKABLE. These methods can have any signature as long
+as each type is supported by this library and your lua::Push<> structs.

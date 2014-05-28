@@ -3,6 +3,66 @@
 
 #include "stack.hpp"
 
+/*
+
+=head1 NAME
+
+lua::range - iterable Lua stacks
+
+=head1 SYNOPSIS
+
+    #include <luacxx/range.hpp>
+
+    int foo_sum(lua::state* const state)
+    {
+        int sum = 0;
+        for (int value : lua::range<int>(state)) {
+            sum += value;
+        }
+        lua_settop(state, 0);
+        lua::push(state, sum);
+        return 1;
+    }
+
+    int luaopen_Foo(lua::state* const state)
+    {
+        lua::thread env(state);
+        env["Foo"] = lua::value::table;
+
+        env["Foo"]["Sum"] = foo_sum;
+
+        return 0;
+    }
+
+=head1 DESCRIPTION
+
+=head2 lua::range<Value>(state)
+
+Constructs an iterable that can be used in a for-loop. A range has a
+begin() and an end() that will return iterators.
+
+    int string_join(lua::state* const state)
+    {
+        std::stringstream str;
+        bool first = true;
+        for (std::string name : lua::range<std::string>(state)) {
+            str << (first ? "" : " ") << name;
+        }
+    }
+
+The above example is equivalent to the following code:
+
+    int string_join(lua::state* const state)
+    {
+        std::stringstream str;
+        bool first = true;
+        for (lua::iterator iter(state); iter; ++i) {
+            auto name = iter.get<std::string>();
+            str << (first ? "" : " ") << str;
+        }
+    }
+*/
+
 namespace lua {
 
 template <class T>
@@ -27,7 +87,17 @@ public:
         return _state;
     }
 
+    int pos() const
+    {
+        return _pos;
+    }
+
     T operator*()
+    {
+        return lua::get<T>(_state, _pos);
+    }
+
+    T get() const
     {
         return lua::get<T>(_state, _pos);
     }

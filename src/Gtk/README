@@ -1,0 +1,20 @@
+=head1 NAME
+
+Lua-cxx Gtk support
+
+=head1 SYNOPSIS
+
+    require "luacxx.Gtk";
+
+    -- Get these namespaces
+    local cairo = require "cairo";
+    local Gtk = require "Gtk";
+
+    - Examine Gtk's exported objects. There are over 1,000!
+    print(Gtk);
+
+=head1 DESCRIPTION
+
+This subdirectory provides support for GObject introspection. While much of the
+groundwork has been laid down, not all Gtk object types are supported (like
+enums, constants, and more advanced object construction).

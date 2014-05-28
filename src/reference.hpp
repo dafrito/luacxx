@@ -13,6 +13,30 @@ lua::reference - a slot for C to save Lua values
 
     #include <luacxx/reference.hpp>
 
+    struct MyData {
+        lua::reference target;
+    };
+
+    int MyData_new(lua::state* const state)
+    {
+        MyData* data = lua::make<MyData>(state);
+        data->target = lua::index(state, 2);
+
+        // Move the data to the first position and return
+        lua_replace(state, 1);
+        return 1;
+    }
+
+    int luaopen_MyData(lua::state* const state)
+    {
+        lua::thread env(state);
+
+        env["MyData"] = lua::value::table;
+        env["MyData"]["new"] = MyData_new;
+
+        return 0;
+    }
+
 =head1 DESCRIPTION
 
 */

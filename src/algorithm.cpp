@@ -67,7 +67,7 @@ std::string lua::traceback(lua::state* const state, const int toplevel)
         std::string rv;
         luaL_traceback(state, state, NULL, toplevel);
         rv = lua::get<std::string>(state, -1);
-        lua::pop(state, 1);
+        lua_pop(state, 1);
         return rv;
     #else
         auto getter = lua::global(state, "debug")["traceback"];
@@ -154,17 +154,12 @@ void lua::swap(const lua::index& a, const lua::index& b)
     a = b;
     b = copy;
 
-    lua::pop(a.state(), 1);
+    lua_pop(a.state(), 1);
 }
 
 void lua::remove(const lua::index& target)
 {
     lua_remove(target.state(), target.pos());
-}
-
-void lua::pop(lua::state* const state, const int num)
-{
-    lua_pop(state, num);
 }
 
 void lua::clear(lua::state* const state)
