@@ -1,0 +1,35 @@
+#!/bin/bash
+PATH=/bin:/usr/bin
+
+die() {
+    echo $* >&2
+    exit 1;
+}
+
+# Set up the output, which is just a temporary file
+OUTPUT=/tmp/cpod.$$
+touch $OUTPUT
+trap 'rm -f $OUTPUT' INT EXIT
+
+FILE=$1
+shift
+
+EXPRESSION=
+case "$FILE" in
+*.lua)
+    sed -r \
+        -e 's/^--\[\[/=head1/g' \
+        -e 's/^\]\]/=cut/g' \
+        $FILE >$OUTPUT || die "sed failed"
+    ;;
+*.hpp|*.cpp|*.h|*.c|*.java)
+    sed -r \
+        -e 's/^\/\*/=head1/g' \
+        -e 's/^\*\//=cut/g' \
+        $FILE >$OUTPUT || die "sed failed"
+    ;;
+esac
+
+perldoc $* -F $OUTPUT || die "perldoc failed"
+
+# vim: set ts=4 sw=4 :
