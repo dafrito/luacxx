@@ -68,7 +68,7 @@ type/function.hpp - support for C functions
         env["AddTwo"] = add_two;
         env["AddSeveral"] = add_several;
 
-        env["AddDelta"] = lua::push_function<int(int)>([](int first) {
+        env["AddDelta"] = lua::push_function<int(int)>(state, [](int first) {
             return first + 3;
         );
 
