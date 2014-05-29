@@ -19,8 +19,61 @@ lua-cxx, luacxx - C++11 API for creating Lua bindings
 
 =head1 DESCRIPTION
 
-Lua-cxx is a set of functions and objects designed to bridge Lua and C++11.
-The Lua C API can be mixed with this project's facilities as desired.
+Lua-cxx is a set of functions and objects designed to simplify the process of
+constructing C++ and C modules for Lua. This library is designed to work in
+tandem with Lua's existing C API, so it does not provide a complete facde. On
+the contrary, I find Lua's C API to be amazingly well-designed, so I've tried
+to ensure that Lua-cxx can be intermixed freely with Lua's C API. In fact, most
+of the Lua C API has no analog in Lua-cxx - I just use the original, like in
+the following example:
+
+    // Add all arguments
+    int add_several(lua::state* const state)
+    {
+        // Get each argument
+        int sum = 0;
+        for (int i = 1; i <= lua_gettop(state); ++i) {
+            sum += lua::get<int>(state, i);
+        }
+
+        // Return the value
+        lua::push(state, sum);
+        lua_replace(state, 1);
+        return 1;
+    }
+
+That being said, there are several places where Lua-cxx greatly simplify common
+tasks. For instance, Lua has a number of lua_push* functions that can be
+replaced with Lua-cxx's lua::push template and appropriate specializations. You
+can extend this specialization with your own types, and Lua-cxx's other
+features will immediately support them.
+
+C++11 also adds support for variadic templates, which can be used to provide a
+way to push a function of any arity into Lua without needing to write the
+marshalling code yourself or running a preprocessor:
+
+    // Standard C API is, of course, supported
+    int create_foo(lua::state* const);
+    lua::push(state, create_foo);
+
+    // Fundamental types work, too
+    int sum(int a, int b);
+    lua::push(state, sum);
+
+    // As are pointers to userdata and conversions to C++ strings.
+    void changeTitle(QWindow* window, const std::string& title);
+    lua::push(state, changeTitle);
+
+    // Even lambdas work too, with a bit of help
+    lua::push_function< int(int, int) >(state, [](int first, int second) {
+        return first + second;
+    });
+
+Beyond this, Lua-cxx also has out-of-the-box support for Qt's QObject model, as
+well as rudimentary support for Gtk's GObject model, so you can push these
+types and their properties and methods will automatically be exposed to Lua.
+You can then specialize further on a specific subtype to add behavior not
+provided by that library's metadata.
 
 =head1 INSTALLATION
 
