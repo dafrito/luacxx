@@ -85,7 +85,7 @@ void lua::QObject_metatable(const lua::index& mt)
 
 void lua::qmetamethod_metatable(const lua::index& mt)
 {
-    mt["Signature"] = lua::function([](lua::state* const state) {
+    mt["signature"] = lua::function([](lua::state* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
         lua::clear(state);
         lua::push(state, getSignature(*method));
