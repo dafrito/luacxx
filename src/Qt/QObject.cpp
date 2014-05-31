@@ -1,6 +1,7 @@
 #include "Qt/QObject.hpp"
 #include "Qt/QObjectSlot.hpp"
 #include "Qt/QVariant.hpp"
+#include "Qt/QString.hpp"
 
 #include <QObject>
 #include <QMetaObject>
@@ -81,6 +82,13 @@ void lua::QObject_metatable(const lua::index& mt)
 
         return 0;
     });
+
+    mt["__tostring"] = lua::function([](lua::state* const state) {
+        auto obj = lua::get<QObject*>(state, 1);
+        lua_settop(state, 0);
+        lua::push(state, obj->metaObject()->className());
+        return 1;
+    });
 }
 
 void lua::qmetamethod_metatable(const lua::index& mt)
@@ -88,6 +96,13 @@ void lua::qmetamethod_metatable(const lua::index& mt)
     mt["signature"] = lua::function([](lua::state* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
         lua::clear(state);
+        lua::push(state, getSignature(*method));
+        return 1;
+    });
+
+    mt["__tostring"] = lua::function([](lua::state* const state) {
+        auto method = lua::get<QMetaMethod*>(state, 1);
+        lua_settop(state, 0);
         lua::push(state, getSignature(*method));
         return 1;
     });
