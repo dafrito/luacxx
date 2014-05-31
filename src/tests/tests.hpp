@@ -1,11 +1,11 @@
-#ifndef LUA_CXX_TEST_TESTS_HEADER
-#define LUA_CXX_TEST_TESTS_HEADER
+#ifndef LUACXX_TESTS_INCLUDED
+#define LUACXX_TESTS_INCLUDED
 
 #include <boost/test/unit_test.hpp>
 
-// Very commonly used headers
+// Add any commonly used headers
 #include <functional>
 
-#endif // LUA_CXX_TEST_TESTS_HEADER
+#endif // LUACXX_TESTS_INCLUDED
 
 // vim: set ts=4 sw=4 :
