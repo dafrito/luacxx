@@ -9,8 +9,8 @@ runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ -
 runtest_LDADD = ../libluacxx.la $(QT_LIBS) $(GIO_CXXFLAGS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 runtest_SOURCES = \
-	core.cpp \
-	main.cpp
+	tests.cpp \
+	runner.cpp
 
 EXTRA_DIST = \
 	lua/bin/a.lua \

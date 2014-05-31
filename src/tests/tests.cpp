@@ -1,4 +1,4 @@
-#include "core.hpp"
+#include "tests.hpp"
 
 #include "thread.hpp"
 #include "stack.hpp"

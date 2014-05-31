@@ -1,5 +1,5 @@
 #define BOOST_TEST_MODULE luacxx
-#include "core.hpp"
+#include "tests.hpp"
 
 #ifdef HAVE_QT_CORE
 
