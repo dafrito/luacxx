@@ -128,109 +128,6 @@ typedef std::function<int(lua::state* const)> callable;
 
 }
 
-namespace {
-
-struct ArgStop {};
-
-template <typename Callee, typename RV, typename Arg, typename... Parameters>
-struct Invoke
-{
-    template <typename... Arguments>
-    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
-    {
-        Invoke<Callee, RV, Parameters...>::template invoke<Arguments..., Arg>(
-            func, index, arguments..., lua::get<Arg>(index++)
-        );
-    }
-};
-
-template <typename Callee, typename RV>
-struct Invoke<Callee, RV, ArgStop>
-{
-    template <typename... Arguments>
-    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
-    {
-        lua::clear(index.state());
-        lua::push(index.state(), func(arguments...));
-    }
-};
-
-template <typename Callee>
-struct Invoke<Callee, void, ArgStop>
-{
-    template <typename... Arguments>
-    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
-    {
-        lua::clear(index.state());
-        func(arguments...);
-    }
-};
-
-/*
-
-=head2 class wrap_call<RV, Args...>
-
-wrap_call is an internal tool for forwarding Lua values into a given C function
-of arbitrary signature. The C function can have any signature as long as each
-parameter is supported by this library. It's highly unlikely that you will
-need to use this class directly.
-
-This implementation was originally based off of
-L<http://dvandyk.wordpress.com/2010/08/15/apply-functions-to-stdtuple/>
-
-*/
-template <typename RV, typename... Args>
-class wrap_call
-{
-    /**
-     * The C++ function that will eventually be invoked.
-     */
-    std::function<RV(Args...)> wrapped;
-
-public:
-    wrap_call(const std::function<RV(Args...)>& wrapped) :
-        wrapped(wrapped)
-    {}
-
-    int operator()(lua::state* const state)
-    {
-        if (lua::size(state) < sizeof...(Args)) {
-            std::stringstream msg;
-            msg << "Function expects at least "
-                << sizeof...(Args)
-                << " argument" << (sizeof...(Args) == 1 ? "" : "s");
-            if (lua::size(state) > 1) {
-                msg << " but only " << lua::size(state) << " were given";
-            } else if (lua::size(state) > 0) {
-                msg << " but only " << lua::size(state) << " was given";
-            } else {
-                msg << " but none were given";
-            }
-            throw lua::error(msg.str());
-        }
-
-        lua::index index(state, 1);
-        Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(wrapped, index);
-        return 1;
-    }
-};
-
-} // namespace anonymous
-
-/*
-
-=head4 lua_pushcclosure(state, lua::function, int upvalues)
-
-=head4 lua::push_closure(state, callable, upvalues...);
-
-=head4 int lua_upvalueindex(int offset)
-
-Returns the stack index that corresponds to the upvalue at the specified
-offset. Upvalues are used to associate arbitrary Lua data with C functions,
-but are rare to actually need in practice.
-
-*/
-
 namespace lua {
 
 template <>
@@ -284,49 +181,133 @@ struct Store<lua::callable>
     }
 };
 
+} // namespace lua
+
+namespace {
+
+struct ArgStop {};
+
+template <typename Callee, typename RV, typename Arg, typename... Parameters>
+struct Invoke
+{
+    template <typename... Arguments>
+    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    {
+        Invoke<Callee, RV, Parameters...>::template invoke<Arguments..., Arg>(
+            func, index, arguments..., lua::get<Arg>(index++)
+        );
+    }
+};
+
+template <typename Callee, typename RV>
+struct Invoke<Callee, RV, ArgStop>
+{
+    template <typename... Arguments>
+    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    {
+        lua::clear(index.state());
+        lua::push(index.state(), func(arguments...));
+    }
+};
+
+template <typename Callee>
+struct Invoke<Callee, void, ArgStop>
+{
+    template <typename... Arguments>
+    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    {
+        lua::clear(index.state());
+        func(arguments...);
+    }
+};
+
+} // namespace anonymous
+
+/*
+
+=head4 struct lua::Push<RV(*)(Args...)>
+
+This allows function pointers to be pushed directly onto the stack. The
+function pointer must be comprised of objects that can be pushed, or void.
+
+    int multiply_direct(int a, int b)
+    {
+        return a * b;
+    }
+
+    lua::push(state, multiply_direct);
+
+This also supports C++ method pointers:
+
+    struct Foo {
+        void multiply(int a, int b);
+    };
+
+    // Equivalent to void get(Foo*, int, int);
+    lua::push(state, &Foo::get);
+
+=head4 struct lua::Push<std::function<RV(Args...)>>
+
+This allows std::functions to be pushed directly onto the stack. This follows
+the same rules as the function-pointer version, but works for anything that
+std::function supports. Notably, this allows lambdas to be pushed:
+
+    env["Multiply"] = std::function<int(int, int)>([](int a, int b) {
+        return a * b;
+    });
+
+Tragically, you can't omit the std::function. Lambdas don't have an accessible
+signature, so it needs to be specified externally using std::function.
+
+*/
+
+namespace lua {
+
+template <typename RV, typename... Args>
+int invoke_callable(lua::state* const state)
+{
+    auto wrapped = lua::get<std::function<RV(Args...)>>(
+        state, lua_upvalueindex(1)
+    );
+
+    if (lua::size(state) < sizeof...(Args)) {
+        std::stringstream msg;
+        msg << "Function expects at least "
+            << sizeof...(Args)
+            << " argument" << (sizeof...(Args) == 1 ? "" : "s");
+        if (lua::size(state) > 1) {
+            msg << " but only " << lua::size(state) << " were given";
+        } else if (lua::size(state) > 0) {
+            msg << " but only " << lua::size(state) << " was given";
+        } else {
+            msg << " but none were given";
+        }
+        throw lua::error(msg.str());
+    }
+
+    lua::index index(state, 1);
+    Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(wrapped, index);
+    return 1;
+}
+
 template <typename RV, typename... Args>
 struct Push<RV(*)(Args...)>
 {
     static void push(lua::state* const state, RV(*func)(Args...))
     {
-        lua::push(state, lua::callable(wrap_call<RV, Args...>(func)));
+        lua::push(state, std::function<RV(Args...)>(func));
     }
 };
 
 template <typename RV, typename... Args>
 struct Push<std::function<RV(Args...)>>
 {
-    static void push(lua::state* const state, const std::function<RV(Args...)>& func)
+    static void push(lua::state* const state, const std::function<RV(Args...)>& callable)
     {
-        lua::push(state, lua::callable(wrap_call<RV, Args...>(func)));
+        Construct<std::function<RV(Args...)>>::construct(state, callable);
+        lua_pushcclosure(state, invoke_callable<RV, Args...>, 1);
     }
 };
-
-/*
-
-=head4 lua::push_function<Signature>(state, callable)
-
-*/
-
-template <typename Signature>
-static lua::index push_function(lua::state* const state, std::function<Signature> callable)
-{
-    return lua::push(state, callable);
-}
-
-/*
-
-=head4 lua::push_closure(state, callable, upvalues...);
-
-*/
-
-template <typename... Upvalues>
-static lua::index push_closure(lua::state* const state, lua::function callable, Upvalues... upvalues)
-{
-    lua::push(state, upvalues...);
-    lua_pushcclosure(state, callable, sizeof...(Upvalues));
-    return lua::index(state, -1);
-}
 
 template <typename RV>
 struct Push<RV(*)(lua::state* const)>
@@ -355,6 +336,32 @@ struct Push<std::function<RV(lua::state* const)>>
         }));
     }
 };
+
+/*
+
+=head4 lua::push_function<Signature>(state, callable)
+
+*/
+
+template <typename Signature>
+static lua::index push_function(lua::state* const state, std::function<Signature> callable)
+{
+    return lua::push(state, callable);
+}
+
+/*
+
+=head4 lua::push_closure(state, callable, upvalues...);
+
+*/
+
+template <typename... Upvalues>
+static lua::index push_closure(lua::state* const state, lua::function callable, Upvalues... upvalues)
+{
+    lua::push(state, upvalues...);
+    lua_pushcclosure(state, callable, sizeof...(Upvalues));
+    return lua::index(state, -1);
+}
 
 } // namespace lua
 

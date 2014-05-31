@@ -281,7 +281,18 @@ BOOST_AUTO_TEST_CASE(value_userdata)
     // Can counters be created from Lua?
     Counter* foo = env["counter"];
     BOOST_CHECK_EQUAL(42, foo->get());
+}
 
+BOOST_AUTO_TEST_CASE(lambda_with_wrap)
+{
+    auto env = lua::create();
+
+    env["multiply"] = std::function<int(int, int)>([](int a, int b) {
+        return a * b;
+    });
+
+    auto result = lua::run_string<int>(env, "return multiply(2, 3)");
+    BOOST_CHECK_EQUAL(6, result);
 }
 
 static int receiveConstPtr(const Counter* counter)
