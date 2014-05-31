@@ -517,6 +517,23 @@ BOOST_AUTO_TEST_CASE(call_lua_from_cpp)
     BOOST_CHECK_EQUAL(1, lua::size(env["foo"]));
 }
 
+struct MethodSum {
+    int sum(int a, int b)
+    {
+        return a + b;
+    }
+};
+
+BOOST_AUTO_TEST_CASE(call_cpp_methods)
+{
+    auto env = lua::create();
+
+    env["sum"] = &MethodSum::sum;
+
+    auto result = lua::run_string<int>(env, "return sum(nil, 2, 3)");
+    BOOST_CHECK_EQUAL(result, 5);
+}
+
 BOOST_AUTO_TEST_CASE(call_lua_from_cpp_with_extra_arguments)
 {
     auto env = lua::create();

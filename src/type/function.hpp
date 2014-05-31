@@ -311,6 +311,17 @@ struct Push<RV(*)(Args...)>
     }
 };
 
+template <typename RV, typename Object, typename... Args>
+struct Push<RV(Object::*)(Args...)>
+{
+    static void push(lua::state* const state, RV(Object::* func)(Args...))
+    {
+        lua::push(state, std::function<RV(Object*, Args...)>(
+            std::mem_fn(func)
+        ));
+    }
+};
+
 template <typename RV, typename... Args>
 struct Push<std::function<RV(Args...)>>
 {
