@@ -86,13 +86,25 @@ type/function.hpp - support for C functions
 
 =head1 DESCRIPTION
 
-All this stuff involves calling C++ from Lua. This means pushing C++ functions
-into Lua, and creating the infrastructure to invoke them reliably.
+    int my_func(lua::state* const state);
+
+Lua-cxx provides support through lua::push and this header for the following
+types:
+
+=head4 lua::callable - std::function<lua::function>
 
 =head4 lua_CFunction, lua::function
 
-The function type that can be called directly from Lua. As a result, these
-can be pushed to Lua and will behave transparently as functions.
+Lua provides direct support for a single C function type, called lua_CFunction
+or lua::function. They appear in Lua identically to Lua-defined functions (
+though perhaps with a telling memory address). Lua-cxx provides support for
+other function types, but these must ultimately end with a lua::function if they
+are to do any work.
+
+The state is populated with the arguments passed to it. The function can then
+work on the stack. Once complete, the function should return the number of
+arguments that will be returned. The arguments are taken from the top, so the
+initial arguments do not need to be removed.
 
     int demo(lua::state* const state)
     {
@@ -341,6 +353,10 @@ struct Push<std::function<RV(lua::state* const)>>
 
 =head4 lua::push_function<Signature>(state, callable)
 
+Pushes the callable with the given function signature onto the Lua stack. This
+is useful if you want to be a bit clearer in how your functions are being
+converted into callables.
+
 */
 
 template <typename Signature>
@@ -352,6 +368,58 @@ static lua::index push_function(lua::state* const state, std::function<Signature
 /*
 
 =head4 lua::push_closure(state, callable, upvalues...);
+
+Pushes the given callable onto the stack. The upvalues provided will be saved
+with the function, and made available using the lua_upvalueindex(n) accessor.
+
+The following example shows pushing a C function onto the stack, and then shows
+the function accessing its upvalues:
+
+    int get_worker(lua::state* const state)
+    {
+        auto url = lua::get<std::string>(state, 1);
+        lua_settop(state, 0);
+
+        // Return the worker function
+        lua::push_closure(work, url);
+        return 1;
+    }
+
+    void work()
+    {
+        // Get the URL, saved from when this worker was made
+        auto url = lua::get<std::string>(state, lua_upvalueindex(1));
+
+        // Upvalues don't interfere with regular arguments
+        auto units_to_perform = lua::get<int>(state, 1);
+
+        connect_to_the_server(url);
+        while (units_to_perform-- > 0) {
+            ... work ...
+        }
+    }
+
+    // Meanwhile, in Lua...
+
+    local workers = {};
+    for i=1, 100 do
+        -- Connect to each server in the network
+        local worker = get_worker("example.com/server/" .. i);
+        table.insert(workers, worker);
+    end;
+
+    -- Start some work
+    for _, worker in ipairs(workers) do
+        worker(1000);
+    end;
+
+=head4 lua_pushcclosure(state, lua::function, int upvalues)
+
+=head4 int lua_upvalueindex(int offset)
+
+Returns the stack index that corresponds to the upvalue at the specified
+offset. Upvalues are used to associate arbitrary Lua data with C functions,
+but are rare to actually need in practice.
 
 */
 

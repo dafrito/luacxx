@@ -44,6 +44,9 @@ std::string traceback(lua::state* const state, const int toplevel);
 
 Returns a diagnostic representation of the Lua stack
 
+    #include <luacxx/algorithm.hpp>
+    #include <iostream>
+
     std::cerr << lua::dump(state) << std::endl;
 
 */
