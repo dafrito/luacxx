@@ -84,9 +84,15 @@ void lua::QObject_metatable(const lua::index& mt)
     });
 
     mt["__tostring"] = lua::function([](lua::state* const state) {
+        // Print something like QObject@0xd3adb33f
         auto obj = lua::get<QObject*>(state, 1);
         lua_settop(state, 0);
-        lua::push(state, obj->metaObject()->className());
+
+        std::stringstream str;
+        str << obj->metaObject()->className();
+        str << "@" << obj;
+        lua::push(state, str.str());
+
         return 1;
     });
 }
