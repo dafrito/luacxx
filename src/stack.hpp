@@ -847,7 +847,7 @@ void push_metatable(lua::state* const state, T* const value)
     set_metatable_as_default_table_for("__index");
     set_metatable_as_default_table_for("__newindex");
 
-    // Let downstream set up their type-specific metatable.
+    // Let the programmer set up their type-specific metatable.
     auto cacheable = Metatable<T>::metatable(mt, value);
 
     // Check if it's cacheable (and actually has a name):
