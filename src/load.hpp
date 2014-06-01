@@ -22,7 +22,7 @@ If compilation errors occur, a lua::error will be thrown.
 
 */
 lua::index load_file(lua::state* const state, QFile& file);
-lua::index load_file(lua::state* const state, const std::string& file);
+lua::index load_file(lua::state* const state, const std::string& filename);
 lua::index load_file(lua::state* const state, const char* file);
 lua::index load_file(lua::state* const state, std::istream& stream, const std::string& name);
 

@@ -48,9 +48,18 @@ namespace {
         if (d->stream.eof()) {
             return NULL;
         }
-        d->stream.readsome(d->buffer, CHUNKSIZE);
-        if (d->stream.fail()) {
-            throw std::runtime_error("Error while reading stream");
+        d->stream.read(d->buffer, CHUNKSIZE);
+        switch (d->stream.rdstate()) {
+            case std::ifstream::failbit:
+            throw std::runtime_error("std::ifstream::failbit: A logical error occurred on a I/O operation.");
+            break;
+
+            case std::ifstream::badbit:
+            throw std::runtime_error("std::ifstream::badbit: A read/writing error occurred on a I/O operation.");
+            break;
+
+            default:
+            break;
         }
         *size = d->stream.gcount();
         return d->buffer;
@@ -60,9 +69,9 @@ namespace {
     {
         switch (rv) {
             case LUA_ERRSYNTAX:
-                throw std::runtime_error(std::string("Syntax error during compilation: ") + lua_tostring(state, -1));
+                throw lua::error(std::string("Syntax error during compilation:\n") + lua_tostring(state, -1));
             case LUA_ERRMEM:
-                throw std::runtime_error(std::string("Memory allocation error during compilation: ") + lua_tostring(state, -1));
+                throw std::runtime_error(std::string("Memory allocation error during compilation:\n") + lua_tostring(state, -1));
         }
         return lua::index(state, -1);
     }
@@ -94,9 +103,9 @@ lua::index lua::load_file(lua::state* const state, std::istream& stream, const s
     ));
 }
 
-lua::index lua::load_file(lua::state* const state, const char* file)
+lua::index lua::load_file(lua::state* const state, const char* filename)
 {
-    return lua::load_file(state, std::string(file));
+    return lua::load_file(state, std::string(filename));
 }
 
 lua::index lua::load_string(lua::state* const state, const std::string& input)
