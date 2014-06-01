@@ -777,17 +777,17 @@ int free_userdata(lua::state* const state)
     auto userdata = reinterpret_cast<lua::userdata_block*>(block);
 
     switch (userdata->storage) {
+    case userdata_storage::pointer:
+    {
+        // Don't do anything for pointers; Lua does not own them, so Lua should not destroy them.
+        break;
+    }
     case userdata_storage::value:
     {
         auto value = reinterpret_cast<Stored*>(block + sizeof(lua::userdata_block));
         if (value != nullptr) {
             call_destructor(*value);
         }
-        break;
-    }
-    case userdata_storage::pointer:
-    {
-        // Don't do anything; pointers are plain data
         break;
     }
     case userdata_storage::shared_ptr:
@@ -827,9 +827,8 @@ void push_metatable(lua::state* const state, T* const value)
     lua_newtable(state);
 
     // Setup how we destroy the object.
-    lua_pushstring(state, "__gc");
     lua_pushcclosure(state, __gc, 0);
-    lua_settable(state, mt.pos());
+    lua_setfield(state, mt.pos(), "__gc");
 
     // Make the class name visible to callers
     lua_pushstring(state, class_name);
