@@ -745,7 +745,7 @@ struct Metatable
             void
         >::type>::metatable(mt, value);
         #else
-        return false;
+        return true;
         #endif
     }
 };
@@ -753,13 +753,14 @@ struct Metatable
 template <>
 struct Metatable<void>
 {
-    static constexpr const char* name = "";
+    static constexpr const char* name = "void";
 
-    static bool metatable(const lua::index& table, void* const value)
+    static bool metatable(const lua::index& mt, void* const value)
     {
-        return false;
+        return true;
     }
 };
+
 
 template <class T>
 inline void call_destructor(T& value)
