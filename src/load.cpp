@@ -167,6 +167,12 @@ const char* readQtStream(lua_State*, void *pstream, size_t *size)
 
 } // namespace anonymous
 
+lua::index lua::load_file(lua::state* const state, const QString& filename)
+{
+    QFile file(filename);
+    return lua::load_file(state, file);
+}
+
 lua::index lua::load_file(lua::state* const state, QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {

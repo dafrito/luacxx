@@ -7,6 +7,7 @@
 
 class QDir;
 class QFile;
+class QString;
 
 namespace lua {
 
@@ -23,6 +24,7 @@ If compilation errors occur, a lua::error will be thrown.
 */
 lua::index load_file(lua::state* const state, QFile& file);
 lua::index load_file(lua::state* const state, const std::string& filename);
+lua::index load_file(lua::state* const state, const QString& filename);
 lua::index load_file(lua::state* const state, const char* file);
 lua::index load_file(lua::state* const state, std::istream& stream, const std::string& name);
 
