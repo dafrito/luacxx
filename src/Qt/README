@@ -55,8 +55,13 @@ Lua-cxx Qt support
 
 =head1 DESCRIPTION
 
-This subdirectory provides full support for Qt QObjet introspection
+This subdirectory provides full support for Qt QObject introspection
 system. This allows all objects that derive from QObject to automatically
 expose their properties, signals, and slots, as well as any methods
 prefixed with Q_INVOKABLE. These methods can have any signature as long
 as each type is supported by this library and your lua::Push<> structs.
+
+This subdirectory also contains prebuilt bindings for many Qt classes.  Each
+class adheres to its documented Qt API where possible, including naming
+conventions. This allows the programmer to use Qt's API documentation directly,
+rather than needing to relearn this project's dialect.
