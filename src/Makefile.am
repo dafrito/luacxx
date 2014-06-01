@@ -36,6 +36,13 @@ libluacxx_la_SOURCES = \
 	stack.cpp \
 	thread.cpp
 
+bin_PROGRAMS = luacxx
+luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
+luacxx_LDADD = libluacxx.la
+
+luacxx_SOURCES = \
+	luacxx.cpp
+
 if BUILD_QT
 
 libluacxx_la_SOURCES += \

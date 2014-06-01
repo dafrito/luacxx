@@ -15,14 +15,17 @@ checkdebug: $(TESTS)
 checkvalgrind:
 	cd src/tests && valgrind -v --leak-check=full .libs/lt-runtest
 
-debug: $(TESTS)
-	cd src && gdb luacxx
-
 valgrind:
-	cd src && valgrind -v --leak-check=full --trace-children=yes luacxx
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./src/.libs/lt-luacxx $(top_srcdir)/src/demo.lua
 
 lua:
 	LUA_CPATH='./src/.libs/lib?.so;;' lua
+
+run:
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua
+
+debug:
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' gdb ./src/.libs/lt-luacxx
 
 # This is a common typo for me
 cehck: check
