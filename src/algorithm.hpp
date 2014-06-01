@@ -55,6 +55,21 @@ std::string dump(lua::state* const state);
 
 /*
 
+=head4 std::string str = lua::memory_address(index)
+
+Returns a string of the memory address for the value at the given index.
+
+    #include <luacxx/algorithm.hpp>
+    #include <iostream>
+
+    std::cerr << lua::memory_address(lua::index(state, -1)) << std::endl;
+
+*/
+
+std::string memory_address(const lua::index& index);
+
+/*
+
 =head4 lua::assert_type<Error>(const char* category, lua::type expected, lua::index)
 
 Asserts that the stack value at the given index is of the expected type. If

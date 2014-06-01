@@ -128,6 +128,13 @@ std::string lua::dump(lua::state* const state)
     return str.str();
 }
 
+std::string memory_address(const lua::index& index)
+{
+    std::stringstream str;
+    str << lua_topointer(index.state(), index.pos());
+    return str.str();
+}
+
 lua::index lua::top(lua::state* const state)
 {
     return lua::index(state, -1);
