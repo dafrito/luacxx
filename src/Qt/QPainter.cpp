@@ -132,8 +132,6 @@ int QPainter_eraseRect(lua::state* const state)
     return 0;
 }
 
-#include <iostream>
-
 int QPainter_fillRect(lua::state* const state)
 {
     auto painter = lua::get<QPainter*>(state, 1);
@@ -144,7 +142,6 @@ int QPainter_fillRect(lua::state* const state)
     width = lua::get<int>(state, 4),
     height = lua::get<int>(state, 5);
 
-    std::cerr << x << y << width << height;
     painter->fillRect(x, y, width, height, Qt::white);
     return 0;
 }
