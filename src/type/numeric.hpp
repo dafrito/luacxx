@@ -147,7 +147,7 @@ struct Push<float>
 {
     static void push(lua::state* const state, const float& value)
     {
-        lua::push(state, value);
+        lua::push<lua_Number>(state, value);
     }
 };
 
