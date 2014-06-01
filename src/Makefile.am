@@ -22,9 +22,25 @@ nobase_pkginclude_HEADERS = \
 	module/ModuleLoader.hpp \
 	Qt/QObject.hpp \
 	Qt/QObjectSlot.hpp \
+	Qt/QRect.hpp \
 	Qt/QChar.hpp \
 	Qt/QString.hpp \
+	Qt/QPainter.hpp \
+	Qt/QElapsedTimer.hpp \
 	Qt/QVariant.hpp \
+	Qt/QWindow.hpp \
+	Qt/QCoreApplication.hpp \
+	Qt/QGuiApplication.hpp \
+	Qt/QBackingStore.hpp \
+	Qt/QEvent.hpp \
+	Qt/QEventLoop.hpp \
+	Qt/QEventFilter.hpp \
+	Qt/QVector3D.hpp \
+	Qt/QQuaternion.hpp \
+	Qt/Qt.hpp \
+	Qt/QRegion.hpp \
+	Qt/QSize.hpp \
+	Qt/QObservable.hpp \
 	Gtk/GObject.hpp \
 	Gtk/require.hpp \
 	Gtk/GIBaseInfo.hpp \
@@ -47,8 +63,23 @@ if BUILD_QT
 
 libluacxx_la_SOURCES += \
 	module/DirectoryModuleLoader.cpp \
-	Qt/QVariant.cpp \
 	Qt/QObject.cpp \
+	Qt/QSize.cpp \
+	Qt/QRect.cpp \
+	Qt/Qt.cpp \
+	Qt/QVariant.cpp \
+	Qt/QWindow.cpp \
+	Qt/QCoreApplication.cpp \
+	Qt/QGuiApplication.cpp \
+	Qt/QPainter.cpp \
+	Qt/QRegion.cpp \
+	Qt/QElapsedTimer.cpp \
+	Qt/QVector3D.cpp \
+	Qt/QEvent.cpp \
+	Qt/QQuaternion.cpp \
+	Qt/QEventLoop.cpp \
+	Qt/QEventFilter.cpp \
+	Qt/QBackingStore.cpp \
 	Qt/QObjectSlot.cpp
 
 endif

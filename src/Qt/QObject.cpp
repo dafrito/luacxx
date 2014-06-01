@@ -2,6 +2,7 @@
 #include "Qt/QObjectSlot.hpp"
 #include "Qt/QVariant.hpp"
 #include "Qt/QString.hpp"
+#include "Qt/QEventFilter.hpp"
 
 #include <QObject>
 #include <QMetaObject>
@@ -21,6 +22,53 @@ namespace {
 
 void lua::QObject_metatable(const lua::index& mt)
 {
+    mt["installEventFilter"] = lua::function([](lua::state* const state) {
+        auto obj = lua::get<QObject*>(state, 1);
+        lua::index filter_arg(state, 2);
+        lua_settop(state, 2);
+
+        // Allow functions to be converted to a QEventFilter
+        if (filter_arg.type().function()) {
+            auto filter = lua::make<lua::QEventFilter>(state, state);
+            filter->setDelegate(filter_arg);
+            obj->installEventFilter(filter);
+        } else {
+            auto filter = filter_arg.get<QObject*>();
+            obj->installEventFilter(filter);
+
+            // Just use the filter as its own key
+            lua_pushvalue(state, 2);
+        }
+
+        // [obj, filter delegate, QEventFilter]
+        lua_getmetatable(state, 1);
+        lua_insert(state, 2);
+        // [obj, mt, filter delegate, QEventFilter]
+        lua_settable(state, 2);
+
+        return 0;
+    });
+
+    mt["removeEventFilter"] = lua::function([](lua::state* const state) {
+        auto obj = lua::get<QObject*>(state, 1);
+        lua::index filter_arg(state, 2);
+        lua_settop(state, 2);
+
+        // Check the metatable for a cached value
+        lua_getmetatable(state, 1);
+        lua::table::get(lua::index(state, -1), filter_arg);
+        if (lua::index(state, -1)) {
+            // We have one, so use it to clear our filter
+            obj->removeEventFilter(lua::index(state, -1).get<QObject*>());
+        }
+        lua_pop(state, 1);
+
+        // Clear the cached entry
+        lua::table::set(lua::index(state, -1), filter_arg, lua::value::nil);
+
+        return 0;
+    });
+
     mt["__index"] = lua::function([](lua::state* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         auto name = lua::get<const char*>(state, 2);
