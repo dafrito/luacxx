@@ -239,10 +239,6 @@ RV call(Callable source, Args... args)
     lua::push(callable.state(), args...);
     lua::invoke(callable);
 
-    if (lua_gettop(callable.state()) < callable.pos()) {
-        throw lua::error("Lua callable did not return a value");
-    }
-
     lua_settop(callable.state(), callable.pos());
     return lua::get<RV>(callable.state(), callable.pos());
 }
