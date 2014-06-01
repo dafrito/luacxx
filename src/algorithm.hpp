@@ -300,9 +300,14 @@ void insert(Table destination, Value value)
 
 /*
 
-=head4 lua::table::get<Value>(source, key)
+=head4 Value lua::table::get<Value>(source, key)
 
-Returns source[key] as a value of the given type.
+Returns source[key] as a value of the given type. The Lua stack
+is unaffected.
+
+=head4 lua::index lua::table::get(source, key)
+
+Pushes source[key] onto the Lua stack.
 
 */
 
