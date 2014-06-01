@@ -87,6 +87,15 @@ Lua-cxx uses Automake as its build system, so the process is conventional:
     make -j
     make install
 
+=head1 DOCUMENTATION
+
+The documentation for this project is found mostly in the source files. Use
+the small bash script, cpod, included with thist project, to view formatted
+documentation. cpod requires perldoc, so you may need to install Perl.
+
+    cd src
+    ./cpod ./stack.hpp
+
 =head1 STYLE
 
 STL conventions are used for naming and case, though not slavishly, to
