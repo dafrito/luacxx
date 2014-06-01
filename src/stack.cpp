@@ -1,5 +1,6 @@
 #include "stack.hpp"
 #include "algorithm.hpp"
+#include <iostream>
 
 template <>
 void lua::get<void>(const lua::index& source)
@@ -20,13 +21,21 @@ int lua::__gc(lua::state* const state)
     lua_getmetatable(state, 1);
     auto mt = lua::index(state, -1);
 
-    auto destroy = lua::table::get(mt, "Destroy");
-    if (destroy.type().function()) {
-        lua::call(destroy, lua::index(state, 1));
-    }
+    try {
+        auto destroy = lua::table::get(mt, "destroy");
+        if (destroy.type().function()) {
+            lua::call(destroy, lua::index(state, 1));
+        }
 
-    userdata->~userdata_block();
+        auto free_userdata = lua::table::get(mt, "free_userdata");
+        if (free_userdata.type().function()) {
+            lua::call(free_userdata, lua::index(state, 1));
+        }
+
+        userdata->~userdata_block();
+    } catch (lua::error& ex) {
+        std::cerr << "Error occurred during Lua garbage collection: " << ex.what();
+    }
 
     return 0;
 }
-

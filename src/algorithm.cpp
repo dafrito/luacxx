@@ -75,6 +75,15 @@ std::string lua::traceback(lua::state* const state, const int toplevel)
     #endif
 }
 
+std::string lua::class_name(const lua::index& index)
+{
+    lua_getmetatable(index.state(), index.pos());
+    lua_getfield(index.state(), -1, "__class");
+    std::string rv(lua_tostring(index.state(), -1));
+    lua_pop(index.state(), 2);
+    return rv;
+}
+
 std::string lua::dump(lua::state* const state)
 {
     std::stringstream str;

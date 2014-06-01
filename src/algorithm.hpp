@@ -53,6 +53,8 @@ Returns a diagnostic representation of the Lua stack
 
 std::string dump(lua::state* const state);
 
+std::string class_name(const lua::index& index);
+
 /*
 
 =head4 std::string str = lua::memory_address(index)

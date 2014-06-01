@@ -770,7 +770,7 @@ inline void call_destructor(T& value)
 
 // Destroy the userdata's value, specified by the template parameter
 template <class Stored>
-int destroy(lua::state* const state)
+int free_userdata(lua::state* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
     auto userdata = reinterpret_cast<lua::userdata_block*>(block);
@@ -830,8 +830,12 @@ void push_metatable(lua::state* const state, T* const value)
     lua_pushcclosure(state, __gc, 0);
     lua_settable(state, mt.pos());
 
-    lua_pushstring(state, "Destroy");
-    lua_pushcfunction(state, destroy<Stored>);
+    // Make the class name visible to callers
+    lua_pushstring(state, class_name);
+    lua_setfield(state, mt.pos(), "__class");
+
+    lua_pushstring(state, "free_userdata");
+    lua_pushcfunction(state, free_userdata<Stored>);
     lua_settable(state, mt.pos());
 
     // Use this metatable as the default index and newindex.
