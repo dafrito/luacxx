@@ -169,8 +169,9 @@ BOOST_AUTO_TEST_CASE(reference)
 {
     auto env = lua::create();
 
-    lua::reference ref(lua::push(env, "No Time"));
-    BOOST_CHECK_EQUAL(lua::size(env), 1);
+    lua::reference ref(env);
+    ref = lua::push(env, "No Time");
+    lua_pop(env, 1);
 
     env << ref;
     BOOST_CHECK_EQUAL(lua::get<const char*>(env, -1), "No Time");

@@ -8,8 +8,9 @@
 lua::QObjectSlot::QObjectSlot(QObject* const parent, const QMetaMethod& signal, const lua::index& slot) :
     QObject(parent),
     _signal(signal),
-    _slot(slot)
+    _slot(slot.state())
 {
+    _slot = slot;
 }
 
 int lua::QObjectSlot::qt_metacall(QMetaObject::Call call, int id, void **arguments)

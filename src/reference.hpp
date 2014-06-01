@@ -2,6 +2,7 @@
 #define LUA_CXX_REFERENCE_HEADER
 
 #include "stack.hpp"
+#include "algorithm.hpp"
 
 /*
 
@@ -62,48 +63,20 @@ public:
 */
 
 reference(lua::state* const $state) :
-    _state($state)
+    _state($state),
+    _id(LUA_NOREF)
 {
-    // No initial value, so fake it with nil
-    lua_pushlightuserdata(state(), NIL_REFERENCE);
-    _id = luaL_ref(state(), LUA_REGISTRYINDEX);
-
-    lua_pushnil(state());
-    lua_rawseti(state(), LUA_REGISTRYINDEX, _id);
 }
 
-/*
-
-=head4 lua::reference(lua::index)
-
-*/
-
-reference(const lua::index& value) :
-    _state(value.state())
+reference(const lua::reference& other)=delete;
+reference(lua::reference& other) :
+    _state(other.state()),
+    _id(LUA_NOREF)
 {
-    if (value.type().nil()) {
-        // No initial value, so fake it with nil
-        lua_pushlightuserdata(state(), NIL_REFERENCE);
-        _id = luaL_ref(state(), LUA_REGISTRYINDEX);
-
-        lua_pushnil(state());
-        lua_rawseti(value.state(), LUA_REGISTRYINDEX, _id);
-    } else {
-        // The index refers to a non-nil value, so create a reference directly
-        lua_pushvalue(state(), value.pos());
+    if (other) {
+        lua_rawgeti(state(), LUA_REGISTRYINDEX, other.id());
         _id = luaL_ref(state(), LUA_REGISTRYINDEX);
     }
-}
-
-/*
-
-=head4 lua::reference(lua::state, int pos)
-
-*/
-
-reference(lua::state* const state, int pos) :
-    reference(lua::index(state, pos))
-{
 }
 
 lua::state* const state() const
@@ -114,6 +87,39 @@ lua::state* const state() const
 const int id() const
 {
     return _id;
+}
+
+explicit operator bool() const
+{
+    return _id != LUA_NOREF && _id != LUA_REFNIL;
+}
+
+lua::type_info type() const
+{
+    if (*this) {
+        lua_rawgeti(state(), LUA_REGISTRYINDEX, _id);
+        auto type = lua::index(state(), -1).type();
+        lua_pop(state(), 1);
+        return type;
+    }
+
+    return lua::type_info(lua::type::nil);
+}
+
+void acquire()
+{
+    if (!*this) {
+        lua_pushlightuserdata(state(), NIL_REFERENCE);
+        _id = luaL_ref(state(), LUA_REGISTRYINDEX);
+    }
+}
+
+void release()
+{
+    if (*this) {
+        luaL_unref(state(), LUA_REGISTRYINDEX, _id);
+        _id = LUA_NOREF;
+    }
 }
 
 /*
@@ -139,7 +145,7 @@ Unreference this value.
 
 ~reference()
 {
-    luaL_unref(state(), LUA_REGISTRYINDEX, _id);
+    release();
 }
 
 };
@@ -149,6 +155,10 @@ struct Push<lua::reference>
 {
     static void push(lua::state* const state, const lua::reference& source)
     {
+        if (!source) {
+            lua_pushnil(state);
+            return;
+        }
         lua_rawgeti(state, LUA_REGISTRYINDEX, source.id());
     }
 };
@@ -158,6 +168,11 @@ struct Store<lua::reference>
 {
     static void store(lua::reference& destination, const lua::index& source)
     {
+        if (source.type().nil()) {
+            destination.release();
+            return;
+        }
+        destination.acquire();
         lua_pushvalue(source.state(), source.pos());
         lua_rawseti(source.state(), LUA_REGISTRYINDEX, destination.id());
     }
