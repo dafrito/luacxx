@@ -36,7 +36,7 @@ debugging function calls.
 
 */
 
-std::string traceback(lua::state* const state, const int toplevel);
+std::string traceback(lua_State* const state, const int toplevel);
 
 /*
 
@@ -51,9 +51,10 @@ Returns a diagnostic representation of the Lua stack
 
 */
 
-std::string dump(lua::state* const state);
+std::string dump(lua_State* const state);
 
 std::string class_name(const lua::index& index);
+std::string class_name(const lua_State* const state, const int index);
 
 /*
 
@@ -102,7 +103,7 @@ Returns the topmost stack index for the given state, as a lua::index.
 
 */
 
-lua::index top(lua::state* const state);
+lua::index top(lua_State* const state);
 
 /*
 
@@ -112,7 +113,7 @@ Returns lua_gettop(state).
 
 */
 
-int size(lua::state* const state);
+int size(lua_State* const state);
 
 /*
 
@@ -156,7 +157,7 @@ Removes all stack values from the given state. Equivalent to lua_settop(state,
 0).
 
 */
-void clear(lua::state* const state);
+void clear(lua_State* const state);
 
 /*
 
@@ -272,7 +273,7 @@ void call(Callable source, Args... args)
 }
 
 template <class T>
-lua::index push_global(lua::state* const state, const T&& name)
+lua::index push_global(lua_State* const state, const T&& name)
 {
     auto globals = lua::push(state, lua::value::globals);
     auto rv = globals[name];

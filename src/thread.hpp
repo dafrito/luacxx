@@ -14,7 +14,7 @@ lua::thread - convenient wrappng for Lua states
 
     #include <luacxx/thread.hpp>
 
-    int luaopen_Foo(lua::state* const state)
+    int luaopen_Foo(lua_State* const state)
     {
         // Set up the table using a lua::thread wrapper
         lua::thread env(state);
@@ -35,7 +35,7 @@ thread is being destroyed. Ownership is not enforced, but for quick demos, as
 well as situations with many different states (like in a threading situation),
 the ownership can be useful.
 
-lua::thread converts to a lua::state automatically, so its usage does not
+lua::thread converts to a lua_State automatically, so its usage does not
 muddy up the rest of the API.
 
 */
@@ -44,7 +44,7 @@ namespace lua {
 
 class thread {
 
-lua::state* _state;
+lua_State* _state;
 bool _owner;
 
 public:
@@ -58,7 +58,7 @@ Creates a new lua::thread that wraps the given state.
 No ownership is transferred.
 
 */
-thread(lua::state* const state) :
+thread(lua_State* const state) :
     _state(state),
     _owner(false)
 {
@@ -66,12 +66,12 @@ thread(lua::state* const state) :
 
 /*
 
-=head2 lua::state* lua::thread::state()
+=head2 lua_State* lua::thread::state()
 
 Returns the underlying state.
 
 */
-lua::state* const state() const
+lua_State* const state() const
 {
     return _state;
 }
@@ -109,7 +109,7 @@ thread& operator=(const lua::thread& other)
 
 =head2 set_as_owner(), clear_owner(), is_owner()
 
-Manages whether the lua::thread will close its lua::state upon destruction.
+Manages whether the lua::thread will close its lua_State upon destruction.
 These will make no attempt to ensure exclusivity.
 
     // Create a new thread; note that ownership is transferred through assignment
@@ -140,7 +140,7 @@ bool is_owner()
     return _owner;
 }
 
-operator lua::state*()
+operator lua_State*()
 {
     return _state;
 }
@@ -181,7 +181,7 @@ lua::thread create();
 template <>
 struct Push<lua::thread>
 {
-    static void push(lua::state* const state, lua::thread& env)=delete;
+    static void push(lua_State* const state, lua::thread& env)=delete;
 };
 
 template <>

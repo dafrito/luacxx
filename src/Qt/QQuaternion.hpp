@@ -23,6 +23,6 @@ struct Metatable<QQuaternion>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QQuaternion(lua::state* const);
+extern "C" int luaopen_luacxx_QQuaternion(lua_State* const);
 
 #endif // LUA_CXX_QQUATERNION_INCLUDED

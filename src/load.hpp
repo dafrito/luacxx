@@ -22,11 +22,11 @@ QFile, or a std::istream.
 If compilation errors occur, a lua::error will be thrown.
 
 */
-lua::index load_file(lua::state* const state, QFile& file);
-lua::index load_file(lua::state* const state, const std::string& filename);
-lua::index load_file(lua::state* const state, const QString& filename);
-lua::index load_file(lua::state* const state, const char* file);
-lua::index load_file(lua::state* const state, std::istream& stream, const std::string& name);
+lua::index load_file(lua_State* const state, QFile& file);
+lua::index load_file(lua_State* const state, const std::string& filename);
+lua::index load_file(lua_State* const state, const QString& filename);
+lua::index load_file(lua_State* const state, const char* file);
+lua::index load_file(lua_State* const state, std::istream& stream, const std::string& name);
 
 /*
 
@@ -38,8 +38,8 @@ function to execute the given code will be pushed on the Lua stack.
 If compilation errors occur, a lua::error will be thrown.
 
 */
-lua::index load_string(lua::state* const state, const std::string& input);
-lua::index load_string(lua::state* const state, const char* input);
+lua::index load_string(lua_State* const state, const std::string& input);
+lua::index load_string(lua_State* const state, const char* input);
 
 /*
 
@@ -61,7 +61,7 @@ specify a filter list on the directory itself:
     lua::run_dir(state, dir, true);
 
 */
-void run_dir(lua::state* const state, const QDir& dir, const bool recurse);
+void run_dir(lua_State* const state, const QDir& dir, const bool recurse);
 
 /*
 
@@ -74,7 +74,7 @@ The return value can be specified to have a single argument be returned.
 
 */
 template <class RV, class Input, class... Rest>
-RV run_string(lua::state* const state, Input& runnable, Rest... args)
+RV run_string(lua_State* const state, Input& runnable, Rest... args)
 {
     lua::index rv(state, lua_gettop(state) + 1);
     lua::invoke(lua::load_string(state, runnable, args...));
@@ -85,7 +85,7 @@ RV run_string(lua::state* const state, Input& runnable, Rest... args)
 }
 
 template <class Input, class... Rest>
-void run_string(lua::state* const state, Input& runnable, Rest... args)
+void run_string(lua_State* const state, Input& runnable, Rest... args)
 {
     lua::invoke(lua::load_string(state, runnable, args...));
 }
@@ -102,7 +102,7 @@ The return value can be specified to have a single argument be returned.
 */
 
 template <class RV, class Input>
-RV run_file(lua::state* const state, Input& runnable)
+RV run_file(lua_State* const state, Input& runnable)
 {
     lua::index rv(state, lua_gettop(state) + 1);
     lua::invoke(lua::load_file(state, runnable));
@@ -113,7 +113,7 @@ RV run_file(lua::state* const state, Input& runnable)
 }
 
 template <class Input>
-void run_file(lua::state* const state, Input& runnable)
+void run_file(lua_State* const state, Input& runnable)
 {
     lua::invoke(lua::load_file(state, runnable));
 }

@@ -21,7 +21,7 @@ namespace {
     const int CHUNKSIZE = 4096;
     const char EMPTY_LINE = '\n';
 
-    const char* readStdStream(lua::state* const, void* data, size_t* size)
+    const char* readStdStream(lua_State* const, void* data, size_t* size)
     {
         LuaReadingData* d = static_cast<LuaReadingData*>(data);
         if (d->atStart) {
@@ -65,7 +65,7 @@ namespace {
         return d->buffer;
     }
 
-    lua::index do_post_load(lua::state* const state, const int rv)
+    lua::index do_post_load(lua_State* const state, const int rv)
     {
         switch (rv) {
             case LUA_ERRSYNTAX:
@@ -78,7 +78,7 @@ namespace {
 
 } // namespace anonymous
 
-lua::index lua::load_file(lua::state* const state, const std::string& file)
+lua::index lua::load_file(lua_State* const state, const std::string& file)
 {
     std::ifstream stream(file, std::ios::in);
     if (!stream) {
@@ -88,7 +88,7 @@ lua::index lua::load_file(lua::state* const state, const std::string& file)
     return lua::load_file(state, stream, file);
 }
 
-lua::index lua::load_file(lua::state* const state, std::istream& stream, const std::string& name)
+lua::index lua::load_file(lua_State* const state, std::istream& stream, const std::string& name)
 {
     LuaReadingData d(stream);
     if (!stream) {
@@ -103,17 +103,17 @@ lua::index lua::load_file(lua::state* const state, std::istream& stream, const s
     ));
 }
 
-lua::index lua::load_file(lua::state* const state, const char* filename)
+lua::index lua::load_file(lua_State* const state, const char* filename)
 {
     return lua::load_file(state, std::string(filename));
 }
 
-lua::index lua::load_string(lua::state* const state, const std::string& input)
+lua::index lua::load_string(lua_State* const state, const std::string& input)
 {
     return lua::load_string(state, input.c_str());
 }
 
-lua::index lua::load_string(lua::state* const state, const char* input)
+lua::index lua::load_string(lua_State* const state, const char* input)
 {
     do_post_load(state, luaL_loadstring(state, input));
     return lua::index(state, -1);
@@ -167,13 +167,13 @@ const char* readQtStream(lua_State*, void *pstream, size_t *size)
 
 } // namespace anonymous
 
-lua::index lua::load_file(lua::state* const state, const QString& filename)
+lua::index lua::load_file(lua_State* const state, const QString& filename)
 {
     QFile file(filename);
     return lua::load_file(state, file);
 }
 
-lua::index lua::load_file(lua::state* const state, QFile& file)
+lua::index lua::load_file(lua_State* const state, QFile& file)
 {
     if (!file.open(QIODevice::ReadOnly)) {
         throw std::runtime_error(
@@ -190,7 +190,7 @@ lua::index lua::load_file(lua::state* const state, QFile& file)
     ));
 }
 
-void lua::run_dir(lua::state* const state, const QDir& dir, const bool recurse)
+void lua::run_dir(lua_State* const state, const QDir& dir, const bool recurse)
 {
     foreach(QFileInfo info, dir.entryInfoList(
         (recurse ? QDir::AllEntries : QDir::Files) | QDir::NoDotAndDotDot,

@@ -20,7 +20,7 @@ type/function.hpp - support for C functions
     #include <luacxx/type/numeric.hpp>
 
     // Add all arguments
-    int add_several(lua::state* const state)
+    int add_several(lua_State* const state)
     {
         int sum = 0;
         for (int i = 1; i <= lua_gettop(state); ++i) {
@@ -39,7 +39,7 @@ type/function.hpp - support for C functions
     }
 
     // Add two, but have the first come from the upvalues
-    int adder(lua::state* const state)
+    int adder(lua_State* const state)
     {
         auto first = lua::get<int>(state, lua_upvalueindex(state, 1));
         auto second = lua::get<int>(state, 1);
@@ -50,7 +50,7 @@ type/function.hpp - support for C functions
     }
 
     // Create a partial function that adds two values
-    int make_adder(lua::state* const state)
+    int make_adder(lua_State* const state)
     {
         auto first = lua::get<int>(state, 1);
         lua_settop(state, 0);
@@ -60,7 +60,7 @@ type/function.hpp - support for C functions
     }
 
     // Open the "add" module
-    int luaopen_add(lua::state* const state)
+    int luaopen_add(lua_State* const state)
     {
         lua:thread env(state);
 
@@ -86,7 +86,7 @@ type/function.hpp - support for C functions
 
 =head1 DESCRIPTION
 
-    int my_func(lua::state* const state);
+    int my_func(lua_State* const state);
 
 Lua-cxx provides support through lua::push and this header for the following
 types:
@@ -106,7 +106,7 @@ work on the stack. Once complete, the function should return the number of
 arguments that will be returned. The arguments are taken from the top, so the
 initial arguments do not need to be removed.
 
-    int demo(lua::state* const state)
+    int demo(lua_State* const state)
     {
         // Pull arguments
         auto id = lua::get<int>(state, 1);
@@ -124,7 +124,7 @@ initial arguments do not need to be removed.
 
 Pushes the given callable C function onto the stack.
 
-    int demo(lua::state* const state)
+    int demo(lua_State* const state)
     {
         // ... same as above ...
     }
@@ -136,7 +136,7 @@ Pushes the given callable C function onto the stack.
 namespace lua {
 
 typedef lua_CFunction function;
-typedef std::function<int(lua::state* const)> callable;
+typedef std::function<int(lua_State* const)> callable;
 
 }
 
@@ -145,7 +145,7 @@ namespace lua {
 template <>
 struct Push<lua::function>
 {
-    static void push(lua::state* const state, lua::function callable)
+    static void push(lua_State* const state, lua::function callable)
     {
         lua_pushcclosure(state, callable, 0);
     }
@@ -160,7 +160,7 @@ struct Store<lua::function>
     }
 };
 
-static int invoke_callable(lua::state* const state)
+static int invoke_callable(lua_State* const state)
 {
     auto callable = lua::get<lua::callable*>(lua::index(state, lua_upvalueindex(1)));
     try {
@@ -175,7 +175,7 @@ static int invoke_callable(lua::state* const state)
 template <>
 struct Push<lua::callable>
 {
-    static void push(lua::state* const state, const lua::callable& callable)
+    static void push(lua_State* const state, const lua::callable& callable)
     {
         Construct<lua::callable>::construct(state, callable);
         lua_pushcclosure(state, invoke_callable, 1);
@@ -287,7 +287,7 @@ signature, so it needs to be specified externally using std::function.
 namespace lua {
 
 template <typename RV, typename... Args>
-int invoke_callable(lua::state* const state)
+int invoke_callable(lua_State* const state)
 {
     auto wrapped = lua::get<std::function<RV(Args...)>>(
         state, lua_upvalueindex(1)
@@ -316,7 +316,7 @@ int invoke_callable(lua::state* const state)
 template <typename RV, typename... Args>
 struct Push<RV(*)(Args...)>
 {
-    static void push(lua::state* const state, RV(*func)(Args...))
+    static void push(lua_State* const state, RV(*func)(Args...))
     {
         lua::push(state, std::function<RV(Args...)>(func));
     }
@@ -325,7 +325,7 @@ struct Push<RV(*)(Args...)>
 template <typename RV, typename Object, typename... Args>
 struct Push<RV(Object::*)(Args...)>
 {
-    static void push(lua::state* const state, RV(Object::* func)(Args...))
+    static void push(lua_State* const state, RV(Object::* func)(Args...))
     {
         lua::push(state, std::function<RV(Object*, Args...)>(
             std::mem_fn(func)
@@ -336,7 +336,7 @@ struct Push<RV(Object::*)(Args...)>
 template <typename RV, typename Object, typename... Args>
 struct Push<RV(Object::*)(Args...) const>
 {
-    static void push(lua::state* const state, RV(Object::* func)(Args...) const)
+    static void push(lua_State* const state, RV(Object::* func)(Args...) const)
     {
         lua::push(state, std::function<RV(Object*, Args...)>(
             std::mem_fn(func)
@@ -347,7 +347,7 @@ struct Push<RV(Object::*)(Args...) const>
 template <typename RV, typename... Args>
 struct Push<std::function<RV(Args...)>>
 {
-    static void push(lua::state* const state, const std::function<RV(Args...)>& callable)
+    static void push(lua_State* const state, const std::function<RV(Args...)>& callable)
     {
         Construct<std::function<RV(Args...)>>::construct(state, callable);
         lua_pushcclosure(state, invoke_callable<RV, Args...>, 1);
@@ -355,11 +355,11 @@ struct Push<std::function<RV(Args...)>>
 };
 
 template <typename RV>
-struct Push<RV(*)(lua::state* const)>
+struct Push<RV(*)(lua_State* const)>
 {
-    static void push(lua::state* const state, RV(*func)(lua::state* const))
+    static void push(lua_State* const state, RV(*func)(lua_State* const))
     {
-        lua::push(state, lua::callable([=](lua::state* const state) {
+        lua::push(state, lua::callable([=](lua_State* const state) {
             lua::push(state, func(state));
             lua_replace(state, 1);
             lua_settop(state, 1);
@@ -369,11 +369,11 @@ struct Push<RV(*)(lua::state* const)>
 };
 
 template <typename RV>
-struct Push<std::function<RV(lua::state* const)>>
+struct Push<std::function<RV(lua_State* const)>>
 {
-    static void push(lua::state* const state, const std::function<RV(lua::state* const)>& func)
+    static void push(lua_State* const state, const std::function<RV(lua_State* const)>& func)
     {
-        lua::push(state, lua::callable([=](lua::state* const state) {
+        lua::push(state, lua::callable([=](lua_State* const state) {
             lua::push(state, func(state));
             lua_replace(state, 1);
             lua_settop(state, 1);
@@ -404,7 +404,7 @@ converted into callables.
 */
 
 template <typename Signature>
-static lua::index push_function(lua::state* const state, std::function<Signature> callable)
+static lua::index push_function(lua_State* const state, std::function<Signature> callable)
 {
     return lua::push(state, callable);
 }
@@ -419,7 +419,7 @@ with the function, and made available using the lua_upvalueindex(n) accessor.
 The following example shows pushing a C function onto the stack, and then shows
 the function accessing its upvalues:
 
-    int get_worker(lua::state* const state)
+    int get_worker(lua_State* const state)
     {
         auto url = lua::get<std::string>(state, 1);
         lua_settop(state, 0);
@@ -468,7 +468,7 @@ but are rare to actually need in practice.
 */
 
 template <typename... Upvalues>
-static lua::index push_closure(lua::state* const state, lua::function callable, Upvalues... upvalues)
+static lua::index push_closure(lua_State* const state, lua::function callable, Upvalues... upvalues)
 {
     lua::push(state, upvalues...);
     lua_pushcclosure(state, callable, sizeof...(Upvalues));

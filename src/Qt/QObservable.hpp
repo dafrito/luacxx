@@ -18,7 +18,7 @@ lua::reference _target;
 
 public:
     template <class... Args>
-    QObservable(lua::state* const state, Args... args) :
+    QObservable(lua_State* const state, Args... args) :
         Object(args...),
         _target(state)
     {
@@ -40,7 +40,7 @@ public:
 };
 
 template <class T>
-int QObservable_event(lua::state* const state)
+int QObservable_event(lua_State* const state)
 {
     lua::get<QObservable<T>*>(state, 1)->setDelegate(lua::index(state, 2));
     return 0;
@@ -60,6 +60,6 @@ struct Metatable<QObservable<T>>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QObservable(lua::state* const);
+extern "C" int luaopen_luacxx_QObservable(lua_State* const);
 
 #endif // LUA_CXX_QOBSERVABLE_INCLUDED

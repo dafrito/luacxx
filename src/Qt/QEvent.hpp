@@ -52,7 +52,7 @@ struct Metatable<QExposeEvent>
 template <>
 struct Push<QEvent*>
 {
-    static void push(lua::state* const state, QEvent* const event)
+    static void push(lua_State* const state, QEvent* const event)
     {
         if (!event) {
             lua_pushnil(state);
@@ -71,6 +71,6 @@ struct Push<QEvent*>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QEvent(lua::state* const);
+extern "C" int luaopen_luacxx_QEvent(lua_State* const);
 
 #endif // LUA_CXX_QEVENT_INCLUDED

@@ -25,6 +25,6 @@ struct Metatable<QRect>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QRect(lua::state* const);
+extern "C" int luaopen_luacxx_QRect(lua_State* const);
 
 #endif // LUA_CXX_QRECT_INCLUDED

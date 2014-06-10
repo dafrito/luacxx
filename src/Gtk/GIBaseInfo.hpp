@@ -8,7 +8,7 @@ namespace lua {
 
 std::string GIInfoType_tostring(GIInfoType value);
 std::string GIBaseInfo_tostring(GIBaseInfo* info);
-int GIBaseInfo_call(lua::state* const state);
+int GIBaseInfo_call(lua_State* const state);
 void GIBaseInfo_metatable(const lua::index& mt);
 
 template <>

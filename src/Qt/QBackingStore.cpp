@@ -12,7 +12,7 @@ void* QBackingStore_handle(QBackingStore* const store)
     return store->handle();
 }
 
-int QBackingStore_flush(lua::state* const state)
+int QBackingStore_flush(lua_State* const state)
 {
     auto store = lua::get<QBackingStore*>(state, 1);
     auto region = lua::get<QRegion>(state, 2);
@@ -47,13 +47,13 @@ void lua::QBackingStore_metatable(const lua::index& mt)
     mt["window"] = &QBackingStore::window;
 }
 
-int QBackingStore_new(lua::state* const state)
+int QBackingStore_new(lua_State* const state)
 {
     lua::make<QBackingStore>(state, lua::get<QWindow*>(state, 2));
     return 1;
 }
 
-int luaopen_luacxx_QBackingStore(lua::state* const state)
+int luaopen_luacxx_QBackingStore(lua_State* const state)
 {
     lua::thread env(state);
 

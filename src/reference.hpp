@@ -18,7 +18,7 @@ lua::reference - a slot for C to save Lua values
         lua::reference target;
     };
 
-    int MyData_new(lua::state* const state)
+    int MyData_new(lua_State* const state)
     {
         MyData* data = lua::make<MyData>(state);
         data->target = lua::index(state, 2);
@@ -28,7 +28,7 @@ lua::reference - a slot for C to save Lua values
         return 1;
     }
 
-    int luaopen_MyData(lua::state* const state)
+    int luaopen_MyData(lua_State* const state)
     {
         lua::thread env(state);
 
@@ -51,7 +51,7 @@ namespace lua {
 class reference
 {
 
-lua::state* const _state;
+lua_State* const _state;
 int _id;
 
 public:
@@ -62,7 +62,7 @@ public:
 
 */
 
-reference(lua::state* const $state) :
+reference(lua_State* const $state) :
     _state($state),
     _id(LUA_NOREF)
 {
@@ -79,7 +79,7 @@ reference(lua::reference& other) :
     }
 }
 
-lua::state* const state() const
+lua_State* const state() const
 {
     return _state;
 }
@@ -153,7 +153,7 @@ Unreference this value.
 template <>
 struct Push<lua::reference>
 {
-    static void push(lua::state* const state, const lua::reference& source)
+    static void push(lua_State* const state, const lua::reference& source)
     {
         if (!source) {
             lua_pushnil(state);

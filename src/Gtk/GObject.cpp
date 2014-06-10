@@ -48,7 +48,7 @@ GIBaseInfo* get_base_info(const lua::index& index)
     return base_info;
 }
 
-int lua::GObject_index(lua::state* const state)
+int lua::GObject_index(lua_State* const state)
 {
     // Get the object and requested name
     auto obj = lua::get<GObject*>(state, 1);
@@ -88,7 +88,7 @@ int lua::GObject_index(lua::state* const state)
     return 1;
 }
 
-int lua::GObject_destroy(lua::state* const state)
+int lua::GObject_destroy(lua_State* const state)
 {
     // Unreference the object from Lua, potentially destroying it
     auto obj = lua::get<GObject*>(state, 1);
@@ -99,7 +99,7 @@ int lua::GObject_destroy(lua::state* const state)
     return 0;
 }
 
-int lua::GObject_tostring(lua::state* const state)
+int lua::GObject_tostring(lua_State* const state)
 {
     GIBaseInfo* base_info = get_base_info(lua::index(state, 1));
     lua_settop(state, 0);

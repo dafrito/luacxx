@@ -10,7 +10,7 @@ namespace lua {
 template<>
 struct Push<QString>
 {
-    static void push(lua::state* const state, const QString& source)
+    static void push(lua_State* const state, const QString& source)
     {
         lua::push(state, source.toUtf8().constData());
     }

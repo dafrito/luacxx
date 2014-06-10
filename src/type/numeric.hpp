@@ -45,7 +45,7 @@ namespace lua {
 template <>
 struct Push<int>
 {
-    static void push(lua::state* const state, const int& value)
+    static void push(lua_State* const state, const int& value)
     {
         lua::push<lua_Integer>(state, value);
     }
@@ -65,7 +65,7 @@ struct Store<int>
 template <>
 struct Push<unsigned int>
 {
-    static void push(lua::state* const state, const unsigned int& value)
+    static void push(lua_State* const state, const unsigned int& value)
     {
         lua::push<lua_Integer>(state, value);
     }
@@ -85,7 +85,7 @@ struct Store<unsigned int>
 template <>
 struct Push<short>
 {
-    static void push(lua::state* const state, const short& value)
+    static void push(lua_State* const state, const short& value)
     {
         lua::push<lua_Integer>(state, value);
     }
@@ -105,7 +105,7 @@ struct Store<short>
 template <>
 struct Push<unsigned short>
 {
-    static void push(lua::state* const state, const unsigned short& value)
+    static void push(lua_State* const state, const unsigned short& value)
     {
         lua::push<lua_Integer>(state, value);
     }
@@ -125,7 +125,7 @@ struct Store<unsigned short>
 template <>
 struct Push<long long>
 {
-    static void push(lua::state* const state, const long long& value)
+    static void push(lua_State* const state, const long long& value)
     {
         lua::push(state, static_cast<lua_Integer>(value));
     }
@@ -145,7 +145,7 @@ struct Store<long long>
 template <>
 struct Push<float>
 {
-    static void push(lua::state* const state, const float& value)
+    static void push(lua_State* const state, const float& value)
     {
         lua::push<lua_Number>(state, value);
     }

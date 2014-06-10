@@ -11,7 +11,7 @@ namespace lua {
 template<>
 struct Push<QChar>
 {
-    static void push(lua::state* const state, const QChar& source)
+    static void push(lua_State* const state, const QChar& source)
     {
         lua::push(state, QString(source));
     }

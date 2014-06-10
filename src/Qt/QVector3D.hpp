@@ -23,6 +23,6 @@ struct Metatable<QVector3D>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QVector3D(lua::state* const);
+extern "C" int luaopen_luacxx_QVector3D(lua_State* const);
 
 #endif // LUA_CXX_QVECTOR3D_INCLUDED

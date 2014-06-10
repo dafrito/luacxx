@@ -10,18 +10,18 @@
 //bool    contains ( int x, int y, bool proper ) const
 //bool    contains ( int x, int y ) const
 //bool    contains ( const QRect & rectangle, bool proper = false ) const
-int QRect_contains(lua::state* const state)
+int QRect_contains(lua_State* const state)
 {
     return 0;
 }
 
-int QRect_moveTo(lua::state* const state)
+int QRect_moveTo(lua_State* const state)
 {
     return 0;
 }
 
 //void    getCoords ( int * x1, int * y1, int * x2, int * y2 ) const
-int QRect_getCoords(lua::state* const state)
+int QRect_getCoords(lua_State* const state)
 {
     int x1, y1, x2, y2;
     lua::get<QRect*>(state, 1)->getCoords(&x1, &y1, &x2, &y2);
@@ -31,7 +31,7 @@ int QRect_getCoords(lua::state* const state)
 }
 
 //void    getRect ( int * x, int * y, int * width, int * height ) const
-int QRect_getRect(lua::state* const state)
+int QRect_getRect(lua_State* const state)
 {
     int x, y, width, height;
     lua::get<QRect*>(state, 1)->getRect(&x, &y, &width, &height);
@@ -113,7 +113,7 @@ void lua::QRect_metatable(const lua::index& mt)
     mt["__tostring"] = QRect_tostring;
 }
 
-int QRect_new(lua::state* const state)
+int QRect_new(lua_State* const state)
 {
     if (lua_gettop(state) >= 5) {
         lua::make<QRect>(state,
@@ -128,7 +128,7 @@ int QRect_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QRect(lua::state* const state)
+int luaopen_luacxx_QRect(lua_State* const state)
 {
     lua::thread env(state);
 

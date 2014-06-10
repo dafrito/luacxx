@@ -16,7 +16,7 @@ void lua::QWindow_metatable(const lua::index& mt)
     mt["isVisible"] = &QWindow::isVisible;
 }
 
-int QWindow_new(lua::state* const state)
+int QWindow_new(lua_State* const state)
 {
     typedef lua::QObservable<QWindow> Window;
 
@@ -46,7 +46,7 @@ int QWindow_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QWindow(lua::state* const state)
+int luaopen_luacxx_QWindow(lua_State* const state)
 {
     lua::thread env(state);
     lua_settop(state, 0);

@@ -100,7 +100,7 @@ enum class value {
 template <>
 struct Push<lua::value>
 {
-    static void push(lua::state* const state, const lua::value& value)
+    static void push(lua_State* const state, const lua::value& value)
     {
         switch (value) {
             case lua::value::table:
@@ -125,7 +125,7 @@ struct Push<lua::value>
 template <>
 struct Push<lua::index>
 {
-    static void push(lua::state* const state, const lua::index& source)
+    static void push(lua_State* const state, const lua::index& source)
     {
         // Push a copy of the value stored at source.pos()
         lua_pushvalue(state, source.pos());
@@ -145,7 +145,7 @@ struct Store<const lua::index>
 template <class Source, class Name>
 struct Push<lua::link<Source, Name>>
 {
-    static void push(lua::state* const state, lua::link<Source, Name>& source)
+    static void push(lua_State* const state, lua::link<Source, Name>& source)
     {
         lua::push(state, source.source());
         lua::push(state, source.name());
@@ -181,7 +181,7 @@ get(const lua::link<Source, Name>& source)
 template <>
 struct Push<lua_Number>
 {
-    static void push(lua::state* const state, const lua_Number& value)
+    static void push(lua_State* const state, const lua_Number& value)
     {
         lua_pushnumber(state, value);
     }
@@ -199,7 +199,7 @@ struct Store<lua_Number>
 template <>
 struct Push<lua_Integer>
 {
-    static void push(lua::state* const state, const lua_Integer& source)
+    static void push(lua_State* const state, const lua_Integer& source)
     {
         lua_pushinteger(state, source);
     }
@@ -224,7 +224,7 @@ struct Store<lua_Integer>
 template <>
 struct Push<bool>
 {
-    static void push(lua::state* const state, const bool& source)
+    static void push(lua_State* const state, const bool& source)
     {
         lua_pushboolean(state, source);
     }
@@ -242,7 +242,7 @@ struct Store<bool>
 template <>
 struct Push<char*>
 {
-    static void push(lua::state* const state, const char* const source)
+    static void push(lua_State* const state, const char* const source)
     {
         lua::push(state, source);
     }
@@ -251,7 +251,7 @@ struct Push<char*>
 template <>
 struct Push<const char*>
 {
-    static void push(lua::state* const state, const char* const source)
+    static void push(lua_State* const state, const char* const source)
     {
         lua_pushstring(state, source);
     }
@@ -278,7 +278,7 @@ struct Store<const char*>
 template <>
 struct Push<std::string>
 {
-    static void push(lua::state* const state, std::string& source)
+    static void push(lua_State* const state, std::string& source)
     {
         lua::push(state, source.c_str());
     }
@@ -305,7 +305,7 @@ struct Get<const std::string&>
 template <>
 struct Push<void*>
 {
-    static void push(lua::state* const state, void* const source)
+    static void push(lua_State* const state, void* const source)
     {
         lua_pushlightuserdata(state, source);
     }
@@ -345,7 +345,7 @@ struct Store<void*>
 template <>
 struct Push<char>
 {
-    static void push(lua::state* const state, char& source)
+    static void push(lua_State* const state, char& source)
     {
         lua_pushlstring(state, &source, 1);
     }

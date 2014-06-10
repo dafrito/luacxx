@@ -23,6 +23,6 @@ struct Metatable<QEventLoop>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QEventLoop(lua::state* const);
+extern "C" int luaopen_luacxx_QEventLoop(lua_State* const);
 
 #endif // LUA_CXX_QEVENTLOOP_INCLUDED

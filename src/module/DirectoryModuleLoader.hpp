@@ -27,7 +27,7 @@ public:
     }
 
     bool search(const std::string& module);
-    void load(lua::state* const state, const std::string& module);
+    void load(lua_State* const state, const std::string& module);
 };
 
 #endif // LUA_CXX_DIRECTORY_MODULE_LOADER_HEADER

@@ -9,17 +9,17 @@ namespace lua {
 
 class global
 {
-    lua::state* const _state;
+    lua_State* const _state;
     std::string _name;
 
 public:
-    global(lua::state* const state, const std::string& name) :
+    global(lua_State* const state, const std::string& name) :
         _state(state),
         _name(name)
     {
     }
 
-    lua::state* const state() const
+    lua_State* const state() const
     {
         return _state;
     }
@@ -73,7 +73,7 @@ public:
 template <>
 struct Push<lua::global>
 {
-    static void push(lua::state* const state, const lua::global& source)
+    static void push(lua_State* const state, const lua::global& source)
     {
         lua_getglobal(state, source.name().c_str());
     }

@@ -10,7 +10,7 @@
 #include <QStringList>
 
 namespace {
-std::unordered_map<int, std::function<void(lua::state* const, const QVariant&)>> qvariant_push_handler;
+std::unordered_map<int, std::function<void(lua_State* const, const QVariant&)>> qvariant_push_handler;
 std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>> qvariant_store_handler;
 }
 
@@ -26,7 +26,7 @@ namespace std {
     };
 }
 
-void lua::set_qvariant_push_handler(const int type, const std::function<void(lua::state* const, const QVariant&)>& handler)
+void lua::set_qvariant_push_handler(const int type, const std::function<void(lua_State* const, const QVariant&)>& handler)
 {
     qvariant_push_handler[type] = handler;
 }
@@ -36,7 +36,7 @@ void lua::set_qvariant_store_handler(const int type, const std::function<void(QV
     qvariant_store_handler[type] = handler;
 }
 
-void lua::push_qvariant(lua::state* const state, const QVariant& value)
+void lua::push_qvariant(lua_State* const state, const QVariant& value)
 {
     switch (value.userType()) {
         case QVariant::Invalid:

@@ -185,7 +185,7 @@ BOOST_AUTO_TEST_CASE(link_and_conversions)
     BOOST_CHECK_EQUAL(env["foo"]["a"].get<int>(), 42);
 }
 
-int sum(lua::state* const state)
+int sum(lua_State* const state)
 {
     int sum = 0;
     for (auto value : lua::range<int>(state)) {
@@ -432,7 +432,7 @@ double addBonanza(int a, long b, float c, double d, short e)
     return a + b + c + d + e;
 }
 
-int luaAdd(lua::state* const state)
+int luaAdd(lua_State* const state)
 {
     auto a = lua::get<int>(state, 1);
     auto b = lua::get<int>(state, 2);
@@ -624,7 +624,7 @@ BOOST_AUTO_TEST_CASE(error_support)
     BOOST_CHECK(errored);
 
     // Does pcall handle lua::error gracefully?
-    env["thrower"] = [](lua::state* const state) {
+    env["thrower"] = [](lua_State* const state) {
         throw lua::error("Intentional");
     };
     lua::run_string(env, "return not pcall(thrower);");
@@ -669,7 +669,7 @@ BOOST_AUTO_TEST_CASE(qvariant)
     // Are QVariants automatically converted to numbers?
     BOOST_CHECK_EQUAL(env["foo"].get<int>(), 42);
 
-    lua::set_qvariant_push_handler(QVariant::Point, [](lua::state* const state, const QVariant& source) {
+    lua::set_qvariant_push_handler(QVariant::Point, [](lua_State* const state, const QVariant& source) {
         auto point = source.toPoint();
         auto table = lua::push(state, lua::value::table);
 

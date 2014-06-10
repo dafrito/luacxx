@@ -8,9 +8,9 @@
 namespace lua {
 
 void GObject_metatable(const lua::index& mt);
-int GObject_index(lua::state* const state);
-int GObject_tostring(lua::state* const state);
-int GObject_destroy(lua::state* const state);
+int GObject_index(lua_State* const state);
+int GObject_tostring(lua_State* const state);
+int GObject_destroy(lua_State* const state);
 
 template <>
 struct Metatable<GObject>

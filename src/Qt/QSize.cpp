@@ -5,12 +5,12 @@
 
 #include <QSize>
 
-int QSize_scale(lua::state* const state)
+int QSize_scale(lua_State* const state)
 {
     return 0;
 }
 
-int QSize_scaled(lua::state* const state)
+int QSize_scaled(lua_State* const state)
 {
     return 0;
 }
@@ -45,7 +45,7 @@ void lua::QSize_metatable(const lua::index& mt)
 
 // QSize()
 // QSize(int width, int height)
-int QSize_new(lua::state* const state)
+int QSize_new(lua_State* const state)
 {
     if (lua_gettop(state) > 1) {
         lua::make<QSize>(state, lua::get<int>(state, 2), lua::get<int>(state, 3));
@@ -55,7 +55,7 @@ int QSize_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QSize(lua::state* const state)
+int luaopen_luacxx_QSize(lua_State* const state)
 {
     lua::thread env(state);
 

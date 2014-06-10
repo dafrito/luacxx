@@ -16,7 +16,7 @@ void lua::QGuiApplication_metatable(const lua::index& mt)
     mt["exec"] = &QGuiApplication::exec;
 }
 
-int luaopen_luacxx_QGuiApplication(lua::state* const state)
+int luaopen_luacxx_QGuiApplication(lua_State* const state)
 {
     luaL_requiref(state, "luacxx.QEventLoop", luaopen_luacxx_QEventLoop, false);
     lua_settop(state, 0);

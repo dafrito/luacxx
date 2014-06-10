@@ -28,7 +28,7 @@ void lua::QVector3D_metatable(const lua::index& mt)
 }
 
 
-int QVector3D_new(lua::state* const state)
+int QVector3D_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
     case 1:
@@ -65,7 +65,7 @@ int QVector3D_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QVector3D(lua::state* const state)
+int luaopen_luacxx_QVector3D(lua_State* const state)
 {
     lua::thread env(state);
 

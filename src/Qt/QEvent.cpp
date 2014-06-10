@@ -67,7 +67,7 @@ std::string QEvent_tostring(QEvent* event)
     return str.str();
 }
 
-int luaopen_luacxx_QEvent(lua::state* const state)
+int luaopen_luacxx_QEvent(lua_State* const state)
 {
     lua::thread env(state);
 

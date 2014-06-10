@@ -10,13 +10,13 @@ void lua::QEventLoop_metatable(const lua::index& mt)
     // TODO Set up metatable methods for this class
 }
 
-int QEventLoop_new(lua::state* const state)
+int QEventLoop_new(lua_State* const state)
 {
     lua::make<QEventLoop>(state);
     return 1;
 }
 
-int luaopen_luacxx_QEventLoop(lua::state* const state)
+int luaopen_luacxx_QEventLoop(lua_State* const state)
 {
     lua::thread env(state);
 

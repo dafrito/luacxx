@@ -56,7 +56,7 @@ Creates a new filter with the given delegate, if one is given.
 
 */
 
-QEventFilter(lua::state* const state) :
+QEventFilter(lua_State* const state) :
     _target(state)
 {
 }
@@ -92,7 +92,7 @@ struct Metatable<lua::QEventFilter>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QEventFilter(lua::state* const);
+extern "C" int luaopen_luacxx_QEventFilter(lua_State* const);
 
 #endif // LUACXX_QEVENTFILTER_INCLUDED
 

@@ -9,7 +9,7 @@ class ModuleLoader
 {
 public:
     virtual bool search(const std::string& module)=0;
-    virtual void load(lua::state* const state, const std::string& module)=0;
+    virtual void load(lua_State* const state, const std::string& module)=0;
     virtual ~ModuleLoader() {}
 };
 

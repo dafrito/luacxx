@@ -185,7 +185,7 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
     return str.str();
 }
 
-int GIBaseInfo_index(lua::state* const state)
+int GIBaseInfo_index(lua_State* const state)
 {
     auto info = lua::get<GIBaseInfo*>(state, 1);
     auto name = lua::get<const char*>(state, 2);
@@ -216,7 +216,7 @@ int GIBaseInfo_index(lua::state* const state)
     return 1;
 }
 
-int lua::GIBaseInfo_call(lua::state* const state)
+int lua::GIBaseInfo_call(lua_State* const state)
 {
     auto callable = lua::get<GICallableInfo*>(state, 1);
 
@@ -355,7 +355,7 @@ void lua::GIBaseInfo_metatable(const lua::index& mt)
 {
     mt["__call"] = lua::GIBaseInfo_call;
     mt["__index"] = GIBaseInfo_index;
-    mt["__tostring"] = lua::function([](lua::state* const state) {
+    mt["__tostring"] = lua::function([](lua_State* const state) {
         // Print this info's name and type
         auto info = lua::get<GIBaseInfo*>(state, 1);
         lua_settop(state, 0);
@@ -365,7 +365,7 @@ void lua::GIBaseInfo_metatable(const lua::index& mt)
         return 1;
     });
 
-    mt["Destroy"] = lua::function([](lua::state* const state) {
+    mt["Destroy"] = lua::function([](lua_State* const state) {
         auto info = lua::get<GIBaseInfo*>(state, 1);
         if (info) {
             g_base_info_unref(info);

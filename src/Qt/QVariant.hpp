@@ -10,16 +10,16 @@
 
 namespace lua {
 
-void set_qvariant_push_handler(const int type, const std::function<void(lua::state* const, const QVariant&)>& handler);
+void set_qvariant_push_handler(const int type, const std::function<void(lua_State* const, const QVariant&)>& handler);
 void set_qvariant_store_handler(const int type, const std::function<void(QVariant&, const lua::index&)>& handler);
 
-void push_qvariant(lua::state* const state, const QVariant& value);
+void push_qvariant(lua_State* const state, const QVariant& value);
 void store_qvariant(QVariant& destination, const lua::index& source);
 
 template<>
 struct Push<QVariant>
 {
-    static void push(lua::state* const state, QVariant value)
+    static void push(lua_State* const state, QVariant value)
     {
         push_qvariant(state, value);
     }

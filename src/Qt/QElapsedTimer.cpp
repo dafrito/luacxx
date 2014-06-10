@@ -19,13 +19,13 @@ void lua::QElapsedTimer_metatable(const lua::index& mt)
     mt["start"] = &QElapsedTimer::start;
 }
 
-int QElapsedTimer_new(lua::state* const state)
+int QElapsedTimer_new(lua_State* const state)
 {
     lua::make<QElapsedTimer>(state);
     return 1;
 }
 
-int luaopen_luacxx_QElapsedTimer(lua::state* const state)
+int luaopen_luacxx_QElapsedTimer(lua_State* const state)
 {
     lua::thread env(state);
 

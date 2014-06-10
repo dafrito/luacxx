@@ -24,7 +24,7 @@ void lua::QRegion_metatable(const lua::index& mt)
     mt["xored"] = &QRegion::xored;
 }
 
-int QRegion_new(lua::state* const state)
+int QRegion_new(lua_State* const state)
 {
     lua::make<QRegion>(state);
 
@@ -43,7 +43,7 @@ int QRegion_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QRegion(lua::state* const state)
+int luaopen_luacxx_QRegion(lua_State* const state)
 {
     lua::thread env(state);
 

@@ -81,7 +81,7 @@ public:
 QCoreApplicationArgs* save_arguments(lua::index arg);
 
 template <class App>
-int QCoreApplication_new(lua::state* const state)
+int QCoreApplication_new(lua_State* const state)
 {
     // Save the initial arguments into a userdata
     auto arguments = lua::save_arguments(lua::index(state, 2));
@@ -119,6 +119,6 @@ struct Metatable<QCoreApplication>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QCoreApplication(lua::state* const);
+extern "C" int luaopen_luacxx_QCoreApplication(lua_State* const);
 
 #endif // LUA_CXX_QCOREAPPLICATION_INCLUDED

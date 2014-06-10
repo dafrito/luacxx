@@ -8,7 +8,7 @@
 #include <string>
 #include <sstream>
 
-static int on_error(lua::state* const state)
+static int on_error(lua_State* const state)
 {
     if (lua::size(state) > 0) {
         if (!lua::index(state, 1).type().userdata()) {
@@ -61,7 +61,7 @@ void lua::invoke(const lua::index& callable)
     throw std::logic_error(str.str());
 }
 
-std::string lua::traceback(lua::state* const state, const int toplevel)
+std::string lua::traceback(lua_State* const state, const int toplevel)
 {
     #if LUA_VERSION_NUM >= 502
         std::string rv;
@@ -84,7 +84,12 @@ std::string lua::class_name(const lua::index& index)
     return rv;
 }
 
-std::string lua::dump(lua::state* const state)
+std::string lua::class_name(const lua_State* const state, const int index)
+{
+    return lua::class_name(state, index);
+}
+
+std::string lua::dump(lua_State* const state)
 {
     std::stringstream str;
 
@@ -144,12 +149,12 @@ std::string memory_address(const lua::index& index)
     return str.str();
 }
 
-lua::index lua::top(lua::state* const state)
+lua::index lua::top(lua_State* const state)
 {
     return lua::index(state, -1);
 }
 
-int lua::size(lua::state* const state)
+int lua::size(lua_State* const state)
 {
     return lua_gettop(state);
 }
@@ -178,7 +183,7 @@ void lua::remove(const lua::index& target)
     lua_remove(target.state(), target.pos());
 }
 
-void lua::clear(lua::state* const state)
+void lua::clear(lua_State* const state)
 {
     lua_settop(state, 0);
 }

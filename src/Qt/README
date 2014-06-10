@@ -10,7 +10,7 @@ Lua-cxx Qt support
 
     #include <QWindow>
 
-    int QWindow_new(lua::state* const state)
+    int QWindow_new(lua_State* const state)
     {
         if (lua_gettop(state) > 1) {
             auto parent = lua::get<QObject*>(state, 2);
@@ -33,7 +33,7 @@ Lua-cxx Qt support
         return 1;
     }
 
-    int luaopen_QWindow(lua::state* const state)
+    int luaopen_QWindow(lua_State* const state)
     {
         lua::thread env(state);
 

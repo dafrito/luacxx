@@ -41,7 +41,7 @@ void lua::QCoreApplication_metatable(const lua::index& mt)
     mt["startingUp"] = &QCoreApplication::startingUp;
 }
 
-int QCoreApplication_processEvents(lua::state* const state)
+int QCoreApplication_processEvents(lua_State* const state)
 {
     switch (lua_gettop(state)) {
         case 0:
@@ -62,7 +62,7 @@ int QCoreApplication_processEvents(lua::state* const state)
     return 0;
 }
 
-int luaopen_luacxx_QCoreApplication(lua::state* const state)
+int luaopen_luacxx_QCoreApplication(lua_State* const state)
 {
     luaL_requiref(state, "luacxx.QEventLoop", luaopen_luacxx_QEventLoop, false);
     lua_settop(state, 0);

@@ -6,112 +6,112 @@
 #include <QPainter>
 #include <QPaintEngine>
 
-int QPainter_boundingRect(lua::state* const state)
+int QPainter_boundingRect(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawArc(lua::state* const state)
+int QPainter_drawArc(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawChord(lua::state* const state)
+int QPainter_drawChord(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawConvexPolygon(lua::state* const state)
+int QPainter_drawConvexPolygon(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawEllipse(lua::state* const state)
+int QPainter_drawEllipse(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawGlyphRun(lua::state* const state)
+int QPainter_drawGlyphRun(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawImage(lua::state* const state)
+int QPainter_drawImage(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawLine(lua::state* const state)
+int QPainter_drawLine(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawLines(lua::state* const state)
+int QPainter_drawLines(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPicture(lua::state* const state)
+int QPainter_drawPicture(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPie(lua::state* const state)
+int QPainter_drawPie(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPixmap(lua::state* const state)
+int QPainter_drawPixmap(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPixmapFragments(lua::state* const state)
+int QPainter_drawPixmapFragments(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPoint(lua::state* const state)
+int QPainter_drawPoint(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPoints(lua::state* const state)
+int QPainter_drawPoints(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPolygon(lua::state* const state)
+int QPainter_drawPolygon(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawPolyline(lua::state* const state)
+int QPainter_drawPolyline(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawRect(lua::state* const state)
+int QPainter_drawRect(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawRects(lua::state* const state)
+int QPainter_drawRects(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawRoundedRect(lua::state* const state)
+int QPainter_drawRoundedRect(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawStaticText(lua::state* const state)
+int QPainter_drawStaticText(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_drawText(lua::state* const state)
+int QPainter_drawText(lua_State* const state)
 {
     auto painter = lua::get<QPainter*>(state, 1);
     painter->drawText(
@@ -122,17 +122,17 @@ int QPainter_drawText(lua::state* const state)
     return 0;
 }
 
-int QPainter_drawTiledPixmap(lua::state* const state)
+int QPainter_drawTiledPixmap(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_eraseRect(lua::state* const state)
+int QPainter_eraseRect(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_fillRect(lua::state* const state)
+int QPainter_fillRect(lua_State* const state)
 {
     auto painter = lua::get<QPainter*>(state, 1);
 
@@ -146,37 +146,37 @@ int QPainter_fillRect(lua::state* const state)
     return 0;
 }
 
-int QPainter_setBrush(lua::state* const state)
+int QPainter_setBrush(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_setBrushOrigin(lua::state* const state)
+int QPainter_setBrushOrigin(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_setClipRect(lua::state* const state)
+int QPainter_setClipRect(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_setPen(lua::state* const state)
+int QPainter_setPen(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_setViewport(lua::state* const state)
+int QPainter_setViewport(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_setWindow(lua::state* const state)
+int QPainter_setWindow(lua_State* const state)
 {
     return 0;
 }
 
-int QPainter_translate(lua::state* const state)
+int QPainter_translate(lua_State* const state)
 {
     return 0;
 }
@@ -275,7 +275,7 @@ void lua::QPainter_metatable(const lua::index& mt)
     mt["worldTransform"] = &QPainter::worldTransform;
 }
 
-int QPainter_new(lua::state* const state)
+int QPainter_new(lua_State* const state)
 {
     // QPainter ()
     // QPainter ( QPaintDevice * device )
@@ -287,7 +287,7 @@ int QPainter_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QPainter(lua::state* const state)
+int luaopen_luacxx_QPainter(lua_State* const state)
 {
     lua::thread env(state);
 

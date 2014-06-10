@@ -23,6 +23,6 @@ struct Metatable<QBackingStore>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QBackingStore(lua::state* const);
+extern "C" int luaopen_luacxx_QBackingStore(lua_State* const);
 
 #endif // LUA_CXX_QBACKINGSTORE_INCLUDED

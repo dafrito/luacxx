@@ -2,7 +2,7 @@
 #include "../type/function.hpp"
 #include "../thread.hpp"
 
-int luaopen_luacxx_Qt(lua::state* const state)
+int luaopen_luacxx_Qt(lua_State* const state)
 {
     lua::thread env(state);
 

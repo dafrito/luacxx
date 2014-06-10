@@ -23,6 +23,6 @@ struct Metatable<QSize>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QSize(lua::state* const);
+extern "C" int luaopen_luacxx_QSize(lua_State* const);
 
 #endif // LUA_CXX_QSIZE_INCLUDED

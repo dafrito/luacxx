@@ -23,6 +23,6 @@ struct Metatable<QElapsedTimer>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QElapsedTimer(lua::state* const);
+extern "C" int luaopen_luacxx_QElapsedTimer(lua_State* const);
 
 #endif // LUA_CXX_QELAPSEDTIMER_INCLUDED

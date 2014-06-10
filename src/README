@@ -28,7 +28,7 @@ of the Lua C API has no analog in Lua-cxx - I just use the original, like in
 the following example:
 
     // Add all arguments
-    int add_several(lua::state* const state)
+    int add_several(lua_State* const state)
     {
         // Get each argument
         int sum = 0;
@@ -53,7 +53,7 @@ way to push a function of any arity into Lua without needing to write the
 marshalling code yourself or running a preprocessor:
 
     // Standard C API is, of course, supported
-    int create_foo(lua::state* const);
+    int create_foo(lua_State* const);
     lua::push(state, create_foo);
 
     // Fundamental types work, too
@@ -100,7 +100,7 @@ documentation. cpod requires perldoc, so you may need to install Perl.
 
 STL conventions are used for naming and case, though not slavishly, to
 infer that a template-heavy C++ dialect is used. However, adherance to Lua's
-conventions is preferred over that of C++. For instance, the lua::state is
+conventions is preferred over that of C++. For instance, the lua_State is
 passed as a pointer, even though it should rightfully be a reference.
 
 =head1 THREAD-SAFETY

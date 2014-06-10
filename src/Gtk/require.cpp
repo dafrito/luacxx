@@ -9,7 +9,7 @@
 #include "type/numeric.hpp"
 #include <iostream>
 
-int g_irepository_introspect(lua::state* const state)
+int g_irepository_introspect(lua_State* const state)
 {
     auto gi_namespace = lua::get<std::string>(state, lua_upvalueindex(1));
     lua::clear(state);
@@ -38,7 +38,7 @@ int g_irepository_introspect(lua::state* const state)
 }
 
 // Create a Lua table that maps to the given namespace
-int gi_import(lua::state* const state)
+int gi_import(lua_State* const state)
 {
     // Get the namespace's name
     auto namespace_name = lua::get<const char*>(state, 1);
@@ -49,7 +49,7 @@ int gi_import(lua::state* const state)
     auto mt = lua::push(state, lua::value::table);
 
     // Set up the index metatable
-    lua::push_closure(state, [](lua::state* const state) {
+    lua::push_closure(state, [](lua_State* const state) {
         // Get arguments
         auto namespace_name = lua::get<const char*>(state, lua_upvalueindex(1));
         auto name = lua::get<const char*>(state, 2);
@@ -79,7 +79,7 @@ int gi_import(lua::state* const state)
 }
 
 // A package.seachers loader that requires a Gtk namespace.
-int gi_search(lua::state* const state)
+int gi_search(lua_State* const state)
 {
     // Look for the namespace by name, which should be given as the first argument (e.g. "cairo")
     auto name = lua::get<const char*>(state, 1);
@@ -105,7 +105,7 @@ int gi_search(lua::state* const state)
 }
 
 // Returns a list of all Gtk-loaded namespaces.
-int gi_get_loaded_namespaces(lua::state* const state)
+int gi_get_loaded_namespaces(lua_State* const state)
 {
     lua::clear(state);
     auto namespace_list = g_irepository_get_loaded_namespaces(nullptr);
@@ -121,7 +121,7 @@ int gi_get_loaded_namespaces(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_Gtk(lua::state* const state)
+int luaopen_luacxx_Gtk(lua_State* const state)
 {
     lua::table::insert(lua::global(state, "package")["searchers"], gi_search);
     return 0;

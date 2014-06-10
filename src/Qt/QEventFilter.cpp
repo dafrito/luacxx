@@ -18,7 +18,7 @@ void lua::QEventFilter::setDelegate(const lua::index& delegate)
     _target = delegate;
 }
 
-int QEventFilter_setDelegate(lua::state* const state)
+int QEventFilter_setDelegate(lua_State* const state)
 {
     auto filter = lua::get<lua::QEventFilter*>(state, 1);
     filter->setDelegate(lua::index(state, 2));
@@ -32,13 +32,13 @@ void lua::QEventFilter_metatable(const lua::index& mt)
     mt["setDelegate"] = QEventFilter_setDelegate;
 }
 
-int QEventFilter_new(lua::state* const state)
+int QEventFilter_new(lua_State* const state)
 {
     lua::make<lua::QEventFilter>(state, state);
     return 1;
 }
 
-int luaopen_luacxx_QEventFilter(lua::state* const state)
+int luaopen_luacxx_QEventFilter(lua_State* const state)
 {
     lua::thread env(state);
 

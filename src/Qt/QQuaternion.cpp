@@ -6,12 +6,12 @@
 
 #include <QQuaternion>
 
-int QQuaternion_setVector(lua::state* const state)
+int QQuaternion_setVector(lua_State* const state)
 {
     return 0;
 }
 
-int QQuaternion_mul(lua::state* const state)
+int QQuaternion_mul(lua_State* const state)
 {
     auto quat = lua::make<QQuaternion>(
         state, lua::get<QQuaternion&>(state, 1)
@@ -20,7 +20,7 @@ int QQuaternion_mul(lua::state* const state)
     return 1;
 }
 
-int QQuaternion_multiply(lua::state* const state)
+int QQuaternion_multiply(lua_State* const state)
 {
     auto quat = lua::get<QQuaternion&>(state, 1);
     quat *= lua::get<QQuaternion&>(state, 2);
@@ -67,7 +67,7 @@ void lua::QQuaternion_metatable(const lua::index& mt)
     mt["__tostring"] = QQuaternion_tostring;
 }
 
-int QQuaternion_new(lua::state* const state)
+int QQuaternion_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
     case 1:
@@ -85,7 +85,7 @@ int QQuaternion_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QQuaternion(lua::state* const state)
+int luaopen_luacxx_QQuaternion(lua_State* const state)
 {
     lua::thread env(state);
 

@@ -34,7 +34,7 @@ stack.hpp - core API
     };
 
     // Create a new Sum for Lua
-    int sum_new(lua::state* const state)
+    int sum_new(lua_State* const state)
     {
         int initial = 0;
         if (lua_gettop(state) > 1) {
@@ -55,7 +55,7 @@ stack.hpp - core API
     }
 
     // Add all numbers to the given sum
-    int sum_add(lua::state* const state)
+    int sum_add(lua_State* const state)
     {
         // lua::get<T> returns a T
         auto sum = lua::get<Sum*>(state, 1);
@@ -69,18 +69,16 @@ stack.hpp - core API
     }
 
     // Get the Sum's value
-    int sum_get(lua::state* const state)
+    int sum_get(lua_State* const state)
     {
         auto sum = lua::get<Sum*>(state, 1);
-
-        // Return the value
         lus_settop(state, 0);
         lua_pushinteger(state, sum->value);
         return 1;
     }
 
     // Export a module named "Sum" that Lua can require
-    int luaopen_Sum(lua::state* const state)
+    int luaopen_Sum(lua_State* const state)
     {
         lua::thread env(state);
 
@@ -128,10 +126,10 @@ typedef lua_State state;
 
 /*
 
-The following methods deal with creating and initializing lua::state
+The following methods deal with creating and initializing lua_State
 objects:
 
-=head4 lua::state* luaL_newstate();
+=head4 lua_State* luaL_newstate();
 
 Create a fresh new state.
 
@@ -139,9 +137,9 @@ This is the general-purpose function. Internally, it just calls lua_newstate
 with a default allocator. It doesn't install the standard libraries, though -
 you will need to use luaL_openlibs(state) for that.
 
-=head4 lua::state* lua_newstate(lua_Alloc allocator, void* allocator_data);
+=head4 lua_State* lua_newstate(lua_Alloc allocator, void* allocator_data);
 
-Create a new lua::state* with a custom allocator (and associated pointer to
+Create a new lua_State* with a custom allocator (and associated pointer to
 user-defined memory). The allocator is used for all runtime memory allocation.
 The default allocator behaves like the following function:
 
@@ -169,7 +167,7 @@ I feel compelled to warn you that creating a custom allocator is an advanced
 topic, but the process is actually straight-forward.  The difficulty is finding
 a need to do so.
 
-=head4 lua::state* lua_newthread(lua::state*);
+=head4 lua_State* lua_newthread(lua_State*);
 
 Creates and returns a new Lua thread that uses the same global environment as
 the given thread. The thread is also pushed onto the stack, as it is owned by
@@ -181,7 +179,7 @@ While the Lua facility is rather limited, it provides enough of a foundation
 for real thread support written on the C side. As a result, it is worth
 understanding if you're writing code that would benefit from multithreading.
 
-=head4 void luaL_openlibs(lua::state*);
+=head4 void luaL_openlibs(lua_State*);
 
 Load all standard libraries into the state's environment. The Lua 5.2 standard
 library consists of the following modules:
@@ -383,7 +381,7 @@ namespace lua {
 template <class Source, class Name>
 class link
 {
-    lua::state* const _state;
+    lua_State* const _state;
     Source _source;
     Name _name;
 
@@ -397,7 +395,7 @@ public:
 
     lua::type_info type() const;
 
-    lua::state* const state() const
+    lua_State* const state() const
     {
         return _state;
     }
@@ -451,7 +449,7 @@ A reference to a stack position.
     #include <stack.hpp>
 
     // Concatenate all strings together
-    int strict_concat(lua::state* const state)
+    int strict_concat(lua_State* const state)
     {
         std::stringstream full_string;
         lua::index value(state, 1);
@@ -486,7 +484,7 @@ external source.  The stack value's position is absolute, so external
 changes will not cause the index's value to move. This inflexibilty
 allows the index to optimize for speed.
 
-=head4 lua::state* index.state(), int index.pos()
+=head4 lua_State* index.state(), int index.pos()
 
 Return the underlying data for this index.
 
@@ -566,11 +564,11 @@ namespace lua {
 
 class index
 {
-    lua::state* _state;
+    lua_State* _state;
     int _pos;
 
 public:
-    index(lua::state* const state, const int pos) :
+    index(lua_State* const state, const int pos) :
         _state(state),
         _pos(lua_absindex(state, pos))
     {
@@ -582,7 +580,7 @@ public:
     {
     }
 
-    lua::state* const state() const
+    lua_State* const state() const
     {
         return _state;
     }
@@ -735,7 +733,7 @@ struct Metatable
     //
     // Return true if the metatable can be cached for future values (requires
     // the name to be specified).
-    static bool metatable(const lua::index& mt, T* value)
+    static bool metatable(const lua::index& mt, const T* value)
     {
         #ifdef HAVE_QT_CORE
         // If it's a QObject, then use that metatable
@@ -755,7 +753,7 @@ struct Metatable<void>
 {
     static constexpr const char* name = "void";
 
-    static bool metatable(const lua::index& mt, void* const value)
+    static bool metatable(const lua::index& mt, const void* const value)
     {
         return true;
     }
@@ -771,7 +769,7 @@ inline void call_destructor(T& value)
 
 // Destroy the userdata's value, specified by the template parameter
 template <class Stored>
-int free_userdata(lua::state* const state)
+int free_userdata(lua_State* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
     auto userdata = reinterpret_cast<lua::userdata_block*>(block);
@@ -802,10 +800,10 @@ int free_userdata(lua::state* const state)
     return 0;
 }
 
-int __gc(lua::state* const state);
+int __gc(lua_State* const state);
 
 template <class T, class Stored = T>
-void push_metatable(lua::state* const state, T* const value)
+void push_metatable(lua_State* const state, T* const value)
 {
     // Check for a cached metatable first.
     auto class_name = Metatable<T>::name;
@@ -859,7 +857,7 @@ void push_metatable(lua::state* const state, T* const value)
 }
 
 template <class Stored>
-char* construct_userdata(lua::state* const state, lua::userdata_storage storage)
+char* construct_userdata(lua_State* const state, lua::userdata_storage storage)
 {
     // Get and push a chunk of memory from Lua to hold our metadata, as well as
     // the underlying value.
@@ -878,7 +876,7 @@ template <class Value, lua::userdata_storage storage = lua::userdata_storage::va
 struct Construct
 {
     template <class... Rest>
-    static void construct(lua::state* const state, Rest... args)
+    static void construct(lua_State* const state, Rest... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value>(state, storage);
@@ -896,7 +894,7 @@ template <class Value>
 struct Construct<Value, lua::userdata_storage::pointer>
 {
     template <class... Rest>
-    static void construct(lua::state* const state, Rest... args)
+    static void construct(lua_State* const state, Rest... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value*>(state, lua::userdata_storage::pointer);
@@ -914,7 +912,7 @@ template <class Value>
 struct Construct<Value, lua::userdata_storage::shared_ptr>
 {
     template <class... Rest>
-    static void construct(lua::state* const state, Rest... args)
+    static void construct(lua_State* const state, Rest... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<std::shared_ptr<Value>>(state, lua::userdata_storage::shared_ptr);
@@ -931,7 +929,7 @@ struct Construct<Value, lua::userdata_storage::shared_ptr>
 template <class T>
 struct Push
 {
-    static void push(lua::state* const state, T value)
+    static void push(lua_State* const state, T value)
     {
         // By default, "push" means "construct a userdata by value"
         Construct<T>::construct(state, value);
@@ -941,7 +939,7 @@ struct Push
 template <class T>
 struct Push<T*>
 {
-    static void push(lua::state* const state, T* value)
+    static void push(lua_State* const state, T* value)
     {
         if (value == nullptr) {
             lua_pushnil(state);
@@ -956,7 +954,7 @@ struct Push<T*>
 template <class T>
 struct Push<std::shared_ptr<T>>
 {
-    static void push(lua::state* const state, const std::shared_ptr<T>& value)
+    static void push(lua_State* const state, const std::shared_ptr<T>& value)
     {
         if (!value) {
             lua_pushnil(state);
@@ -991,7 +989,7 @@ specially. For instance, the struct for lua::index looks like this:
     template <>
     struct Push<lua::index>
     {
-        static void push(lua::state* const state, const lua::index& source)
+        static void push(lua_State* const state, const lua::index& source)
         {
             // Push a copy of the value stored at source.pos()
             lua_pushvalue(state, source.pos());
@@ -1001,7 +999,7 @@ specially. For instance, the struct for lua::index looks like this:
 */
 
 template <class T>
-lua::index push(lua::state* const state, T value)
+lua::index push(lua_State* const state, T value)
 {
     // Forward to the struct
     lua::Push<T>::push(state, value);
@@ -1009,10 +1007,10 @@ lua::index push(lua::state* const state, T value)
 }
 
 // Allows noop invocations from variadic templates
-lua::index push(lua::state* const state);
+lua::index push(lua_State* const state);
 
 template <class T, class... Rest>
-lua::index push(lua::state* const state, T value, Rest... values)
+lua::index push(lua_State* const state, T value, Rest... values)
 {
     // Forward everything to the struct
     lua::Push<T>::push(state, value);
@@ -1334,7 +1332,7 @@ template <>
 void get<void>(const lua::index& source);
 
 template <class T>
-T get(lua::state* const state, const int pos)
+T get(lua_State* const state, const int pos)
 {
     return lua::get<T>(lua::index(state, pos));
 }
@@ -1364,7 +1362,7 @@ specified arguments.
 */
 
 template <class T, class... Args>
-T* make(lua::state* const state, Args... args)
+T* make(lua_State* const state, Args... args)
 {
     Construct<T>::construct(state, args...);
     return lua::get<T*>(state, -1);
