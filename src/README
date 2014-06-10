@@ -21,7 +21,7 @@ lua-cxx, luacxx - C++11 API for creating Lua bindings
 
 Lua-cxx is a set of functions and objects designed to simplify the process of
 constructing C++ and C modules for Lua. This library is designed to work in
-tandem with Lua's existing C API, so it does not provide a complete facde. On
+tandem with Lua's existing C API, so it does not provide a complete facade. On
 the contrary, I find Lua's C API to be amazingly well-designed, so I've tried
 to ensure that Lua-cxx can be intermixed freely with Lua's C API. In fact, most
 of the Lua C API has no analog in Lua-cxx - I just use the original, like in

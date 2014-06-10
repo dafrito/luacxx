@@ -13,6 +13,12 @@ namespace lua {
 
 /*
 
+=head1 NAME
+
+#include <luacxx/load.hpp> - Loads files and strings into Lua functions
+
+=head1 DESCRIPTION
+
 =head2 lua::index lua::load_file(state, file)
 
 Reads and compiles the Lua code within the given file, and pushes a function

@@ -657,9 +657,115 @@ public:
 
 /*
 
-=head1 Handling userdata
+=head2 MEMORY MODELS
 
-=head4 lua_newuserdata(state, size_t size)
+C++'s memory model is largely dependent on reachability being determined at
+compile-time. It turns out that this is sufficient for a large portion of
+memory allocation needs, and C++'s designers were able to implement it
+identically to how memory allocation works for its builtin types. This
+affordance is not offered the C programmer, and it represents perhaps the
+largest philosophical break between these two often interchangeable languages.
+
+Lua's memory model is limited by its weak type information, which constrain it
+to a more conservative strategy - garbage collection. This does have the
+benefit of working even in the most pathological of cases, but at the cost of
+worse performance relative to what a static compiler could do for common cases.
+
+C++ objects are almost always created on the stack. This memory allocation
+strategy allows for the possible lifetimes of the created object to be known
+with certainty. As a result, its place in memory can vary without causing the
+behavior of the program. The compiler can even omit allocating the full object
+in memory altogether, as well as take advantage of the known locality of that
+object by omitting synchronization.
+
+However, it is common to not know the full lifetime of an object, as well as
+preferring to work with memory without intervention from the compiler. In this
+case, C provides malloc(), and C++ provides operator new.
+
+Lua, being a weakly typed language, offers only its own form of malloc() called
+lua_newuserdata(state, int size). The size is in bytes, so it's very easy to
+create C++ objects on a Lua userdata:
+
+    void* block = lua_newuserdata(state, sizeof(Point));
+    new (block) Point();
+
+By default, this object is opaque to Lua, but methods and access can be
+provided through its metatable. At the very least, we can use a metatable
+to call the object's destructor when that object is collected.
+
+    // Assuming the userdata is at the top of the stack
+    lua_getmetatable(state, -1);
+
+    lua_pushcclosure(state, __gc, 0);
+    lua_setfield(state, mt.pos(), "__gc");
+
+    // __gc looks something like this. I use a template for clarity:
+
+    template <class T>
+    void call_destructor(T& value)
+    {
+        value.~T();
+    }
+
+    int __gc(lua_State* const state)
+    {
+        auto block = reinterpret_cast<Point*>(lua_touserdata(state, 1));
+        call_destructor(*block);
+    }
+
+
+Lua-cxx uses this strategy as its default for values pushed on the stack. This
+means that Lua can handle any C++ object out-of-the-box, without the need to
+write any binding code.
+
+    // Create a C++ Point on the Lua stack.
+
+    Point p(2, 3);
+    lua::push(state, p);
+
+If the object has a non-zero-argument constructor, lua::make can be used to
+pass the constructor arguments directly, as in the following example.
+
+    // Create a C++ Point. This example behaves the same as the previous one.
+
+    lua::make<Point>(state, 2, 3);
+
+It's conventional to have the class be a table that uses itself as a metatable
+for created objects. Userdata do not need to folow this convention, but I find
+it nice to do so as it allows C++ objects to mesh well with Lua objects. Here's
+how I'd do it:
+
+    // Load with require "Point"
+    int luaopen_Point(lua_State* const state)
+    {
+        lua::thread env(state);
+
+        env["Point"] = lua::value::table;
+        env["Point"]["new"] = Point_new;
+
+        return 0;
+    }
+
+Point:new is the constructor, which we can write to accept either zero arguments
+or an (x, y) pair. lua::make is used behind the scenes, as in the following
+implementation:
+
+    int Point_new(lua_State* const state)
+    {
+        // We could check for exactly 3, but I like to behave as Lua would.
+        if (lua_gettop(state) > 1) {
+            // Call Point::Point(x, y)
+            lua::make<Point>(state,
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3)
+            );
+        } else {
+            // Just call Point::Point()
+            lua::make<Point>(state);
+        }
+
+        return 1;
+    }
 
 =head4 lua_pushlightuserdata(state, void* p), lua::push<void*>
 
@@ -685,24 +791,6 @@ nil, void pointers, and C callbacks. Lua-cxx provides a common interface for
 accessing all of these types. Lua-cxx also supports passing C++ functions of
 arbitrary signature presuming the arguments and return types are supported.
 
-The set of supported types can be extended at compile-time by including a
-template specialization for that type.
-
-Lua employs garbage collection for memory management of its values including
-userdata. When userdata is garbage collected, the underlying C++ value is
-always destroyed. This ensures that changes in Lua always propagate to C++.
-
-Destruction in C++ does not necessarily propagate to Lua. Insufficient
-propagation will cause errors on attempted access, and universal protection
-from these problems is not possible in the C++ memory model. Nevertheless,
-correctness is usually easy to attain.
-
-C and C++ libraries commonly construct their own memory models, usually in the
-form of a crude and idiosyncratic approximation of what could have been better
-done with std::shared_ptr. Lua-cxx has adapters for some of these, as well as
-implicit support for std::shared_ptr, to propagate destruction notification to
-Lua.
-
 */
 
 // Discriminant for how userdata is stored
@@ -722,6 +810,235 @@ public:
     {
     }
 };
+
+/*
+
+=head3 METATABLES
+
+Metatables enable operator overloading for Lua tables and userdata. Operator
+overloading allows the programmer to redefine what an operator means for a
+given object. In practice, it's rare to overload every operator on a given
+object, but overloading a key few when appropriate can aid greatly in the
+clarity of code.
+
+To overload an operator, populate a table with the overloaded operations and
+install it using setmetatable(object, metatable):
+
+    local mt = {
+
+        -- Equality
+        __eq = function(a, b)
+            return a.x == b.x and a.y == b.y;
+        end,
+
+        -- Unary minus
+        __unm = function(self)
+            a.x = -a.x;
+            a.y = -a.y;
+        end,
+
+        -- Shows up on tostring(obj)
+        __tostring = function(self)
+            return "(" .. self.x .. ", " .. self.y .. ")";
+        end
+    };
+
+    Point = {};
+    function Point:New(x, y)
+        local self = {x, y};
+        setmetatable(self, mt);
+    end;
+
+It is allowed and reasonable to use a table as its own metatable, as well as to
+have non-metatable functions intermixed with metatable functions:
+
+    local obj = {
+        __index = function(self, name)
+            -- .. implement as needed ...
+        end
+    };
+    setmetatable(obj, obj);
+
+=over 4
+
+=item Printable types
+
+Objects that have a printable value should overload __tostring. Objects that
+are purely opaque pointers should still overload __tostring, to provide some
+indication of what that userdata contains:
+
+    #include <sstream>
+
+    std::string Point_tostring(Point* point)
+    {
+        std::stringstream str;
+        str << "Point (" << point->x << ", " << point->y << ")";
+        return str.str();
+    }
+
+=item Numeric types
+
+Objects that represent a numeric type, or a vector of numeric types, can
+overload the numeric operators where appropriate.
+
+* __add(a, b) - a+b
+* __sub(a, b) - a-b
+* __mul(a, b) - a*b
+* __div(a, b) - a/b
+* __unm(a) - unary minus
+* __mod - a % b
+* __pow - a ^ b
+
+=item Comparable types
+
+Objects that have identity can implement the equality operations. Comparable
+objects can also implement both the < and <= operators.
+
+* __eq(a, b) a == b
+* __lt(a, b) a < b
+* __le(a, b) a <= b
+
+There are no __gt or __ge overloads, nor is there a __cmp operator like Perl
+would have.
+
+=item Composite types
+
+Lists, strings, and other countable data structures can implement contacenation
+and length:
+
+* __concat(self, append) self .. append
+* __len(self) #a
+
+=item Mapping types
+
+Tables that provide a mapping, or support a fixed range of variations for
+a given mapping, can use __index to provide that support.
+
+    -- Make colors be case-insensitive!
+    Colors = setmetatable({}, {
+        __index = function(self, name)
+            local canonical = tostring(name):lower();
+            return rawget(self, canonical);
+        end,
+
+        __newindex = function(self, name, color)
+            local canonical = tostring(name):lower();
+            rawset(self, canonical, color);
+        end
+    });
+
+    Colors.white = {1, 1, 1};
+    Colors.black = {0, 0, 0};
+    Colors.red   = {1, 0, 0};
+    Colors.green = {0, 1, 0};
+    Colors.blue  = {0, 0, 1};
+
+    print(unpack(Colors.WHITE)) -- 1 1 1
+
+=item Invokable types
+
+Objects can behave as functions by overloading the __call operator. Much
+of what can be done with __call can be done with closures, but it's possible
+that __call may convey the meaning better for some esoteric use:
+
+    function Adder(dx, dy)
+        return setmetatable({}, {
+            change_dx = function(self, value)
+                dx = value;
+            end,
+            change_dy = function(self, value)
+                dy = value;
+            end,
+            __call = function(self, point)
+                point.x = point.x + dx;
+                point.y = point.y + dy;
+                return point;
+            end
+        });
+    end;
+
+    local adder = Adder(2, 3);
+
+    print(adder(Point:New(1, 1)));
+    -- 3 4
+
+    adder:change_dx(10);
+    adder:change_dy(10);
+    print(adder(Point:New(1, 1)));
+    -- 11 11
+
+=item Userdata types
+
+All C++ userdata, as well as C userdata that have non-trivial destruction,
+should overload __gc to provide correct behavior when a Lua userdata has
+become reclaimable.
+
+    template <class T>
+    void call_destructor(T& value)
+    {
+        value.~T();
+    }
+
+    int __gc(lua_State* const state)
+    {
+        auto block = reinterpret_cast<Point*>(lua_touserdata(state, 1));
+        call_destructor(*block);
+    }
+
+A __gc method is guaranteed to be invoked for each object where it was set, but
+an overload must be given before setmetatable is called:
+
+    auto obj = lua::get<Point*>(state, -1);
+
+    // Create the new table
+    auto mt = lua::push(state, lua::value::table);
+
+    // Set up the __gc method
+    lua_pushcclosure(state, __gc, 0);
+    lua_setfield(state, mt.pos(), "__gc");
+
+    // And then set the metatable
+    lua_setmetatable(state, -2);
+
+A __gc method is guaranteed to be invoked once for each userdata that has one,
+either when the object is reclaimed by garbage collection or when the Lua
+environment is closed with lua_close. This is a weaker guarantee than what it
+provided by C++ destructors.
+
+=head2 lua::Metatable<T>
+
+The default implementation of Lua-cxx pushes C++ objects by value. Its metatable
+is manufactured initially by this fixed process, but the programmer can add
+additional methods and overloads by providing a lua::Metatable<> specialization
+for their type:
+
+    namespace lua {
+
+    template <>
+    struct Metatable<Point>
+    {
+        // Set this object's name. Used by its value for caching.
+        static constexpr const char* name = "Point";
+
+        static bool metatable(const lua::index& mt, Point* value)
+        {
+            // Let Lua-cxx create these method bindings
+            mt["x"] = &Point::x;
+            mt["y"] = &Point::x;
+            mt["set_x"] = &Point::set_x;
+            mt["set_y"] = &Point::set_y;
+
+            // Allow it to be cached. Return false if it shouldn't be cached.
+            return true;
+        }
+    };
+
+    } // namespace lua
+
+If the Metatable<> specialization returns true, that metatable will be cached
+and used for all subsequent objects with that metatable's name.
+
+*/
 
 template <class T>
 struct Metatable
@@ -763,7 +1080,6 @@ struct Metatable<void>
 template <class T>
 inline void call_destructor(T& value)
 {
-    // Isolate the destructor to maximize clarity
     value.~T();
 }
 

@@ -65,3 +65,61 @@ This subdirectory also contains prebuilt bindings for many Qt classes.  Each
 class adheres to its documented Qt API where possible, including naming
 conventions. This allows the programmer to use Qt's API documentation directly,
 rather than needing to relearn this project's dialect.
+
+=head1 SUPPORTED CLASSES
+
+All exported symbols from the QtCore and QtGui modules are to be supported. There
+are some areas where exact support is not possible or desired.
+
+When possible, the function signature should be matched exactly, like so:
+
+    mt["brush"] = &QPainter::brush;
+
+Overloaded methods cannot be matched exactly, as they would be ambiguous. Therefore,
+a separate method should be created to determine the correct method:
+
+    int QPainter_fillRect(lua::state* const state)
+    {
+        auto painter = lua::get<QPainter*>(state, 1);
+
+        // Determine the method to call
+        switch (lua_gettop(state)) {
+        case 2:
+            painter->fillRect(
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4),
+                lua::get<int>(state, 5),
+            );
+            break;
+        default:
+        }
+    }
+
+    mt["fillRect"] = QPainter_fillRect;
+
+Some Qt methods use signatures like (int*, int*, int*, int*) to return multiple
+values.  These simply return those values on the stack.
+
+In the rare case that a name collision occurs, a new name should be made. For
+instance, "end" is a keyword in Lua, so it cannot be natively used as a
+function name.
+
+Extensions to the Qt API should only be done when their benefit outweighs their
+cost to maintain. For the most part, the Qt API should be ported directly
+without any modification. For instnace, Lua-cxx should perform only essential
+error-checking on called methods, but there is no guarantee that a call won't
+corrupt memory, segfault, or do anything that couldn't happen in C++.
+
+These constraints may seem overly strict, but having them and abiding by them
+simplifies the task of writing a binding. It also makes it very easy for anyone
+to maintain. Classes can be constructed in Lua to provide a better facade over
+the underlying library.
+
+=over 4
+
+=item B<QtCore C++ classes> - https://qt-project.org/doc/qt-5/qtcore-module.html
+
+=item B<QtGui C++ classes> - https://qt-project.org/doc/qt-5/qtgui-module.html
+
+=back
