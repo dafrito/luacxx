@@ -16,7 +16,7 @@ struct Metatable<QObject>
 {
     static constexpr const char* name = "QObject";
 
-    static bool metatable(const lua::index& mt, QObject* const)
+    static bool metatable(const lua::index& mt, const QObject* const)
     {
         lua::QObject_metatable(mt);
         return true;
@@ -30,7 +30,7 @@ struct Metatable<QMetaMethod>
 {
     static constexpr const char* name = "QMetaMethod";
 
-    static bool metatable(const lua::index& mt, QMetaMethod* const)
+    static bool metatable(const lua::index& mt, const QMetaMethod* const)
     {
         lua::qmetamethod_metatable(mt);
         return true;
