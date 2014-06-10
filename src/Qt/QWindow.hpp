@@ -7,6 +7,14 @@
 
 #include <QWindow>
 
+/*
+
+=head1 NAME
+
+QWindow - http://qt-project.org/doc/qt-5/qwindow.html
+
+*/
+
 namespace lua {
 
 void QWindow_metatable(const lua::index& mt);
