@@ -4,6 +4,8 @@
 #include "QSize.hpp"
 #include "QRegion.hpp"
 #include "QRect.hpp"
+#include "QPaintDevice.hpp"
+#include "QWindow.hpp"
 
 #include <QBackingStore>
 

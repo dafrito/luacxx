@@ -2,13 +2,67 @@
 #include "../type/function.hpp"
 #include "../type/numeric.hpp"
 #include "../thread.hpp"
+#include "QRect.hpp"
+#include "QRectF.hpp"
+#include "QTextOption.hpp"
 
 #include <QPainter>
 #include <QPaintEngine>
 
+/*
+
+
+*/
 int QPainter_boundingRect(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_type(state, 2) != LUA_TUSERDATA) {
+        // QRect boundingRect(int x, int y, int w, int h, int flags, const QString & text)
+        lua::push(state, self->boundingRect(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<int>(state, 6),
+            lua::get<QString>(state, 7)
+        ));
+        return 1;
+    }
+
+    if (lua::class_name(state, 2) == lua::Metatable<QRect>::name) {
+        // QRect boundingRect(const QRect & rectangle, int flags, const QString & text)
+        lua::push(state, self->boundingRect(
+            lua::get<const QRect&>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<QString>(state, 4)
+        ));
+        return 1;
+    }
+    if (lua_type(state, 3) == LUA_TNUMBER) {
+        // QRectF boundingRect(const QRectF & rectangle, int flags, const QString & text)
+        lua::push(state, self->boundingRect(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<QString>(state, 4)
+        ));
+        return 1;
+    }
+
+    // QRectF boundingRect(const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption())
+    if (lua_gettop(state) > 3) {
+        lua::push(state, self->boundingRect(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<QString>(state, 3),
+            lua::get<const QTextOption&>(state, 4)
+        ));
+        return 1;
+    }
+
+    lua::push(state, self->boundingRect(
+        lua::get<const QRectF&>(state, 2),
+        lua::get<QString>(state, 3)
+    ));
+    return 1;
 }
 
 int QPainter_drawArc(lua_State* const state)

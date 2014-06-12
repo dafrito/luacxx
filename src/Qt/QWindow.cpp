@@ -1,15 +1,74 @@
 #include "QWindow.hpp"
-#include "QObject.hpp"
 #include "QObservable.hpp"
+#include "QSurface.hpp"
+#include "QObject.hpp"
+#include "QScreen.hpp"
+#include "QSize.hpp"
+#include "QRect.hpp"
+#include "QIcon.hpp"
+#include "QSurfaceFormat.hpp"
+#include "QPoint.hpp"
 
 #include "../type/function.hpp"
+#include "../type/numeric.hpp"
 #include "../thread.hpp"
 
 #include <QScreen>
 
+// http://qt-project.org/doc/qt-5/qwindow.html
+
+// void     resize(const QSize & newSize)
+// void     resize(int w, int h)
+int QWindow_resize(lua_State* const state)
+{
+    auto self = lua::get<QWindow*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->resize(lua::get<const QSize&>(state, 2));
+    } else {
+        self->resize(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
+
+    return 0;
+}
+
+int QWindow_setGeometry(lua_State* const state)
+{
+    auto self = lua::get<QWindow*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->setGeometry(lua::get<const QRect&>(state, 2));
+    } else {
+        self->setGeometry(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5)
+        );
+    }
+    return 0;
+}
+
+int QWindow_setPosition(lua_State* const state)
+{
+    auto self = lua::get<QWindow*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->setPosition(lua::get<const QPoint&>(state, 2));
+    } else {
+        self->setPosition(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
+    return 0;
+}
+
+
 void lua::QWindow_metatable(const lua::index& mt)
 {
     lua::QObject_metatable(mt);
+    lua::QSurface_metatable(mt);
 
     mt["baseSize"] = &QWindow::baseSize;
     mt["contentOrientation"] = &QWindow::contentOrientation;
@@ -47,8 +106,7 @@ void lua::QWindow_metatable(const lua::index& mt)
     mt["position"] = &QWindow::position;
     mt["reportContentOrientationChange"] = &QWindow::reportContentOrientationChange;
     mt["requestedFormat"] = &QWindow::requestedFormat;
-    //mt["resize"] = &QWindow::resize;
-    //mt["resize"] = &QWindow::resize;
+    mt["resize"] = QWindow_resize;
     mt["screen"] = &QWindow::screen;
     mt["setBaseSize"] = &QWindow::setBaseSize;
     mt["setCursor"] = &QWindow::setCursor;
@@ -56,8 +114,7 @@ void lua::QWindow_metatable(const lua::index& mt)
     mt["setFlags"] = &QWindow::setFlags;
     mt["setFormat"] = &QWindow::setFormat;
     mt["setFramePosition"] = &QWindow::setFramePosition;
-    //mt["setGeometry"] = &QWindow::setGeometry;
-    //mt["setGeometry"] = &QWindow::setGeometry;
+    mt["setGeometry"] = QWindow_setGeometry;
     mt["setIcon"] = &QWindow::setIcon;
     mt["setKeyboardGrabEnabled"] = &QWindow::setKeyboardGrabEnabled;
     mt["setMask"] = &QWindow::setMask;
@@ -67,8 +124,7 @@ void lua::QWindow_metatable(const lua::index& mt)
     mt["setMouseGrabEnabled"] = &QWindow::setMouseGrabEnabled;
     mt["setOpacity"] = &QWindow::setOpacity;
     mt["setParent"] = &QWindow::setParent;
-    //mt["setPosition"] = &QWindow::setPosition;
-    //mt["setPosition"] = &QWindow::setPosition;
+    mt["setPosition"] = QWindow_setPosition;
     mt["setScreen"] = &QWindow::setScreen;
     mt["setSizeIncrement"] = &QWindow::setSizeIncrement;
     mt["setSurfaceType"] = &QWindow::setSurfaceType;
@@ -124,6 +180,21 @@ int luaopen_luacxx_QWindow(lua_State* const state)
 
     env["QWindow"] = lua::value::table;
     env["QWindow"]["new"] = QWindow_new;
+    auto t = env["QWindow"];
+
+    env["fromWinId"] = &QWindow::fromWinId;
+
+    // enum QWindow::AncestorMode
+    t["ExcludeTransients"] = QWindow::ExcludeTransients;
+    t["IncludeTransients"] = QWindow::IncludeTransients;
+
+    // enum QWindow::Visibility
+    t["Windowed"] = QWindow::Windowed;
+    t["Minimized"] = QWindow::Minimized;
+    t["Maximized"] = QWindow::Maximized;
+    t["FullScreen"] = QWindow::FullScreen;
+    t["AutomaticVisibility"] = QWindow::AutomaticVisibility;
+    t["Hidden"] = QWindow::Hidden;
 
     return 0;
 }

@@ -1,8 +1,8 @@
 #include "QQuaternion.hpp"
 #include "QVector3D.hpp"
+#include "../type/numeric.hpp"
 #include "../type/function.hpp"
 #include "../thread.hpp"
-#include "../type/numeric.hpp"
 
 #include <QQuaternion>
 
@@ -73,7 +73,13 @@ int QQuaternion_new(lua_State* const state)
     case 1:
         lua::make<QQuaternion>(state);
         break;
-    case 5:
+    case 3:
+        lua::make<QQuaternion>(state,
+            lua::get<float>(state, 2), // scalar
+            lua::get<const QVector3D&>(state, 3)
+        );
+        break;
+    default:
         lua::make<QQuaternion>(state,
             lua::get<float>(state, 2), // scalar
             lua::get<float>(state, 3), // xpos
@@ -85,12 +91,25 @@ int QQuaternion_new(lua_State* const state)
     return 1;
 }
 
+int QQuaternion_benchmark(lua_State* const state)
+{
+    auto MAX = lua::get<int>(state, 1);
+    QQuaternion quat(2, 3, 7, 5);
+    for (int i = 0; i < MAX; ++i) {
+        quat = quat * QQuaternion(2, 2, 2, 2);
+        quat.normalize();
+    }
+    lua::push(state, quat);
+    return 1;
+}
+
 int luaopen_luacxx_QQuaternion(lua_State* const state)
 {
     lua::thread env(state);
 
     env["QQuaternion"] = lua::value::table;
     env["QQuaternion"]["new"] = QQuaternion_new;
+    env["QQuaternion"]["benchmark"] = QQuaternion_benchmark;
 
     return 0;
 }

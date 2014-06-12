@@ -1,11 +1,16 @@
 #include "QCoreApplication.hpp"
 #include "QObject.hpp"
 #include "QEventLoop.hpp"
+#include "QAbstractNativeEventFilter.hpp"
+#include "QStringList.hpp"
+#include "QEvent.hpp"
+#include "QTranslator.hpp"
 
 #include "../type/function.hpp"
 #include "../type/numeric.hpp"
 #include "../thread.hpp"
 
+#include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 
 lua::QCoreApplicationArgs* lua::save_arguments(lua::index arg)
@@ -35,10 +40,9 @@ void lua::QCoreApplication_metatable(const lua::index& mt)
 {
     lua::QObject_metatable(mt);
 
-    mt["exec"] = &QCoreApplication::exec;
-    mt["flush"] = &QCoreApplication::flush;
-    mt["closingDown"] = &QCoreApplication::closingDown;
-    mt["startingUp"] = &QCoreApplication::startingUp;
+    mt["installNativeEventFilter"] = &QCoreApplication::installNativeEventFilter;
+    mt["notify"] = &QCoreApplication::notify;
+    mt["removeNativeEventFilter"] = &QCoreApplication::removeNativeEventFilter;
 }
 
 int QCoreApplication_processEvents(lua_State* const state)
@@ -65,13 +69,54 @@ int QCoreApplication_processEvents(lua_State* const state)
 int luaopen_luacxx_QCoreApplication(lua_State* const state)
 {
     luaL_requiref(state, "luacxx.QEventLoop", luaopen_luacxx_QEventLoop, false);
-    lua_settop(state, 0);
 
     lua::thread env(state);
 
     env["QCoreApplication"] = lua::value::table;
     env["QCoreApplication"]["new"] = lua::QCoreApplication_new<QCoreApplication>;
-    env["QCoreApplication"]["processEvents"] = QCoreApplication_processEvents;
+    auto t = env["QCoreApplication"];
+
+    t["addLibraryPath"] = &QCoreApplication::addLibraryPath;
+    t["applicationDirPath"] = &QCoreApplication::applicationDirPath;
+    t["applicationFilePath"] = &QCoreApplication::applicationFilePath;
+    t["applicationName"] = &QCoreApplication::applicationName;
+    t["applicationPid"] = &QCoreApplication::applicationPid;
+    t["applicationVersion"] = &QCoreApplication::applicationVersion;
+    t["arguments"] = &QCoreApplication::arguments;
+    t["closingDown"] = &QCoreApplication::closingDown;
+    t["eventDispatcher"] = &QCoreApplication::eventDispatcher;
+    t["exec"] = &QCoreApplication::exec;
+    t["exit"] = &QCoreApplication::exit;
+    t["flush"] = &QCoreApplication::flush;
+    t["installTranslator"] = &QCoreApplication::installTranslator;
+    t["instance"] = &QCoreApplication::instance;
+    t["isQuitLockEnabled"] = &QCoreApplication::isQuitLockEnabled;
+    t["libraryPaths"] = &QCoreApplication::libraryPaths;
+    t["organizationDomain"] = &QCoreApplication::organizationDomain;
+    t["organizationName"] = &QCoreApplication::organizationName;
+    t["postEvent"] = &QCoreApplication::postEvent;
+    t["processEvents"] = QCoreApplication_processEvents;
+    t["removeLibraryPath"] = &QCoreApplication::removeLibraryPath;
+    t["removePostedEvents"] = &QCoreApplication::removePostedEvents;
+    t["removeTranslator"] = &QCoreApplication::removeTranslator;
+    t["sendEvent"] = &QCoreApplication::sendEvent;
+    t["sendPostedEvents"] = &QCoreApplication::sendPostedEvents;
+    t["setApplicationName"] = &QCoreApplication::setApplicationName;
+    t["setApplicationVersion"] = &QCoreApplication::setApplicationVersion;
+    t["setAttribute"] = &QCoreApplication::setAttribute;
+    t["setEventDispatcher"] = &QCoreApplication::setEventDispatcher;
+    t["setLibraryPaths"] = &QCoreApplication::setLibraryPaths;
+    t["setOrganizationDomain"] = &QCoreApplication::setOrganizationDomain;
+    t["setOrganizationName"] = &QCoreApplication::setOrganizationName;
+    t["setQuitLockEnabled"] = &QCoreApplication::setQuitLockEnabled;
+    t["startingUp"] = &QCoreApplication::startingUp;
+    t["testAttribute"] = &QCoreApplication::testAttribute;
+    t["translate"] = &QCoreApplication::translate;
+
+    #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
+    t["setSetuidAllowed"] = &QCoreApplication::setSetuidAllowed;
+    t["isSetuidAllowed"] = &QCoreApplication::isSetuidAllowed;
+    #endif
 
     return 0;
 }

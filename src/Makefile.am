@@ -23,9 +23,22 @@ nobase_pkginclude_HEADERS = \
 	Qt/QObject.hpp \
 	Qt/QObjectSlot.hpp \
 	Qt/QRect.hpp \
+	Qt/QRectF.hpp \
 	Qt/QChar.hpp \
 	Qt/QString.hpp \
+	Qt/QPen.hpp \
+	Qt/QBrush.hpp \
+	Qt/QPoint.hpp \
+	Qt/QPointF.hpp \
+	Qt/QTransform.hpp \
+	Qt/QGradient.hpp \
+	Qt/QLinearGradient.hpp \
+	Qt/QColor.hpp \
 	Qt/QPainter.hpp \
+	Qt/QImage.hpp \
+	Qt/QFont.hpp \
+	Qt/QPainterPath.hpp \
+	Qt/QPaintDevice.hpp \
 	Qt/QElapsedTimer.hpp \
 	Qt/QVariant.hpp \
 	Qt/QWindow.hpp \
@@ -34,9 +47,27 @@ nobase_pkginclude_HEADERS = \
 	Qt/QBackingStore.hpp \
 	Qt/QEvent.hpp \
 	Qt/QEventLoop.hpp \
+	Qt/QPixmap.hpp \
+	Qt/QBitmap.hpp \
+	Qt/QSurfaceFormat.hpp \
+	Qt/QMatrix.hpp \
+	Qt/QCursor.hpp \
+	Qt/QStringList.hpp \
+	Qt/QClipboard.hpp \
+	Qt/QMimeData.hpp \
+	Qt/QDrag.hpp \
+	Qt/QIcon.hpp \
+	Qt/QInputMethod.hpp \
+	Qt/QPalette.hpp \
 	Qt/QEventFilter.hpp \
+	Qt/QVector2D.hpp \
 	Qt/QVector3D.hpp \
+	Qt/QVector4D.hpp \
 	Qt/QQuaternion.hpp \
+	Qt/QOpenGLContext.hpp \
+	Qt/QOpenGLContextGroup.hpp \
+	Qt/QOpenGLFunctions.hpp \
+	Qt/QScreen.hpp \
 	Qt/Qt.hpp \
 	Qt/QRegion.hpp \
 	Qt/QSize.hpp \
@@ -64,19 +95,50 @@ if BUILD_QT
 libluacxx_la_SOURCES += \
 	module/DirectoryModuleLoader.cpp \
 	Qt/QObject.cpp \
-	Qt/QSize.cpp \
-	Qt/QRect.cpp \
-	Qt/Qt.cpp \
 	Qt/QVariant.cpp \
+	Qt/QPoint.cpp \
+	Qt/QPointF.cpp \
+	Qt/QSize.cpp \
+	Qt/QSizeF.cpp \
+	Qt/QRect.cpp \
+	Qt/QRectF.cpp \
+	Qt/QQuaternion.cpp \
+	Qt/Qt.cpp \
 	Qt/QWindow.cpp \
 	Qt/QCoreApplication.cpp \
 	Qt/QGuiApplication.cpp \
+	Qt/QOpenGLContext.cpp \
+	Qt/QOpenGLContextGroup.cpp \
+	Qt/QOpenGLFunctions.cpp \
+	Qt/QSurfaceFormat.cpp \
+	Qt/QMatrix.cpp \
+	Qt/QCursor.cpp \
+	Qt/QStringList.cpp \
+	Qt/QClipboard.cpp \
+	Qt/QMimeData.cpp \
+	Qt/QDrag.cpp \
+	Qt/QIcon.cpp \
+	Qt/QInputMethod.cpp \
+	Qt/QPalette.cpp \
+	Qt/QScreen.cpp \
+	Qt/QImage.cpp \
+	Qt/QFont.cpp \
+	Qt/QPainterPath.cpp \
+	Qt/QBrush.cpp \
+	Qt/QSurface.cpp \
+	Qt/QGradient.cpp \
+	Qt/QLinearGradient.cpp \
+	Qt/QPen.cpp \
+	Qt/QTransform.cpp \
+	Qt/QColor.cpp \
+	Qt/QPixmap.cpp \
+	Qt/QBitmap.cpp \
 	Qt/QPainter.cpp \
+	Qt/QPaintDevice.cpp \
 	Qt/QRegion.cpp \
 	Qt/QElapsedTimer.cpp \
 	Qt/QVector3D.cpp \
 	Qt/QEvent.cpp \
-	Qt/QQuaternion.cpp \
 	Qt/QEventLoop.cpp \
 	Qt/QEventFilter.cpp \
 	Qt/QBackingStore.cpp \

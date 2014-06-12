@@ -3,7 +3,7 @@
 
 #include "../stack.hpp"
 
-class QGuiApplication;
+#include <QGuiApplication>
 
 namespace lua {
 
