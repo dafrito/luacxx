@@ -778,19 +778,6 @@ save C data as upvalues to a C function.
     lua_pushvalue(state, LUA_REGISTRYINDEX);
     lua::push(state, lua::value::registry);
 
-=head2 Userdata
-
-Lua-cxx provides two complimentary functions: To call C++ from Lua and to call
-Lua from C++. Both of these functions require:
-
-* translating values as they cross language boundaries
-* synchronizing memory models for non-primitive data
-
-Lua itself provides direct support for pushing strings, numbers, true, false,
-nil, void pointers, and C callbacks. Lua-cxx provides a common interface for
-accessing all of these types. Lua-cxx also supports passing C++ functions of
-arbitrary signature presuming the arguments and return types are supported.
-
 */
 
 // Discriminant for how userdata is stored

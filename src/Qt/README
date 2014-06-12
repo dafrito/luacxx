@@ -55,30 +55,63 @@ Lua-cxx Qt support
 
 =head1 DESCRIPTION
 
-This subdirectory provides full support for Qt QObject introspection
-system. This allows all objects that derive from QObject to automatically
-expose their properties, signals, and slots, as well as any methods
-prefixed with Q_INVOKABLE. These methods can have any signature as long
-as each type is supported by this library and your lua::Push<> structs.
+Lua-cxx maintains bindings for much of Qt's Core and GUI modules as well as
+direct support for QObject-derived classes.
 
-This subdirectory also contains prebuilt bindings for many Qt classes.  Each
-class adheres to its documented Qt API where possible, including naming
-conventions. This allows the programmer to use Qt's API documentation directly,
-rather than needing to relearn this project's dialect.
+=head2 QObjects
 
-=head1 SUPPORTED CLASSES
+This allows all objects that derive from QObject to automatically expose their
+properties, signals, and slots, as well as any methods prefixed with
+Q_INVOKABLE. These methods can have any signature as long as each type is
+supported by this library and lua::Push<> struct specializations.
 
-All exported symbols from the QtCore and QtGui modules are to be supported. There
-are some areas where exact support is not possible or desired.
+=head2 Translation rules
 
-When possible, the function signature should be matched exactly, like so:
+Lua-cxx makes as few modifications to the original API as possible. This
+minimizes the burden on the programmer by eliminating their need to learn this
+library's changes. As a result, naming conventions, parameter lists, and other
+stylistic decisions are not modified unless it becomes necessary to do so.
+This approach greatly simplifies the creation and maintenance of object
+bindings.
 
-    mt["brush"] = &QPainter::brush;
+For C++ objects, a binding can easily be created manually by creating a
+lua::Metatable<> specialization, as shown:
 
-Overloaded methods cannot be matched exactly, as they would be ambiguous. Therefore,
+    template <>
+    struct Metatable<QPainter>
+    {
+        static constexpr const char* name = "QPainter";
+
+        static bool metatable(const lua::index& mt, QPainter* const)
+        {
+            lua::QPainter_metatable(mt);
+            return true;
+        }
+    };
+
+The metatable will be used to expose behavior to Lua. By default, Lua-cxx's
+metatable will be used as its own index, so methods can be assigned directly
+to it to add behavior:
+
+    void lua::QPainter_metatable(const lua::index& mt)
+    {
+        // Add all public QPainter methods
+        mt["background"] = &QPainter::background;
+        mt["backgroundMode"] = &QPainter::backgroundMode;
+        mt["begin"] = &QPainter::begin;
+        mt["beginNativePainting"] = &QPainter::beginNativePainting;
+
+        // ... etc ...
+
+        mt["window"] = &QPainter::window;
+        mt["worldMatrixEnabled"] = &QPainter::worldMatrixEnabled;
+        mt["worldTransform"] = &QPainter::worldTransform;
+    }
+
+Overloaded methods cannot be assigned exactly, as they would be ambiguous. Therefore,
 a separate method should be created to determine the correct method:
 
-    int QPainter_fillRect(lua::state* const state)
+    int QPainter_fillRect(lua_State* const state)
     {
         auto painter = lua::get<QPainter*>(state, 1);
 
@@ -96,30 +129,21 @@ a separate method should be created to determine the correct method:
         }
     }
 
+    // Added to QPainter_metatable
     mt["fillRect"] = QPainter_fillRect;
 
 Some Qt methods use signatures like (int*, int*, int*, int*) to return multiple
-values.  These simply return those values on the stack.
+values. These methods should simply return those values on the stack.
 
 In the rare case that a name collision occurs, a new name should be made. For
 instance, "end" is a keyword in Lua, so it cannot be natively used as a
 function name.
 
-Extensions to the Qt API should only be done when their benefit outweighs their
-cost to maintain. For the most part, the Qt API should be ported directly
-without any modification. For instnace, Lua-cxx should perform only essential
-error-checking on called methods, but there is no guarantee that a call won't
-corrupt memory, segfault, or do anything that couldn't happen in C++.
+In cases where a property name collides with a method, the method is preferred. For
+instance, QWindow has a width property, but it also has a width method. In this and all
+other cases, the method should shadow the property.
 
-These constraints may seem overly strict, but having them and abiding by them
-simplifies the task of writing a binding. It also makes it very easy for anyone
-to maintain. Classes can be constructed in Lua to provide a better facade over
-the underlying library.
+=head1 SEE ALSO
 
-=over 4
-
-=item B<QtCore C++ classes> - https://qt-project.org/doc/qt-5/qtcore-module.html
-
-=item B<QtGui C++ classes> - https://qt-project.org/doc/qt-5/qtgui-module.html
-
-=back
+B<QtCore C++ classes> - https://qt-project.org/doc/qt-5/qtcore-module.html
+B<QtGui C++ classes> - https://qt-project.org/doc/qt-5/qtgui-module.html

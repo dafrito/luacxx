@@ -19,13 +19,70 @@ lua-cxx, luacxx - C++11 API for creating Lua bindings
 
 =head1 DESCRIPTION
 
-Lua-cxx is a set of functions and objects designed to simplify the process of
-constructing C++ and C modules for Lua. This library is designed to work in
-tandem with Lua's existing C API, so it does not provide a complete facade. On
-the contrary, I find Lua's C API to be amazingly well-designed, so I've tried
-to ensure that Lua-cxx can be intermixed freely with Lua's C API. In fact, most
-of the Lua C API has no analog in Lua-cxx - I just use the original, like in
-the following example:
+Lua-cxx is a C++ library that helps you write Lua bindings for C++ and C code.
+
+B<Lua-cxx plays well with others.> Lua-cxx does not try to cover up Lua's C API
+or its stack-based model. In fact, Lua-cxx and Lua C API's can and must be
+mixed freely, and Lua-cxx works transparently over Lua's stack, so you can work
+using either one. There is absolutely no harm in mixing the two together.
+
+B<Lua-cxx is fast>. A binding's overhead of calling into C and converting
+arguments can be significant for simple methods. Lua-cxx has been built
+specifically for efficiency, so it has avoided much of the overhead
+that plagues other bindings (and older versions of Lua-cxx!).
+
+Lua-cxx's overhead is around that of an extra function call, which means that a
+C++ binding will be faster than equivalent Lua code for all but the most
+trivial of cases. For instance, this math-intensive benchmark has the
+QQuaternion binding performing ~150% faster than an API-indentical quaternion
+written in Lua:
+
+    quat = QQuaternion:new(2, 3, 7, 5);
+    for i=1, MAX do
+        -- Do some CPU-intensive matrix math, as well as creating a temporary.
+        quat = quat * QQuaternion:new(2, 2, 2, 2);
+        quat:normalize();
+    end
+
+    // My numbers
+    Benchmark Runs: 10000
+    C++:      0.824ms ( 1.00 relative to C++)
+    Lua:     21.514ms (26.10 relative to C++)
+    Lua-cxx: 13.579ms (16.47 relative to C++)
+
+B<Lua-cxx is frugal>. Lua-cxx takes advantage of C++'s memory efficiency.
+Objects pushed on the Lua stack are instantiated directly on new Lua userdata,
+and with only 4 bytes of Lua-cxx-specific metadata appended to the end.
+lua_touserdata works out-of-the-box, and the returned value can be cast
+directly to the intended C++ type.
+
+B<Lua-cxx is open-ended>. Much of Lua-cxx is built using class templates. This
+allows you to add new support for your own types without needing to recompile
+Lua-cxx. Once a new template specialization for your type is found, all of
+Lua-cxx's APIs will be able to use it.
+
+B<Lua-cxx is comprehensive>. Lua-cxx includes bindings for over 150 Qt classes,
+as well as automatic introspection support for QObjects. It also has
+preliminary support for Gtk's introspection system, allowing any project with
+GObject introspection support to work with Lua-cxx.
+
+B<Lua-cxx is not a generator>. Lua-cxx doesn't write header files or extra
+boilerplate. Everything can be done using just a C++11 compiler.
+
+=head2 INTENDED USAGE
+
+Lua-cxx is built to make writing bindings easy. It's all too common that you
+have to choose between a terrible API that's fast or a good API that's slow and
+bloated, so I wanted to provide an alternative that doesn't get in your way
+while still giving you sufficient power to get things done.
+
+=head2 EXTENDED OVERVIEW
+
+This library is designed to work in tandem with Lua's existing C API, so it
+does not provide a complete facade. On the contrary, I find Lua's C API to be
+amazingly well-designed, so I've tried to ensure that Lua-cxx can be intermixed
+freely with Lua's C API. In fact, most of the Lua C API has no analog in
+Lua-cxx - I just use the original, like in the following example:
 
     // Add all arguments
     int add_several(lua_State* const state)
@@ -77,7 +134,8 @@ provided by that library's metadata.
 
 =head1 INSTALLATION
 
-Lua-cxx uses Automake as its build system, so the process is conventional:
+Lua-cxx uses Automake as its build system, so the process looks something like
+this:
 
     git clone https://github.com/dafrito/lua-cxx.git
 
@@ -115,9 +173,55 @@ custom QVariant types. Thread-safety for these methods has not been determined.
 
 Lua 5.2 - http://www.lua.org/manual/5.2/manual.html
 
+    Lua is an extension programming language designed to support general
+    procedural programming with data description facilities.
+
+Qt - http://qt-project.org/doc/qt-5/modules-cpp.html
+
+    Qt is a cross-platform application and UI framework for developers.
+
+LuaJIT - http://luajit.org/index.html
+
+    LuaJIT is a Just-In-Time Compiler (JIT) for the Lua programming language.
+
+tolua++ - http://www.codenix.com/~tolua/
+
+    tolua++ is an extended version of tolua, a tool to integrate C/C++ code
+    with Lua.
+
+tolua - http://www.tecgraf.puc-rio.br/~celes/tolua/
+
+    tolua is a tool that greatly simplifies the integration of C/C++ code with Lua.
+    Based on a cleaned header file, tolua automatically generates the binding code
+    to access C/C++ features from Lua.
+
+Luabind - http://www.rasterbar.com/products/luabind.html
+
+    Luabind is a library that helps you create bindings between C++ and Lua. It
+    has the ability to expose functions and classes, written in C++, to Lua. It
+    will also supply the functionality to define classes in lua and let them
+    derive from other lua classes or C++ classes. Lua classes can override
+    virtual functions from their C++ baseclasses.
+
+lqt - https://github.com/mkottman/lqt
+
+    lqt is a Lua binding to the Qt framework. It is an automated binding
+    generated from the Qt headers, and covers almost all classes and methods
+    from supported Qt modules.
+
+QtLua - http://www.nongnu.org/libqtlua/
+
+    The QtLua library aims to make Qt4/Qt5 applications scriptable using the
+    Lua scripting language. It is an alternative to the QtScript module.
+
+LGI - https://github.com/pavouk/lgi
+
+    LGI is gobject-introspection based dynamic Lua binding to GObject based
+    libraries. It allows using GObject-based libraries directly from Lua.
+
 =head1 COMMENTS AND BUG REPORTING
 
-Email dafrito@gmail.com with all your reporting needs.
+Please send any feedback or questions regarding this project to dafrito@gmail.com
 
 =head1 LICENSE
 
