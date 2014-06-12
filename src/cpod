@@ -28,6 +28,9 @@ case "$FILE" in
         -e 's/^\*\//=cut/g' \
         $FILE >$OUTPUT || die "sed failed"
     ;;
+*)
+    cat $FILE >$OUTPUT || die "cat failed"
+    ;;
 esac
 
 perldoc $* -F $OUTPUT || die "perldoc failed"
