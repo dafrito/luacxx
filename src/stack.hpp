@@ -1066,7 +1066,7 @@ template <class Stored>
 int free_userdata(lua_State* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
-    auto userdata = reinterpret_cast<lua::userdata_block*>(block);
+    auto userdata = reinterpret_cast<lua::userdata_block*>(block + sizeof(Stored));
 
     switch (userdata->storage) {
     case userdata_storage::pointer:
@@ -1076,14 +1076,14 @@ int free_userdata(lua_State* const state)
     }
     case userdata_storage::value:
     {
-        auto value = reinterpret_cast<Stored*>(block + sizeof(lua::userdata_block));
+        auto value = reinterpret_cast<Stored*>(block);
         if (value != nullptr) {
             call_destructor(*value);
         }
         break;
     }
     case userdata_storage::shared_ptr:
-        auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block + sizeof(lua::userdata_block));
+        auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block);
         if (value != nullptr) {
             call_destructor(*value);
         }
@@ -1156,14 +1156,15 @@ char* construct_userdata(lua_State* const state, lua::userdata_storage storage)
     // Get and push a chunk of memory from Lua to hold our metadata, as well as
     // the underlying value.
     char* block = static_cast<char*>(lua_newuserdata(state,
-        sizeof(lua::userdata_block) + sizeof(Stored)
+        sizeof(Stored) + sizeof(lua::userdata_block)
     ));
 
-    // Create the metadata
-    new (block) lua::userdata_block(storage);
+    // Create the metadata at the end of the memory block; lua_touserdata will return a
+    // valid pointer.
+    new (block + sizeof(Stored)) lua::userdata_block(storage);
 
     // Return a pointer to the data block
-    return block + sizeof(lua::userdata_block);
+    return block;
 }
 
 template <class Value, lua::userdata_storage storage = lua::userdata_storage::value>
@@ -1459,10 +1460,12 @@ static void store_userdata(T& destination, const lua::index& source)
     } else {
         // Get a userdata value and set up the parameters for the inner procedure.
         auto block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
+
+        char* userdata_block = block + lua_rawlen(source.state(), source.pos()) - sizeof(lua::userdata_block);
         store_full_userdata<storage>(
             destination,
-            reinterpret_cast<lua::userdata_block*>(block),
-            block + sizeof(lua::userdata_block)
+            reinterpret_cast<lua::userdata_block*>(userdata_block),
+            block
         );
     }
 }

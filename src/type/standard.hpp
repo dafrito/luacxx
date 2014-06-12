@@ -348,10 +348,10 @@ struct Store<void*>
 
         switch (userdata->storage) {
         case lua::userdata_storage::value:
-            destination = block + sizeof(lua::userdata_block);
+            destination = block;
             break;
         case lua::userdata_storage::pointer:
-            destination = *reinterpret_cast<void**>(block + sizeof(lua::userdata_block));
+            destination = *reinterpret_cast<void**>(block);
             break;
         case lua::userdata_storage::shared_ptr:
             throw std::logic_error("shared_ptr's cannot be safely converted to void pointers");
