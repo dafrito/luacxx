@@ -100,8 +100,6 @@ int QCoreApplication_new(lua_State* const state)
     // [..., arguments, application]
 
     // Only return the application
-    lua_replace(state, 1);
-    lua_settop(state, 1);
     return 1;
 }
 
