@@ -121,6 +121,15 @@ std::string lua::dump(lua_State* const state)
             str << lua::get<std::string>(iter);
             break;
         case lua::type::userdata:
+        {
+            auto userdata_block = lua::get<lua::userdata_block*>(iter);
+            if (userdata_block->name) {
+                str << userdata_block->name << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
+            } else {
+                str << iter.type().name() << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
+            }
+            break;
+        }
         case lua::type::table:
             str << iter.type().name() << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
             break;
