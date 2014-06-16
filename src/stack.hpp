@@ -1065,9 +1065,9 @@ template <class Stored>
 int free_userdata(lua_State* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
-    auto userdata = reinterpret_cast<lua::userdata_block*>(block + sizeof(Stored));
+    auto userdata_block = reinterpret_cast<lua::userdata_block*>(block + sizeof(Stored));
 
-    switch (userdata->storage) {
+    switch (userdata_block->storage) {
     case userdata_storage::pointer:
     {
         // Don't do anything for pointers; Lua does not own them, so Lua should not destroy them.

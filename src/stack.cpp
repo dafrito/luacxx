@@ -16,7 +16,7 @@ lua::index lua::push(lua_State* const state)
 int lua::__gc(lua_State* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
-    auto userdata = reinterpret_cast<lua::userdata_block*>(block);
+    auto userdata_block = lua::get<lua::userdata_block*>(state, 1);
 
     lua_getmetatable(state, 1);
     auto mt = lua::index(state, -1);
@@ -32,7 +32,7 @@ int lua::__gc(lua_State* const state)
             lua::call(free_userdata, lua::index(state, 1));
         }
 
-        userdata->~userdata_block();
+        userdata_block->~userdata_block();
     } catch (lua::error& ex) {
         std::cerr << "Error occurred during Lua garbage collection: " << ex.what();
     }

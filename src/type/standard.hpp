@@ -339,14 +339,15 @@ struct Store<void*>
         }
 
         // It's a full userdata, so retrieve the underlying value
-        char* block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
-        if (!block) {
+        auto userdata_block = lua::get<lua::userdata_block*>(source);
+        if (!userdata_block) {
             destination = nullptr;
             return;
-        }
-        auto userdata = reinterpret_cast<lua::userdata_block*>(block);
 
-        switch (userdata->storage) {
+        }
+
+        void* block = lua_touserdata(source.state(), source.pos());
+        switch (userdata_block->storage) {
         case lua::userdata_storage::value:
             destination = block;
             break;
