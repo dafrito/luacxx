@@ -312,6 +312,23 @@ struct Push<void*>
 };
 
 template <>
+struct Store<lua::userdata_block*>
+{
+    static void store(lua::userdata_block*& destination, const lua::index& source)
+    {
+        char* block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
+        if (!block) {
+            destination = nullptr;
+            return;
+        }
+
+        destination = reinterpret_cast<lua::userdata_block*>(
+            block + lua_rawlen(source.state(), source.pos()) - sizeof(lua::userdata_block)
+        );
+    }
+};
+
+template <>
 struct Store<void*>
 {
     static void store(void*& destination, const lua::index& source)
