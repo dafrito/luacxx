@@ -20,7 +20,9 @@ public:
         _argc($argc),
         _argv(new char*[$argc])
     {
-        memset(_argv, 0, sizeof(char*) * _argc);
+        for (int i = 0; i < _argc; ++i) {
+            _argv[i] = nullptr;
+        }
     }
 
     void set(int index, const char* value)
