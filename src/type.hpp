@@ -8,6 +8,7 @@ namespace lua {
 class type_info;
 
 enum class type {
+    none = LUA_TNONE,
     nil = LUA_TNIL,
     boolean = LUA_TBOOLEAN,
     number = LUA_TNUMBER,
@@ -36,6 +37,7 @@ public:
         // they're usually just used for debugging purposes.
 
         switch (get()) {
+            case lua::type::none:          return "none";
             case lua::type::nil:           return "nil";
             case lua::type::boolean:       return "boolean";
             case lua::type::number:        return "number";
@@ -45,7 +47,7 @@ public:
             case lua::type::thread:        return "thread";
             case lua::type::userdata:      return "userdata";
             case lua::type::lightuserdata: return "lightuserdata";
-            default:                       return "";
+            default:                       return "unknown";
         }
     }
 
@@ -67,7 +69,12 @@ public:
 
     bool nil() const
     {
-        return get() == lua::type::nil;
+        return get() == lua::type::nil || get() == lua::type::none;
+    }
+
+    bool none() const
+    {
+        return get() == lua::type::none;
     }
 
     bool boolean() const
