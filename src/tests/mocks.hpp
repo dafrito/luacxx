@@ -2,6 +2,7 @@
 #define LUA_CXX_TESTS_MOCKS_HEADER
 
 #include "range.hpp"
+#include "Qt/QObject.hpp"
 
 #include <QObject>
 #include <QPoint>
@@ -131,5 +132,21 @@ signals:
     void xChanged() const;
     void yChanged() const;
 };
+
+namespace lua {
+
+template <>
+struct Metatable<QtPoint>
+{
+    static constexpr const char* name = "QtPoint";
+
+    static bool metatable(const lua::index& mt, const QtPoint* const)
+    {
+        lua::QObject_metatable(mt);
+        return true;
+    }
+};
+
+}; // namespace lua
 
 #endif // LUA_CXX_TESTS_MOCKS_HEADER

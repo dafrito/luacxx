@@ -1039,16 +1039,7 @@ struct Metatable
     // the name to be specified).
     static bool metatable(const lua::index& mt, const T* value)
     {
-        #ifdef HAVE_QT_CORE
-        // If it's a QObject, then use that metatable
-        return Metatable<typename std::conditional<
-            std::is_base_of<QObject, T>::value,
-            QObject,
-            void
-        >::type>::metatable(mt, value);
-        #else
         return true;
-        #endif
     }
 };
 
