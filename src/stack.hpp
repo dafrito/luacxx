@@ -11,8 +11,7 @@
 #include <memory>
 #include <string>
 #include <stdexcept>
-
-class QObject;
+#include <sstream>
 
 /*
 
@@ -1460,6 +1459,12 @@ static void store_userdata(T& destination, const lua::index& source)
     } else {
         // Get a userdata value and set up the parameters for the inner procedure.
         auto block = static_cast<char*>(lua_touserdata(source.state(), source.pos()));
+        if (!block) {
+            std::stringstream str;
+            str << "lua::store_userdata: Source at " << source.pos()
+                << " was a " << source.type().name() << ", not a userdata as required.";
+            throw lua::error(str.str());
+        }
 
         char* userdata_block = block + lua_rawlen(source.state(), source.pos()) - sizeof(lua::userdata_block);
         store_full_userdata<storage>(
@@ -1475,6 +1480,9 @@ struct Store
 {
     static void store(T& destination, const lua::index& source)
     {
+        if (source.type().nil()) {
+            throw lua::error("lua::Store<T>::store: source stack value must not be nil");
+        }
         // Retrieve the userdata as a value
         store_userdata<lua::userdata_storage::value>(destination, source);
     }
@@ -1485,6 +1493,10 @@ struct Store<T*>
 {
     static void store(T*& destination, const lua::index& source)
     {
+        if (source.type().nil()) {
+            destination = nullptr;
+            return;
+        }
         // Retrieve the userdata as a pointer
         store_userdata<lua::userdata_storage::pointer>(destination, source);
     }
@@ -1495,6 +1507,11 @@ struct Store<std::shared_ptr<T>>
 {
     static void store(std::shared_ptr<T>& destination, const lua::index& source)
     {
+        if (source.type().nil()) {
+            destination.reset();
+            return;
+        }
+
         // Retrieve the userdata as a shared pointer
         store_userdata<lua::userdata_storage::shared_ptr>(destination, source);
     }

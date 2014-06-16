@@ -187,6 +187,10 @@ struct Store<lua::callable>
 {
     static void store(lua::callable& destination, const lua::index& source)
     {
+        if (source.type().nil()) {
+            destination = nullptr;
+            return;
+        }
         lua_getupvalue(source.state(), source.pos(), 1);
         lua::store_userdata<lua::userdata_storage::value>(destination, lua::index(source.state(), -1));
         lua_pop(source.state(), 1);
