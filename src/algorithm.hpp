@@ -56,6 +56,34 @@ std::string dump(lua_State* const state);
 std::string class_name(const lua::index& index);
 std::string class_name(const lua_State* const state, const int index);
 
+template <class T>
+struct is_type
+{
+    const bool is_same;
+
+    is_type(const lua::index& index) :
+        // Compare exactly for efficiency, but I really should
+        // benchmark this to ensure the performance is worth it.
+        is_same(lua::class_name(index) == required_name())
+    {
+    }
+
+    is_type(lua_State* const state, const int pos) :
+        is_type(lua::index(state, pos))
+    {
+    }
+
+    const char* required_name() const
+    {
+        return lua::Metatable<T>::name;
+    }
+
+    operator bool() const
+    {
+        return is_same;
+    }
+};
+
 /*
 
 =head4 std::string str = lua::memory_address(index)
