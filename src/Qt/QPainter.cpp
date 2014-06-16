@@ -5,6 +5,7 @@
 #include "QRect.hpp"
 #include "QRectF.hpp"
 #include "QTextOption.hpp"
+#include "Qt.hpp"
 
 #include <QPainter>
 #include <QPaintEngine>
@@ -29,7 +30,7 @@ int QPainter_boundingRect(lua_State* const state)
         return 1;
     }
 
-    if (lua::class_name(state, 2) == lua::Metatable<QRect>::name) {
+    if (lua::is_type<QRect>(state, 2)) {
         // QRect boundingRect(const QRect & rectangle, int flags, const QString & text)
         lua::push(state, self->boundingRect(
             lua::get<const QRect&>(state, 2),
@@ -67,31 +68,318 @@ int QPainter_boundingRect(lua_State* const state)
 
 int QPainter_drawArc(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_gettop(state) == 4) {
+        if (lua::is_type<QRect>(state, 2)) {
+            // void drawArc( const QRect & rectangle, int startAngle, int spanAngle )
+            self->drawArc(
+                lua::get<const QRect&>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
+            );
+        }
+        // void drawArc( const QRectF & rectangle, int startAngle, int spanAngle )
+        self->drawArc(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4)
+        );
+        return 0;
+    }
+
+    // void drawArc( int x, int y, int width, int height, int startAngle, int spanAngle )
+    self->drawArc(
+        lua::get<int>(state, 2), // x
+        lua::get<int>(state, 3), // y
+        lua::get<int>(state, 4), // width
+        lua::get<int>(state, 5), // height
+        lua::get<int>(state, 6), // startAngle
+        lua::get<int>(state, 7) // spanAngle
+    );
     return 0;
 }
 
 int QPainter_drawChord(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_gettop(state) == 4) {
+        if (lua::is_type<QRect>(state, 2)) {
+            // void drawChord( const QRect & rectangle, int startAngle, int spanAngle )
+            self->drawChord(
+                lua::get<const QRect&>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
+            );
+        }
+        // void drawChord( const QRectF & rectangle, int startAngle, int spanAngle )
+        self->drawChord(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4)
+        );
+        return 0;
+    }
+
+    // void drawChord( int x, int y, int width, int height, int startAngle, int spanAngle )
+    self->drawChord(
+        lua::get<int>(state, 2), // x
+        lua::get<int>(state, 3), // y
+        lua::get<int>(state, 4), // width
+        lua::get<int>(state, 5), // height
+        lua::get<int>(state, 6), // startAngle
+        lua::get<int>(state, 7) // spanAngle
+    );
     return 0;
 }
 
 int QPainter_drawConvexPolygon(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua::is_type<QPolygonF>(state, 2)) {
+        // void    drawConvexPolygon ( const QPolygonF & polygon )
+        self->drawConvexPolygon(
+            lua::get<const QPolygonF&>(state, 2)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QPolygon>(state, 2)) {
+        // void    drawConvexPolygon ( const QPolygon & polygon )
+        self->drawConvexPolygon(
+            lua::get<const QPolygon&>(state, 2)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QPoint>(state, 2)) {
+        // void    drawConvexPolygon ( const QPoint * points, int pointCount )
+        self->drawConvexPolygon(
+            lua::get<QPoint*>(state, 2),
+            lua::get<int>(state, 3)
+        );
+        return 0;
+    }
+
+    // void    drawConvexPolygon ( const QPointF * points, int pointCount )
+    self->drawConvexPolygon(
+        lua::get<QPointF*>(state, 2),
+        lua::get<int>(state, 3)
+    );
     return 0;
 }
 
 int QPainter_drawEllipse(lua_State* const state)
 {
-    return 0;
-}
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        if (lua::is_type<QRectF>(state, 2)) {
+            // void    drawEllipse ( const QRectF & rectangle )
+            self->drawEllipse(lua::get<const QRectF&>(state, 2));
+            return 0;
+        }
 
-int QPainter_drawGlyphRun(lua_State* const state)
-{
+        // void    drawEllipse ( const QRect & rectangle )
+        self->drawEllipse(lua::get<const QRect&>(state, 2));
+        return 0;
+    }
+
+    if (lua_gettop(state) >= 4) {
+        // void    drawEllipse ( int x, int y, int width, int height )
+        self->drawEllipse(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // void    drawEllipse ( const QPointF & center, qreal rx, qreal ry )
+        self->drawEllipse(
+            lua::get<const QPointF&>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4)
+        );
+        return 0;
+    }
+
+    // void    drawEllipse ( const QPoint & center, int rx, int ry )
+    self->drawEllipse(
+        lua::get<const QPoint&>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4)
+    );
     return 0;
 }
 
 int QPainter_drawImage(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    // void    drawImage ( const QRectF & rectangle, const QImage & image )
+    // void    drawImage ( const QRectF & target, const QImage & image, const QRectF & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+    if (lua::is_type<QRectF>(state, 2)) {
+        switch (lua_gettop(state)) {
+            case 3:
+            {
+                self->drawImage(
+                    lua::get<const QRectF&>(state, 2),
+                    lua::get<const QImage&>(state, 3)
+                );
+                return 0;
+            }
+            case 4:
+            {
+                self->drawImage(
+                    lua::get<const QRectF&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4)
+                );
+                return 0;
+            }
+            default:
+            {
+                self->drawImage(
+                    lua::get<const QRectF&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4),
+                    lua::get<Qt::ImageConversionFlags>(state, 5)
+                );
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    // void    drawImage ( const QRect & target, const QImage & image, const QRect & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+    // void    drawImage ( const QRect & rectangle, const QImage & image )
+    if (lua::is_type<QRect>(state, 2)) {
+        switch (lua_gettop(state)) {
+            case 3:
+            {
+                self->drawImage(
+                    lua::get<const QRect&>(state, 2),
+                    lua::get<const QImage&>(state, 3)
+                );
+                return 0;
+            }
+            case 4:
+            {
+                self->drawImage(
+                    lua::get<const QRect&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4)
+                );
+                return 0;
+            }
+            default:
+            {
+                self->drawImage(
+                    lua::get<const QRect&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4),
+                    lua::get<Qt::ImageConversionFlags>(state, 5)
+                );
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    // void    drawImage ( const QPointF & point, const QImage & image )
+    // void    drawImage ( const QPointF & point, const QImage & image, const QRectF & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+    if (lua::is_type<QPointF>(state, 2)) {
+        switch (lua_gettop(state)) {
+            case 3:
+            {
+                self->drawImage(
+                    lua::get<const QPointF&>(state, 2),
+                    lua::get<const QImage&>(state, 3)
+                );
+                return 0;
+            }
+            case 4:
+            {
+                self->drawImage(
+                    lua::get<const QPointF&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4)
+                );
+                return 0;
+            }
+            default:
+            {
+                self->drawImage(
+                    lua::get<const QPointF&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4),
+                    lua::get<Qt::ImageConversionFlags>(state, 5)
+                );
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    // void    drawImage ( const QPoint & point, const QImage & image )
+    // void    drawImage ( const QPoint & point, const QImage & image, const QRect & source, Qt::ImageConversionFlags flags = Qt::AutoColor )
+    if (lua::is_type<QPoint>(state, 2)) {
+        switch (lua_gettop(state)) {
+            case 3:
+            {
+                self->drawImage(
+                    lua::get<const QPoint&>(state, 2),
+                    lua::get<const QImage&>(state, 3)
+                );
+                return 0;
+            }
+            case 4:
+            {
+                self->drawImage(
+                    lua::get<const QPoint&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4)
+                );
+                return 0;
+            }
+            default:
+            {
+                self->drawImage(
+                    lua::get<const QPoint&>(state, 2),
+                    lua::get<const QImage&>(state, 3),
+                    lua::get<const QRectF&>(state, 4),
+                    lua::get<Qt::ImageConversionFlags>(state, 5)
+                );
+                return 0;
+            }
+        }
+        return 0;
+    }
+
+    // void    drawImage ( int x, int y, const QImage & image, int sx = 0, int sy = 0, int sw = -1, int sh = -1, Qt::ImageConversionFlags flags = Qt::AutoColor )
+    if (lua_gettop(state) == 8) {
+        self->drawImage(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<const QImage&>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<int>(state, 6),
+            lua::get<int>(state, 7),
+            lua::get<int>(state, 8)
+        );
+    }
+
+    self->drawImage(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<const QImage&>(state, 4),
+        lua::get<int>(state, 5),
+        lua::get<int>(state, 6),
+        lua::get<int>(state, 7),
+        lua::get<int>(state, 8),
+        lua::get<Qt::ImageConversionFlags>(state, 9)
+    );
     return 0;
 }
 
@@ -183,20 +471,143 @@ int QPainter_drawTiledPixmap(lua_State* const state)
 
 int QPainter_eraseRect(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua::is_type<QRect>(state, 2)) {
+        // void    eraseRect ( const QRect & rectangle )
+        self->eraseRect(
+            lua::get<const QRect&>(state, 2)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QRectF>(state, 3)) {
+        // void    eraseRect ( const QRectF & rectangle )
+        self->eraseRect(
+            lua::get<const QRectF&>(state, 2)
+        );
+        return 0;
+    }
+
+    // void    eraseRect ( int x, int y, int width, int height )
+    self->eraseRect(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4),
+        lua::get<int>(state, 5)
+    );
     return 0;
 }
 
 int QPainter_fillRect(lua_State* const state)
 {
-    auto painter = lua::get<QPainter*>(state, 1);
+    auto self = lua::get<QPainter*>(state, 1);
 
-    int x, y, width, height;
-    x = lua::get<int>(state, 2),
-    y = lua::get<int>(state, 3),
-    width = lua::get<int>(state, 4),
-    height = lua::get<int>(state, 5);
+    if (lua::is_type<QRect>(state, 2)) {
+        if (lua::is_type<QColor>(state, 3)) {
+            // void    fillRect ( const QRect & rectangle, const QColor & color )
+            self->fillRect(
+                lua::get<const QRect&>(state, 2),
+                lua::get<const QColor&>(state, 3)
+            );
+            return 0;
+        }
 
-    painter->fillRect(x, y, width, height, Qt::white);
+        if (lua::is_type<QBrush>(state, 3)) {
+            // void    fillRect ( const QRect & rectangle, const QBrush & brush )
+            self->fillRect(
+                lua::get<const QRect&>(state, 2),
+                lua::get<const QBrush&>(state, 3)
+            );
+            return 0;
+        }
+
+        if (lua::is_type<Qt::GlobalColor>(state, 3)) {
+            // void    fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
+            self->fillRect(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<Qt::GlobalColor>(state, 3)
+            );
+            return 0;
+        }
+
+        // void    fillRect ( const QRect & rectangle, Qt::BrushStyle style )
+        self->fillRect(
+            lua::get<const QRect&>(state, 2),
+            lua::get<Qt::BrushStyle>(state, 3)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QRectF>(state, 2)) {
+        if (lua::is_type<QColor>(state, 3)) {
+            // void    fillRect ( const QRectF & rectangle, const QColor & color )
+            self->fillRect(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<const QColor&>(state, 3)
+            );
+            return 0;
+        }
+        if (lua::is_type<Qt::GlobalColor>(state, 3)) {
+            // void    fillRect ( const QRectF & rectangle, Qt::GlobalColor color )
+            self->fillRect(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<Qt::GlobalColor>(state, 3)
+            );
+            return 0;
+        }
+
+        // void    fillRect ( const QRectF & rectangle, Qt::BrushStyle style )
+        self->fillRect(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<Qt::BrushStyle>(state, 3)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QBrush>(state, 6)) {
+        // void    fillRect ( int x, int y, int width, int height, const QBrush & brush )
+        self->fillRect(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<const QBrush&>(state, 6)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QColor>(state, 6)) {
+        // void    fillRect ( int x, int y, int width, int height, const QColor & color )
+        self->fillRect(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<const QColor&>(state, 6)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<Qt::GlobalColor>(state, 6)) {
+        // void    fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
+        self->fillRect(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<Qt::BrushStyle>(state, 6)
+        );
+        return 0;
+    }
+
+    self->fillRect(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4),
+        lua::get<int>(state, 5),
+        lua::get<Qt::GlobalColor>(state, 6)
+    );
     return 0;
 }
 

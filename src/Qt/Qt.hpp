@@ -2,6 +2,45 @@
 #define LUA_CXX_QT_INCLUDED
 
 #include "../stack.hpp"
+#include <Qt>
+
+namespace lua {
+
+template <>
+struct Metatable<Qt::BrushStyle>
+{
+    // The name for this type
+    static constexpr const char* name = "Qt::BrushStyle";
+
+    static bool metatable(const lua::index& mt, const void*)
+    {
+        return true;
+    }
+};
+
+template <>
+struct Metatable<Qt::GlobalColor>
+{
+    static constexpr const char* name = "Qt::GlobalColor";
+
+    static bool metatable(const lua::index& mt, const void*)
+    {
+        return true;
+    }
+};
+
+template <>
+struct Metatable<Qt::Alignment>
+{
+    static constexpr const char* name = "Qt::Alignment";
+
+    static bool metatable(const lua::index& mt, const void*)
+    {
+        return true;
+    }
+};
+
+}; // namespace lua
 
 extern "C" int luaopen_luacxx_Qt(lua_State* const);
 
