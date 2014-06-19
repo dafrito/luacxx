@@ -44,9 +44,9 @@ function acme.quat_benchmark()
         printf("Lua-cxx: %.02fms (%.01f times slower than C++)", luacxxtime, luacxxtime/ctime);
 
         if luacxxtime > luatime then
-            printf("Lua-cxx was %.03f times slower than Lua.", luacxxtime/luatime);
+            printf("Lua-cxx was %.02f times slower than Lua.", luacxxtime/luatime);
         else
-            printf("Lua-cxx was %.03f times faster than Lua.", luatime/luacxxtime);
+            printf("Lua-cxx was %.02f times faster than Lua.", luatime/luacxxtime);
         end;
         print("");
     end;
