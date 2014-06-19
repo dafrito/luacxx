@@ -63,26 +63,6 @@ struct Store<int>
 };
 
 template <>
-struct Push<unsigned int>
-{
-    static void push(lua_State* const state, const unsigned int& value)
-    {
-        lua::push<lua_Integer>(state, value);
-    }
-};
-
-template <>
-struct Store<unsigned int>
-{
-    static void store(unsigned int& destination, const lua::index& source)
-    {
-        lua_Integer sink;
-        lua::store(sink, source);
-        destination = sink;
-    }
-};
-
-template <>
 struct Push<short>
 {
     static void push(lua_State* const state, const short& value)
@@ -107,7 +87,7 @@ struct Push<unsigned short>
 {
     static void push(lua_State* const state, const unsigned short& value)
     {
-        lua::push<lua_Integer>(state, value);
+        lua::push<lua_Unsigned>(state, value);
     }
 };
 
@@ -116,9 +96,27 @@ struct Store<unsigned short>
 {
     static void store(unsigned short& destination, const lua::index& source)
     {
-        lua_Integer sink;
+        lua_Unsigned sink;
         lua::store(sink, source);
         destination = sink;
+    }
+};
+
+template <>
+struct Push<unsigned long>
+{
+    static void push(lua_State* const state, const unsigned long& value)
+    {
+        lua::push(state, static_cast<lua_Unsigned>(value));
+    }
+};
+
+template <>
+struct Store<unsigned long>
+{
+    static void store(unsigned long& destination, const lua::index& source)
+    {
+        destination = lua::get<lua_Unsigned>(source);
     }
 };
 

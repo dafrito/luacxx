@@ -82,7 +82,8 @@ libluacxx_la_SOURCES = \
 	algorithm.cpp \
 	load.cpp \
 	stack.cpp \
-	thread.cpp
+	thread.cpp \
+	type/standard.cpp
 
 bin_PROGRAMS = luacxx
 luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)

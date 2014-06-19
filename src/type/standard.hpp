@@ -205,19 +205,34 @@ struct Push<lua_Integer>
     }
 };
 
+void store_lua_Integer(lua_Integer& destination, const lua::index& source);
+
 template <>
 struct Store<lua_Integer>
 {
     static void store(lua_Integer& destination, const lua::index& source)
     {
-        int isnum;
-        destination = lua_tointegerx(source.state(), source.pos(), &isnum);
-        if (!isnum) {
-            std::stringstream str;
-            str << "lua::store<lua_Integer>: Numeric conversion failed for ";
-            str << source.type().name() << " value at Lua stack index " << source.pos();
-            throw lua::error(str.str());
-        }
+        store_lua_Integer(destination, source);
+    }
+};
+
+template <>
+struct Push<lua_Unsigned>
+{
+    static void push(lua_State* const state, const lua_Unsigned& source)
+    {
+        lua_pushinteger(state, source);
+    }
+};
+
+void store_lua_Unsigned(lua_Unsigned& destination, const lua::index& source);
+
+template <>
+struct Store<lua_Unsigned>
+{
+    static void store(lua_Unsigned& destination, const lua::index& source)
+    {
+        store_lua_Unsigned(destination, source);
     }
 };
 
