@@ -2,9 +2,15 @@
 #define LUA_CXX_QT_INCLUDED
 
 #include "../stack.hpp"
+#include "../global.hpp"
 #include <Qt>
 
 namespace lua {
+
+void qt_constants_1(lua::global& t);
+void qt_constants_2(lua::global& t);
+void qt_constants_3(lua::global& t);
+void qt_constants_4(lua::global& t);
 
 template <>
 struct Metatable<Qt::BrushStyle>

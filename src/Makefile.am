@@ -104,7 +104,10 @@ libluacxx_la_SOURCES += \
 	Qt/QRect.cpp \
 	Qt/QRectF.cpp \
 	Qt/QQuaternion.cpp \
-	Qt/Qt.cpp \
+	Qt/Qt_1.cpp \
+	Qt/Qt_2.cpp \
+	Qt/Qt_3.cpp \
+	Qt/Qt_4.cpp \
 	Qt/QWindow.cpp \
 	Qt/QCoreApplication.cpp \
 	Qt/QGuiApplication.cpp \
