@@ -1,6 +1,5 @@
 #include "../ncurses.hpp"
 #include "../thread.hpp"
-#include <iostream>
 
 /*
 
@@ -31,18 +30,11 @@ int _KEY_F(lua_State* const state)
     return 1;
 }
 
-int _getch(lua_State* const state)
-{
-    auto value = getch();
-    lua::push(state, value);
-    return 1;
-}
-
 void lua::ncurses_curs_getch(lua_State* const state)
 {
     lua::thread env(state);
 
-    env["getch"] = _getch;
+    env["getch"] = getch;
     env["wgetch"] = wgetch;
     env["mvgetch"] = mvgetch;
     env["mvwgetch"] = mvwgetch;
