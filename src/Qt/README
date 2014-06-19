@@ -48,8 +48,8 @@ Lua-cxx Qt support
     require "QWindow";
 
     local window = QWindow:new();
-    window.width = 300;
-    window.height = 300;
+    window:setWidth(300);
+    window:setHeight(300);
     window.title = "Hello, world";
     window:show();
 
