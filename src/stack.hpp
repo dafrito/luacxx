@@ -1143,21 +1143,15 @@ void push_metatable(lua_State* const state, T* const value)
     }
 }
 
+char* malloc(lua_State* const state, size_t size, const lua::userdata_block& userdata_block = lua::userdata_block(lua::userdata_storage::value, "userdata"));
+
 template <class Stored>
 char* construct_userdata(lua_State* const state, lua::userdata_storage storage)
 {
-    // Get and push a chunk of memory from Lua to hold our metadata, as well as
-    // the underlying value.
-    char* block = static_cast<char*>(lua_newuserdata(state,
-        sizeof(Stored) + sizeof(lua::userdata_block)
-    ));
-
-    // Create the metadata at the end of the memory block; lua_touserdata will return a
-    // valid pointer.
-    new (block + sizeof(Stored)) lua::userdata_block(storage);
-
-    // Return a pointer to the data block
-    return block;
+    return lua::malloc(state,
+        sizeof(Stored),
+        lua::userdata_block(storage)
+    );
 }
 
 template <class Value, lua::userdata_storage storage = lua::userdata_storage::value>

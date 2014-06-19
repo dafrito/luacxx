@@ -311,6 +311,13 @@ lua::index push_global(lua_State* const state, const T&& name)
     return --rv;
 }
 
+template <class T>
+int make_malloc(lua_State* const state)
+{
+    lua::malloc(state, sizeof(T));
+    return 1;
+}
+
 namespace table {
 
 /*
