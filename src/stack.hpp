@@ -1143,6 +1143,16 @@ void push_metatable(lua_State* const state, T* const value)
     }
 }
 
+/*
+
+=head2 char* lua::malloc(state, size_t size, (optional) lua::userdata_block)
+
+Creates a new userdata of the given size. The userdata has a userdata_block
+appended to the end of it, so lua_rawlen will not return the same size as
+size was given.
+
+*/
+
 char* malloc(lua_State* const state, size_t size, const lua::userdata_block& userdata_block = lua::userdata_block(lua::userdata_storage::value, "userdata"));
 
 template <class Stored>

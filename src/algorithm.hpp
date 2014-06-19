@@ -311,6 +311,21 @@ lua::index push_global(lua_State* const state, const T&& name)
     return --rv;
 }
 
+/*
+
+=head4 int lua::make_malloc<T>(state)
+
+Creates a new userdata and pushed it on the stack. The userdata's size is
+determined by the specified type.
+
+This returns 1, so it can be used directly as a callable Lua function for
+simple C types, as shown in the example:
+
+    env["chtype"] = lua::value::table;
+    env["chtype"]["new"] = lua::make_malloc<chtype>;
+
+*/
+
 template <class T>
 int make_malloc(lua_State* const state)
 {
@@ -433,6 +448,14 @@ lua::type_info get_type(Table source, Key key)
 }
 
 } // namespace table
+
+/*
+
+=head4 lua::setfield(source, key, value)
+
+Identical to lua::table::set(source, key, value)
+
+*/
 
 template <typename Value, typename Key, typename Table>
 void setfield(Table source, Key key, Value value)
