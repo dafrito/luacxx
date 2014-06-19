@@ -19,6 +19,12 @@ public:
     {
     }
 
+    global(const lua::global& other) :
+        _state(other._state),
+        _name(other._name)
+    {
+    }
+
     lua_State* const state() const
     {
         return _state;
