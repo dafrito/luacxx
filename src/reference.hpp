@@ -59,7 +59,7 @@ namespace lua {
 class reference
 {
 
-lua_State* const _state;
+lua_State* _state;
 int _id;
 
 public:
@@ -70,14 +70,19 @@ public:
 
 */
 
+reference() :
+    _state(nullptr),
+    _id(LUA_NOREF)
+{
+}
+
 reference(lua_State* const $state) :
     _state($state),
     _id(LUA_NOREF)
 {
 }
 
-reference(const lua::reference& other)=delete;
-reference(lua::reference& other) :
+reference(const lua::reference& other) :
     _state(other.state()),
     _id(LUA_NOREF)
 {
@@ -92,6 +97,11 @@ lua_State* const state() const
     return _state;
 }
 
+void set_state(lua_State* const state)
+{
+    _state = state;
+}
+
 const int id() const
 {
     return _id;
@@ -99,7 +109,7 @@ const int id() const
 
 explicit operator bool() const
 {
-    return _id != LUA_NOREF && _id != LUA_REFNIL;
+    return _state && _id != LUA_NOREF && _id != LUA_REFNIL;
 }
 
 lua::type_info type() const
@@ -116,6 +126,9 @@ lua::type_info type() const
 
 void acquire()
 {
+    if (!state()) {
+        return;
+    }
     if (!*this) {
         lua_pushlightuserdata(state(), NIL_REFERENCE);
         _id = luaL_ref(state(), LUA_REGISTRYINDEX);
@@ -124,6 +137,9 @@ void acquire()
 
 void release()
 {
+    if (!state()) {
+        return;
+    }
     if (*this) {
         luaL_unref(state(), LUA_REGISTRYINDEX, _id);
         _id = LUA_NOREF;
@@ -180,6 +196,7 @@ struct Store<lua::reference>
             destination.release();
             return;
         }
+        destination.set_state(source.state());
         destination.acquire();
         lua_pushvalue(source.state(), source.pos());
         lua_rawseti(source.state(), LUA_REGISTRYINDEX, destination.id());
