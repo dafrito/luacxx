@@ -463,6 +463,19 @@ void setfield(Table source, Key key, Value value)
     lua::table::set(source, key, value);
 }
 
+/*
+
+=head4 lua::setglobal<Value>(state, const char* name, Value value)
+
+*/
+
+template <typename Value>
+void setglobal(lua_State* const state, const char* name, Value value)
+{
+    lua::push(state, value);
+    lua_setglobal(state, name);
+}
+
 } // namespace lua
 
 #endif // LUA_CXX_ALGORITHM_HEADER
