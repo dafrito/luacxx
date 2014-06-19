@@ -31,7 +31,7 @@ int _ripoffline(lua_State* const state)
 
 int _getsyx(lua_State* const state)
 {
-    int y, x;
+    int y = 0, x = 0;
     getsyx(y, x);
     lua::push(state, y, x);
     return 2;

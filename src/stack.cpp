@@ -31,7 +31,6 @@ char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_block
 
 int lua::__gc(lua_State* const state)
 {
-    char* block = static_cast<char*>(lua_touserdata(state, 1));
     auto userdata_block = lua::get<lua::userdata_block*>(state, 1);
 
     lua_getmetatable(state, 1);
