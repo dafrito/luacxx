@@ -142,7 +142,9 @@ libluacxx_la_SOURCES += \
 	Qt/QPaintDevice.cpp \
 	Qt/QRegion.cpp \
 	Qt/QElapsedTimer.cpp \
+	Qt/QVector2D.cpp \
 	Qt/QVector3D.cpp \
+	Qt/QVector4D.cpp \
 	Qt/QEvent.cpp \
 	Qt/QEventLoop.cpp \
 	Qt/QEventFilter.cpp \
