@@ -37,6 +37,16 @@ else
     AC_MSG_ERROR([Lua is required to build luacxx])
 fi
 
+AC_SUBST(NCURSES_INCLUDE)
+AC_SUBST(NCURSES_LIB)
+if pkg-config --print-errors --exists 'ncursesw'; then
+    NCURSES_INCLUDE=`pkg-config --cflags ncursesw`
+    NCURSES_LIB=`pkg-config --libs ncursesw`
+    AM_CONDITIONAL([BUILD_NCURSES], [true])
+else
+    AM_CONDITIONAL([BUILD_NCURSES], [false])
+fi
+
 # Check for Boost
 AX_BOOST_BASE([], [:], [:])
 AX_BOOST_UNIT_TEST_FRAMEWORK
