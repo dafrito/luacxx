@@ -89,6 +89,11 @@ std::string lua::class_name(const lua_State* const state, const int index)
     return lua::class_name(state, index);
 }
 
+size_t lua::userdata_size(const lua::index& index)
+{
+    return lua_rawlen(index.state(), index.pos()) - sizeof(lua::userdata_block);
+}
+
 std::string lua::dump(lua_State* const state)
 {
     std::stringstream str;

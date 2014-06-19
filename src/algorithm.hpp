@@ -56,6 +56,8 @@ std::string dump(lua_State* const state);
 std::string class_name(const lua::index& index);
 std::string class_name(const lua_State* const state, const int index);
 
+size_t userdata_size(const lua::index& index);
+
 template <class T>
 struct is_type
 {
