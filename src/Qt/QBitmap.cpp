@@ -19,7 +19,7 @@ void lua::QBitmap_metatable(const lua::index& mt)
     mt["transformed"] = QBitmap_transformed;
 }
 
-int QBitmap_new(lua::state* const state)
+int QBitmap_new(lua_State* const state)
 {
     lua::make<QBitmap>(state);
     // TODO Set up object-specific methods
@@ -27,7 +27,7 @@ int QBitmap_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QBitmap(lua::state* const state)
+int luaopen_luacxx_QBitmap(lua_State* const state)
 {
     lua::thread env(state);
 

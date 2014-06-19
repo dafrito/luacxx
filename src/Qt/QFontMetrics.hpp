@@ -23,6 +23,6 @@ struct Metatable<QFontMetrics>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QFontMetrics(lua::state* const);
+extern "C" int luaopen_luacxx_QFontMetrics(lua_State* const);
 
 #endif // LUA_CXX_QFONTMETRICS_INCLUDED

@@ -23,6 +23,6 @@ struct Metatable<QPointF>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QPointF(lua::state* const);
+extern "C" int luaopen_luacxx_QPointF(lua_State* const);
 
 #endif // LUA_CXX_QPOINTF_INCLUDED

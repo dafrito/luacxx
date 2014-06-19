@@ -53,13 +53,13 @@ void lua::QDrag_metatable(const lua::index& mt)
     mt["target"] = &QDrag::target;
 }
 
-int QDrag_new(lua::state* const state)
+int QDrag_new(lua_State* const state)
 {
     lua::make<QDrag>(state, lua::get<QObject*>(state, 2));
     return 1;
 }
 
-int luaopen_luacxx_QDrag(lua::state* const state)
+int luaopen_luacxx_QDrag(lua_State* const state)
 {
     lua::thread env(state);
 

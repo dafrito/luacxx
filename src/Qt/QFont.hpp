@@ -22,6 +22,6 @@ struct Metatable<QFont>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QFont(lua::state* const);
+extern "C" int luaopen_luacxx_QFont(lua_State* const);
 
 #endif // LUA_CXX_QFONT_INCLUDED

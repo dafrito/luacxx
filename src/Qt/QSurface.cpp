@@ -18,7 +18,7 @@ void lua::QSurface_metatable(const lua::index& mt)
     #endif
 }
 
-int luaopen_luacxx_QTcpSocket(lua::state* const state)
+int luaopen_luacxx_QTcpSocket(lua_State* const state)
 {
     lua::thread env(state);
 

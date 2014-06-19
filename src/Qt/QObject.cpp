@@ -22,7 +22,7 @@ namespace {
 
 void lua::QObject_metatable(const lua::index& mt)
 {
-    mt["installEventFilter"] = lua::function([](lua_State* const state) {
+    mt["installEventFilter"] = lua_CFunction([](lua_State* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         lua::index filter_arg(state, 2);
         lua_settop(state, 2);
@@ -49,7 +49,7 @@ void lua::QObject_metatable(const lua::index& mt)
         return 0;
     });
 
-    mt["removeEventFilter"] = lua::function([](lua_State* const state) {
+    mt["removeEventFilter"] = lua_CFunction([](lua_State* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         lua::index filter_arg(state, 2);
         lua_settop(state, 2);
@@ -69,7 +69,7 @@ void lua::QObject_metatable(const lua::index& mt)
         return 0;
     });
 
-    mt["__index"] = lua::function([](lua_State* const state) {
+    mt["__index"] = lua_CFunction([](lua_State* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         auto name = lua::get<const char*>(state, 2);
 
@@ -115,7 +115,7 @@ void lua::QObject_metatable(const lua::index& mt)
         return 0;
     });
 
-    mt["__newindex"] = lua::function([](lua_State* const state) {
+    mt["__newindex"] = lua_CFunction([](lua_State* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         auto name = lua::get<const char*>(state, 2);
 
@@ -131,7 +131,7 @@ void lua::QObject_metatable(const lua::index& mt)
         return 0;
     });
 
-    mt["__tostring"] = lua::function([](lua_State* const state) {
+    mt["__tostring"] = lua_CFunction([](lua_State* const state) {
         // Print something like QObject@0xd3adb33f
         auto obj = lua::get<QObject*>(state, 1);
         lua_settop(state, 0);
@@ -147,21 +147,21 @@ void lua::QObject_metatable(const lua::index& mt)
 
 void lua::qmetamethod_metatable(const lua::index& mt)
 {
-    mt["signature"] = lua::function([](lua_State* const state) {
+    mt["signature"] = lua_CFunction([](lua_State* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
         lua::clear(state);
         lua::push(state, getSignature(*method));
         return 1;
     });
 
-    mt["__tostring"] = lua::function([](lua_State* const state) {
+    mt["__tostring"] = lua_CFunction([](lua_State* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
         lua_settop(state, 0);
         lua::push(state, getSignature(*method));
         return 1;
     });
 
-    mt["__call"] = lua::function([](lua_State* const state) {
+    mt["__call"] = lua_CFunction([](lua_State* const state) {
         auto method = lua::get<QMetaMethod&>(state, 1);
         auto obj = lua::get<QObject*>(state, 2);
 

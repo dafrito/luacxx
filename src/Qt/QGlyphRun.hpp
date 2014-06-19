@@ -23,6 +23,6 @@ struct Metatable<QGlyphRun>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QGlyphRun(lua::state* const);
+extern "C" int luaopen_luacxx_QGlyphRun(lua_State* const);
 
 #endif // LUA_CXX_QGLYPHRUN_INCLUDED

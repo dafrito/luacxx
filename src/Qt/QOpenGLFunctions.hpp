@@ -23,6 +23,6 @@ struct Metatable<QOpenGLFunctions>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QOpenGLFunctions(lua::state* const);
+extern "C" int luaopen_luacxx_QOpenGLFunctions(lua_State* const);
 
 #endif // LUA_CXX_QOPENGLFUNCTIONS_INCLUDED

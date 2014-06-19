@@ -23,6 +23,6 @@ struct Metatable<QTranslator>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QTranslator(lua::state* const);
+extern "C" int luaopen_luacxx_QTranslator(lua_State* const);
 
 #endif // LUA_CXX_QTRANSLATOR_INCLUDED

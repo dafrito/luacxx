@@ -23,6 +23,6 @@ struct Metatable<QVector2D>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QVector2D(lua::state* const);
+extern "C" int luaopen_luacxx_QVector2D(lua_State* const);
 
 #endif // LUA_CXX_QVECTOR2D_INCLUDED

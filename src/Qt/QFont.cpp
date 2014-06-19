@@ -68,7 +68,7 @@ void lua::QFont_metatable(const lua::index& mt)
     mt["wordSpacing"] = &QFont::wordSpacing;
 }
 
-int QFont_new(lua::state* const state)
+int QFont_new(lua_State* const state)
 {
     lua::make<QFont>(state);
     // TODO Set up object-specific methods
@@ -76,7 +76,7 @@ int QFont_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QFont(lua::state* const state)
+int luaopen_luacxx_QFont(lua_State* const state)
 {
     lua::thread env(state);
 

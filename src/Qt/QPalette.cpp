@@ -135,7 +135,7 @@ void lua::QPalette_metatable(const lua::index& mt)
     mt["windowText"] = &QPalette::windowText;
 }
 
-int QPalette_new(lua::state* const state)
+int QPalette_new(lua_State* const state)
 {
     if (lua_gettop(state) < 1) {
         // QPalette()
@@ -184,7 +184,7 @@ int QPalette_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QPalette(lua::state* const state)
+int luaopen_luacxx_QPalette(lua_State* const state)
 {
     lua::thread env(state);
 

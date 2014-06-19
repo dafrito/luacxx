@@ -9,7 +9,7 @@ void lua::QVector2D_metatable(const lua::index& mt)
     // TODO Set up metatable methods for this class
 }
 
-int QVector2D_new(lua::state* const state)
+int QVector2D_new(lua_State* const state)
 {
     lua::make<QVector2D>(state);
     // TODO Set up object-specific methods
@@ -17,7 +17,7 @@ int QVector2D_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QVector2D(lua::state* const state)
+int luaopen_luacxx_QVector2D(lua_State* const state)
 {
     lua::thread env(state);
 

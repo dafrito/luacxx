@@ -23,6 +23,6 @@ struct Metatable<QOpenGLContextGroup>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QOpenGLContextGroup(lua::state* const);
+extern "C" int luaopen_luacxx_QOpenGLContextGroup(lua_State* const);
 
 #endif // LUA_CXX_QOPENGLCONTEXTGROUP_INCLUDED

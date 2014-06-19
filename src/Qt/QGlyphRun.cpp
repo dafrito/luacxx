@@ -34,7 +34,7 @@ void lua::QGlyphRun_metatable(const lua::index& mt)
     mt["underline"] = &QGlyphRun::underline;
 }
 
-int QGlyphRun_new(lua::state* const state)
+int QGlyphRun_new(lua_State* const state)
 {
     if (lua_gettop(state) > 1) {
         lua::make<QGlyphRun>(state, lua::get<const QGlyphRun&>(state, 2));
@@ -45,7 +45,7 @@ int QGlyphRun_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QGlyphRun(lua::state* const state)
+int luaopen_luacxx_QGlyphRun(lua_State* const state)
 {
     lua::thread env(state);
 

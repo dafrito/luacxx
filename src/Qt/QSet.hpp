@@ -24,7 +24,7 @@ struct Metatable<QSet>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QSet(lua::state* const);
+extern "C" int luaopen_luacxx_QSet(lua_State* const);
 */
 
 #endif // LUA_CXX_QSET_INCLUDED

@@ -23,6 +23,6 @@ struct Metatable<QVector4D>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QVector4D(lua::state* const);
+extern "C" int luaopen_luacxx_QVector4D(lua_State* const);
 
 #endif // LUA_CXX_QVECTOR4D_INCLUDED

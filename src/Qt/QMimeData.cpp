@@ -9,7 +9,7 @@ void lua::QMimeData_metatable(const lua::index& mt)
     // TODO Set up metatable methods for this class
 }
 
-int QMimeData_new(lua::state* const state)
+int QMimeData_new(lua_State* const state)
 {
     lua::make<QMimeData>(state);
     // TODO Set up object-specific methods
@@ -17,7 +17,7 @@ int QMimeData_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QMimeData(lua::state* const state)
+int luaopen_luacxx_QMimeData(lua_State* const state)
 {
     lua::thread env(state);
 

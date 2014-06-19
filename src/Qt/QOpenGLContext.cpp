@@ -45,13 +45,13 @@ void lua::QOpenGLContext_metatable(const lua::index& mt)
     #endif
 }
 
-int QOpenGLContext_new(lua::state* const state)
+int QOpenGLContext_new(lua_State* const state)
 {
     lua::make<QOpenGLContext>(state);
     return 1;
 }
 
-int luaopen_luacxx_QOpenGLContext(lua::state* const state)
+int luaopen_luacxx_QOpenGLContext(lua_State* const state)
 {
     lua::thread env(state);
 

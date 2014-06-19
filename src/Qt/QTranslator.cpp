@@ -25,13 +25,13 @@ void lua::QTranslator_metatable(const lua::index& mt)
     mt["translate"] = &QLocale::translate;
 }
 
-int QTranslator_new(lua::state* const state)
+int QTranslator_new(lua_State* const state)
 {
     lua::make<QTranslator>(state);
     return 1;
 }
 
-int luaopen_luacxx_QTranslator(lua::state* const state)
+int luaopen_luacxx_QTranslator(lua_State* const state)
 {
     lua::thread env(state);
 

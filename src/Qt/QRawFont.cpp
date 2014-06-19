@@ -54,14 +54,14 @@ void lua::QRawFont_metatable(const lua::index& mt)
     QRawFont(const QByteArray & fontData, qreal pixelSize, QFont::HintingPreference hintingPreference = QFont::PreferDefaultHinting)
     QRawFont(const QRawFont & other)
 */
-int QRawFont_new(lua::state* const state)
+int QRawFont_new(lua_State* const state)
 {
     lua::make<QRawFont>(state);
 
     return 1;
 }
 
-int luaopen_luacxx_QRawFont(lua::state* const state)
+int luaopen_luacxx_QRawFont(lua_State* const state)
 {
     lua::thread env(state);
 

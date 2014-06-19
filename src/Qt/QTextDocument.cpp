@@ -103,7 +103,7 @@ void lua::QTextDocument_metatable(const lua::index& mt)
     mt["useDesignMetrics"] = &QTextDocument::useDesignMetrics;
 }
 
-int QTextDocument_new(lua::state* const state)
+int QTextDocument_new(lua_State* const state)
 {
     if (lua_gettop(state) > 1) {
         lua::make<QTextDocument>(state,
@@ -113,7 +113,7 @@ int QTextDocument_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QTextDocument(lua::state* const state)
+int luaopen_luacxx_QTextDocument(lua_State* const state)
 {
     lua::thread env(state);
 

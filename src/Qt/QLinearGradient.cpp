@@ -67,7 +67,7 @@ void lua::QLinearGradient_metatable(const lua::index& mt)
     mt["start"] = &QLinearGradient::start;
 }
 
-int QLinearGradient_new(lua::state* const state)
+int QLinearGradient_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
         case 0:
@@ -96,7 +96,7 @@ int QLinearGradient_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QLinearGradient(lua::state* const state)
+int luaopen_luacxx_QLinearGradient(lua_State* const state)
 {
     lua::thread env(state);
 

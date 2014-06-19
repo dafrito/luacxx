@@ -41,7 +41,7 @@ void lua::QFontMetrics_metatable(const lua::index& mt)
     mt["xHeight"] = &QAbstractSocket::xHeight;
 }
 
-int QFontMetrics_new(lua::state* const state)
+int QFontMetrics_new(lua_State* const state)
 {
     if (lua::class_name(state, 2) == lua::Metatable<QFontMetrics>::name) {
         lua::make<QFontMetrics>(state, lua::get<const QFontMetrics&>(state, 2));
@@ -62,7 +62,7 @@ int QFontMetrics_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QFontMetrics(lua::state* const state)
+int luaopen_luacxx_QFontMetrics(lua_State* const state)
 {
     lua::thread env(state);
 

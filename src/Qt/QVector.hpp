@@ -181,6 +181,6 @@ struct Metatable<QVector<T>>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QVector(lua::state* const);
+extern "C" int luaopen_luacxx_QVector(lua_State* const);
 
 #endif // LUA_CXX_QVECTOR_INCLUDED

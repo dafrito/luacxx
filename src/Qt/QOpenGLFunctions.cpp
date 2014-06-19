@@ -156,13 +156,13 @@ void lua::QOpenGLFunctions_metatable(const lua::index& mt)
     #endif
 }
 
-int QOpenGLFunctions_new(lua::state* const state)
+int QOpenGLFunctions_new(lua_State* const state)
 {
     lua::make<QOpenGLFunctions>(state, lua::get<QOpenGLContext*>(state, 2));
     return 1;
 }
 
-int luaopen_luacxx_QOpenGLFunctions(lua::state* const state)
+int luaopen_luacxx_QOpenGLFunctions(lua_State* const state)
 {
     lua::thread env(state);
 

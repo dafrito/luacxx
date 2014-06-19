@@ -23,6 +23,6 @@ struct Metatable<QMatrix>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QMatrix(lua::state* const);
+extern "C" int luaopen_luacxx_QMatrix(lua_State* const);
 
 #endif // LUA_CXX_QMATRIX_INCLUDED

@@ -47,7 +47,7 @@ void lua::QScreen_metatable(const lua::index& mt)
     mt["virtualSize"] = &QScreen::virtualSize;
 }
 
-int luaopen_luacxx_QScreen(lua::state* const state)
+int luaopen_luacxx_QScreen(lua_State* const state)
 {
     lua::thread env(state);
 

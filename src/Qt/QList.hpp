@@ -22,7 +22,7 @@ struct Metatable<QList>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QList(lua::state* const);
+extern "C" int luaopen_luacxx_QList(lua_State* const);
 */
 
 #endif // LUA_CXX_QLIST_INCLUDED

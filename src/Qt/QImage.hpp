@@ -23,6 +23,6 @@ struct Metatable<QImage>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QImage(lua::state* const);
+extern "C" int luaopen_luacxx_QImage(lua_State* const);
 
 #endif // LUA_CXX_QIMAGE_INCLUDED

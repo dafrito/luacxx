@@ -107,7 +107,7 @@ void lua::QLocale_metatable(const lua::index& mt)
     mt["zeroDigit"] = &QLocale::zeroDigit;
 }
 
-int QLocale_new(lua::state* const state)
+int QLocale_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
     case 0:
@@ -144,7 +144,7 @@ int QLocale_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QLocale(lua::state* const state)
+int luaopen_luacxx_QLocale(lua_State* const state)
 {
     lua::thread env(state);
 

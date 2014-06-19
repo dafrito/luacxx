@@ -28,7 +28,7 @@ void lua::QCursor_metatable(const lua::index& mt)
     QCursor ( HCURSOR cursor )
     QCursor ( Qt::HANDLE handle )
 */
-int QCursor_new(lua::state* const state)
+int QCursor_new(lua_State* const state)
 {
     lua::make<QCursor>(state);
     // TODO Set up object-specific methods
@@ -41,7 +41,7 @@ int QCursor_new(lua::state* const state)
     void    setPos ( int x, int y )
     void    setPos ( const QPoint & p )
 */
-int luaopen_luacxx_QCursor(lua::state* const state)
+int luaopen_luacxx_QCursor(lua_State* const state)
 {
     lua::thread env(state);
 

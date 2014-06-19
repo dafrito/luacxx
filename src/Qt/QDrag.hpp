@@ -23,6 +23,6 @@ struct Metatable<QDrag>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QDrag(lua::state* const);
+extern "C" int luaopen_luacxx_QDrag(lua_State* const);
 
 #endif // LUA_CXX_QDRAG_INCLUDED

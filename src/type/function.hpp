@@ -91,14 +91,14 @@ type/function.hpp - support for C functions
 Lua-cxx provides support through lua::push and this header for the following
 types:
 
-=head4 lua::callable - std::function<lua::function>
+=head4 lua::callable - std::function<int(lua_State*)>
 
-=head4 lua_CFunction, lua::function
+=head4 lua_CFunction, lua_CFunction
 
 Lua provides direct support for a single C function type, called lua_CFunction
-or lua::function. They appear in Lua identically to Lua-defined functions (
+or lua_CFunction. They appear in Lua identically to Lua-defined functions (
 though perhaps with a telling memory address). Lua-cxx provides support for
-other function types, but these must ultimately end with a lua::function if they
+other function types, but these must ultimately end with a lua_CFunction if they
 are to do any work.
 
 The state is populated with the arguments passed to it. The function can then
@@ -120,7 +120,7 @@ initial arguments do not need to be removed.
         return 1;
     }
 
-=head4 lua_pushcfunction(state, lua::function)
+=head4 lua_pushcfunction(state, lua_CFunction)
 
 Pushes the given callable C function onto the stack.
 
@@ -135,7 +135,6 @@ Pushes the given callable C function onto the stack.
 
 namespace lua {
 
-typedef lua_CFunction function;
 typedef std::function<int(lua_State* const)> callable;
 
 }
@@ -143,18 +142,18 @@ typedef std::function<int(lua_State* const)> callable;
 namespace lua {
 
 template <>
-struct Push<lua::function>
+struct Push<lua_CFunction>
 {
-    static void push(lua_State* const state, lua::function callable)
+    static void push(lua_State* const state, lua_CFunction callable)
     {
         lua_pushcclosure(state, callable, 0);
     }
 };
 
 template <>
-struct Store<lua::function>
+struct Store<lua_CFunction>
 {
-    static void store(lua::function& destination, const lua::index& source)
+    static void store(lua_CFunction& destination, const lua::index& source)
     {
         destination = lua_tocfunction(source.state(), source.pos());
     }
@@ -472,7 +471,7 @@ but are rare to actually need in practice.
 */
 
 template <typename... Upvalues>
-static lua::index push_closure(lua_State* const state, lua::function callable, Upvalues... upvalues)
+static lua::index push_closure(lua_State* const state, lua_CFunction callable, Upvalues... upvalues)
 {
     lua::push(state, upvalues...);
     lua_pushcclosure(state, callable, sizeof...(Upvalues));

@@ -22,6 +22,6 @@ struct Metatable<QInputMethod>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QInputMethod(lua::state* const);
+extern "C" int luaopen_luacxx_QInputMethod(lua_State* const);
 
 #endif // LUA_CXX_QINPUTMETHOD_INCLUDED

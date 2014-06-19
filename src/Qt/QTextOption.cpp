@@ -24,7 +24,7 @@ void lua::QTextOption_metatable(const lua::index& mt)
     mt["wrapMode"] = &QTextOption::wrapMode;
 }
 
-int QTextOption_new(lua::state* const state)
+int QTextOption_new(lua_State* const state)
 {
     if (lua_gettop(state) < 2) {
         lua::make<QTextOption>(state);
@@ -36,7 +36,7 @@ int QTextOption_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QTextOption(lua::state* const state)
+int luaopen_luacxx_QTextOption(lua_State* const state)
 {
     lua::thread env(state);
 

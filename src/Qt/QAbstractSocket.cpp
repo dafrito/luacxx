@@ -77,7 +77,7 @@ void lua::QAbstractSocket_metatable(const lua::index& mt)
     mt["waitForDisconnected"] = QAbstractSocket_waitForDisconnected;
 }
 
-int QAbstractSocket_new(lua::state* const state)
+int QAbstractSocket_new(lua_State* const state)
 {
     lua::make<QAbstractSocket>(state);
     // TODO Set up object-specific methods
@@ -85,7 +85,7 @@ int QAbstractSocket_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QAbstractSocket(lua::state* const state)
+int luaopen_luacxx_QAbstractSocket(lua_State* const state)
 {
     lua::thread env(state);
 

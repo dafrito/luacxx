@@ -117,12 +117,6 @@ providing a diferent facade over this common subset of behavior.
 
 */
 
-namespace lua {
-
-typedef lua_State state;
-
-}
-
 /*
 
 The following methods deal with creating and initializing lua_State

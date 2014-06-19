@@ -54,7 +54,7 @@ QSurfaceFormat(FormatOptions options)
 QSurfaceFormat(const QSurfaceFormat & other)
 
 */
-int QSurfaceFormat_new(lua::state* const state)
+int QSurfaceFormat_new(lua_State* const state)
 {
     if (lua_gettop(state) < 2) {
         lua::make<QSurfaceFormat>(state);
@@ -71,7 +71,7 @@ int QSurfaceFormat_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QSurfaceFormat(lua::state* const state)
+int luaopen_luacxx_QSurfaceFormat(lua_State* const state)
 {
     lua::thread env(state);
 

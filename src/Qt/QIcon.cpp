@@ -56,7 +56,7 @@ void lua::QIcon_metatable(const lua::index& mt)
     mt["swap"] = &QIcon::swap;
 }
 
-int QIcon_new(lua::state* const state)
+int QIcon_new(lua_State* const state)
 {
     if (lua_gettop(state) < 1) {
         // QIcon()
@@ -87,7 +87,7 @@ int QIcon_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QIcon(lua::state* const state)
+int luaopen_luacxx_QIcon(lua_State* const state)
 {
     lua::thread env(state);
 

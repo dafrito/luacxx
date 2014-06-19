@@ -23,6 +23,6 @@ struct Metatable<QCryptographicHash>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QCryptographicHash(lua::state* const);
+extern "C" int luaopen_luacxx_QCryptographicHash(lua_State* const);
 
 #endif // LUA_CXX_QCRYPTOGRAPHICHASH_INCLUDED

@@ -111,7 +111,7 @@ void lua::QRectF_metatable(const lua::index& mt)
     mt["__tostring"] = QRectF_tostring;
 }
 
-int QRectF_new(lua::state* const state)
+int QRectF_new(lua_State* const state)
 {
     lua::make<QRectF>(state);
     // TODO Set up object-specific methods
@@ -119,7 +119,7 @@ int QRectF_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QRectF(lua::state* const state)
+int luaopen_luacxx_QRectF(lua_State* const state)
 {
     lua::thread env(state);
 

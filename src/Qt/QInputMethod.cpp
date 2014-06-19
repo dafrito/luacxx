@@ -9,7 +9,7 @@ void lua::QInputMethod_metatable(const lua::index& mt)
     // TODO Set up metatable methods for this class
 }
 
-int luaopen_luacxx_QInputMethod(lua::state* const state)
+int luaopen_luacxx_QInputMethod(lua_State* const state)
 {
     lua::thread env(state);
 

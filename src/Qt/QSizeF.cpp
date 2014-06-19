@@ -41,7 +41,7 @@ void lua::QSizeF_metatable(const lua::index& mt)
     mt["__tostring"] = QSizeF_tostring;
 }
 
-int QSizeF_new(lua::state* const state)
+int QSizeF_new(lua_State* const state)
 {
     if (lua_gettop(state) > 1) {
         lua::make<QSizeF>(state, lua::get<qreal>(state, 2), lua::get<qreal>(state, 3));
@@ -51,7 +51,7 @@ int QSizeF_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QSizeF(lua::state* const state)
+int luaopen_luacxx_QSizeF(lua_State* const state)
 {
     lua::thread env(state);
 

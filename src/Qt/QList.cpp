@@ -10,7 +10,7 @@ void lua::QList_metatable(const lua::index& mt)
     // TODO Set up metatable methods for this class
 }
 
-int QList_new(lua::state* const state)
+int QList_new(lua_State* const state)
 {
     lua::make<QList>(state);
     // TODO Set up object-specific methods
@@ -18,7 +18,7 @@ int QList_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QList(lua::state* const state)
+int luaopen_luacxx_QList(lua_State* const state)
 {
     lua::thread env(state);
 

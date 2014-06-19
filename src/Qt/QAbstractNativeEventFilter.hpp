@@ -23,6 +23,6 @@ struct Metatable<QAbstractNativeEventFilter>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QAbstractNativeEventFilter(lua::state* const);
+extern "C" int luaopen_luacxx_QAbstractNativeEventFilter(lua_State* const);
 
 #endif // LUA_CXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED

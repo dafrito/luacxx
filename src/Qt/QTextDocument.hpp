@@ -23,6 +23,6 @@ struct Metatable<QTextDocument>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QTextDocument(lua::state* const);
+extern "C" int luaopen_luacxx_QTextDocument(lua_State* const);
 
 #endif // LUA_CXX_QTEXTDOCUMENT_INCLUDED

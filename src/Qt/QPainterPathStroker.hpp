@@ -23,6 +23,6 @@ struct Metatable<QPainterPathStroker>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QPainterPathStroker(lua::state* const);
+extern "C" int luaopen_luacxx_QPainterPathStroker(lua_State* const);
 
 #endif // LUA_CXX_QPAINTERPATHSTROKER_INCLUDED

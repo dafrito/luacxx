@@ -14,7 +14,7 @@ void lua::QPointF_metatable(const lua::index& mt)
     mt["setY"] = &QPointF::setY;
 }
 
-int QPointF_new(lua::state* const state)
+int QPointF_new(lua_State* const state)
 {
     if (lua_gettop(state) > 1) {
         lua::make<QPointF>(state,
@@ -27,7 +27,7 @@ int QPointF_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QPointF(lua::state* const state)
+int luaopen_luacxx_QPointF(lua_State* const state)
 {
     lua::thread env(state);
 

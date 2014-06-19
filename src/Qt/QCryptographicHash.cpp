@@ -29,13 +29,13 @@ void lua::QCryptographicHash_metatable(const lua::index& mt)
     mt["result"] = &QCryptographicHash::result;
 }
 
-int QCryptographicHash_new(lua::state* const state)
+int QCryptographicHash_new(lua_State* const state)
 {
     lua::make<QCryptographicHash>(state, lua::get<QCryptographicHash::Algorithm>(state, 2));
     return 1;
 }
 
-int luaopen_luacxx_QCryptographicHash(lua::state* const state)
+int luaopen_luacxx_QCryptographicHash(lua_State* const state)
 {
     lua::thread env(state);
 

@@ -23,6 +23,6 @@ struct Metatable<QLinearGradient>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QLinearGradient(lua::state* const);
+extern "C" int luaopen_luacxx_QLinearGradient(lua_State* const);
 
 #endif // LUA_CXX_QLINEARGRADIENT_INCLUDED

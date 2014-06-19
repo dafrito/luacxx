@@ -23,6 +23,6 @@ struct Metatable<QRectF>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QRectF(lua::state* const);
+extern "C" int luaopen_luacxx_QRectF(lua_State* const);
 
 #endif // LUA_CXX_QRECTF_INCLUDED

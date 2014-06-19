@@ -243,7 +243,7 @@ void lua::QPainterPath_Element_metatable(const lua::index& mt)
     mt["isMoveTo"] = &QPainterPath::Element::isMoveTo;
 }
 
-int QPainterPath_new(lua::state* const state)
+int QPainterPath_new(lua_State* const state)
 {
     lua::make<QPainterPath>(state);
     // TODO Set up object-specific methods
@@ -251,7 +251,7 @@ int QPainterPath_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QPainterPath(lua::state* const state)
+int luaopen_luacxx_QPainterPath(lua_State* const state)
 {
     lua::thread env(state);
 

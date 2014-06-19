@@ -23,6 +23,6 @@ struct Metatable<QCursor>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QCursor(lua::state* const);
+extern "C" int luaopen_luacxx_QCursor(lua_State* const);
 
 #endif // LUA_CXX_QCURSOR_INCLUDED

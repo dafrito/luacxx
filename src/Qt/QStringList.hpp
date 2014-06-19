@@ -23,6 +23,6 @@ struct Metatable<QStringList>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QStringList(lua::state* const);
+extern "C" int luaopen_luacxx_QStringList(lua_State* const);
 
 #endif // LUA_CXX_QSTRINGLIST_INCLUDED

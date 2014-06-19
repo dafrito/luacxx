@@ -23,6 +23,6 @@ struct Metatable<QBitmap>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QBitmap(lua::state* const);
+extern "C" int luaopen_luacxx_QBitmap(lua_State* const);
 
 #endif // LUA_CXX_QBITMAP_INCLUDED

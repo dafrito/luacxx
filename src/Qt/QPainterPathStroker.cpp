@@ -33,7 +33,7 @@ void lua::QPainterPathStroker_metatable(const lua::index& mt)
     mt["width"] = &QPainterPathStroker::width;
 }
 
-int QPainterPathStroker_new(lua::state* const state)
+int QPainterPathStroker_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
     case 1:
@@ -47,7 +47,7 @@ int QPainterPathStroker_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QPainterPathStroker(lua::state* const state)
+int luaopen_luacxx_QPainterPathStroker(lua_State* const state)
 {
     lua::thread env(state);
 

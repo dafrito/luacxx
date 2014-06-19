@@ -10,7 +10,7 @@ void lua::QSet_metatable(const lua::index& mt)
     // TODO Set up metatable methods for this class
 }
 
-int QSet_new(lua::state* const state)
+int QSet_new(lua_State* const state)
 {
     lua::make<QSet>(state);
     // TODO Set up object-specific methods
@@ -18,7 +18,7 @@ int QSet_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QSet(lua::state* const state)
+int luaopen_luacxx_QSet(lua_State* const state)
 {
     lua::thread env(state);
 

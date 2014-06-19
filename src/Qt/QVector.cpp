@@ -10,13 +10,13 @@ QVector(QVector<T> && other)
 QVector(std::initializer_list<T> args)
 
 */
-int QVector_new(lua::state* const state)
+int QVector_new(lua_State* const state)
 {
     // XXX Can this be done in a reasonable manner?
     return 0;
 }
 
-int luaopen_luacxx_QVector(lua::state* const state)
+int luaopen_luacxx_QVector(lua_State* const state)
 {
     lua::thread env(state);
 

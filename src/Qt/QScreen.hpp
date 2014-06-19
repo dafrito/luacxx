@@ -23,6 +23,6 @@ struct Metatable<QScreen>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QScreen(lua::state* const);
+extern "C" int luaopen_luacxx_QScreen(lua_State* const);
 
 #endif // LUA_CXX_QSCREEN_INCLUDED

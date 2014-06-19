@@ -23,6 +23,6 @@ struct Metatable<QMimeData>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QMimeData(lua::state* const);
+extern "C" int luaopen_luacxx_QMimeData(lua_State* const);
 
 #endif // LUA_CXX_QMIMEDATA_INCLUDED

@@ -65,7 +65,7 @@ void lua::QClipboard_metatable(const lua::index& mt)
     mt["text"] = QClipboard_text;
 }
 
-int luaopen_luacxx_QClipboard(lua::state* const state)
+int luaopen_luacxx_QClipboard(lua_State* const state)
 {
     lua::thread env(state);
 

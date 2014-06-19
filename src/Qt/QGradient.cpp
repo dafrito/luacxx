@@ -16,7 +16,7 @@ void lua::QGradient_metatable(const lua::index& mt)
     mt["type"] = &QGradient::type ;
 }
 
-int luaopen_luacxx_QGradient(lua::state* const state)
+int luaopen_luacxx_QGradient(lua_State* const state)
 {
     lua::thread env(state);
 

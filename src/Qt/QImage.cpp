@@ -135,7 +135,7 @@ void lua::QImage_metatable(const lua::index& mt)
 }
 
 
-int QImage_new(lua::state* const state)
+int QImage_new(lua_State* const state)
 {
     lua::make<QImage>(state);
     // TODO Set up object-specific methods
@@ -143,7 +143,7 @@ int QImage_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QImage(lua::state* const state)
+int luaopen_luacxx_QImage(lua_State* const state)
 {
     lua::thread env(state);
 

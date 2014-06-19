@@ -23,7 +23,7 @@ void lua::QConicalGradient_metatable(const lua::index& mt)
     mt["setCenter"] = QConicalGradient_setCenter;
 }
 
-int QConicalGradient_new(lua::state* const state)
+int QConicalGradient_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
     case 0:
@@ -47,7 +47,7 @@ int QConicalGradient_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QConicalGradient(lua::state* const state)
+int luaopen_luacxx_QConicalGradient(lua_State* const state)
 {
     lua::thread env(state);
 

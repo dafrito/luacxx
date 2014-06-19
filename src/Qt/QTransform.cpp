@@ -51,7 +51,7 @@ void lua::QTransform_metatable(const lua::index& mt)
     mt["type"] = &QTransform::type;
 }
 
-int QTransform_new(lua::state* const state)
+int QTransform_new(lua_State* const state)
 {
     lua::make<QTransform>(state);
     // TODO Set up object-specific methods
@@ -59,7 +59,7 @@ int QTransform_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QTransform(lua::state* const state)
+int luaopen_luacxx_QTransform(lua_State* const state)
 {
     lua::thread env(state);
 

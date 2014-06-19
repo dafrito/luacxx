@@ -37,6 +37,6 @@ struct Metatable<QPainterPath::Element>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QPainterPath(lua::state* const);
+extern "C" int luaopen_luacxx_QPainterPath(lua_State* const);
 
 #endif // LUA_CXX_QPAINTERPATH_INCLUDED
