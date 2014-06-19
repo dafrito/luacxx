@@ -54,7 +54,10 @@ Returns a diagnostic representation of the Lua stack
 std::string dump(lua_State* const state);
 
 std::string class_name(const lua::index& index);
-std::string class_name(const lua_State* const state, const int index);
+std::string class_name(lua_State* const state, int pos);
+
+const char* class_id(const lua::index& index);
+const char* class_id(lua_State* const state, int pos);
 
 size_t userdata_size(const lua::index& index);
 
@@ -66,7 +69,7 @@ struct is_type
     is_type(const lua::index& index) :
         // Compare exactly for efficiency, but I really should
         // benchmark this to ensure the performance is worth it.
-        is_same(lua::class_name(index) == required_name())
+        is_same(lua::class_id(index) == required_name())
     {
     }
 

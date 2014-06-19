@@ -75,18 +75,33 @@ std::string lua::traceback(lua_State* const state, const int toplevel)
     #endif
 }
 
-std::string lua::class_name(const lua::index& index)
+const char* lua::class_id(const lua::index& index)
 {
     lua_getmetatable(index.state(), index.pos());
     lua_getfield(index.state(), -1, "__class");
-    std::string rv(lua_tostring(index.state(), -1));
-    lua_pop(index.state(), 2);
-    return rv;
+    auto rv = lua_topointer(index.state(), -1);
+    lua_pop(index.state(), 1);
+    return static_cast<const char*>(rv);
 }
 
-std::string lua::class_name(const lua_State* const state, const int index)
+const char* lua::class_id(lua_State* const state, int pos)
 {
-    return lua::class_name(state, index);
+    return lua::class_id(lua::index(state, pos));
+}
+
+std::string lua::class_name(const lua::index& index)
+{
+    auto id = lua::class_id(index);
+    if (!id) {
+        return std::string();
+    }
+
+    return std::string(id);
+}
+
+std::string lua::class_name(lua_State* const state, int pos)
+{
+    return lua::class_name(lua::index(state, pos));
 }
 
 size_t lua::userdata_size(const lua::index& index)
@@ -127,9 +142,9 @@ std::string lua::dump(lua_State* const state)
             break;
         case lua::type::userdata:
         {
-            auto userdata_block = lua::get<lua::userdata_block*>(iter);
-            if (userdata_block->name) {
-                str << userdata_block->name << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
+            auto name = lua::class_id(iter);
+            if (name) {
+                str << name << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
             } else {
                 str << iter.type().name() << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
             }

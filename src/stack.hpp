@@ -1116,7 +1116,7 @@ void push_metatable(lua_State* const state, T* const value)
     lua_setfield(state, mt.pos(), "__gc");
 
     // Make the class name visible to callers
-    lua_pushstring(state, class_name);
+    lua_pushlightuserdata(state, const_cast<char*>(class_name));
     lua_setfield(state, mt.pos(), "__class");
 
     lua_pushstring(state, "free_userdata");
@@ -1153,7 +1153,7 @@ size was given.
 
 */
 
-char* malloc(lua_State* const state, size_t size, const lua::userdata_block& userdata_block = lua::userdata_block(lua::userdata_storage::value, "userdata"));
+char* malloc(lua_State* const state, size_t size, const lua::userdata_block& userdata_block = lua::userdata_block(lua::userdata_storage::value));
 
 template <class Stored>
 char* construct_userdata(lua_State* const state, lua::userdata_storage storage)
