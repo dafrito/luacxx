@@ -781,13 +781,18 @@ enum class userdata_storage {
 };
 
 // Metadata that defines the Lua userdata
-struct userdata_block {
-    userdata_storage storage;
+class userdata_block {
+    char _storage;
 
 public:
     userdata_block(const lua::userdata_storage& storage) :
-        storage(storage)
+        _storage(static_cast<char>(storage))
     {
+    }
+
+    lua::userdata_storage storage()
+    {
+        return static_cast<lua::userdata_storage>(_storage);
     }
 };
 
@@ -1061,7 +1066,7 @@ int free_userdata(lua_State* const state)
     char* block = static_cast<char*>(lua_touserdata(state, 1));
     auto userdata_block = reinterpret_cast<lua::userdata_block*>(block + sizeof(Stored));
 
-    switch (userdata_block->storage) {
+    switch (userdata_block->storage()) {
     case userdata_storage::pointer:
     {
         // Don't do anything for pointers; Lua does not own them, so Lua should not destroy them.
@@ -1369,7 +1374,7 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
         return;
     }
     // Carefully retrieve the value from the userdata.
-    switch (userdata->storage) {
+    switch (userdata->storage()) {
     case lua::userdata_storage::value:
         destination = *static_cast<T*>(data);
         break;
@@ -1391,7 +1396,7 @@ static void store_full_userdata(T*& destination, lua::userdata_block* userdata, 
         return;
     }
     // Get a pointer to the userdata's value.
-    switch (userdata->storage) {
+    switch (userdata->storage()) {
     case lua::userdata_storage::value:
         destination = static_cast<T*>(data);
         break;
@@ -1413,7 +1418,7 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
         return;
     }
     // Assign to the shared pointer; fail otherwise.
-    switch (userdata->storage) {
+    switch (userdata->storage()) {
     case lua::userdata_storage::shared_ptr:
     {
         destination = *reinterpret_cast<T*>(data);

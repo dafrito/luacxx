@@ -362,7 +362,7 @@ struct Store<void*>
         }
 
         void* block = lua_touserdata(source.state(), source.pos());
-        switch (userdata_block->storage) {
+        switch (userdata_block->storage()) {
         case lua::userdata_storage::value:
             destination = block;
             break;
