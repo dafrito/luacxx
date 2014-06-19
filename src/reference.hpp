@@ -28,12 +28,20 @@ lua::reference - a slot for C to save Lua values
         return 1;
     }
 
+    int MyData_call(lua_State* const state)
+    {
+        auto data = lua::get<MyData*>(state, 1);
+        lua::call(data->target, lua::get<const char*>(state, 2));
+        return 0;
+    }
+
     int luaopen_MyData(lua_State* const state)
     {
         lua::thread env(state);
 
         env["MyData"] = lua::value::table;
         env["MyData"]["new"] = MyData_new;
+        env["MyData"]["call"] = MyData_call;
 
         return 0;
     }
