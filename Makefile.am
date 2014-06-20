@@ -24,6 +24,12 @@ lua:
 run:
 	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua
 
+run-nanorecv:
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua recv ipc:///tmp/pipeline.ipc
+
+run-nanosend:
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua send ipc:///tmp/pipeline.ipc "Hello!"
+
 debug:
 	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' gdb ./src/.libs/lt-luacxx
 

@@ -225,10 +225,69 @@ int _nn_symbol(lua_State* const state)
     return 2;
 }
 
+int void_tostring(lua_State* const state)
+{
+    lua::push(state,
+        *static_cast<const char**>(lua_touserdata(state, 1))
+    );
+    return 1;
+}
+
+int _nn_freemsg(lua_State* const state)
+{
+    nn_freemsg(*reinterpret_cast<void**>(lua_touserdata(state, 1)));
+    return 0;
+}
+
+int _nn_recv(lua_State* const state)
+{
+    void* buf = nullptr;
+    lua::push(state, nn_recv(
+        lua::get<int>(state, 1),
+        &buf,
+        NN_MSG,
+        lua::get<int>(state, 4)
+    ));
+
+    lua::Construct<void*>::construct(state, buf);
+    lua_getmetatable(state, -1);
+    lua::index(state, -1)["__tostring"] = void_tostring;
+    lua_pop(state, 1);
+
+    return 2;
+}
+
+int _nn_send(lua_State* const state)
+{
+    if (lua_type(state, 2) == LUA_TUSERDATA) {
+        lua::push(state, nn_send(
+            lua::get<int>(state, 1),
+            lua::get<void*>(state, 2),
+            lua::get<size_t>(state, 3),
+            lua::get<int>(state, 4)
+        ));
+        return 1;
+    }
+    lua::push(state, nn_send(
+        lua::get<int>(state, 1),
+        lua::get<const char*>(state, 2),
+        lua::get<size_t>(state, 3),
+        lua::get<int>(state, 4)
+    ));
+    return 1;
+}
+
+int _errno(lua_State* const state)
+{
+    lua::push(state, errno);
+    return 1;
+}
+
 int luaopen_luacxx_nanomsg(lua_State* const state)
 {
     lua::thread env(state);
 
+    env["errno"] = _errno;
     env["EADDRNOTAVAIL"] = EADDRNOTAVAIL;
     env["EADDRINUSE"] = EADDRINUSE;
     env["EAGAIN"] = EAGAIN;
@@ -279,7 +338,7 @@ int luaopen_luacxx_nanomsg(lua_State* const state)
     env["nn_errno"] = nn_errno;
 
     // http://nanomsg.org/v0.4/nn_freemsg.3.html
-    env["nn_freemsg"] = nn_freemsg;
+    env["nn_freemsg"] = _nn_freemsg;
 
     // http://nanomsg.org/v0.4/nn_getsockopt.3.html
     env["nn_getsockopt"] = nn_getsockopt;
@@ -326,10 +385,10 @@ int luaopen_luacxx_nanomsg(lua_State* const state)
     env["NN_DONTWAIT"] = NN_DONTWAIT;
 
     // http://nanomsg.org/v0.4/nn_recv.3.html
-    env["nn_recv"] = nn_recv;
+    env["nn_recv"] = _nn_recv;
 
     // http://nanomsg.org/v0.4/nn_send.3.html
-    env["nn_send"] = nn_send;
+    env["nn_send"] = _nn_send;
 
     // http://nanomsg.org/v0.4/nn_sendmsg.3.html
     env["nn_sendmsg"] = nn_sendmsg;
