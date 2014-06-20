@@ -47,6 +47,16 @@ else
     AM_CONDITIONAL([BUILD_NCURSES], [false])
 fi
 
+AC_SUBST(NANOMSG_INCLUDE)
+AC_SUBST(NANOMSG_LIB)
+if pkg-config --print-errors --exists libnanomsg; then
+    NANOMSG_INCLUDE=`pkg-config --cflags libnanomsg`
+    NANOMSG_LIB=`pkg-config --libs libnanomsg`
+    AM_CONDITIONAL([BUILD_NANOMSG], [true])
+else
+    AM_CONDITIONAL([BUILD_NANOMSG], [false])
+fi
+
 # Check for Boost
 AX_BOOST_BASE([], [:], [:])
 AX_BOOST_UNIT_TEST_FRAMEWORK

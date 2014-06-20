@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libluacxx.la
 
-libluacxx_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ -I$(top_srcdir)/src
-libluacxx_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@
+libluacxx_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ @NANOMSG_INCLUDE@ -I$(top_srcdir)/src
+libluacxx_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@ @NANOMSG_LIB@
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
@@ -76,7 +76,8 @@ nobase_pkginclude_HEADERS = \
 	Gtk/GObject.hpp \
 	Gtk/require.hpp \
 	Gtk/GIBaseInfo.hpp \
-	Gtk/GIRepository.hpp
+	Gtk/GIRepository.hpp \
+	nanomsg.hpp
 
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
@@ -229,5 +230,12 @@ libluacxx_la_SOURCES += \
 	ncurses/legacy_coding.cpp \
 	ncurses/resizeterm.cpp \
 	ncurses/wresize.cpp
+
+endif
+
+if BUILD_NANOMSG
+
+libluacxx_la_SOURCES += \
+	nanomsg.cpp
 
 endif
