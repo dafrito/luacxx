@@ -20,7 +20,27 @@ void    addEllipse(const QPointF & center, qreal rx, qreal ry)
 */
 int QPainterPath_addEllipse(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+    switch (lua_gettop(state)) {
+    case 2:
+        self->addEllipse(lua::get<const QRectF&>(state, 2));
+        return 0;
+    case 3:
+        self->addEllipse(
+            lua::get<const QPointF&>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4)
+        );
+        return 0;
+    default:
+        self->addEllipse(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        );
+        return 0;
+    }
 }
 
 /*
@@ -31,6 +51,17 @@ void    addRect(qreal x, qreal y, qreal width, qreal height)
 */
 int QPainterPath_addRect(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->addRect(lua::get<const QRectF&>(state, 2));
+        return 0;
+    }
+    self->addRect(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3),
+        lua::get<qreal>(state, 4),
+        lua::get<qreal>(state, 5)
+    );
     return 0;
 }
 
@@ -42,6 +73,44 @@ void    addRoundedRect(qreal x, qreal y, qreal w, qreal h, qreal xRadius, qreal 
 */
 int QPainterPath_addRoundedRect(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 4) {
+        self->addRoundedRect(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<qreal>(state, 3), // xRadius
+            lua::get<qreal>(state, 4) // yRadius
+        );
+        return 0;
+    }
+    if (lua_gettop(state) == 5) {
+        self->addRoundedRect(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<qreal>(state, 3), // xRadius
+            lua::get<qreal>(state, 4), // yRadius
+            lua::get<Qt::SizeMode>(state, 5) // mode
+        );
+        return 0;
+    }
+    if (lua_gettop(state) == 7) {
+        self->addRoundedRect(
+            lua::get<qreal>(state, 2), // x
+            lua::get<qreal>(state, 3), // y
+            lua::get<qreal>(state, 4), // width
+            lua::get<qreal>(state, 5), // height
+            lua::get<qreal>(state, 6), // xRadius
+            lua::get<qreal>(state, 7) // yRadius
+        );
+        return 0;
+    }
+    self->addRoundedRect(
+        lua::get<qreal>(state, 2), // x
+        lua::get<qreal>(state, 3), // y
+        lua::get<qreal>(state, 4), // width
+        lua::get<qreal>(state, 5), // height
+        lua::get<qreal>(state, 6), // xRadius
+        lua::get<qreal>(state, 7), // yRadius
+        lua::get<Qt::SizeMode>(state, 8) // mode
+    );
     return 0;
 }
 
@@ -53,6 +122,21 @@ void    addText(qreal x, qreal y, const QFont & font, const QString & text)
 */
 int QPainterPath_addText(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 4) {
+        self->addText(
+            lua::get<const QPointF&>(state, 2),
+            lua::get<const QFont&>(state, 3),
+            lua::get<const QString&>(state, 4)
+        );
+        return 0;
+    }
+    self->addText(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3),
+        lua::get<const QFont&>(state, 3),
+        lua::get<const QString&>(state, 4)
+    );
     return 0;
 }
 
@@ -64,6 +148,18 @@ void    arcMoveTo(qreal x, qreal y, qreal width, qreal height, qreal angle)
 */
 int QPainterPath_arcMoveTo(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 3) {
+        self->arcMoveTo(lua::get<const QRectF&>(state, 2), lua::get<qreal>(state, 3));
+        return 0;
+    }
+    self->arcMoveTo(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3),
+        lua::get<qreal>(state, 4),
+        lua::get<qreal>(state, 5),
+        lua::get<qreal>(state, 6)
+    );
     return 0;
 }
 
@@ -75,6 +171,23 @@ void    arcTo(qreal x, qreal y, qreal width, qreal height, qreal startAngle, qre
 */
 int QPainterPath_arcTo(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 3) {
+        self->arcTo(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4)
+        );
+        return 0;
+    }
+    self->arcTo(
+        lua::get<qreal>(state, 2), // x
+        lua::get<qreal>(state, 3), // y
+        lua::get<qreal>(state, 4), // width
+        lua::get<qreal>(state, 5), // height
+        lua::get<qreal>(state, 6), // startAngle
+        lua::get<qreal>(state, 7) // sweepLength
+    );
     return 0;
 }
 
@@ -87,7 +200,17 @@ bool    contains(const QPainterPath & p) const
 */
 int QPainterPath_contains(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua::is_type<QRectF>(state, 2)) {
+        lua::push(state, self->contains(lua::get<const QRectF&>(state, 2)));
+        return 1;
+    }
+    if (lua::is_type<QPointF>(state, 2)) {
+        lua::push(state, self->contains(lua::get<const QPointF&>(state, 2)));
+        return 1;
+    }
+    lua::push(state, self->intersects(lua::get<const QPainterPath&>(state, 2)));
+    return 1;
 }
 
 /*
@@ -98,6 +221,23 @@ void    cubicTo(qreal c1X, qreal c1Y, qreal c2X, qreal c2Y, qreal endPointX, qre
 */
 int QPainterPath_cubicTo(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 4) {
+        self->cubicTo(
+            lua::get<const QPointF&>(state, 2),
+            lua::get<const QPointF&>(state, 3),
+            lua::get<const QPointF&>(state, 4)
+        );
+        return 0;
+    }
+    self->cubicTo(
+        lua::get<qreal>(state, 2), // c1x
+        lua::get<qreal>(state, 3), // c1y
+        lua::get<qreal>(state, 4), // c2x
+        lua::get<qreal>(state, 5), // c2y
+        lua::get<qreal>(state, 6), // endPointX
+        lua::get<qreal>(state, 7) // endPointY
+    );
     return 0;
 }
 
@@ -109,7 +249,13 @@ bool    intersects(const QPainterPath & p) const
 */
 int QPainterPath_intersects(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua::is_type<QRectF>(state, 2)) {
+        lua::push(state, self->intersects(lua::get<const QRectF&>(state, 2)));
+        return 1;
+    }
+    lua::push(state, self->intersects(lua::get<const QPainterPath&>(state, 2)));
+    return 1;
 }
 
 /*
@@ -120,6 +266,15 @@ void    lineTo(qreal x, qreal y)
 */
 int QPainterPath_lineTo(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->lineTo(lua::get<const QPointF&>(state, 2));
+        return 0;
+    }
+    self->lineTo(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3)
+    );
     return 0;
 }
 
@@ -131,6 +286,15 @@ void    moveTo(qreal x, qreal y)
 */
 int QPainterPath_moveTo(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->moveTo(lua::get<const QPointF&>(state, 2));
+        return 0;
+    }
+    self->moveTo(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3)
+    );
     return 0;
 }
 
@@ -142,6 +306,20 @@ void    quadTo(qreal cx, qreal cy, qreal endPointX, qreal endPointY)
 */
 int QPainterPath_quadTo(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 3) {
+        self->quadTo(
+            lua::get<const QPointF&>(state, 2),
+            lua::get<const QPointF&>(state, 3)
+        );
+        return 0;
+    }
+    self->quadTo(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3),
+        lua::get<qreal>(state, 4),
+        lua::get<qreal>(state, 5)
+    );
     return 0;
 }
 
@@ -151,7 +329,6 @@ QPolygonF   toFillPolygon(const QTransform & matrix) const
 QPolygonF   toFillPolygon(const QMatrix & matrix = QMatrix()) const
 QList<QPolygonF>    toFillPolygons(const QTransform & matrix) const
 QList<QPolygonF>    toFillPolygons(const QMatrix & matrix = QMatrix()) const
-QPainterPath    toReversed() const
 QList<QPolygonF>    toSubpathPolygons(const QTransform & matrix) const
 QList<QPolygonF>    toSubpathPolygons(const QMatrix & matrix = QMatrix()) const
 
@@ -182,12 +359,30 @@ QPainterPath    translated(const QPointF & offset) const
 
 int QPainterPath_translate(lua_State* const state)
 {
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        self->translate(lua::get<const QPointF&>(state, 2));
+        return 0;
+    }
+    self->translate(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3)
+    );
     return 0;
 }
 
 int QPainterPath_translated(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        lua::push(state, self->translated(lua::get<const QPointF&>(state, 2)));
+        return 1;
+    }
+    lua::push(state, self->translated(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3)
+    ));
+    return 1;
 }
 
 void lua::QPainterPath_metatable(const lua::index& mt)
@@ -245,9 +440,16 @@ void lua::QPainterPath_Element_metatable(const lua::index& mt)
 
 int QPainterPath_new(lua_State* const state)
 {
-    lua::make<QPainterPath>(state);
-    // TODO Set up object-specific methods
+    if (lua_gettop(state) <= 1) {
+        lua::make<QPainterPath>(state);
+        return 1;
+    }
+    if (lua::is_type<QPainterPath>(state, 2)) {
+        lua::make<QPainterPath>(state, lua::get<const QPainterPath&>(state, 2));
+        return 1;
+    }
 
+    lua::make<QPainterPath>(state, lua::get<const QPointF&>(state, 2));
     return 1;
 }
 

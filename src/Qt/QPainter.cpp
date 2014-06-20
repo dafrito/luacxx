@@ -385,76 +385,303 @@ int QPainter_drawImage(lua_State* const state)
 
 int QPainter_drawLine(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) == 2) {
+        if (lua::is_type<QLineF>(state, 2)) {
+            // void drawLine(const QLineF & line)
+            self->drawLine(lua::get<const QLineF&>(state, 2));
+            return 0;
+        }
+
+        // void drawLine(const QLine & line)
+        self->drawLine(lua::get<const QLine&>(state, 2));
+        return 0;
+    }
+    if (lua_gettop(state) == 3) {
+        if (lua::is_type<QPointF>(state, 2)) {
+            // void drawLine(const QPointF & p1, const QPointF & p2)
+            self->drawLine(
+                lua::get<const QPointF&>(state, 2),
+                lua::get<const QPointF&>(state, 3)
+            );
+            return 0;
+        }
+
+        // void drawLine(const QPoint & p1, const QPoint & p2)
+        self->drawLine(
+            lua::get<const QPoint&>(state, 2),
+            lua::get<const QPoint&>(state, 3)
+        );
+        return 0;
+    }
+
+    // void drawLine(int x1, int y1, int x2, int y2)
+    self->drawLine(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4),
+        lua::get<int>(state, 5)
+    );
     return 0;
 }
 
 int QPainter_drawLines(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    // TODO
+    // void drawLines(const QLineF * lines, int lineCount)
+    // void drawLines(const QLine * lines, int lineCount)
+    // void drawLines(const QPointF * pointPairs, int lineCount)
+    // void drawLines(const QPoint * pointPairs, int lineCount)
+    // void drawLines(const QVector<QPointF> & pointPairs)
+    // void drawLines(const QVector<QPoint> & pointPairs)
+    // void drawLines(const QVector<QLineF> & lines)
+    // void drawLines(const QVector<QLine> & lines)
     return 0;
 }
 
 int QPainter_drawPicture(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) > 3) {
+        // void drawPicture(int x, int y, const QPicture & picture)
+        self->drawPicture(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<const QPicture&>(state, 4)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QPoint>(state, 2)) {
+        // void drawPicture(const QPoint & point, const QPicture & picture)
+        self->drawPicture(
+            lua::get<const QPoint&>(state, 2),
+            lua::get<const QPicture&>(state, 3)
+        );
+        return 0;
+    }
+
+    // void drawPicture(const QPointF & point, const QPicture & picture)
+    self->drawPicture(
+        lua::get<const QPointF&>(state, 2),
+        lua::get<const QPicture&>(state, 3)
+    );
     return 0;
 }
 
 int QPainter_drawPie(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) > 3) {
+        // void drawPie(int x, int y, int width, int height, int startAngle, int spanAngle)
+        self->drawPie(
+            lua::get<int>(state, 2), // x
+            lua::get<int>(state, 3), // y
+            lua::get<int>(state, 4), // width
+            lua::get<int>(state, 5), // height
+            lua::get<int>(state, 6), // startAngle
+            lua::get<int>(state, 7)  // spanAngle
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QRect>(state, 2)) {
+        // void drawPie(const QRect & rectangle, int startAngle, int spanAngle)
+        self->drawPie(
+            lua::get<const QRect&>(state, 2),
+            lua::get<int>(state, 3), // startAngle
+            lua::get<int>(state, 4)  // spanAngle
+        );
+        return 0;
+    }
+
+    // void drawPie(const QRectF & rectangle, int startAngle, int spanAngle)
+    self->drawPie(
+        lua::get<const QRectF&>(state, 2),
+        lua::get<int>(state, 3), // startAngle
+        lua::get<int>(state, 4)  // spanAngle
+    );
     return 0;
 }
 
 int QPainter_drawPixmap(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    // TODO
+    // void drawPixmap(const QRectF & target, const QPixmap & pixmap, const QRectF & source)
+    // void drawPixmap(const QRect & target, const QPixmap & pixmap, const QRect & source)
+    // void drawPixmap(const QPointF & point, const QPixmap & pixmap, const QRectF & source)
+    // void drawPixmap(const QPoint & point, const QPixmap & pixmap, const QRect & source)
+    // void drawPixmap(const QPointF & point, const QPixmap & pixmap)
+    // void drawPixmap(const QPoint & point, const QPixmap & pixmap)
+    // void drawPixmap(int x, int y, const QPixmap & pixmap)
+    // void drawPixmap(const QRect & rectangle, const QPixmap & pixmap)
+    // void drawPixmap(int x, int y, int width, int height, const QPixmap & pixmap)
+    // void drawPixmap(int x, int y, int w, int h, const QPixmap & pixmap, int sx, int sy, int sw, int sh)
+    // void drawPixmap(int x, int y, const QPixmap & pixmap, int sx, int sy, int sw, int sh)
     return 0;
 }
 
 int QPainter_drawPixmapFragments(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) >= 5) {
+        // void drawPixmapFragments(const PixmapFragment * fragments, int fragmentCount, const QPixmap & pixmap, PixmapFragmentHints hints)
+        self->drawPixmapFragments(
+            lua::get<QPainter::PixmapFragment*>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<const QPixmap&>(state, 4),
+            lua::get<QPainter::PixmapFragmentHints>(state, 5)
+        );
+        return 0;
+    }
+
+    // void drawPixmapFragments(const PixmapFragment * fragments, int fragmentCount, const QPixmap & pixmap)
+    self->drawPixmapFragments(
+        lua::get<QPainter::PixmapFragment*>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<const QPixmap&>(state, 4)
+    );
     return 0;
 }
 
 int QPainter_drawPoint(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) > 2) {
+        // void drawPoint(int x, int y)
+        self->drawPoint(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QPoint>(state, 2)) {
+        // void drawPoint(const QPoint & position)
+        self->drawPoint(
+            lua::get<const QPoint&>(state, 2)
+        );
+        return 0;
+    }
+
+    // void drawPoint(const QPointF & position)
+    self->drawPoint(
+        lua::get<const QPointF&>(state, 2)
+    );
     return 0;
 }
 
 int QPainter_drawPoints(lua_State* const state)
 {
+    // TODO
+    // void drawPoints(const QPointF * points, int pointCount)
+    // void drawPoints(const QPoint * points, int pointCount)
+    // void drawPoints(const QPolygonF & points)
+    // void drawPoints(const QPolygon & points)
     return 0;
 }
 
 int QPainter_drawPolygon(lua_State* const state)
 {
+    // TODO
+    // void drawPolygon(const QPointF * points, int pointCount, Qt::FillRule fillRule = Qt::OddEvenFill)
+    // void drawPolygon(const QPoint * points, int pointCount, Qt::FillRule fillRule = Qt::OddEvenFill)
+    // void drawPolygon(const QPolygonF & points, Qt::FillRule fillRule = Qt::OddEvenFill)
+    // void drawPolygon(const QPolygon & points, Qt::FillRule fillRule = Qt::OddEvenFill)
     return 0;
 }
 
 int QPainter_drawPolyline(lua_State* const state)
 {
+    // TODO
+    // void drawPolyline(const QPointF * points, int pointCount)
+    // void drawPolyline(const QPoint * points, int pointCount)
+    // void drawPolyline(const QPolygonF & points)
+    // void drawPolyline(const QPolygon & points)
     return 0;
 }
 
 int QPainter_drawRect(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) > 2) {
+        // void drawRect(int x, int y, int width, int height)
+        self->drawRect(
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<int>(state, 6)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QRectF>(state, 2)) {
+        // void drawRect(const QRectF & rectangle)
+        self->drawRect(
+            lua::get<const QRectF&>(state, 2)
+        );
+        return 0;
+    }
+
+    // void drawRect(const QRect & rectangle)
+    self->drawRect(
+        lua::get<const QRect&>(state, 2)
+    );
     return 0;
 }
 
 int QPainter_drawRects(lua_State* const state)
 {
+    // TODO
+    // void drawRects(const QRectF * rectangles, int rectCount)
+    // void drawRects(const QRect * rectangles, int rectCount)
+    // void drawRects(const QVector<QRectF> & rectangles)
+    // void drawRects(const QVector<QRect> & rectangles)
     return 0;
 }
 
 int QPainter_drawRoundedRect(lua_State* const state)
 {
+    // TODO
+    // void drawRoundedRect(const QRectF & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize)
+    // void drawRoundedRect(const QRect & rect, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize)
+    // void drawRoundedRect(int x, int y, int w, int h, qreal xRadius, qreal yRadius, Qt::SizeMode mode = Qt::AbsoluteSize)
     return 0;
 }
 
 int QPainter_drawStaticText(lua_State* const state)
 {
+    if (lua_gettop(state) > 3) {
+        // void drawStaticText(int left, int top, const QStaticText & staticText)
+
+    }
+
+    if (lua::is_type<QPoint>(state, 2)) {
+        // void drawStaticText(const QPointF & topLeftPosition, const QStaticText & staticText)
+    }
+
+    // void drawStaticText(const QPoint & topLeftPosition, const QStaticText & staticText)
     return 0;
 }
 
 int QPainter_drawText(lua_State* const state)
 {
+    // TODO
+    // void drawText(const QPointF & position, const QString & text)
+    // void drawText(const QPoint & position, const QString & text)
+    // void drawText(const QRectF & rectangle, int flags, const QString & text, QRectF * boundingRect = 0)
+    // void drawText(const QRect & rectangle, int flags, const QString & text, QRect * boundingRect = 0)
+    // void drawText(int x, int y, const QString & text)
+    // void drawText(int x, int y, int width, int height, int flags, const QString & text, QRect * boundingRect = 0)
+    // void drawText(const QRectF & rectangle, const QString & text, const QTextOption & option = QTextOption())
     auto painter = lua::get<QPainter*>(state, 1);
     painter->drawText(
         lua::get<int>(state, 2),
@@ -466,6 +693,76 @@ int QPainter_drawText(lua_State* const state)
 
 int QPainter_drawTiledPixmap(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) > 5) {
+        // void drawTiledPixmap(int x, int y, int width, int height, const QPixmap & pixmap, int sx = 0, int sy = 0)
+        switch (lua_gettop(state)) {
+        case 6:
+            self->drawTiledPixmap(
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4),
+                lua::get<int>(state, 5),
+                lua::get<const QPixmap&>(state, 6)
+            );
+            return 0;
+        case 7:
+            self->drawTiledPixmap(
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4),
+                lua::get<int>(state, 5),
+                lua::get<const QPixmap&>(state, 6),
+                lua::get<int>(state, 7) // sx
+            );
+            return 0;
+        default:
+            self->drawTiledPixmap(
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4),
+                lua::get<int>(state, 5),
+                lua::get<const QPixmap&>(state, 6),
+                lua::get<int>(state, 7), // sx
+                lua::get<int>(state, 8) // sy
+            );
+            return 0;
+        }
+    }
+
+    if (lua::is_type<QRect>(state, 2)) {
+        if (lua_gettop(state) >= 4) {
+            // void drawTiledPixmap(const QRect & rectangle, const QPixmap & pixmap, const QPoint & position)
+            self->drawTiledPixmap(
+                lua::get<const QRect&>(state, 2),
+                lua::get<const QPixmap&>(state, 3),
+                lua::get<const QPoint&>(state, 4)
+            );
+            return 0;
+        }
+        // void drawTiledPixmap(const QRect & rectangle, const QPixmap & pixmap)
+        self->drawTiledPixmap(
+            lua::get<const QRect&>(state, 2),
+            lua::get<const QPixmap&>(state, 3)
+        );
+        return 0;
+    }
+
+    if (lua_gettop(state) >= 4) {
+        // void drawTiledPixmap(const QRectF & rectangle, const QPixmap & pixmap, const QPointF & position)
+        self->drawTiledPixmap(
+            lua::get<const QRectF&>(state, 2),
+            lua::get<const QPixmap&>(state, 3),
+            lua::get<const QPointF&>(state, 4)
+        );
+        return 0;
+    }
+    // void drawTiledPixmap(const QRectF & rectangle, const QPixmap & pixmap)
+    self->drawTiledPixmap(
+        lua::get<const QRectF&>(state, 2),
+        lua::get<const QPixmap&>(state, 3)
+    );
     return 0;
 }
 
@@ -613,36 +910,220 @@ int QPainter_fillRect(lua_State* const state)
 
 int QPainter_setBrush(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua::is_type<QBrush>(state, 2)) {
+        // void setBrush(const QBrush & brush)
+        self->setBrush(lua::get<const QBrush&>(state, 2));
+        return 0;
+    }
+    self->setBrush(lua::get<Qt::BrushStyle>(state, 2));
     return 0;
 }
 
 int QPainter_setBrushOrigin(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        if (lua::is_type<QPointF>(state, 2)) {
+            // void setBrushOrigin(const QPointF & position)
+            self->setBrushOrigin(lua::get<const QPointF&>(state, 2));
+            return 0;
+        }
+        // void setBrushOrigin(const QPoint & position)
+        self->setBrushOrigin(lua::get<const QPoint&>(state, 2));
+        return 0;
+    }
+    // void setBrushOrigin(int x, int y)
+    self->setBrushOrigin(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3)
+    );
+    return 0;
+}
+
+int QPainter_setClipPath(lua_State* const state)
+{
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        // void setClipPath(const QPainterPath & path)
+        self->setClipPath(
+            lua::get<const QPainterPath&>(state, 2)
+        );
+        return 0;
+    }
+
+    // void setClipPath(const QPainterPath & path, Qt::ClipOperation operation)
+    self->setClipPath(
+        lua::get<const QPainterPath&>(state, 2),
+        lua::get<Qt::ClipOperation>(state, 3)
+    );
     return 0;
 }
 
 int QPainter_setClipRect(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) == 5) {
+        // void setClipRect(int x, int y, int width, int height)
+        self->setClipRect(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5)
+        );
+        return 0;
+    }
+    if (lua_gettop(state) == 6) {
+        // void setClipRect(int x, int y, int width, int height, Qt::ClipOperation operation)
+        self->setClipRect(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5),
+            lua::get<Qt::ClipOperation>(state, 6)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QRectF>(state, 2)) {
+        if (lua_gettop(state) > 2) {
+            // void setClipRect(const QRectF & rectangle, Qt::ClipOperation operation)
+            self->setClipRect(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<Qt::ClipOperation>(state, 3)
+            );
+            return 0;
+        }
+        // void setClipRect(const QRectF & rectangle)
+        self->setClipRect(
+            lua::get<const QRectF&>(state, 2)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QRect>(state, 2)) {
+        if (lua_gettop(state) > 2) {
+            // void setClipRect(const QRect & rectangle, Qt::ClipOperation operation)
+            self->setClipRect(
+                lua::get<const QRect&>(state, 2),
+                lua::get<Qt::ClipOperation>(state, 3)
+            );
+            return 0;
+        }
+        // void setClipRect(const QRect & rectangle)
+        self->setClipRect(
+            lua::get<const QRect&>(state, 2)
+        );
+        return 0;
+    }
+
+    return 0;
+}
+
+int QPainter_setClipRegion(lua_State* const state)
+{
+    auto self = lua::get<QPainter*>(state, 1);
+    if (lua_gettop(state) == 2) {
+        // void setClipRegion(const QRegion & region)
+        self->setClipRegion(
+            lua::get<const QRegion&>(state, 2)
+        );
+        return 0;
+    }
+
+    // void setClipRegion(const QRegion & region, Qt::ClipOperation operation)
+    self->setClipRegion(
+        lua::get<const QRegion&>(state, 2),
+        lua::get<Qt::ClipOperation>(state, 3)
+    );
     return 0;
 }
 
 int QPainter_setPen(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua::is_type<QPen>(state, 2)) {
+        // void setPen(const QPen & pen)
+        self->setPen(lua::get<const QPen&>(state, 2));
+        return 0;
+    }
+    if (lua::is_type<QColor>(state, 2)) {
+        // void setPen(const QColor & color)
+        self->setPen(lua::get<const QColor&>(state, 2));
+        return 0;
+    }
+    // void setPen(Qt::PenStyle style)
+    self->setPen(lua::get<Qt::PenStyle>(state, 2));
     return 0;
 }
 
 int QPainter_setViewport(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) == 2) {
+        // void setViewport(const QRect & rectangle)
+        self->setViewport(lua::get<const QRect&>(state, 2));
+        return 0;
+    }
+
+    // void setViewport(int x, int y, int width, int height)
+    self->setViewport(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4),
+        lua::get<int>(state, 5)
+    );
     return 0;
 }
 
 int QPainter_setWindow(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) == 2) {
+        // void setWindow(const QRect & rectangle)
+        self->setWindow(lua::get<const QRect&>(state, 2));
+        return 0;
+    }
+
+    // void setWindow(int x, int y, int width, int height)
+    self->setWindow(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4),
+        lua::get<int>(state, 5)
+    );
     return 0;
 }
 
 int QPainter_translate(lua_State* const state)
 {
+    auto self = lua::get<QPainter*>(state, 1);
+
+    if (lua_gettop(state) > 2) {
+        // void translate(qreal dx, qreal dy)
+        self->translate(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        );
+        return 0;
+    }
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // void translate(const QPointF & offset)
+        self->translate(lua::get<const QPointF&>(state, 2));
+        return 0;
+    }
+
+    if (lua::is_type<QPoint>(state, 2)) {
+        // void translate(const QPoint& offset)
+        self->translate(lua::get<const QPoint&>(state, 2));
+        return 0;
+    }
+
     return 0;
 }
 
@@ -711,9 +1192,9 @@ void lua::QPainter_metatable(const lua::index& mt)
     mt["setBackgroundMode"] = &QPainter::setBackgroundMode;
     mt["setBrush"] = QPainter_setBrush;
     mt["setBrushOrigin"] = QPainter_setBrushOrigin;
-    mt["setClipPath"] = &QPainter::setClipPath;
+    mt["setClipPath"] = QPainter_setClipPath;
     mt["setClipRect"] = QPainter_setClipRect;
-    mt["setClipRegion"] = &QPainter::setClipRegion;
+    mt["setClipRegion"] = QPainter_setClipRegion;
     mt["setClipping"] = &QPainter::setClipping;
     mt["setCompositionMode"] = &QPainter::setCompositionMode;
     mt["setFont"] = &QPainter::setFont;
@@ -742,11 +1223,11 @@ void lua::QPainter_metatable(const lua::index& mt)
 
 int QPainter_new(lua_State* const state)
 {
-    // QPainter ()
-    // QPainter ( QPaintDevice * device )
     if (lua_gettop(state) > 1) {
+        // QPainter ( QPaintDevice * device )
         lua::make<QPainter>(state, lua::get<QPaintDevice*>(state, 2));
     } else {
+        // QPainter ()
         lua::make<QPainter>(state);
     }
     return 1;
@@ -758,6 +1239,57 @@ int luaopen_luacxx_QPainter(lua_State* const state)
 
     env["QPainter"] = lua::value::table;
     env["QPainter"]["new"] = QPainter_new;
+
+    // enum QPainter::CompositionMode
+    env["QPainter"]["CompositionMode_SourceOver"] = QPainter::CompositionMode_SourceOver;
+    env["QPainter"]["CompositionMode_DestinationOver"] = QPainter::CompositionMode_DestinationOver;
+    env["QPainter"]["CompositionMode_Clear"] = QPainter::CompositionMode_Clear;
+    env["QPainter"]["CompositionMode_Source"] = QPainter::CompositionMode_Source;
+    env["QPainter"]["CompositionMode_Destination"] = QPainter::CompositionMode_Destination;
+    env["QPainter"]["CompositionMode_SourceIn"] = QPainter::CompositionMode_SourceIn;
+    env["QPainter"]["CompositionMode_DestinationIn"] = QPainter::CompositionMode_DestinationIn;
+    env["QPainter"]["CompositionMode_SourceOut"] = QPainter::CompositionMode_SourceOut;
+    env["QPainter"]["CompositionMode_DestinationOut"] = QPainter::CompositionMode_DestinationOut;
+    env["QPainter"]["CompositionMode_SourceAtop"] = QPainter::CompositionMode_SourceAtop;
+    env["QPainter"]["CompositionMode_DestinationAtop"] = QPainter::CompositionMode_DestinationAtop;
+    env["QPainter"]["CompositionMode_Xor"] = QPainter::CompositionMode_Xor;
+    env["QPainter"]["CompositionMode_Plus"] = QPainter::CompositionMode_Plus;
+    env["QPainter"]["CompositionMode_Multiply"] = QPainter::CompositionMode_Multiply;
+    env["QPainter"]["CompositionMode_Screen"] = QPainter::CompositionMode_Screen;
+    env["QPainter"]["CompositionMode_Overlay"] = QPainter::CompositionMode_Overlay;
+    env["QPainter"]["CompositionMode_Darken"] = QPainter::CompositionMode_Darken;
+    env["QPainter"]["CompositionMode_Lighten"] = QPainter::CompositionMode_Lighten;
+    env["QPainter"]["CompositionMode_ColorDodge"] = QPainter::CompositionMode_ColorDodge;
+    env["QPainter"]["CompositionMode_ColorBurn"] = QPainter::CompositionMode_ColorBurn;
+    env["QPainter"]["CompositionMode_HardLight"] = QPainter::CompositionMode_HardLight;
+    env["QPainter"]["CompositionMode_SoftLight"] = QPainter::CompositionMode_SoftLight;
+    env["QPainter"]["CompositionMode_Difference"] = QPainter::CompositionMode_Difference;
+    env["QPainter"]["CompositionMode_Exclusion"] = QPainter::CompositionMode_Exclusion;
+    env["QPainter"]["RasterOp_SourceOrDestination"] = QPainter::RasterOp_SourceOrDestination;
+    env["QPainter"]["RasterOp_SourceAndDestination"] = QPainter::RasterOp_SourceAndDestination;
+    env["QPainter"]["RasterOp_SourceXorDestination"] = QPainter::RasterOp_SourceXorDestination;
+    env["QPainter"]["RasterOp_NotSourceAndNotDestination"] = QPainter::RasterOp_NotSourceAndNotDestination;
+    env["QPainter"]["RasterOp_NotSourceOrNotDestination"] = QPainter::RasterOp_NotSourceOrNotDestination;
+    env["QPainter"]["RasterOp_NotSourceXorDestination"] = QPainter::RasterOp_NotSourceXorDestination;
+    env["QPainter"]["RasterOp_NotSource"] = QPainter::RasterOp_NotSource;
+    env["QPainter"]["RasterOp_NotSourceAndDestination"] = QPainter::RasterOp_NotSourceAndDestination;
+    env["QPainter"]["RasterOp_SourceAndNotDestination"] = QPainter::RasterOp_SourceAndNotDestination;
+    env["QPainter"]["RasterOp_NotSourceOrDestination"] = QPainter::RasterOp_NotSourceOrDestination;
+    env["QPainter"]["RasterOp_ClearDestination"] = QPainter::RasterOp_ClearDestination;
+    env["QPainter"]["RasterOp_SetDestination"] = QPainter::RasterOp_SetDestination;
+    env["QPainter"]["RasterOp_NotDestination"] = QPainter::RasterOp_NotDestination;
+    env["QPainter"]["RasterOp_SourceOrNotDestination"] = QPainter::RasterOp_SourceOrNotDestination;
+
+    // enum QPainter::PixmapFragmentHint
+    env["QPainter"]["OpaqueHint"] = QPainter::OpaqueHint;
+
+    // enum QPainter::RenderHint
+    env["QPainter"]["Antialiasing"] = QPainter::Antialiasing;
+    env["QPainter"]["TextAntialiasing"] = QPainter::TextAntialiasing;
+    env["QPainter"]["SmoothPixmapTransform"] = QPainter::SmoothPixmapTransform;
+    env["QPainter"]["HighQualityAntialiasing"] = QPainter::HighQualityAntialiasing;
+    env["QPainter"]["NonCosmeticDefaultPen"] = QPainter::NonCosmeticDefaultPen;
+    env["QPainter"]["Qt4CompatiblePainting"] = QPainter::Qt4CompatiblePainting;
 
     return 0;
 }

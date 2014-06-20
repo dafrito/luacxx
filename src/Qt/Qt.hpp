@@ -46,6 +46,28 @@ struct Metatable<Qt::Alignment>
     }
 };
 
+template <>
+struct Metatable<Qt::SizeMode>
+{
+    static constexpr const char* name = "Qt::SizeMode";
+
+    static bool metatable(const lua::index& mt, const void*)
+    {
+        return true;
+    }
+};
+
+template <>
+struct Metatable<Qt::FillRule>
+{
+    static constexpr const char* name = "Qt::FillRule";
+
+    static bool metatable(const lua::index& mt, const void*)
+    {
+        return true;
+    }
+};
+
 }; // namespace lua
 
 extern "C" int luaopen_luacxx_Qt(lua_State* const);

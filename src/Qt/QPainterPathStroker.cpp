@@ -11,6 +11,17 @@
 
 int QPainterPathStroker_setDashPattern(lua_State* const state)
 {
+    auto self = lua::get<QPainterPathStroker*>(state, 1);
+
+    // void QPen::setDashPattern(const QVector<qreal> & pattern)
+    if (lua_type(state, 2) == LUA_TTABLE) {
+        QVector<qreal> pattern;
+        for (int i = 1; i <= lua_rawlen(state, 2); ++i) {
+            pattern.push_back(lua::table::get<qreal>(lua::index(state, 2), i));
+        }
+        self->setDashPattern(pattern);
+    }
+    self->setDashPattern(lua::get<const QVector<qreal>&>(state, 2));
     return 0;
 }
 

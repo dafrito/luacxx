@@ -6,7 +6,9 @@
 
 int QFont_resolve(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QFont*>(state, 1);
+    lua::push(state, self->resolve(lua::get<const QFont&>(state, 2)));
+    return 1;
 }
 
 void lua::QFont_metatable(const lua::index& mt)
@@ -70,9 +72,51 @@ void lua::QFont_metatable(const lua::index& mt)
 
 int QFont_new(lua_State* const state)
 {
-    lua::make<QFont>(state);
-    // TODO Set up object-specific methods
+    if (lua_gettop(state) <= 1) {
+        lua::make<QFont>(state);
+        return 1;
+    }
 
+    if (lua::is_type<QFont>(state, 2)) {
+        if (lua_gettop(state) == 2) {
+            lua::make<QFont>(state, lua::get<const QFont&>(state, 2));
+            return 1;
+        }
+        lua::make<QFont>(state,
+            lua::get<const QFont&>(state, 2),
+            lua::get<QPaintDevice*>(state, 3)
+        );
+        return 1;
+    }
+
+    switch (lua_gettop(state)) {
+    case 2:
+        lua::make<QFont>(state,
+            lua::get<QString>(state, 2) // family
+        );
+        return 1;
+    case 3:
+        lua::make<QFont>(state,
+            lua::get<QString>(state, 2), // family
+            lua::get<int>(state, 3) // pointSize
+        );
+        return 1;
+    case 4:
+        lua::make<QFont>(state,
+            lua::get<QString>(state, 2), // family
+            lua::get<int>(state, 3), // pointSize
+            lua::get<int>(state, 4) // weight
+        );
+        return 1;
+    default:
+        lua::make<QFont>(state,
+            lua::get<QString>(state, 2), // family
+            lua::get<int>(state, 3), // pointSize
+            lua::get<int>(state, 4), // weight
+            lua::get<bool>(state, 5) // italic
+        );
+        return 1;
+    }
     return 1;
 }
 
@@ -83,20 +127,24 @@ int luaopen_luacxx_QFont(lua_State* const state)
     env["QFont"] = lua::value::table;
     env["QFont"]["new"] = QFont_new;
 
-    env["QFont"]["PreferDefaultHinting"] = QFont::PreferDefaultHinting;
-    env["QFont"]["PreferNoHinting"] = QFont::PreferNoHinting;
-    env["QFont"]["PreferVerticalHinting"] = QFont::PreferVerticalHinting;
-    env["QFont"]["PreferFullHinting"] = QFont::PreferFullHinting;
-
+    // enum QFont::Capitalization
     env["QFont"]["MixedCase"] = QFont::MixedCase;
     env["QFont"]["AllUppercase"] = QFont::AllUppercase;
     env["QFont"]["AllLowercase"] = QFont::AllLowercase;
     env["QFont"]["SmallCaps"] = QFont::SmallCaps;
     env["QFont"]["Capitalize"] = QFont::Capitalize;
 
+    // enum QFont::HintingPreference
+    env["QFont"]["PreferDefaultHinting"] = QFont::PreferDefaultHinting;
+    env["QFont"]["PreferNoHinting"] = QFont::PreferNoHinting;
+    env["QFont"]["PreferVerticalHinting"] = QFont::PreferVerticalHinting;
+    env["QFont"]["PreferFullHinting"] = QFont::PreferFullHinting;
+
+    // enum QFont::SpacingType
     env["QFont"]["PercentageSpacing"] = QFont::PercentageSpacing;
     env["QFont"]["AbsoluteSpacing"] = QFont::AbsoluteSpacing;
 
+    // enum QFont::Stretch
     env["QFont"]["UltraCondensed"] = QFont::UltraCondensed;
     env["QFont"]["ExtraCondensed"] = QFont::ExtraCondensed;
     env["QFont"]["Condensed"] = QFont::Condensed;
@@ -107,10 +155,12 @@ int luaopen_luacxx_QFont(lua_State* const state)
     env["QFont"]["ExtraExpanded"] = QFont::ExtraExpanded;
     env["QFont"]["UltraExpanded"] = QFont::UltraExpanded;
 
+    // enum QFont::Style
     env["QFont"]["StyleNormal"] = QFont::StyleNormal;
     env["QFont"]["StyleItalic"] = QFont::StyleItalic;
     env["QFont"]["StyleOblique"] = QFont::StyleOblique;
 
+    // enum QFont::StyleHint
     env["QFont"]["AnyStyle"] = QFont::AnyStyle;
     env["QFont"]["SansSerif"] = QFont::SansSerif;
     env["QFont"]["Helvetica"] = QFont::Helvetica;
@@ -125,6 +175,7 @@ int luaopen_luacxx_QFont(lua_State* const state)
     env["QFont"]["Cursive"] = QFont::Cursive;
     env["QFont"]["System"] = QFont::System;
 
+    // enum QFont::StyleStrategy
     env["QFont"]["PreferDefault"] = QFont::PreferDefault;
     env["QFont"]["PreferBitmap"] = QFont::PreferBitmap;
     env["QFont"]["PreferDevice"] = QFont::PreferDevice;
@@ -134,11 +185,11 @@ int luaopen_luacxx_QFont(lua_State* const state)
     env["QFont"]["PreferAntialias"] = QFont::PreferAntialias;
     env["QFont"]["OpenGLCompatible"] = QFont::OpenGLCompatible;
     env["QFont"]["NoFontMerging"] = QFont::NoFontMerging;
-
     env["QFont"]["PreferMatch"] = QFont::PreferMatch;
     env["QFont"]["PreferQuality"] = QFont::PreferQuality;
     env["QFont"]["ForceIntegerMetrics"] = QFont::ForceIntegerMetrics;
 
+    // enum QFont::Weight
     env["QFont"]["Light"] = QFont::Light;
     env["QFont"]["Normal"] = QFont::Normal;
     env["QFont"]["DemiBold"] = QFont::DemiBold;
