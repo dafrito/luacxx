@@ -1,8 +1,8 @@
-lib_LTLIBRARIES = libluacxx.la
+lib_LTLIBRARIES = librainback.la
 
-libluacxx_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ @NANOMSG_INCLUDE@ -I$(top_srcdir)/src
-libluacxx_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@ @NANOMSG_LIB@
-libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
+librainback_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ @NANOMSG_INCLUDE@ -I$(top_srcdir)/src
+librainback_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@ @NANOMSG_LIB@
+librainback_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
 	config.hpp \
@@ -74,28 +74,28 @@ nobase_pkginclude_HEADERS = \
 	Qt/QSize.hpp \
 	Qt/QObservable.hpp \
 	Gtk/GObject.hpp \
-	Gtk/require.hpp \
+	gir.hpp \
 	Gtk/GIBaseInfo.hpp \
 	Gtk/GIRepository.hpp \
 	nanomsg.hpp
 
-libluacxx_la_SOURCES = \
+librainback_la_SOURCES = \
 	algorithm.cpp \
 	load.cpp \
 	stack.cpp \
 	thread.cpp \
 	type/standard.cpp
 
-bin_PROGRAMS = luacxx
-luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
-luacxx_LDADD = libluacxx.la
+bin_PROGRAMS = rainback
+rainback_CPPFLAGS = $(librainback_la_CPPFLAGS)
+rainback_LDADD = librainback.la
 
-luacxx_SOURCES = \
-	luacxx.cpp
+rainback_SOURCES = \
+	rainback.cpp
 
 if BUILD_QT
 
-libluacxx_la_SOURCES += \
+librainback_la_SOURCES += \
 	module/DirectoryModuleLoader.cpp \
 	Qt/QObject.cpp \
 	Qt/QVariant.cpp \
@@ -156,17 +156,17 @@ endif
 
 if BUILD_GTK
 
-libluacxx_la_SOURCES += \
+librainback_la_SOURCES += \
 	Gtk/GIBaseInfo.cpp \
 	Gtk/GObject.cpp \
 	Gtk/GIRepository.cpp \
-	Gtk/require.cpp
+	gir.cpp
 
 endif
 
 if BUILD_NCURSES
 
-libluacxx_la_SOURCES += \
+librainback_la_SOURCES += \
 	ncurses.cpp \
 	ncurses/curs_add_wch.cpp \
 	ncurses/curs_add_wchstr.cpp \
@@ -235,7 +235,7 @@ endif
 
 if BUILD_NANOMSG
 
-libluacxx_la_SOURCES += \
+librainback_la_SOURCES += \
 	nanomsg.cpp
 
 endif

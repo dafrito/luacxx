@@ -1,7 +1,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([luacxx], [3.1], [dafrito@gmail.com], [luacxx], [http://www.dafrito.com])
+AC_INIT([rainback], [3.1], [dafrito@gmail.com], [rainback], [http://www.rainback.com])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/stack.hpp])
@@ -34,7 +34,7 @@ if pkg-config --print-errors --exists 'lua >= 5.0'; then
     LUA_INCLUDE=`pkg-config --cflags lua`
     LUA_LIB=`pkg-config --libs lua`
 else
-    AC_MSG_ERROR([Lua is required to build luacxx])
+    AC_MSG_ERROR([Lua is required to build rainback])
 fi
 
 AC_SUBST(NCURSES_INCLUDE)
@@ -80,5 +80,5 @@ else
     AM_CONDITIONAL([BUILD_GTK], [false])
 fi
 
-AC_CONFIG_FILES([luacxx.m4 luacxx.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
+AC_CONFIG_FILES([lua-cxx.m4 rainback.pc Makefile src/Makefile src/tests/Makefile rpm.spec])
 AC_OUTPUT
