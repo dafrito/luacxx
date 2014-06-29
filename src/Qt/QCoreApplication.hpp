@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QCOREAPPLICATION_INCLUDED
 #define LUA_CXX_QCOREAPPLICATION_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 #include <vector>
 #include <sstream>
 #include <cstring>

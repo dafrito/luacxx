@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
-#include "../thread.hpp"
-#include "../reference.hpp"
+#include "../lua-cxx/thread.hpp"
+#include "../lua-cxx/reference.hpp"
 
 #include <unordered_map>
 

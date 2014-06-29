@@ -1,8 +1,8 @@
-#include "algorithm.hpp"
+#include "lua-cxx/algorithm.hpp"
 
-#include "error.hpp"
-#include "type/standard.hpp"
-#include "type/function.hpp"
+#include "lua-cxx/error.hpp"
+#include "lua-cxx/type/standard.hpp"
+#include "lua-cxx/type/function.hpp"
 
 #include <cassert>
 #include <string>

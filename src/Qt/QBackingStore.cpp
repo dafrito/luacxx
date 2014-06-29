@@ -1,6 +1,6 @@
 #include "QBackingStore.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QSize.hpp"
 #include "QRegion.hpp"
 #include "QRect.hpp"

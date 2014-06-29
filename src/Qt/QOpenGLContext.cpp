@@ -1,6 +1,6 @@
 #include "QOpenGLContext.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QScreen.hpp"
 #include "QOpenGLContextGroup.hpp"
 #include "QOpenGLFunctions.hpp"

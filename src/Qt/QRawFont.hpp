@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QRAWFONT_INCLUDED
 #define LUA_CXX_QRAWFONT_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QRawFont;
 

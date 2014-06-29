@@ -1,7 +1,7 @@
 #include "Qt/QObjectSlot.hpp"
 #include "Qt/QVariant.hpp"
 
-#include "../algorithm.hpp"
+#include "../lua-cxx/algorithm.hpp"
 
 #include <iostream>
 

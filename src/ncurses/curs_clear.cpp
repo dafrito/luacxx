@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
 
-#include "../thread.hpp"
+#include "../lua-cxx/thread.hpp"
 
 // http://invisible-island.net/ncurses/man/curs_clear.3x.html
 

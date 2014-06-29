@@ -1,6 +1,6 @@
 #include "QPixmap.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QRect.hpp"
 #include "QSize.hpp"
 #include "QPaintDevice.hpp"

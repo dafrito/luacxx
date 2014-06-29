@@ -1,25 +1,25 @@
-lib_LTLIBRARIES = librainback.la
+lib_LTLIBRARIES = liblua-cxx.la
 
-librainback_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ @NANOMSG_INCLUDE@ -I$(top_srcdir)/src
-librainback_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@ @NANOMSG_LIB@
-librainback_la_LDFLAGS = -version-info 0:0:0 --build-id
+liblua_cxx_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ @NANOMSG_INCLUDE@ -I$(top_srcdir)/src
+liblua_cxx_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@ @NANOMSG_LIB@
+liblua_cxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
 	config.hpp \
-	algorithm.hpp \
-	stack.hpp \
-	error.hpp \
-	global.hpp \
-	load.hpp \
-	range.hpp \
-	reference.hpp \
-	thread.hpp \
-	type.hpp \
-	type/function.hpp \
-	type/numeric.hpp \
-	type/standard.hpp \
-	module/DirectoryModuleLoader.hpp \
-	module/ModuleLoader.hpp \
+	lua-cxx/algorithm.hpp \
+	lua-cxx/stack.hpp \
+	lua-cxx/error.hpp \
+	lua-cxx/global.hpp \
+	lua-cxx/load.hpp \
+	lua-cxx/range.hpp \
+	lua-cxx/reference.hpp \
+	lua-cxx/thread.hpp \
+	lua-cxx/type.hpp \
+	lua-cxx/type/function.hpp \
+	lua-cxx/type/numeric.hpp \
+	lua-cxx/type/standard.hpp \
+	lua-cxx/module/DirectoryModuleLoader.hpp \
+	lua-cxx/module/ModuleLoader.hpp \
 	ncurses.hpp \
 	Qt/QObject.hpp \
 	Qt/QObjectSlot.hpp \
@@ -79,24 +79,60 @@ nobase_pkginclude_HEADERS = \
 	Gtk/GIRepository.hpp \
 	nanomsg.hpp
 
-librainback_la_SOURCES = \
-	algorithm.cpp \
-	load.cpp \
-	stack.cpp \
-	thread.cpp \
-	type/standard.cpp
+liblua_cxx_la_SOURCES = \
+	lua-cxx/algorithm.cpp \
+	lua-cxx/load.cpp \
+	lua-cxx/stack.cpp \
+	lua-cxx/thread.cpp \
+	lua-cxx/type/standard.cpp
 
-bin_PROGRAMS = rainback
-rainback_CPPFLAGS = $(librainback_la_CPPFLAGS)
-rainback_LDADD = librainback.la
+bin_PROGRAMS = lua-cxx
+lua_cxx_CPPFLAGS = $(liblua_cxx_la_CPPFLAGS)
+lua_cxx_LDADD = liblua_cxx.la
 
-rainback_SOURCES = \
-	rainback.cpp
+lua_cxx_SOURCES = \
+	acme/lua-cxx.cpp
+
+check_PROGRAMS = runtest
+TESTS = $(check_PROGRAMS)
+
+runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ -I$(top_srcdir)/src \
+	@BOOST_CPPFLAGS@ \
+	-DBOOST_TEST_DYN_LINK \
+	-DLUA_DIR=\"$(srcdir)/lua/\"
+
+runtest_LDADD = ../librainback.la $(QT_LIBS) $(GIO_CXXFLAGS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
+
+runtest_SOURCES = \
+	tests.cpp \
+	runner.cpp
+
+EXTRA_DIST = \
+	lua/bin/a.lua \
+	lua/bin/b.lua \
+	lua/anim.lua \
+	lua/simple.lua \
+	lua/testlib/Library.lua
 
 if BUILD_QT
 
-librainback_la_SOURCES += \
-	module/DirectoryModuleLoader.cpp \
+runtest_MOC_SOURCES = \
+	moc_mocks.cpp
+nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
+
+mostlyclean-local:
+	rm -f $(runtest_MOC_SOURCES)
+.PHONY: mostlyclean-local
+
+moc_%.cpp: %.hpp
+	@QT_MOC@ -o $@ $<
+
+endif
+
+if BUILD_QT
+
+liblua_cxx_la_SOURCES += \
+	lua-cxx/module/DirectoryModuleLoader.cpp \
 	Qt/QObject.cpp \
 	Qt/QVariant.cpp \
 	Qt/QPoint.cpp \
@@ -156,7 +192,7 @@ endif
 
 if BUILD_GTK
 
-librainback_la_SOURCES += \
+liblua_cxx_la_SOURCES += \
 	Gtk/GIBaseInfo.cpp \
 	Gtk/GObject.cpp \
 	Gtk/GIRepository.cpp \
@@ -166,7 +202,7 @@ endif
 
 if BUILD_NCURSES
 
-librainback_la_SOURCES += \
+liblua_cxx_la_SOURCES += \
 	ncurses.cpp \
 	ncurses/curs_add_wch.cpp \
 	ncurses/curs_add_wchstr.cpp \
@@ -235,7 +271,7 @@ endif
 
 if BUILD_NANOMSG
 
-librainback_la_SOURCES += \
+liblua_cxx_la_SOURCES += \
 	nanomsg.cpp
 
 endif

@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QTEXTOPTION_INCLUDED
 #define LUA_CXX_QTEXTOPTION_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QTextOption;
 

@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QVECTOR2D_INCLUDED
 #define LUA_CXX_QVECTOR2D_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QVector2D;
 

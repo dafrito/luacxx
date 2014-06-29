@@ -33,9 +33,9 @@
 
 */
 
-#include "../stack.hpp"
-#include "../reference.hpp"
-#include "../algorithm.hpp"
+#include "../lua-cxx/stack.hpp"
+#include "../lua-cxx/reference.hpp"
+#include "../lua-cxx/algorithm.hpp"
 
 #include <QObject>
 

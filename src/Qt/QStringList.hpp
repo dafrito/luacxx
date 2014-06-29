@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QSTRINGLIST_INCLUDED
 #define LUA_CXX_QSTRINGLIST_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QStringList;
 

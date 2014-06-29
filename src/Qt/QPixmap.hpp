@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QPIXMAP_INCLUDED
 #define LUA_CXX_QPIXMAP_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 #include <QPixmap>
 
 // https://qt-project.org/doc/qt-5/qpixmap.html

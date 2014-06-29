@@ -1,5 +1,5 @@
 #include "../ncurses.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/thread.hpp"
 
 // http://invisible-island.net/ncurses/man/curs_addchstr.3x.html
 

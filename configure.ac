@@ -1,10 +1,9 @@
-# Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.68])
-AC_INIT([rainback], [3.1], [dafrito@gmail.com], [rainback], [http://www.rainback.com])
+AC_INIT([rainback], [1.0], [dafrito@gmail.com], [rainback], [http://www.rainback.com])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AM_INIT_AUTOMAKE([-Wall foreign])
-AC_CONFIG_SRCDIR([src/stack.hpp])
+AC_CONFIG_SRCDIR([src/lua-cxx/stack.hpp])
 AC_CONFIG_HEADERS([src/config.hpp])
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -14,13 +13,11 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 
-# Initialize libtool
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_PREREQ([2.2])
 LT_INIT
 AC_PROG_LIBTOOL
 
-# Check for compiler characteristics.
 AC_LANG([C++])
 AC_HEADER_STDBOOL
 AC_TYPE_SIZE_T
@@ -57,7 +54,7 @@ else
     AM_CONDITIONAL([BUILD_NANOMSG], [false])
 fi
 
-# Check for Boost
+# Check for Boost. It's used for unit tets
 AX_BOOST_BASE([], [:], [:])
 AX_BOOST_UNIT_TEST_FRAMEWORK
 

@@ -1,6 +1,6 @@
 #include "QCursor.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QPoint.hpp"
 #include "QPixmap.hpp"
 #include "QBitmap.hpp"

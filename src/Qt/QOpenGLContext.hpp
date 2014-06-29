@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QOPENGLCONTEXT_INCLUDED
 #define LUA_CXX_QOPENGLCONTEXT_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QOpenGLContext;
 

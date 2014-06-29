@@ -1,25 +1,24 @@
 #include "tests.hpp"
 
-#include "thread.hpp"
-#include "stack.hpp"
-#include "algorithm.hpp"
-#include "load.hpp"
-#include "reference.hpp"
-
-#include "type/standard.hpp"
-#include "type/function.hpp"
-#include "type/numeric.hpp"
+#include "../lua-cxx/thread.hpp"
+#include "../lua-cxx/stack.hpp"
+#include "../lua-cxx/algorithm.hpp"
+#include "../lua-cxx/load.hpp"
+#include "../lua-cxx/reference.hpp"
+#include "../lua-cxx/type/standard.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/type/numeric.hpp"
 
 #include <boost/test/unit_test.hpp>
 
 #include <memory>
 
-#include "Qt/QString.hpp"
-#include "Qt/QChar.hpp"
-#include "Qt/QVariant.hpp"
-#include "Qt/QObject.hpp"
+#include "../Qt/QString.hpp"
+#include "../Qt/QChar.hpp"
+#include "../Qt/QVariant.hpp"
+#include "../Qt/QObject.hpp"
 
-#include "module/DirectoryModuleLoader.hpp"
+#include "../lua-cxx/module/DirectoryModuleLoader.hpp"
 #include <QDir>
 
 #include "mocks.hpp"

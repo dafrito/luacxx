@@ -1,6 +1,6 @@
 #include "QBrush.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QGradient.hpp"
 #include "QMatrix.hpp"
 #include "QPixmap.hpp"

@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QICON_INCLUDED
 #define LUA_CXX_QICON_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 #include <QIcon>
 
 namespace lua {

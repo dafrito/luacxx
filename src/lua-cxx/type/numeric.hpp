@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_TYPE_NUMERIC_HEADER
 #define LUA_CXX_TYPE_NUMERIC_HEADER
 
-#include "type/standard.hpp"
+#include "standard.hpp"
 
 /*
 

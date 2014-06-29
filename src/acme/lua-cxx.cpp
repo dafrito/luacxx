@@ -1,9 +1,8 @@
-#include "thread.hpp"
-#include "algorithm.hpp"
-#include "load.hpp"
-
-#include "type/standard.hpp"
-#include "type/numeric.hpp"
+#include "lua-cxx/thread.hpp"
+#include "lua-cxx/algorithm.hpp"
+#include "lua-cxx/load.hpp"
+#include "lua-cxx/type/standard.hpp"
+#include "lua-cxx/type/numeric.hpp"
 
 #include <iostream>
 

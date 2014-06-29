@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QOPENGLFUNCTIONS_INCLUDED
 #define LUA_CXX_QOPENGLFUNCTIONS_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QOpenGLFunctions;
 

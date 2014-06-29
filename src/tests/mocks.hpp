@@ -1,8 +1,8 @@
 #ifndef LUA_CXX_TESTS_MOCKS_HEADER
 #define LUA_CXX_TESTS_MOCKS_HEADER
 
-#include "range.hpp"
-#include "Qt/QObject.hpp"
+#include "../lua-cxx/range.hpp"
+#include "../Qt/QObject.hpp"
 
 #include <QObject>
 #include <QPoint>

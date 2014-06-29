@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QPAINTDEVICE_INCLUDED
 #define LUA_CXX_QPAINTDEVICE_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QPaintDevice;
 

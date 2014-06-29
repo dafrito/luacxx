@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QLIST_INCLUDED
 #define LUA_CXX_QLIST_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 /*
 
 namespace lua {

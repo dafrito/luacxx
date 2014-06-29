@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QEVENT_INCLUDED
 #define LUA_CXX_QEVENT_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 #include <QEvent>
 #include <QResizeEvent>

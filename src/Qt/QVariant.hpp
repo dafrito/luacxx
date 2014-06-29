@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_TYPE_QVARIANT_HEADER
 #define LUA_CXX_TYPE_QVARIANT_HEADER
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 #include <QVariant>
 

@@ -1,11 +1,11 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src src/tests
+SUBDIRS = src
 
 pkgdata_DATA = \
-	luacxx.m4
+	rainback.m4
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = luacxx.pc
+pkgconfig_DATA = rainback.pc
 
 export RPMDIR ?= $$HOME/rpmbuild
 
@@ -38,7 +38,7 @@ cehck: check
 .PHONY: cehck
 
 RPMFLAGS ?= --ba
-SRCRPM=luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
+SRCRPM=rainback-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
 
 rpm:
 	$(MAKE) dist-gzip $(RPMDIR)
@@ -51,7 +51,7 @@ rpm:
 		[ -e `basename $$filename` ] || ln -s $$filename; \
 	done
 	rm -f $(SRCRPM)
-	ln -s $(RPMDIR)/SRPMS/luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $(SRCRPM)
+	ln -s $(RPMDIR)/SRPMS/rainback-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $(SRCRPM)
 .PHONY: rpm
 
 $(RPMDIR):

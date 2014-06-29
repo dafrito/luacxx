@@ -1,10 +1,10 @@
 #ifndef LUA_CXX_QOBSERVABLE_INCLUDED
 #define LUA_CXX_QOBSERVABLE_INCLUDED
 
-#include "../stack.hpp"
-#include "../reference.hpp"
-#include "../algorithm.hpp"
-#include "../type/standard.hpp"
+#include "../lua-cxx/stack.hpp"
+#include "../lua-cxx/reference.hpp"
+#include "../lua-cxx/algorithm.hpp"
+#include "../lua-cxx/type/standard.hpp"
 #include "QEvent.hpp"
 #include <iostream>
 

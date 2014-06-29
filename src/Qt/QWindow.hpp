@@ -1,9 +1,9 @@
 #ifndef LUA_CXX_QWINDOW_INCLUDED
 #define LUA_CXX_QWINDOW_INCLUDED
 
-#include "../stack.hpp"
-#include "../type/standard.hpp"
-#include "../type/function.hpp"
+#include "../lua-cxx/stack.hpp"
+#include "../lua-cxx/type/standard.hpp"
+#include "../lua-cxx/type/function.hpp"
 
 #include <QWindow>
 

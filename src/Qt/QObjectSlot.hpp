@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QOBJECTSLOT_HEADER
 #define LUA_CXX_QOBJECTSLOT_HEADER
 
-#include "../reference.hpp"
+#include "../lua-cxx/reference.hpp"
 
 #include <QObject>
 #include <QMetaObject>

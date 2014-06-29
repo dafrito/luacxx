@@ -1,5 +1,5 @@
-#include "load.hpp"
-#include "error.hpp"
+#include "lua-cxx/load.hpp"
+#include "lua-cxx/error.hpp"
 
 #include "config.hpp"
 #include <fstream>

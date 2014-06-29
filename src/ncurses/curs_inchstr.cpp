@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
 
-#include "../thread.hpp"
+#include "../lua-cxx/thread.hpp"
 
 // http://invisible-island.net/ncurses/man/curs_inchstr.3x.html
 

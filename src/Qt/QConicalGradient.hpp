@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QCONICALGRADIENT_INCLUDED
 #define LUA_CXX_QCONICALGRADIENT_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QConicalGradient;
 

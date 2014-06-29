@@ -1,6 +1,6 @@
 #include "QPainterPathStroker.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QPainterPath.hpp"
 #include "QVector.hpp"
 #include "QPen.hpp"

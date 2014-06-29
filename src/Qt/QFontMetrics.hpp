@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QFONTMETRICS_INCLUDED
 #define LUA_CXX_QFONTMETRICS_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 class QFontMetrics;
 

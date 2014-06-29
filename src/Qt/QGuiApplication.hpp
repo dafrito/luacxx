@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QGUIAPPLICATION_INCLUDED
 #define LUA_CXX_QGUIAPPLICATION_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 
 #include <QGuiApplication>
 

@@ -1,7 +1,7 @@
 #include "QSize.hpp"
-#include "../type/function.hpp"
-#include "../type/numeric.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/type/numeric.hpp"
+#include "../lua-cxx/thread.hpp"
 
 #include <QSize>
 

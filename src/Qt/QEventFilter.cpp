@@ -1,8 +1,8 @@
 #include "QEventFilter.hpp"
 #include "QObject.hpp"
 #include "QEvent.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 
 bool lua::QEventFilter::eventFilter(QObject* watched, QEvent* event)
 {

@@ -1,6 +1,6 @@
 #include "QCryptographicHash.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QByteArray.hpp"
 
 #include <QCryptographicHash>

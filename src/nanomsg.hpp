@@ -1,11 +1,11 @@
 #ifndef LUA_CXX_NANOMSG_INCLUDED
 #define LUA_CXX_NANOMSG_INCLUDED
 
-#include "stack.hpp"
-#include "algorithm.hpp"
-#include "type/numeric.hpp"
-#include "type/function.hpp"
-#include "type/standard.hpp"
+#include "lua-cxx/stack.hpp"
+#include "lua-cxx/algorithm.hpp"
+#include "lua-cxx/type/numeric.hpp"
+#include "lua-cxx/type/function.hpp"
+#include "lua-cxx/type/standard.hpp"
 
 #include <nanomsg/nn.h>
 #include <nanomsg/reqrep.h>

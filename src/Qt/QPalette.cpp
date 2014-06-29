@@ -1,6 +1,6 @@
 #include "QPalette.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QColor.hpp"
 #include "QBrush.hpp"
 

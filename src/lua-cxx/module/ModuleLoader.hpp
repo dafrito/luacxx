@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_MODULE_LOADER_HEADER
 #define LUA_CXX_MODULE_LOADER_HEADER
 
-#include "stack.hpp"
+#include "lua-cxx/stack.hpp"
 
 #include <string>
 

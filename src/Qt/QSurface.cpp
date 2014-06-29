@@ -1,7 +1,7 @@
 #include "QSurface.hpp"
 #include "QObject.hpp"
-#include "../type/function.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/thread.hpp"
 
 #include <QSurface>
 

@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "../stack.hpp"
-#include "../algorithm.hpp"
-#include "../type/standard.hpp"
+#include "../lua-cxx/stack.hpp"
+#include "../lua-cxx/algorithm.hpp"
+#include "../lua-cxx/type/standard.hpp"
 
 namespace lua {
 

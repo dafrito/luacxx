@@ -1,7 +1,7 @@
 #ifndef LUA_CXX_QPALETTE_INCLUDED
 #define LUA_CXX_QPALETTE_INCLUDED
 
-#include "../stack.hpp"
+#include "../lua-cxx/stack.hpp"
 #include <QPalette>
 
 namespace lua {

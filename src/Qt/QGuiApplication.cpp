@@ -3,9 +3,9 @@
 #include "QObject.hpp"
 #include "QEventLoop.hpp"
 
-#include "../type/function.hpp"
-#include "../type/numeric.hpp"
-#include "../thread.hpp"
+#include "../lua-cxx/type/function.hpp"
+#include "../lua-cxx/type/numeric.hpp"
+#include "../lua-cxx/thread.hpp"
 #include "QClipboard.hpp"
 #include "QObject.hpp"
 #include "QPalette.hpp"
