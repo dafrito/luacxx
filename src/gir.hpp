@@ -1,8 +1,8 @@
-#ifndef LUA_CXX_GTK_HEADER
-#define LUA_CXX_GTK_HEADER
+#ifndef LUA_CXX_GIR_INCLUDED
+#define LUA_CXX_GIR_INCLUDED
 
 #include "stack.hpp"
 
-extern "C" int luaopen_luacxx_Gtk(lua_State* const state);
+extern "C" int luaopen_luacxx_gir(lua_State* const state);
 
-#endif // LUA_CXX_GTK_HEADER
+#endif // LUA_CXX_GIR_INCLUDED

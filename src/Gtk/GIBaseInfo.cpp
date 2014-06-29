@@ -236,46 +236,69 @@ int lua::GIBaseInfo_call(lua_State* const state)
 
     // Marshal Lua arguments into GObject parameters
     auto n_args = g_callable_info_get_n_args(callable);
-    for (int i = 0; i < n_args; ++i, ++param) {
+    for (int i = 0; i < n_args; ++i) {
         auto arginfo = g_callable_info_get_arg(callable, i);
 
+        GIArgument arg;
+
+        // Get the argument type
         GITypeInfo argtype;
         g_arg_info_load_type(arginfo, &argtype);
-
-        GIArgument arg;
         auto type_tag = g_type_info_get_tag(&argtype);
-        switch (type_tag) {
-        case GI_TYPE_TAG_INTERFACE:
-        case GI_TYPE_TAG_VOID:
-            arg.v_pointer = param.get<void*>();
-            break;
-        case GI_TYPE_TAG_BOOLEAN: arg.v_boolean = param.get<bool>(); break;
-        case GI_TYPE_TAG_INT8: arg.v_int8 = param.get<char>(); break;
-        case GI_TYPE_TAG_UINT8: arg.v_uint8 = param.get<unsigned char>(); break;
-        case GI_TYPE_TAG_INT16: arg.v_int16 = param.get<short>(); break;
-        case GI_TYPE_TAG_UINT16: arg.v_uint16 = param.get<unsigned short>(); break;
-        case GI_TYPE_TAG_INT32: arg.v_int32 = param.get<int>(); break;
-        case GI_TYPE_TAG_UINT32: arg.v_uint32 = param.get<unsigned int>(); break;
-        case GI_TYPE_TAG_INT64: arg.v_int64 = param.get<long>(); break;
-        case GI_TYPE_TAG_UINT64: arg.v_uint64 = param.get<unsigned long>(); break;
-        case GI_TYPE_TAG_FLOAT:
-            arg.v_float = param.get<float>();
-            break;
-        case GI_TYPE_TAG_DOUBLE:
-            arg.v_double = param.get<double>();
-            break;
-        case GI_TYPE_TAG_FILENAME:
-        case GI_TYPE_TAG_UTF8:
-            arg.v_string = param.get<char*>();
-            break;
-        case GI_TYPE_TAG_GTYPE:
-        case GI_TYPE_TAG_ARRAY:
-        case GI_TYPE_TAG_GLIST:
-        case GI_TYPE_TAG_GSLIST:
-        case GI_TYPE_TAG_GHASH:
-        case GI_TYPE_TAG_ERROR:
-        case GI_TYPE_TAG_UNICHAR:
-            throw lua::error(std::string("The type, ") + g_type_tag_to_string(type_tag) + ", is not yet supported.");
+
+        if (g_arg_info_get_direction(arginfo) != GI_DIRECTION_OUT) {
+            switch (type_tag) {
+            case GI_TYPE_TAG_INTERFACE:
+            case GI_TYPE_TAG_VOID:
+                arg.v_pointer = param.get<void*>();
+                break;
+            case GI_TYPE_TAG_BOOLEAN:
+                arg.v_boolean = param.get<bool>();
+                break;
+            case GI_TYPE_TAG_INT8:
+                arg.v_int8 = param.get<char>();
+                break;
+            case GI_TYPE_TAG_UINT8:
+                arg.v_uint8 = param.get<unsigned char>();
+                break;
+            case GI_TYPE_TAG_INT16:
+                arg.v_int16 = param.get<short>();
+                break;
+            case GI_TYPE_TAG_UINT16:
+                arg.v_uint16 = param.get<unsigned short>();
+                break;
+            case GI_TYPE_TAG_INT32:
+                arg.v_int32 = param.get<int>();
+                break;
+            case GI_TYPE_TAG_UINT32:
+                arg.v_uint32 = param.get<unsigned int>();
+                break;
+            case GI_TYPE_TAG_INT64:
+                arg.v_int64 = param.get<long>();
+                break;
+            case GI_TYPE_TAG_UINT64:
+                arg.v_uint64 = param.get<unsigned long>();
+                break;
+            case GI_TYPE_TAG_FLOAT:
+                arg.v_float = param.get<float>();
+                break;
+            case GI_TYPE_TAG_DOUBLE:
+                arg.v_double = param.get<double>();
+                break;
+            case GI_TYPE_TAG_FILENAME:
+            case GI_TYPE_TAG_UTF8:
+                arg.v_string = param.get<char*>();
+                break;
+            case GI_TYPE_TAG_GTYPE:
+            case GI_TYPE_TAG_ARRAY:
+            case GI_TYPE_TAG_GLIST:
+            case GI_TYPE_TAG_GSLIST:
+            case GI_TYPE_TAG_GHASH:
+            case GI_TYPE_TAG_ERROR:
+            case GI_TYPE_TAG_UNICHAR:
+                throw lua::error(std::string("The type, ") + g_type_tag_to_string(type_tag) + ", is not yet supported.");
+            }
+            ++param;
         }
 
         switch (g_arg_info_get_direction(arginfo)) {

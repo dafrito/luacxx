@@ -1,4 +1,4 @@
-#include "Gtk/require.hpp"
+#include "gir.hpp"
 #include "Gtk/GIBaseInfo.hpp"
 #include "Gtk/GIRepository.hpp"
 
@@ -75,7 +75,8 @@ int gi_import(lua_State* const state)
     // Finally, hook up the metatable
     lua_setmetatable(state, table.pos());
 
-    return 1;
+    lua::global(state, namespace_name) = table;
+    return 0;
 }
 
 // A package.seachers loader that requires a Gtk namespace.
@@ -121,7 +122,7 @@ int gi_get_loaded_namespaces(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_Gtk(lua_State* const state)
+int luaopen_luacxx_gir(lua_State* const state)
 {
     lua::table::insert(lua::global(state, "package")["searchers"], gi_search);
     return 0;
