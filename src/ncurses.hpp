@@ -12,7 +12,23 @@
 
 /*
 
-ncurses.h includes the following header:
+=head1 NAME
+
+ncurses 5.9
+
+=head1 SYNOPSIS
+
+    require "rainback.ncurses";
+
+=head1 DESCRIPTION
+
+This binding allows direct use of the ncurses terminal package, as described in:
+
+    http://invisible-island.net/ncurses/man/ncurses.3x.html
+
+=head1 LICENSE
+
+ncurses itself is licensed under the following terms:
 
      ****************************************************************************
      * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
@@ -48,7 +64,7 @@ ncurses.h includes the following header:
      *     and: Thomas E. Dickey                        1996-on                 *
      ****************************************************************************
 
-As much as possible, this source file uses the same license as ncurses itself.
+As much as is possible, this binding uses the same license as ncurses itself.
 
 */
 

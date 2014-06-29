@@ -1,3 +1,59 @@
+# =head1 NAME
+#
+# configure.ac - Autoconf build configuration for Rainback
+#
+# =head1 SYNOPSIS
+#
+# Compile this file with autoreconf, producing a ./configure script
+#
+#     autoreconf -i;
+#
+# If this command fails, you've likely found a bug in the project.  Please look
+# at the REPORTING BUGS section to report what you've found.
+#
+# Create a build directory (optional, but assumed here)
+#
+#     mkdir build;
+#     cd build;
+#
+# Run the output of this file, creating this project's Makefiles.
+#
+#     ../configure --prefix=$HOME;
+#
+# If this command fails, you have a missing dependency.  Look at this file
+# for a detailed listing of the prerequisites.
+#
+# =head1 BUILD CONFIGURATION FILES
+#
+# =head2 configure.ac
+#
+# This is the Autoconf file for Rainback and its underlying projects. It
+# provides the configuration for how to compile Rainback itself. The language
+# this file is written is likely unfamiliar unless you've worked with the
+# Autotools, but the syntax is simple: it's little more than a macro language
+# to write shell scripts.
+#
+# =head2 Makefile.am
+#
+# This file contains the commands to implement Makefile targets like "check"
+# and "run". It also included the src/Makefile.am.
+#
+# This file can be updated to add new build targets (e.g. for new executables or
+# for other build processes).
+#
+# =head2 src/Makefile.am
+#
+# This file contains the listing of source files for each library and executable
+# produced by this project including the unit tests.
+#
+# This file must be updated whenever source files are added or removed from the
+# project.
+#
+# =head1 TROUBLESHOOTING
+#
+# Getting configure to work is essential in building Rainback, but most
+# problems stem from missing dependencies or porting issues. If this file is
+# changed, you must rebuild the configure script
 
 AC_PREREQ([2.68])
 AC_INIT([rainback], [1.0], [dafrito@gmail.com], [rainback], [http://www.rainback.com])
