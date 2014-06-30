@@ -19,13 +19,6 @@ run:
 debug:
 	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' gdb ./src/.libs/lt-luacxx
 
-# This is a common typo for me
-cehck: check
-.PHONY: cehck
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = src/rainback.pc
-
 run-nanorecv:
 	LUA_PATH='$(top_srcdir)/?.lua;;' LUA_CPATH='./.libs/lib?.so;;' ./luacxx $(top_srcdir)/demo.lua recv ipc:///tmp/pipeline.ipc
 
@@ -58,3 +51,6 @@ mostlyclean-local:
 	rm -f $(runtest_MOC_SOURCES)
 .PHONY: mostlyclean-local
 
+# This is a common typo for me
+cehck: check
+.PHONY: cehck

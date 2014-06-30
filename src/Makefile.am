@@ -1,3 +1,6 @@
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = src/rainback.pc
+
 lib_LTLIBRARIES = libluacxx.la
 
 libluacxx_la_CPPFLAGS = \
