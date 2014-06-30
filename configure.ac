@@ -255,7 +255,17 @@ PKG_CHECK_MODULES(ncurses, [ncursesw],
     [AM_CONDITIONAL([BUILD_ncurses], [false])]
 )
 
-PKG_CHECK_MODULES(nanomsg, [nanomsg],
+PKG_CHECK_MODULES(libevdev, [libevdev],
+    [AM_CONDITIONAL([BUILD_libevdev], [true])],
+    [AM_CONDITIONAL([BUILD_libevdev], [false])]
+)
+
+PKG_CHECK_MODULES(libinput, [libinput],
+    [AM_CONDITIONAL([BUILD_libinput], [true])],
+    [AM_CONDITIONAL([BUILD_libinput], [false])]
+)
+
+PKG_CHECK_MODULES(nanomsg, [libnanomsg],
     [AM_CONDITIONAL([BUILD_nanomsg], [true])],
     [AM_CONDITIONAL([BUILD_nanomsg], [false])]
 )

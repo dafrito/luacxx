@@ -306,3 +306,23 @@ nobase_pkginclude_HEADERS += \
 	nanomsg.hpp
 
 endif
+
+if BUILD_libevdev
+
+libluacxx_la_SOURCES += \
+	libevdev.cpp
+
+nobase_pkginclude_HEADERS += \
+	libevdev.hpp
+
+endif
+
+if BUILD_libinput
+
+libluacxx_la_SOURCES += \
+	libinput.cpp
+
+nobase_pkginclude_HEADERS += \
+	libinput.hpp
+
+endif
