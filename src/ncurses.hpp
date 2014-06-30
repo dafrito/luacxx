@@ -18,7 +18,7 @@ ncurses 5.9
 
 =head1 SYNOPSIS
 
-    require "rainback.ncurses";
+    require "luacxx.ncurses";
 
 =head1 DESCRIPTION
 

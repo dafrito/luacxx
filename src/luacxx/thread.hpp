@@ -27,7 +27,7 @@ lua::thread - convenient wrappng for Lua states
 
 lua::thread offers a few C++-specific semantic additions to a plain Lua state.
 The biggest is global support: env["foo"] will return a reference to the global
-named foo. This can be chained together to produce env["Rainback"]["Open"] and
+named foo. This can be chained together to produce env["Device"]["Open"] and
 so forth.
 
 The thread can also own its Lua state, calling lua_close() on it when the
