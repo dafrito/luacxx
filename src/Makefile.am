@@ -79,17 +79,11 @@ runtest_LDADD = \
 runtest_SOURCES = \
 	tests.cpp
 
-EXTRA_DIST = \
-	tests/bin/a.lua \
-	tests/bin/b.lua \
-	tests/anim.lua \
-	tests/simple.lua \
-	tests/testlib/Library.lua
-
 if BUILD_Qt5Core
 
 runtest_MOC_SOURCES = \
 	moc_tests.cpp
+
 nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
 
 moc_tests.cpp: tests.hpp
