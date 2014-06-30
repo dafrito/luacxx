@@ -20,7 +20,7 @@ configure.ac - Autoconf build configuration for Rainback
 
     make -j 4
 
-=head1 DEPENDENCIES
+=head1 REQUIRED DEPENDENCIES
 
 =head3 C++11 compiler
 
@@ -43,13 +43,28 @@ Rainback has been built successfully using the following versions:
 
     Lua 5.2.2  Copyright (C) 1994-2013 Lua.org, PUC-Rio
 
-=head1 OPTIONAL SOFTWARE
+=head1 OPTIONAL DEPENDENCIES
+
+=head3 Linux kernel
+
+If available, bindings for the Linux kernel headers will be compiled.
+
+    yum install kernel-headers
+
+=head3 gobject-introspection
+
+If available, Gtk's GObject introspection model will be available to Lua.
 
     yum install gobject-introspection-devel
 
 =head3 libinput
 
+If available, bindings for the libinput input handling library will be
+compiled.
+
     yum install mtdev-devel systemd-devel
+
+=head1 BUILD PROCESS
 
 Compile this file with autoreconf, producing a ./configure script
 

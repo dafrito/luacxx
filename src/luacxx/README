@@ -131,8 +131,7 @@ marshalling code yourself or running a preprocessor:
 
 STL conventions are used for naming and case, though not slavishly, to
 infer that a template-heavy C++ dialect is used. However, adherance to Lua's
-conventions is preferred over that of C++. For instance, the lua_State is
-passed as a pointer, even though it should rightfully be a reference.
+conventions is preferred over that of C++.
 
 =head1 SEE ALSO
 
