@@ -1,3 +1,4 @@
+#include "numeric.hpp"
 #include "../algorithm.hpp"
 
 void lua::store_lua_Integer(lua_Integer& destination, const lua::index& source)

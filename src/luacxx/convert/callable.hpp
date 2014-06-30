@@ -11,13 +11,13 @@
 
 =head1 NAME
 
-type/function.hpp - support for C functions
+convert/callable.hpp - support for C functions
 
 =head1 SYNOPSIS
 
-    #include <luacxx/type/function.hpp>
-    #include <luacxx/type/standard.hpp>
-    #include <luacxx/type/numeric.hpp>
+    #include <luacxx/convert/callable.hpp>
+    #include <luacxx/convert/string.hpp>
+    #include <luacxx/convert/numeric.hpp>
 
     // Add all arguments
     int add_several(lua_State* const state)

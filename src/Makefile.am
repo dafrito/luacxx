@@ -37,9 +37,15 @@ nobase_pkginclude_HEADERS = \
 	luacxx/reference.hpp \
 	luacxx/thread.hpp \
 	luacxx/type.hpp \
-	luacxx/type/function.hpp \
-	luacxx/type/numeric.hpp \
-	luacxx/type/standard.hpp \
+	luacxx/convert/numeric.cpp
+	luacxx/convert/builtin.hpp
+	luacxx/convert/callable.hpp
+	luacxx/convert/char.hpp
+	luacxx/convert/char_pointer.hpp
+	luacxx/convert/numeric.hpp
+	luacxx/convert/shared_ptr.hpp
+	luacxx/convert/string.hpp
+	luacxx/convert/void.hpp
 	luacxx/module/ModuleLoader.hpp
 
 libluacxx_la_SOURCES = \
@@ -47,7 +53,7 @@ libluacxx_la_SOURCES = \
 	luacxx/load.cpp \
 	luacxx/stack.cpp \
 	luacxx/thread.cpp \
-	luacxx/type/standard.cpp
+	luacxx/convert/numeric.cpp
 
 bin_PROGRAMS = luacxx
 luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)

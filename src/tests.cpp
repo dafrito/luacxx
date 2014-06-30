@@ -6,9 +6,10 @@
 #include "luacxx/algorithm.hpp"
 #include "luacxx/load.hpp"
 #include "luacxx/reference.hpp"
-#include "luacxx/type/standard.hpp"
-#include "luacxx/type/function.hpp"
-#include "luacxx/type/numeric.hpp"
+#include "luacxx/convert/string.hpp"
+#include "luacxx/convert/char.hpp"
+#include "luacxx/convert/callable.hpp"
+#include "luacxx/convert/numeric.hpp"
 
 #include <boost/test/unit_test.hpp>
 

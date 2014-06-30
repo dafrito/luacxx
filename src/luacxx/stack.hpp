@@ -511,7 +511,7 @@ The index behaves as a smart pointer. operator bool() will return false
 if the index is out of range of the underlying state. The index is always
 positive, so increment and decrement work as expected.
 
-    #include <luacxx/type/numeric.hpp>
+    #include <luacxx/convert/numeric.hpp>
 
     int sum = 0;
     while (index) {
@@ -524,8 +524,7 @@ positive, so increment and decrement work as expected.
 Replace the value at this index's position with the given value, similar
 to lua_replace.
 
-    #include <luacxx/type/numeric.hpp>
-    #include <luacxx/type/standard.hpp>
+    #include <luacxx/convert/numeric.hpp>
 
     lua_pushnil(state);
     lua::index index(state, -1);
@@ -538,7 +537,7 @@ to lua_replace.
 
 =head4 operator[](T name);
 
-    #include <luacxx/type/numeric.hpp>
+    #include <luacxx/convert/numeric.hpp>
 
     auto id = index["id"];
     assert(2 == id.get<int>());
@@ -766,7 +765,7 @@ Pushes a raw pointer onto the stack. The pointer has no metatable, so
 it is only really useful to pass data between C functions, and to quickly
 save C data as upvalues to a C function.
 
-    #include <luacxx/type/standard.hpp>
+    #include <luacxx/convert/string.hpp>
 
     lua_pushvalue(state, LUA_REGISTRYINDEX);
     lua::push(state, lua::value::registry);
@@ -1267,8 +1266,8 @@ struct Push<std::shared_ptr<T>>
 
 =head2 lua::index push(state, T value, Rest... values)
 
-    #include <luacxx/type/standard.hpp>
-    #include <luacxx/type/numeric.hpp>
+    #include <luacxx/convert/string.hpp>
+    #include <luacxx/convert/numeric.hpp>
 
     auto table = lua::push(state, lua::value::table);
     table["Foo"] = 42;
@@ -1688,3 +1687,5 @@ T* make(lua_State* const state, Args... args)
 } // namespace lua
 
 #endif // LUACXX_STACK_INCLUDED
+
+#include "convert/builtin.hpp"

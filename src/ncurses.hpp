@@ -3,9 +3,9 @@
 
 #include "luacxx/stack.hpp"
 #include "luacxx/algorithm.hpp"
-#include "luacxx/type/numeric.hpp"
-#include "luacxx/type/function.hpp"
-#include "luacxx/type/standard.hpp"
+#include "luacxx/convert/numeric.hpp"
+#include "luacxx/convert/callable.hpp"
+#include "luacxx/convert/string.hpp"
 
 #include <ncurses.h>
 #include <cstdio>

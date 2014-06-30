@@ -2,7 +2,6 @@
 #define LUACXX_ALGORITHM_INCLUDED
 
 #include "stack.hpp"
-#include "type/standard.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -18,7 +17,7 @@ algorithm.hpp - common algorithms and functions for Lua
 =head1 SYNOPSIS
 
     #include <luacxx/algorithm.hpp>
-    #include <luacxx/type/numeric.hpp>
+    #include <luacxx/convert/numeric.hpp>
 
 =head1 DESCRIPTION
 
@@ -273,7 +272,7 @@ Invokes the given source value with the given arguments. The returned value
 will be converted and returned. The stack will be returned to its original
 state.
 
-    #include <luacxx/type/standard.hpp>
+    #include <luacxx/convert/string.hpp>
     #include <luacxx/algorithm.hpp>
 
     lua::call(env["print"], "Hello, world");

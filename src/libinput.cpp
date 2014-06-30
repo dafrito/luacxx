@@ -1,6 +1,6 @@
 #include "libinput.hpp"
 
-#include "luacxx/type/function.hpp"
+#include "luacxx/convert/callable.hpp"
 #include "luacxx/thread.hpp"
 #include "linux/input.hpp"
 

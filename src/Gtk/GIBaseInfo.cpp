@@ -1,6 +1,6 @@
 #include "GIBaseInfo.hpp"
 #include "GObject.hpp"
-#include "../luacxx/type/function.hpp"
+#include "../luacxx/convert/callable.hpp"
 #include <sstream>
 
 std::string lua::GIInfoType_tostring(GIInfoType info_type)
