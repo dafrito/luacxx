@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QOBJECTSLOT_HEADER
-#define LUA_CXX_QOBJECTSLOT_HEADER
+#ifndef LUACXX_QOBJECTSLOT_INCLUDED
+#define LUACXX_QOBJECTSLOT_INCLUDED
 
-#include "../lua-cxx/reference.hpp"
+#include "../luacxx/reference.hpp"
 
 #include <QObject>
 #include <QMetaObject>
@@ -29,4 +29,4 @@ public:
 
 } // namespace lua
 
-#endif // LUA_CXX_QOBJECTSLOT_HEADER
+#endif // LUACXX_QOBJECTSLOT_INCLUDED

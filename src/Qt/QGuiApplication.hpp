@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QGUIAPPLICATION_INCLUDED
-#define LUA_CXX_QGUIAPPLICATION_INCLUDED
+#ifndef LUACXX_QGUIAPPLICATION_INCLUDED
+#define LUACXX_QGUIAPPLICATION_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QGuiApplication>
 
@@ -25,4 +25,4 @@ struct Metatable<QGuiApplication>
 
 extern "C" int luaopen_luacxx_QGuiApplication(lua_State* const);
 
-#endif // LUA_CXX_QGUIAPPLICATION_INCLUDED
+#endif // LUACXX_QGUIAPPLICATION_INCLUDED

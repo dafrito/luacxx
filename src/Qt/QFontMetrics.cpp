@@ -1,6 +1,6 @@
 #include "QFontMetrics.hpp"
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/thread.hpp"
 #include "QRect.hpp"
 #include "QSize.hpp"
 #include "QString.hpp"

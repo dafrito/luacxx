@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QDRAG_INCLUDED
-#define LUA_CXX_QDRAG_INCLUDED
+#ifndef LUACXX_QDRAG_INCLUDED
+#define LUACXX_QDRAG_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QDrag;
 
@@ -25,4 +25,4 @@ struct Metatable<QDrag>
 
 extern "C" int luaopen_luacxx_QDrag(lua_State* const);
 
-#endif // LUA_CXX_QDRAG_INCLUDED
+#endif // LUACXX_QDRAG_INCLUDED

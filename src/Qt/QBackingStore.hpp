@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QBACKINGSTORE_INCLUDED
-#define LUA_CXX_QBACKINGSTORE_INCLUDED
+#ifndef LUACXX_QBACKINGSTORE_INCLUDED
+#define LUACXX_QBACKINGSTORE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QBackingStore;
 
@@ -25,4 +25,4 @@ struct Metatable<QBackingStore>
 
 extern "C" int luaopen_luacxx_QBackingStore(lua_State* const);
 
-#endif // LUA_CXX_QBACKINGSTORE_INCLUDED
+#endif // LUACXX_QBACKINGSTORE_INCLUDED

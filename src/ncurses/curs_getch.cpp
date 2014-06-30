@@ -1,5 +1,5 @@
 #include "../ncurses.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/thread.hpp"
 
 /*
 

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QVECTOR3D_INCLUDED
-#define LUA_CXX_QVECTOR3D_INCLUDED
+#ifndef LUACXX_QVECTOR3D_INCLUDED
+#define LUACXX_QVECTOR3D_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QVector3D;
 
@@ -25,4 +25,4 @@ struct Metatable<QVector3D>
 
 extern "C" int luaopen_luacxx_QVector3D(lua_State* const);
 
-#endif // LUA_CXX_QVECTOR3D_INCLUDED
+#endif // LUACXX_QVECTOR3D_INCLUDED

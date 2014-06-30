@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSURFACE_INCLUDED
-#define LUA_CXX_QSURFACE_INCLUDED
+#ifndef LUACXX_QSURFACE_INCLUDED
+#define LUACXX_QSURFACE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 /*
 
@@ -31,4 +31,4 @@ struct Metatable<QSurface>
 
 }; // namespace lua
 
-#endif // LUA_CXX_QSURFACE_INCLUDED
+#endif // LUACXX_QSURFACE_INCLUDED

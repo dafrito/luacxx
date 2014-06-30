@@ -1,34 +1,20 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 
-pkgdata_DATA = \
-	rainback.m4
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = rainback.pc
-
-export RPMDIR ?= $$HOME/rpmbuild
-
-checkdebug: $(TESTS)
-	cd src/tests && gdb .libs/lt-runtest
-
-checkvalgrind:
-	cd src/tests && valgrind -v --leak-check=full .libs/lt-runtest
-
-valgrind:
-	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./src/.libs/lt-luacxx $(top_srcdir)/src/demo.lua
-
 lua:
 	LUA_CPATH='./src/.libs/lib?.so;;' lua
 
+checkdebug: $(TESTS)
+	cd tests && gdb ./src/.libs/lt-runtest
+
+checkvalgrind:
+	cd tests && valgrind -v --leak-check=full ./src/.libs/lt-runtest
+
+valgrind:
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./.libs/lt-luacxx $(top_srcdir)/demo.lua
+
 run:
-	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua
-
-run-nanorecv:
-	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua recv ipc:///tmp/pipeline.ipc
-
-run-nanosend:
-	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/src/demo.lua send ipc:///tmp/pipeline.ipc "Hello!"
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' ./src/luacxx $(top_srcdir)/demo.lua
 
 debug:
 	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;;' gdb ./src/.libs/lt-luacxx
@@ -37,8 +23,18 @@ debug:
 cehck: check
 .PHONY: cehck
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = src/rainback.pc
+
+run-nanorecv:
+	LUA_PATH='$(top_srcdir)/?.lua;;' LUA_CPATH='./.libs/lib?.so;;' ./luacxx $(top_srcdir)/demo.lua recv ipc:///tmp/pipeline.ipc
+
+run-nanosend:
+	LUA_PATH='$(top_srcdir)/?.lua;;' LUA_CPATH='./.libs/lib?.so;;' ./luacxx $(top_srcdir)/demo.lua send ipc:///tmp/pipeline.ipc "Hello!"
+
 RPMFLAGS ?= --ba
 SRCRPM=rainback-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
+export RPMDIR ?= $$HOME/rpmbuild
 
 rpm:
 	$(MAKE) dist-gzip $(RPMDIR)
@@ -57,3 +53,8 @@ rpm:
 $(RPMDIR):
 	mkdir -p $@
 	cd $@ && mkdir -p SOURCES SPECS BUILD RPMS SRPMS
+
+mostlyclean-local:
+	rm -f $(runtest_MOC_SOURCES)
+.PHONY: mostlyclean-local
+

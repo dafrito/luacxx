@@ -1,9 +1,9 @@
-#ifndef LUA_CXX_QWINDOW_INCLUDED
-#define LUA_CXX_QWINDOW_INCLUDED
+#ifndef LUACXX_QWINDOW_INCLUDED
+#define LUACXX_QWINDOW_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
-#include "../lua-cxx/type/standard.hpp"
-#include "../lua-cxx/type/function.hpp"
+#include "../luacxx/stack.hpp"
+#include "../luacxx/type/standard.hpp"
+#include "../luacxx/type/function.hpp"
 
 #include <QWindow>
 
@@ -35,4 +35,4 @@ struct Metatable<QWindow>
 
 extern "C" int luaopen_luacxx_QWindow(lua_State* const);
 
-#endif // LUA_CXX_QWINDOW_INCLUDED
+#endif // LUACXX_QWINDOW_INCLUDED

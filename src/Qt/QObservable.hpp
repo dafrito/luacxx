@@ -1,10 +1,10 @@
-#ifndef LUA_CXX_QOBSERVABLE_INCLUDED
-#define LUA_CXX_QOBSERVABLE_INCLUDED
+#ifndef LUACXX_QOBSERVABLE_INCLUDED
+#define LUACXX_QOBSERVABLE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
-#include "../lua-cxx/reference.hpp"
-#include "../lua-cxx/algorithm.hpp"
-#include "../lua-cxx/type/standard.hpp"
+#include "../luacxx/stack.hpp"
+#include "../luacxx/reference.hpp"
+#include "../luacxx/algorithm.hpp"
+#include "../luacxx/type/standard.hpp"
 #include "QEvent.hpp"
 #include <iostream>
 
@@ -62,4 +62,4 @@ struct Metatable<QObservable<T>>
 
 extern "C" int luaopen_luacxx_QObservable(lua_State* const);
 
-#endif // LUA_CXX_QOBSERVABLE_INCLUDED
+#endif // LUACXX_QOBSERVABLE_INCLUDED

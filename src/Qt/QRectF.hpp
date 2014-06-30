@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QRECTF_INCLUDED
-#define LUA_CXX_QRECTF_INCLUDED
+#ifndef LUACXX_QRECTF_INCLUDED
+#define LUACXX_QRECTF_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QRectF;
 
@@ -25,4 +25,4 @@ struct Metatable<QRectF>
 
 extern "C" int luaopen_luacxx_QRectF(lua_State* const);
 
-#endif // LUA_CXX_QRECTF_INCLUDED
+#endif // LUACXX_QRECTF_INCLUDED

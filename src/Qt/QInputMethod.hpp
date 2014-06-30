@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QINPUTMETHOD_INCLUDED
-#define LUA_CXX_QINPUTMETHOD_INCLUDED
+#ifndef LUACXX_QINPUTMETHOD_INCLUDED
+#define LUACXX_QINPUTMETHOD_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <QInputMethod>
 
 namespace lua {
@@ -24,4 +24,4 @@ struct Metatable<QInputMethod>
 
 extern "C" int luaopen_luacxx_QInputMethod(lua_State* const);
 
-#endif // LUA_CXX_QINPUTMETHOD_INCLUDED
+#endif // LUACXX_QINPUTMETHOD_INCLUDED

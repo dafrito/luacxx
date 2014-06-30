@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QCOLOR_INCLUDED
-#define LUA_CXX_QCOLOR_INCLUDED
+#ifndef LUACXX_QCOLOR_INCLUDED
+#define LUACXX_QCOLOR_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QColor;
 
@@ -25,4 +25,4 @@ struct Metatable<QColor>
 
 extern "C" int luaopen_luacxx_QColor(lua_State* const);
 
-#endif // LUA_CXX_QCOLOR_INCLUDED
+#endif // LUACXX_QCOLOR_INCLUDED

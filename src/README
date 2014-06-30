@@ -1,0 +1,14 @@
+=head1 NAME
+
+Rainback - Lua-based visual programming tool
+
+=head1 GETTING IN TOUCH
+
+Send quick questions and comments to #rainback on irc.freenode.net. For longer
+questions or concerns, please email me at dafrito@gmail.com. I will answer
+these as quickly as practical.
+
+=head1 LICENSE
+
+By default, this project uses the GNU General Public License, version 2, for
+all code. Licensing exceptions are noted in each file where they occur

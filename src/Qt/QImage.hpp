@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QIMAGE_INCLUDED
-#define LUA_CXX_QIMAGE_INCLUDED
+#ifndef LUACXX_QIMAGE_INCLUDED
+#define LUACXX_QIMAGE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QImage;
 
@@ -25,4 +25,4 @@ struct Metatable<QImage>
 
 extern "C" int luaopen_luacxx_QImage(lua_State* const);
 
-#endif // LUA_CXX_QIMAGE_INCLUDED
+#endif // LUACXX_QIMAGE_INCLUDED

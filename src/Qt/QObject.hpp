@@ -1,11 +1,11 @@
-#ifndef LUA_CXX_QOBJECT_HEADER
-#define LUA_CXX_QOBJECT_HEADER
+#ifndef LUACXX_QOBJECT_INCLUDED
+#define LUACXX_QOBJECT_INCLUDED
 
 #include <QObject>
 
-#include "../lua-cxx/stack.hpp"
-#include "../lua-cxx/algorithm.hpp"
-#include "../lua-cxx/type/standard.hpp"
+#include "../luacxx/stack.hpp"
+#include "../luacxx/algorithm.hpp"
+#include "../luacxx/type/standard.hpp"
 
 namespace lua {
 
@@ -39,4 +39,4 @@ struct Metatable<QMetaMethod>
 
 } // namespace lua
 
-#endif // LUA_CXX_QOBJECT_HEADER
+#endif // LUACXX_QOBJECT_INCLUDED

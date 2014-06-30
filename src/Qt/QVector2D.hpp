@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QVECTOR2D_INCLUDED
-#define LUA_CXX_QVECTOR2D_INCLUDED
+#ifndef LUACXX_QVECTOR2D_INCLUDED
+#define LUACXX_QVECTOR2D_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QVector2D;
 
@@ -25,4 +25,4 @@ struct Metatable<QVector2D>
 
 extern "C" int luaopen_luacxx_QVector2D(lua_State* const);
 
-#endif // LUA_CXX_QVECTOR2D_INCLUDED
+#endif // LUACXX_QVECTOR2D_INCLUDED

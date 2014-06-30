@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QELAPSEDTIMER_INCLUDED
-#define LUA_CXX_QELAPSEDTIMER_INCLUDED
+#ifndef LUACXX_QELAPSEDTIMER_INCLUDED
+#define LUACXX_QELAPSEDTIMER_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QElapsedTimer;
 
@@ -25,4 +25,4 @@ struct Metatable<QElapsedTimer>
 
 extern "C" int luaopen_luacxx_QElapsedTimer(lua_State* const);
 
-#endif // LUA_CXX_QELAPSEDTIMER_INCLUDED
+#endif // LUACXX_QELAPSEDTIMER_INCLUDED

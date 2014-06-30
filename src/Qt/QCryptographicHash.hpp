@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QCRYPTOGRAPHICHASH_INCLUDED
-#define LUA_CXX_QCRYPTOGRAPHICHASH_INCLUDED
+#ifndef LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
+#define LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QCryptographicHash;
 
@@ -25,4 +25,4 @@ struct Metatable<QCryptographicHash>
 
 extern "C" int luaopen_luacxx_QCryptographicHash(lua_State* const);
 
-#endif // LUA_CXX_QCRYPTOGRAPHICHASH_INCLUDED
+#endif // LUACXX_QCRYPTOGRAPHICHASH_INCLUDED

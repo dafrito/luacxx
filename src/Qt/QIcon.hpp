@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QICON_INCLUDED
-#define LUA_CXX_QICON_INCLUDED
+#ifndef LUACXX_QICON_INCLUDED
+#define LUACXX_QICON_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <QIcon>
 
 namespace lua {
@@ -24,4 +24,4 @@ struct Metatable<QIcon>
 
 extern "C" int luaopen_luacxx_QIcon(lua_State* const);
 
-#endif // LUA_CXX_QICON_INCLUDED
+#endif // LUACXX_QICON_INCLUDED

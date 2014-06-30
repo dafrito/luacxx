@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QLINEARGRADIENT_INCLUDED
-#define LUA_CXX_QLINEARGRADIENT_INCLUDED
+#ifndef LUACXX_QLINEARGRADIENT_INCLUDED
+#define LUACXX_QLINEARGRADIENT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QLinearGradient;
 
@@ -25,4 +25,4 @@ struct Metatable<QLinearGradient>
 
 extern "C" int luaopen_luacxx_QLinearGradient(lua_State* const);
 
-#endif // LUA_CXX_QLINEARGRADIENT_INCLUDED
+#endif // LUACXX_QLINEARGRADIENT_INCLUDED

@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
 
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/thread.hpp"
 
 // http://invisible-island.net/ncurses/man/curs_in_wch.3x.html
 

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QRAWFONT_INCLUDED
-#define LUA_CXX_QRAWFONT_INCLUDED
+#ifndef LUACXX_QRAWFONT_INCLUDED
+#define LUACXX_QRAWFONT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QRawFont;
 
@@ -25,4 +25,4 @@ struct Metatable<QRawFont>
 
 extern "C" int luaopen_luacxx_QRawFont(lua_State* const);
 
-#endif // LUA_CXX_QRAWFONT_INCLUDED
+#endif // LUACXX_QRAWFONT_INCLUDED

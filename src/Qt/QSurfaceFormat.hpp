@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSURFACEFORMAT_INCLUDED
-#define LUA_CXX_QSURFACEFORMAT_INCLUDED
+#ifndef LUACXX_QSURFACEFORMAT_INCLUDED
+#define LUACXX_QSURFACEFORMAT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QSurfaceFormat;
 
@@ -25,4 +25,4 @@ struct Metatable<QSurfaceFormat>
 
 extern "C" int luaopen_luacxx_QSurfaceFormat(lua_State* const);
 
-#endif // LUA_CXX_QSURFACEFORMAT_INCLUDED
+#endif // LUACXX_QSURFACEFORMAT_INCLUDED

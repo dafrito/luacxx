@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSET_INCLUDED
-#define LUA_CXX_QSET_INCLUDED
+#ifndef LUACXX_QSET_INCLUDED
+#define LUACXX_QSET_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 /*
 
 class QSet;
@@ -27,4 +27,4 @@ struct Metatable<QSet>
 extern "C" int luaopen_luacxx_QSet(lua_State* const);
 */
 
-#endif // LUA_CXX_QSET_INCLUDED
+#endif // LUACXX_QSET_INCLUDED

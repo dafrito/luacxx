@@ -1,7 +1,7 @@
 #include "QElapsedTimer.hpp"
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/type/numeric.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/type/numeric.hpp"
+#include "../luacxx/thread.hpp"
 
 #include <QElapsedTimer>
 

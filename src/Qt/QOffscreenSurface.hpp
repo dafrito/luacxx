@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QOFFSCREENSURFACE_INCLUDED
-#define LUA_CXX_QOFFSCREENSURFACE_INCLUDED
+#ifndef LUACXX_QOFFSCREENSURFACE_INCLUDED
+#define LUACXX_QOFFSCREENSURFACE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QOffscreenSurface;
 
@@ -25,4 +25,4 @@ struct Metatable<QOffscreenSurface>
 
 extern "C" int luaopen_luacxx_QOffscreenSurface(lua_State* const);
 
-#endif // LUA_CXX_QOFFSCREENSURFACE_INCLUDED
+#endif // LUACXX_QOFFSCREENSURFACE_INCLUDED

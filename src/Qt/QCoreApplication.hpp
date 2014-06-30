@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QCOREAPPLICATION_INCLUDED
-#define LUA_CXX_QCOREAPPLICATION_INCLUDED
+#ifndef LUACXX_QCOREAPPLICATION_INCLUDED
+#define LUACXX_QCOREAPPLICATION_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <vector>
 #include <sstream>
 #include <cstring>
@@ -120,4 +120,4 @@ struct Metatable<QCoreApplication>
 
 extern "C" int luaopen_luacxx_QCoreApplication(lua_State* const);
 
-#endif // LUA_CXX_QCOREAPPLICATION_INCLUDED
+#endif // LUACXX_QCOREAPPLICATION_INCLUDED

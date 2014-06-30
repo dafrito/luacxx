@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPOINT_INCLUDED
-#define LUA_CXX_QPOINT_INCLUDED
+#ifndef LUACXX_QPOINT_INCLUDED
+#define LUACXX_QPOINT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QPoint;
 
@@ -25,4 +25,4 @@ struct Metatable<QPoint>
 
 extern "C" int luaopen_luacxx_QPoint(lua_State* const);
 
-#endif // LUA_CXX_QPOINT_INCLUDED
+#endif // LUACXX_QPOINT_INCLUDED

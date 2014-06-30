@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPAINTER_INCLUDED
-#define LUA_CXX_QPAINTER_INCLUDED
+#ifndef LUACXX_QPAINTER_INCLUDED
+#define LUACXX_QPAINTER_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <QPainter>
 
 class QPainter;
@@ -59,4 +59,4 @@ struct Metatable<QPainter::RenderHint>
 
 extern "C" int luaopen_luacxx_QPainter(lua_State* const);
 
-#endif // LUA_CXX_QPAINTER_INCLUDED
+#endif // LUACXX_QPAINTER_INCLUDED

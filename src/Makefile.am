@@ -1,138 +1,93 @@
-lib_LTLIBRARIES = liblua-cxx.la
+lib_LTLIBRARIES = libluacxx.la
 
-liblua_cxx_la_CPPFLAGS = $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ @NCURSES_INCLUDE@ @NANOMSG_INCLUDE@ -I$(top_srcdir)/src
-liblua_cxx_la_LIBADD = $(QT_LIBS) $(GIO_LIB) @LUA_LIB@ @NCURSES_LIB@ @NANOMSG_LIB@
-liblua_cxx_la_LDFLAGS = -version-info 0:0:0 --build-id
+libluacxx_la_CPPFLAGS = \
+	-Wall \
+	@stdcxx11_CFLAGS@ \
+	-I$(top_srcdir) \
+	@Qt5Core_CFLAGS@ -fPIC \
+	@Qt5Gui_CFLAGS@ \
+	@gobject_introspection_CFLAGS@ \
+	@lua_CFLAGS@ \
+	@ncurses_CFLAGS@ \
+	@libevdev_CFLAGS@ \
+	@nanomsg_CFLAGS@
+
+libluacxx_la_LIBADD = \
+	@Qt5Core_LIBS@ \
+	@Qt5Gui_LIBS@ \
+	@gobject_introspection_LIBS@ \
+	@lua_LIBS@ \
+	@ncurses_LIBS@ \
+	@libevdev_LIBS@ \
+	@nanomsg_LIBS@
+
+libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
 	config.hpp \
-	lua-cxx/algorithm.hpp \
-	lua-cxx/stack.hpp \
-	lua-cxx/error.hpp \
-	lua-cxx/global.hpp \
-	lua-cxx/load.hpp \
-	lua-cxx/range.hpp \
-	lua-cxx/reference.hpp \
-	lua-cxx/thread.hpp \
-	lua-cxx/type.hpp \
-	lua-cxx/type/function.hpp \
-	lua-cxx/type/numeric.hpp \
-	lua-cxx/type/standard.hpp \
-	lua-cxx/module/DirectoryModuleLoader.hpp \
-	lua-cxx/module/ModuleLoader.hpp \
-	ncurses.hpp \
-	Qt/QObject.hpp \
-	Qt/QObjectSlot.hpp \
-	Qt/QRect.hpp \
-	Qt/QRectF.hpp \
-	Qt/QChar.hpp \
-	Qt/QString.hpp \
-	Qt/QPen.hpp \
-	Qt/QBrush.hpp \
-	Qt/QPoint.hpp \
-	Qt/QPointF.hpp \
-	Qt/QTransform.hpp \
-	Qt/QGradient.hpp \
-	Qt/QLinearGradient.hpp \
-	Qt/QColor.hpp \
-	Qt/QPainter.hpp \
-	Qt/QImage.hpp \
-	Qt/QFont.hpp \
-	Qt/QPainterPath.hpp \
-	Qt/QPaintDevice.hpp \
-	Qt/QElapsedTimer.hpp \
-	Qt/QVariant.hpp \
-	Qt/QWindow.hpp \
-	Qt/QCoreApplication.hpp \
-	Qt/QGuiApplication.hpp \
-	Qt/QBackingStore.hpp \
-	Qt/QEvent.hpp \
-	Qt/QEventLoop.hpp \
-	Qt/QPixmap.hpp \
-	Qt/QBitmap.hpp \
-	Qt/QSurfaceFormat.hpp \
-	Qt/QMatrix.hpp \
-	Qt/QCursor.hpp \
-	Qt/QStringList.hpp \
-	Qt/QClipboard.hpp \
-	Qt/QMimeData.hpp \
-	Qt/QDrag.hpp \
-	Qt/QIcon.hpp \
-	Qt/QInputMethod.hpp \
-	Qt/QPalette.hpp \
-	Qt/QEventFilter.hpp \
-	Qt/QVector2D.hpp \
-	Qt/QVector3D.hpp \
-	Qt/QVector4D.hpp \
-	Qt/QQuaternion.hpp \
-	Qt/QOpenGLContext.hpp \
-	Qt/QOpenGLContextGroup.hpp \
-	Qt/QOpenGLFunctions.hpp \
-	Qt/QScreen.hpp \
-	Qt/Qt.hpp \
-	Qt/QRegion.hpp \
-	Qt/QSize.hpp \
-	Qt/QObservable.hpp \
-	Gtk/GObject.hpp \
-	gir.hpp \
-	Gtk/GIBaseInfo.hpp \
-	Gtk/GIRepository.hpp \
-	nanomsg.hpp
+	luacxx/algorithm.hpp \
+	luacxx/stack.hpp \
+	luacxx/error.hpp \
+	luacxx/global.hpp \
+	luacxx/load.hpp \
+	luacxx/range.hpp \
+	luacxx/reference.hpp \
+	luacxx/thread.hpp \
+	luacxx/type.hpp \
+	luacxx/type/function.hpp \
+	luacxx/type/numeric.hpp \
+	luacxx/type/standard.hpp \
+	luacxx/module/ModuleLoader.hpp
 
-liblua_cxx_la_SOURCES = \
-	lua-cxx/algorithm.cpp \
-	lua-cxx/load.cpp \
-	lua-cxx/stack.cpp \
-	lua-cxx/thread.cpp \
-	lua-cxx/type/standard.cpp
+libluacxx_la_SOURCES = \
+	luacxx/algorithm.cpp \
+	luacxx/load.cpp \
+	luacxx/stack.cpp \
+	luacxx/thread.cpp \
+	luacxx/type/standard.cpp
 
-bin_PROGRAMS = lua-cxx
-lua_cxx_CPPFLAGS = $(liblua_cxx_la_CPPFLAGS)
-lua_cxx_LDADD = liblua_cxx.la
+bin_PROGRAMS = luacxx
+luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
+luacxx_LDADD = libluacxx.la
 
-lua_cxx_SOURCES = \
-	acme/lua-cxx.cpp
+luacxx_SOURCES = \
+	acme/luacxx.cpp
 
 check_PROGRAMS = runtest
 TESTS = $(check_PROGRAMS)
 
-runtest_CXXFLAGS = $(AM_CXXFLAGS) $(QT_CXXFLAGS) $(GIO_CXXFLAGS) @LUA_INCLUDE@ -I$(top_srcdir)/src \
+runtest_CXXFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
 	@BOOST_CPPFLAGS@ \
 	-DBOOST_TEST_DYN_LINK \
-	-DLUA_DIR=\"$(srcdir)/lua/\"
+	-DTEST_DIR=\"$(top_srcdir)/src/tests/\"
 
-runtest_LDADD = ../librainback.la $(QT_LIBS) $(GIO_CXXFLAGS) @LUA_LIB@ @BOOST_LDFLAGS@ @BOOST_UNIT_TEST_FRAMEWORK_LIB@
+runtest_LDADD = \
+	libluacxx.la \
+	@BOOST_LDFLAGS@ \
+	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 runtest_SOURCES = \
-	tests.cpp \
-	runner.cpp
+	tests.cpp
 
 EXTRA_DIST = \
-	lua/bin/a.lua \
-	lua/bin/b.lua \
-	lua/anim.lua \
-	lua/simple.lua \
-	lua/testlib/Library.lua
+	tests/bin/a.lua \
+	tests/bin/b.lua \
+	tests/anim.lua \
+	tests/simple.lua \
+	tests/testlib/Library.lua
 
-if BUILD_QT
+if BUILD_Qt5Core
 
 runtest_MOC_SOURCES = \
-	moc_mocks.cpp
+	moc_tests.cpp
 nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
 
-mostlyclean-local:
-	rm -f $(runtest_MOC_SOURCES)
-.PHONY: mostlyclean-local
+moc_tests.cpp: tests.hpp
+	$(QT_MOC) -o $@ $<
 
-moc_%.cpp: %.hpp
-	@QT_MOC@ -o $@ $<
-
-endif
-
-if BUILD_QT
-
-liblua_cxx_la_SOURCES += \
-	lua-cxx/module/DirectoryModuleLoader.cpp \
+libluacxx_la_SOURCES += \
+	luacxx/module/DirectoryModuleLoader.cpp \
 	Qt/QObject.cpp \
 	Qt/QVariant.cpp \
 	Qt/QPoint.cpp \
@@ -146,8 +101,43 @@ liblua_cxx_la_SOURCES += \
 	Qt/Qt_2.cpp \
 	Qt/Qt_3.cpp \
 	Qt/Qt_4.cpp \
-	Qt/QWindow.cpp \
 	Qt/QCoreApplication.cpp \
+	Qt/QStringList.cpp \
+	Qt/QMimeData.cpp \
+	Qt/QElapsedTimer.cpp \
+	Qt/QEvent.cpp \
+	Qt/QEventLoop.cpp \
+	Qt/QEventFilter.cpp \
+	Qt/QObjectSlot.cpp
+
+nobase_pkginclude_HEADERS += \
+	luacxx/module/DirectoryModuleLoader.hpp \
+	Qt/QObject.hpp \
+	Qt/QObjectSlot.hpp \
+	Qt/QRect.hpp \
+	Qt/QRectF.hpp \
+	Qt/QChar.hpp \
+	Qt/QString.hpp \
+	Qt/QPoint.hpp \
+	Qt/QPointF.hpp \
+	Qt/QElapsedTimer.hpp \
+	Qt/QVariant.hpp \
+	Qt/QCoreApplication.hpp \
+	Qt/QEvent.hpp \
+	Qt/QEventLoop.hpp \
+	Qt/QStringList.hpp \
+	Qt/QMimeData.hpp \
+	Qt/QEventFilter.hpp \
+	Qt/Qt.hpp \
+	Qt/QSize.hpp \
+	Qt/QObservable.hpp
+
+endif
+
+if BUILD_Qt5Gui
+
+libluacxx_la_SOURCES += \
+	Qt/QWindow.cpp \
 	Qt/QGuiApplication.cpp \
 	Qt/QOpenGLContext.cpp \
 	Qt/QOpenGLContextGroup.cpp \
@@ -155,9 +145,7 @@ liblua_cxx_la_SOURCES += \
 	Qt/QSurfaceFormat.cpp \
 	Qt/QMatrix.cpp \
 	Qt/QCursor.cpp \
-	Qt/QStringList.cpp \
 	Qt/QClipboard.cpp \
-	Qt/QMimeData.cpp \
 	Qt/QDrag.cpp \
 	Qt/QIcon.cpp \
 	Qt/QInputMethod.cpp \
@@ -178,31 +166,68 @@ liblua_cxx_la_SOURCES += \
 	Qt/QPainter.cpp \
 	Qt/QPaintDevice.cpp \
 	Qt/QRegion.cpp \
-	Qt/QElapsedTimer.cpp \
 	Qt/QVector2D.cpp \
 	Qt/QVector3D.cpp \
 	Qt/QVector4D.cpp \
-	Qt/QEvent.cpp \
-	Qt/QEventLoop.cpp \
-	Qt/QEventFilter.cpp \
-	Qt/QBackingStore.cpp \
-	Qt/QObjectSlot.cpp
+	Qt/QBackingStore.cpp
+
+nobase_pkginclude_HEADERS += \
+	Qt/QPen.hpp \
+	Qt/QBrush.hpp \
+	Qt/QTransform.hpp \
+	Qt/QGradient.hpp \
+	Qt/QLinearGradient.hpp \
+	Qt/QColor.hpp \
+	Qt/QPainter.hpp \
+	Qt/QImage.hpp \
+	Qt/QFont.hpp \
+	Qt/QPainterPath.hpp \
+	Qt/QPaintDevice.hpp \
+	Qt/QWindow.hpp \
+	Qt/QGuiApplication.hpp \
+	Qt/QBackingStore.hpp \
+	Qt/QPixmap.hpp \
+	Qt/QBitmap.hpp \
+	Qt/QSurfaceFormat.hpp \
+	Qt/QMatrix.hpp \
+	Qt/QCursor.hpp \
+	Qt/QClipboard.hpp \
+	Qt/QDrag.hpp \
+	Qt/QIcon.hpp \
+	Qt/QInputMethod.hpp \
+	Qt/QPalette.hpp \
+	Qt/QVector2D.hpp \
+	Qt/QVector3D.hpp \
+	Qt/QVector4D.hpp \
+	Qt/QQuaternion.hpp \
+	Qt/QOpenGLContext.hpp \
+	Qt/QOpenGLContextGroup.hpp \
+	Qt/QOpenGLFunctions.hpp \
+	Qt/QScreen.hpp \
+	Qt/Qt.hpp \
+	Qt/QRegion.hpp
 
 endif
 
-if BUILD_GTK
+if BUILD_gobject_introspection
 
-liblua_cxx_la_SOURCES += \
+libluacxx_la_SOURCES += \
 	Gtk/GIBaseInfo.cpp \
 	Gtk/GObject.cpp \
 	Gtk/GIRepository.cpp \
-	gir.cpp
+	gobject-introspection.cpp
+
+nobase_pkginclude_HEADERS += \
+	Gtk/GIBaseInfo.hpp \
+	Gtk/GObject.hpp \
+	Gtk/GIRepository.hpp \
+	gobject-introspection.hpp
 
 endif
 
-if BUILD_NCURSES
+if BUILD_ncurses
 
-liblua_cxx_la_SOURCES += \
+libluacxx_la_SOURCES += \
 	ncurses.cpp \
 	ncurses/curs_add_wch.cpp \
 	ncurses/curs_add_wchstr.cpp \
@@ -267,11 +292,17 @@ liblua_cxx_la_SOURCES += \
 	ncurses/resizeterm.cpp \
 	ncurses/wresize.cpp
 
+nobase_pkginclude_HEADERS += \
+	ncurses.hpp
+
 endif
 
-if BUILD_NANOMSG
+if BUILD_nanomsg
 
-liblua_cxx_la_SOURCES += \
+libluacxx_la_SOURCES += \
 	nanomsg.cpp
+
+nobase_pkginclude_HEADERS += \
+	nanomsg.hpp
 
 endif

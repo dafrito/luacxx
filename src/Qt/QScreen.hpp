@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSCREEN_INCLUDED
-#define LUA_CXX_QSCREEN_INCLUDED
+#ifndef LUACXX_QSCREEN_INCLUDED
+#define LUACXX_QSCREEN_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QScreen;
 
@@ -25,4 +25,4 @@ struct Metatable<QScreen>
 
 extern "C" int luaopen_luacxx_QScreen(lua_State* const);
 
-#endif // LUA_CXX_QSCREEN_INCLUDED
+#endif // LUACXX_QSCREEN_INCLUDED

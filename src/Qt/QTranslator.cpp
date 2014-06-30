@@ -1,6 +1,6 @@
 #include "QTranslator.hpp"
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/thread.hpp"
 #include "QLocale.hpp"
 #include "QObject.hpp"
 

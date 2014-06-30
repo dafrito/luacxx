@@ -1,8 +1,8 @@
-#ifndef LUA_CXX_QT_INCLUDED
-#define LUA_CXX_QT_INCLUDED
+#ifndef LUACXX_QT_INCLUDED
+#define LUACXX_QT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
-#include "../lua-cxx/global.hpp"
+#include "../luacxx/stack.hpp"
+#include "../luacxx/global.hpp"
 #include <Qt>
 
 namespace lua {
@@ -72,4 +72,4 @@ struct Metatable<Qt::FillRule>
 
 extern "C" int luaopen_luacxx_Qt(lua_State* const);
 
-#endif // LUA_CXX_QT_INCLUDED
+#endif // LUACXX_QT_INCLUDED

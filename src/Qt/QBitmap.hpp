@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QBITMAP_INCLUDED
-#define LUA_CXX_QBITMAP_INCLUDED
+#ifndef LUACXX_QBITMAP_INCLUDED
+#define LUACXX_QBITMAP_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QBitmap>
 
@@ -25,4 +25,4 @@ struct Metatable<QBitmap>
 
 extern "C" int luaopen_luacxx_QBitmap(lua_State* const);
 
-#endif // LUA_CXX_QBITMAP_INCLUDED
+#endif // LUACXX_QBITMAP_INCLUDED

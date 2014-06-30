@@ -1,8 +1,8 @@
-#include "Gtk/GIRepository.hpp"
-#include "Gtk/GIBaseInfo.hpp"
-#include "type/standard.hpp"
-#include "type/function.hpp"
-#include "stack.hpp"
+#include "GIRepository.hpp"
+#include "GIBaseInfo.hpp"
+#include "../luacxx/type/standard.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/stack.hpp"
 
 void lua::girepository_metatable(const lua::index& mt)
 {

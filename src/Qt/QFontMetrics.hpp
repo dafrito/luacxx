@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QFONTMETRICS_INCLUDED
-#define LUA_CXX_QFONTMETRICS_INCLUDED
+#ifndef LUACXX_QFONTMETRICS_INCLUDED
+#define LUACXX_QFONTMETRICS_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QFontMetrics;
 
@@ -25,4 +25,4 @@ struct Metatable<QFontMetrics>
 
 extern "C" int luaopen_luacxx_QFontMetrics(lua_State* const);
 
-#endif // LUA_CXX_QFONTMETRICS_INCLUDED
+#endif // LUACXX_QFONTMETRICS_INCLUDED

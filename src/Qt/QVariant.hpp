@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_TYPE_QVARIANT_HEADER
-#define LUA_CXX_TYPE_QVARIANT_HEADER
+#ifndef LUACXX_TYPE_QVARIANT_INCLUDED
+#define LUACXX_TYPE_QVARIANT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QVariant>
 
@@ -45,4 +45,4 @@ struct Get<QVariant>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_QVARIANT_HEADER
+#endif // LUACXX_TYPE_QVARIANT_INCLUDED

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSIZE_INCLUDED
-#define LUA_CXX_QSIZE_INCLUDED
+#ifndef LUACXX_QSIZE_INCLUDED
+#define LUACXX_QSIZE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QSize;
 
@@ -25,4 +25,4 @@ struct Metatable<QSize>
 
 extern "C" int luaopen_luacxx_QSize(lua_State* const);
 
-#endif // LUA_CXX_QSIZE_INCLUDED
+#endif // LUACXX_QSIZE_INCLUDED

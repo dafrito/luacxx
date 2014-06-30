@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QTRANSLATOR_INCLUDED
-#define LUA_CXX_QTRANSLATOR_INCLUDED
+#ifndef LUACXX_QTRANSLATOR_INCLUDED
+#define LUACXX_QTRANSLATOR_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QTranslator;
 
@@ -25,4 +25,4 @@ struct Metatable<QTranslator>
 
 extern "C" int luaopen_luacxx_QTranslator(lua_State* const);
 
-#endif // LUA_CXX_QTRANSLATOR_INCLUDED
+#endif // LUACXX_QTRANSLATOR_INCLUDED

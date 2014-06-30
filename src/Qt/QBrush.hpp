@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QBRUSH_INCLUDED
-#define LUA_CXX_QBRUSH_INCLUDED
+#ifndef LUACXX_QBRUSH_INCLUDED
+#define LUACXX_QBRUSH_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QBrush;
 
@@ -25,4 +25,4 @@ struct Metatable<QBrush>
 
 extern "C" int luaopen_luacxx_QBrush(lua_State* const);
 
-#endif // LUA_CXX_QBRUSH_INCLUDED
+#endif // LUACXX_QBRUSH_INCLUDED

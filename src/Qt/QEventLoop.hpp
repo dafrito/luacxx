@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QEVENTLOOP_INCLUDED
-#define LUA_CXX_QEVENTLOOP_INCLUDED
+#ifndef LUACXX_QEVENTLOOP_INCLUDED
+#define LUACXX_QEVENTLOOP_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QEventLoop;
 
@@ -25,4 +25,4 @@ struct Metatable<QEventLoop>
 
 extern "C" int luaopen_luacxx_QEventLoop(lua_State* const);
 
-#endif // LUA_CXX_QEVENTLOOP_INCLUDED
+#endif // LUACXX_QEVENTLOOP_INCLUDED

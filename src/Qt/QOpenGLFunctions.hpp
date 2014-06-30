@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QOPENGLFUNCTIONS_INCLUDED
-#define LUA_CXX_QOPENGLFUNCTIONS_INCLUDED
+#ifndef LUACXX_QOPENGLFUNCTIONS_INCLUDED
+#define LUACXX_QOPENGLFUNCTIONS_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QOpenGLFunctions;
 
@@ -25,4 +25,4 @@ struct Metatable<QOpenGLFunctions>
 
 extern "C" int luaopen_luacxx_QOpenGLFunctions(lua_State* const);
 
-#endif // LUA_CXX_QOPENGLFUNCTIONS_INCLUDED
+#endif // LUACXX_QOPENGLFUNCTIONS_INCLUDED

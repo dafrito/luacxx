@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSTRINGLIST_INCLUDED
-#define LUA_CXX_QSTRINGLIST_INCLUDED
+#ifndef LUACXX_QSTRINGLIST_INCLUDED
+#define LUACXX_QSTRINGLIST_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QStringList;
 
@@ -25,4 +25,4 @@ struct Metatable<QStringList>
 
 extern "C" int luaopen_luacxx_QStringList(lua_State* const);
 
-#endif // LUA_CXX_QSTRINGLIST_INCLUDED
+#endif // LUACXX_QSTRINGLIST_INCLUDED

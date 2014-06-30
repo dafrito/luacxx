@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPAINTERPATHSTROKER_INCLUDED
-#define LUA_CXX_QPAINTERPATHSTROKER_INCLUDED
+#ifndef LUACXX_QPAINTERPATHSTROKER_INCLUDED
+#define LUACXX_QPAINTERPATHSTROKER_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QPainterPathStroker;
 
@@ -25,4 +25,4 @@ struct Metatable<QPainterPathStroker>
 
 extern "C" int luaopen_luacxx_QPainterPathStroker(lua_State* const);
 
-#endif // LUA_CXX_QPAINTERPATHSTROKER_INCLUDED
+#endif // LUACXX_QPAINTERPATHSTROKER_INCLUDED

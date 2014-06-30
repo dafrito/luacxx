@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QABSTRACTSOCKET_INCLUDED
-#define LUA_CXX_QABSTRACTSOCKET_INCLUDED
+#ifndef LUACXX_QABSTRACTSOCKET_INCLUDED
+#define LUACXX_QABSTRACTSOCKET_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QAbstractSocket;
 
@@ -25,4 +25,4 @@ struct Metatable<QAbstractSocket>
 
 extern "C" int luaopen_luacxx_QAbstractSocket(lua_State* const);
 
-#endif // LUA_CXX_QABSTRACTSOCKET_INCLUDED
+#endif // LUACXX_QABSTRACTSOCKET_INCLUDED

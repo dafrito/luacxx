@@ -1,9 +1,9 @@
-#ifndef LUA_CXX_TYPE_QCHAR_HEADER
-#define LUA_CXX_TYPE_QCHAR_HEADER
+#ifndef LUACXX_TYPE_QCHAR_INCLUDED
+#define LUACXX_TYPE_QCHAR_INCLUDED
 
 #include <QChar>
 
-#include "../lua-cxx/type/standard.hpp"
+#include "../luacxx/type/standard.hpp"
 #include "QString.hpp"
 
 namespace lua {
@@ -28,4 +28,4 @@ struct Store<QChar>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_QCHAR_HEADER
+#endif // LUACXX_TYPE_QCHAR_INCLUDED

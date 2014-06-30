@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPEN_INCLUDED
-#define LUA_CXX_QPEN_INCLUDED
+#ifndef LUACXX_QPEN_INCLUDED
+#define LUACXX_QPEN_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QPen;
 
@@ -25,4 +25,4 @@ struct Metatable<QPen>
 
 extern "C" int luaopen_luacxx_QPen(lua_State* const);
 
-#endif // LUA_CXX_QPEN_INCLUDED
+#endif // LUACXX_QPEN_INCLUDED

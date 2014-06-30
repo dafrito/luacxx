@@ -1,7 +1,7 @@
 #include "GObject.hpp"
-#include "type/function.hpp"
+#include "GIBaseInfo.hpp"
 
-#include "Gtk/GIBaseInfo.hpp"
+#include "../luacxx/type/function.hpp"
 
 #include <girepository.h>
 

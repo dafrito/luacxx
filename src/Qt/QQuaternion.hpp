@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QQUATERNION_INCLUDED
-#define LUA_CXX_QQUATERNION_INCLUDED
+#ifndef LUACXX_QQUATERNION_INCLUDED
+#define LUACXX_QQUATERNION_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QQuaternion;
 
@@ -25,4 +25,4 @@ struct Metatable<QQuaternion>
 
 extern "C" int luaopen_luacxx_QQuaternion(lua_State* const);
 
-#endif // LUA_CXX_QQUATERNION_INCLUDED
+#endif // LUACXX_QQUATERNION_INCLUDED

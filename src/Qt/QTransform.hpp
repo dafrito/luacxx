@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QTRANSFORM_INCLUDED
-#define LUA_CXX_QTRANSFORM_INCLUDED
+#ifndef LUACXX_QTRANSFORM_INCLUDED
+#define LUACXX_QTRANSFORM_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QTransform;
 
@@ -25,4 +25,4 @@ struct Metatable<QTransform>
 
 extern "C" int luaopen_luacxx_QTransform(lua_State* const);
 
-#endif // LUA_CXX_QTRANSFORM_INCLUDED
+#endif // LUACXX_QTRANSFORM_INCLUDED

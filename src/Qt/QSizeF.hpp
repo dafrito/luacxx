@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QSIZEF_INCLUDED
-#define LUA_CXX_QSIZEF_INCLUDED
+#ifndef LUACXX_QSIZEF_INCLUDED
+#define LUACXX_QSIZEF_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QSizeF;
 
@@ -25,4 +25,4 @@ struct Metatable<QSizeF>
 
 extern "C" int luaopen_luacxx_QSizeF(lua_State* const);
 
-#endif // LUA_CXX_QSIZEF_INCLUDED
+#endif // LUACXX_QSIZEF_INCLUDED

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QEVENT_INCLUDED
-#define LUA_CXX_QEVENT_INCLUDED
+#ifndef LUACXX_QEVENT_INCLUDED
+#define LUACXX_QEVENT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QEvent>
 #include <QResizeEvent>
@@ -73,4 +73,4 @@ struct Push<QEvent*>
 
 extern "C" int luaopen_luacxx_QEvent(lua_State* const);
 
-#endif // LUA_CXX_QEVENT_INCLUDED
+#endif // LUACXX_QEVENT_INCLUDED

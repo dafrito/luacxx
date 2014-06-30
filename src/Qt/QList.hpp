@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QLIST_INCLUDED
-#define LUA_CXX_QLIST_INCLUDED
+#ifndef LUACXX_QLIST_INCLUDED
+#define LUACXX_QLIST_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 /*
 
 namespace lua {
@@ -25,4 +25,4 @@ struct Metatable<QList>
 extern "C" int luaopen_luacxx_QList(lua_State* const);
 */
 
-#endif // LUA_CXX_QLIST_INCLUDED
+#endif // LUACXX_QLIST_INCLUDED

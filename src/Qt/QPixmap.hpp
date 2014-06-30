@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPIXMAP_INCLUDED
-#define LUA_CXX_QPIXMAP_INCLUDED
+#ifndef LUACXX_QPIXMAP_INCLUDED
+#define LUACXX_QPIXMAP_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <QPixmap>
 
 // https://qt-project.org/doc/qt-5/qpixmap.html
@@ -26,4 +26,4 @@ struct Metatable<QPixmap>
 
 extern "C" int luaopen_luacxx_QPixmap(lua_State* const);
 
-#endif // LUA_CXX_QPIXMAP_INCLUDED
+#endif // LUACXX_QPIXMAP_INCLUDED

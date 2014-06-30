@@ -1,8 +1,8 @@
-#ifndef LUA_CXX_QVECTOR_INCLUDED
-#define LUA_CXX_QVECTOR_INCLUDED
+#ifndef LUACXX_QVECTOR_INCLUDED
+#define LUACXX_QVECTOR_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
-#include "../lua-cxx/type/function.hpp"
+#include "../luacxx/stack.hpp"
+#include "../luacxx/type/function.hpp"
 
 #include <QVector>
 
@@ -183,4 +183,4 @@ struct Metatable<QVector<T>>
 
 extern "C" int luaopen_luacxx_QVector(lua_State* const);
 
-#endif // LUA_CXX_QVECTOR_INCLUDED
+#endif // LUACXX_QVECTOR_INCLUDED

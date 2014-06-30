@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPAINTDEVICE_INCLUDED
-#define LUA_CXX_QPAINTDEVICE_INCLUDED
+#ifndef LUACXX_QPAINTDEVICE_INCLUDED
+#define LUACXX_QPAINTDEVICE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QPaintDevice;
 
@@ -23,4 +23,4 @@ struct Metatable<QPaintDevice>
 
 }; // namespace lua
 
-#endif // LUA_CXX_QPAINTDEVICE_INCLUDED
+#endif // LUACXX_QPAINTDEVICE_INCLUDED

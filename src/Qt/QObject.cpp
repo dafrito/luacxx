@@ -8,9 +8,9 @@
 #include <QMetaObject>
 #include <QMetaMethod>
 
-#include "../lua-cxx/algorithm.hpp"
-#include "../lua-cxx/reference.hpp"
-#include "../lua-cxx/type/function.hpp"
+#include "../luacxx/algorithm.hpp"
+#include "../luacxx/reference.hpp"
+#include "../luacxx/type/function.hpp"
 
 #include <cassert>
 #include <functional>

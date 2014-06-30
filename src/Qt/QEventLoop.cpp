@@ -1,8 +1,8 @@
 #include "QEventLoop.hpp"
 #include <QEventLoop>
 
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/thread.hpp"
 #include "QObject.hpp"
 
 int QEventLoop_processEvents(lua_State* const state)

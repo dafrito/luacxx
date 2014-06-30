@@ -1,11 +1,11 @@
-#ifndef LUA_CXX_NCURSES_INCLUDED
-#define LUA_CXX_NCURSES_INCLUDED
+#ifndef LUACXX_NCURSES_INCLUDED
+#define LUACXX_NCURSES_INCLUDED
 
-#include "lua-cxx/stack.hpp"
-#include "lua-cxx/algorithm.hpp"
-#include "lua-cxx/type/numeric.hpp"
-#include "lua-cxx/type/function.hpp"
-#include "lua-cxx/type/standard.hpp"
+#include "luacxx/stack.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/type/numeric.hpp"
+#include "luacxx/type/function.hpp"
+#include "luacxx/type/standard.hpp"
 
 #include <ncurses.h>
 #include <cstdio>
@@ -151,4 +151,4 @@ void ncurses_wresize(lua_State* const state);
 
 extern "C" int luaopen_luacxx_ncurses(lua_State* const);
 
-#endif // LUA_CXX_NCURSES_INCLUDED
+#endif // LUACXX_NCURSES_INCLUDED

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
-#define LUA_CXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
+#ifndef LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
+#define LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QAbstractNativeEventFilter;
 
@@ -25,4 +25,4 @@ struct Metatable<QAbstractNativeEventFilter>
 
 extern "C" int luaopen_luacxx_QAbstractNativeEventFilter(lua_State* const);
 
-#endif // LUA_CXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
+#endif // LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED

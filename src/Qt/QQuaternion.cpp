@@ -1,8 +1,8 @@
 #include "QQuaternion.hpp"
 #include "QVector3D.hpp"
-#include "../lua-cxx/type/numeric.hpp"
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/numeric.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/thread.hpp"
 
 #include <QQuaternion>
 

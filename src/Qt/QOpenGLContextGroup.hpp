@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QOPENGLCONTEXTGROUP_INCLUDED
-#define LUA_CXX_QOPENGLCONTEXTGROUP_INCLUDED
+#ifndef LUACXX_QOPENGLCONTEXTGROUP_INCLUDED
+#define LUACXX_QOPENGLCONTEXTGROUP_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QOpenGLContextGroup;
 
@@ -25,4 +25,4 @@ struct Metatable<QOpenGLContextGroup>
 
 extern "C" int luaopen_luacxx_QOpenGLContextGroup(lua_State* const);
 
-#endif // LUA_CXX_QOPENGLCONTEXTGROUP_INCLUDED
+#endif // LUACXX_QOPENGLCONTEXTGROUP_INCLUDED

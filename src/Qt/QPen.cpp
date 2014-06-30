@@ -1,6 +1,6 @@
 #include "QPen.hpp"
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/thread.hpp"
 #include "QVector.hpp"
 #include "QBrush.hpp"
 

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QMIMEDATA_INCLUDED
-#define LUA_CXX_QMIMEDATA_INCLUDED
+#ifndef LUACXX_QMIMEDATA_INCLUDED
+#define LUACXX_QMIMEDATA_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QMimeData;
 
@@ -25,4 +25,4 @@ struct Metatable<QMimeData>
 
 extern "C" int luaopen_luacxx_QMimeData(lua_State* const);
 
-#endif // LUA_CXX_QMIMEDATA_INCLUDED
+#endif // LUACXX_QMIMEDATA_INCLUDED

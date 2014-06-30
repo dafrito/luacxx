@@ -1,11 +1,11 @@
-#ifndef LUA_CXX_NANOMSG_INCLUDED
-#define LUA_CXX_NANOMSG_INCLUDED
+#ifndef LUACXX_NANOMSG_INCLUDED
+#define LUACXX_NANOMSG_INCLUDED
 
-#include "lua-cxx/stack.hpp"
-#include "lua-cxx/algorithm.hpp"
-#include "lua-cxx/type/numeric.hpp"
-#include "lua-cxx/type/function.hpp"
-#include "lua-cxx/type/standard.hpp"
+#include "luacxx/stack.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/type/numeric.hpp"
+#include "luacxx/type/function.hpp"
+#include "luacxx/type/standard.hpp"
 
 #include <nanomsg/nn.h>
 #include <nanomsg/reqrep.h>
@@ -129,4 +129,4 @@ struct Metatable<nn_iovec>
 
 extern "C" int luaopen_luacxx_nanomsg(lua_State* const);
 
-#endif // LUA_CXX_NCURSES_INCLUDED
+#endif // LUACXX_NCURSES_INCLUDED

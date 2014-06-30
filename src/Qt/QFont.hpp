@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QFONT_INCLUDED
-#define LUA_CXX_QFONT_INCLUDED
+#ifndef LUACXX_QFONT_INCLUDED
+#define LUACXX_QFONT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <QFont>
 
 namespace lua {
@@ -112,4 +112,4 @@ struct Metatable<QFont>
 
 extern "C" int luaopen_luacxx_QFont(lua_State* const);
 
-#endif // LUA_CXX_QFONT_INCLUDED
+#endif // LUACXX_QFONT_INCLUDED

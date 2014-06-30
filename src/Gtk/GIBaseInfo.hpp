@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_TYPE_GIBASEINFO_HEADER
-#define LUA_CXX_TYPE_GIBASEINFO_HEADER
+#ifndef LUACXX_TYPE_GIBASEINFO_INCLUDED
+#define LUACXX_TYPE_GIBASEINFO_INCLUDED
 
-#include "stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <girepository.h>
 
 namespace lua {
@@ -25,4 +25,4 @@ struct Metatable<GIBaseInfo>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_GIBASEINFO_HEADER
+#endif // LUACXX_TYPE_GIBASEINFO_INCLUDED

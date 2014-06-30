@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QCLIPBOARD_INCLUDED
-#define LUA_CXX_QCLIPBOARD_INCLUDED
+#ifndef LUACXX_QCLIPBOARD_INCLUDED
+#define LUACXX_QCLIPBOARD_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QClipboard>
 
@@ -25,4 +25,4 @@ struct Metatable<QClipboard>
 
 extern "C" int luaopen_luacxx_QClipboard(lua_State* const);
 
-#endif // LUA_CXX_QCLIPBOARD_INCLUDED
+#endif // LUACXX_QCLIPBOARD_INCLUDED

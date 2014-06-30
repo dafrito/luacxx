@@ -1,6 +1,6 @@
 #include "QVector4D.hpp"
-#include "../lua-cxx/type/function.hpp"
-#include "../lua-cxx/thread.hpp"
+#include "../luacxx/type/function.hpp"
+#include "../luacxx/thread.hpp"
 
 #include <QVector4D>
 

@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPAINTERPATH_INCLUDED
-#define LUA_CXX_QPAINTERPATH_INCLUDED
+#ifndef LUACXX_QPAINTERPATH_INCLUDED
+#define LUACXX_QPAINTERPATH_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QPainterPath>
 
@@ -39,4 +39,4 @@ struct Metatable<QPainterPath::Element>
 
 extern "C" int luaopen_luacxx_QPainterPath(lua_State* const);
 
-#endif // LUA_CXX_QPAINTERPATH_INCLUDED
+#endif // LUACXX_QPAINTERPATH_INCLUDED

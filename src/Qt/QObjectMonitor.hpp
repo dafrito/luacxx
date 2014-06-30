@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QOBJECTMONITOR_HEADER
-#define LUA_CXX_QOBJECTMONITOR_HEADER
+#ifndef LUACXX_QOBJECTMONITOR_INCLUDED
+#define LUACXX_QOBJECTMONITOR_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <QObject>
 
@@ -28,6 +28,6 @@ public slots:
 
 } // namespace lua
 
-#endif // LUA_CXX_QOBJECTMONITOR_HEADER
+#endif // LUACXX_QOBJECTMONITOR_INCLUDED
 
 // vim: set ts=4 sw=4 :

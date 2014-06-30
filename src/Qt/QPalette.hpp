@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QPALETTE_INCLUDED
-#define LUA_CXX_QPALETTE_INCLUDED
+#ifndef LUACXX_QPALETTE_INCLUDED
+#define LUACXX_QPALETTE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <QPalette>
 
 namespace lua {
@@ -24,4 +24,4 @@ struct Metatable<QPalette>
 
 extern "C" int luaopen_luacxx_QPalette(lua_State* const);
 
-#endif // LUA_CXX_QPALETTE_INCLUDED
+#endif // LUACXX_QPALETTE_INCLUDED

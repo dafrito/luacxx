@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_TYPE_GIREPOSITORY_HEADER
-#define LUA_CXX_TYPE_GIREPOSITORY_HEADER
+#ifndef LUACXX_TYPE_GIREPOSITORY_INCLUDED
+#define LUACXX_TYPE_GIREPOSITORY_INCLUDED
 
-#include "stack.hpp"
+#include "../luacxx/stack.hpp"
 #include <girepository.h>
 
 namespace lua {
@@ -22,4 +22,4 @@ struct Metatable<GIRepository>
 
 } // namespace lua
 
-#endif // LUA_CXX_TYPE_GIREPOSITORY_HEADER
+#endif // LUACXX_TYPE_GIREPOSITORY_INCLUDED

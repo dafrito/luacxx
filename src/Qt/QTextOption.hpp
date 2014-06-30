@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QTEXTOPTION_INCLUDED
-#define LUA_CXX_QTEXTOPTION_INCLUDED
+#ifndef LUACXX_QTEXTOPTION_INCLUDED
+#define LUACXX_QTEXTOPTION_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QTextOption;
 
@@ -25,4 +25,4 @@ struct Metatable<QTextOption>
 
 extern "C" int luaopen_luacxx_QTextOption(lua_State* const);
 
-#endif // LUA_CXX_QTEXTOPTION_INCLUDED
+#endif // LUACXX_QTEXTOPTION_INCLUDED

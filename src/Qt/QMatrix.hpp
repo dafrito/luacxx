@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QMATRIX_INCLUDED
-#define LUA_CXX_QMATRIX_INCLUDED
+#ifndef LUACXX_QMATRIX_INCLUDED
+#define LUACXX_QMATRIX_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QMatrix;
 
@@ -25,4 +25,4 @@ struct Metatable<QMatrix>
 
 extern "C" int luaopen_luacxx_QMatrix(lua_State* const);
 
-#endif // LUA_CXX_QMATRIX_INCLUDED
+#endif // LUACXX_QMATRIX_INCLUDED

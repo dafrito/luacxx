@@ -2,9 +2,9 @@
 
 #include "Qt/QChar.hpp"
 #include "Qt/QString.hpp"
-#include "../lua-cxx/algorithm.hpp"
-#include "../lua-cxx/type/standard.hpp"
-#include "../lua-cxx/type/numeric.hpp"
+#include "../luacxx/algorithm.hpp"
+#include "../luacxx/type/standard.hpp"
+#include "../luacxx/type/numeric.hpp"
 
 #include <unordered_map>
 #include <QStringList>

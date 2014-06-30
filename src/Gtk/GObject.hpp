@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_GOBJECT_INCLUDED
-#define LUA_CXX_GOBJECT_INCLUDED
+#ifndef LUACXX_GOBJECT_INCLUDED
+#define LUACXX_GOBJECT_INCLUDED
 
-#include "stack.hpp"
+#include "../luacxx/stack.hpp"
 
 #include <glib-object.h>
 
@@ -26,4 +26,4 @@ struct Metatable<GObject>
 
 }; // namespace lua
 
-#endif // LUA_CXX_GOBJECT_INCLUDED
+#endif // LUACXX_GOBJECT_INCLUDED

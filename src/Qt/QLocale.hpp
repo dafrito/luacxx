@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QLOCALE_INCLUDED
-#define LUA_CXX_QLOCALE_INCLUDED
+#ifndef LUACXX_QLOCALE_INCLUDED
+#define LUACXX_QLOCALE_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QLocale;
 
@@ -25,4 +25,4 @@ struct Metatable<QLocale>
 
 extern "C" int luaopen_luacxx_QLocale(lua_State* const);
 
-#endif // LUA_CXX_QLOCALE_INCLUDED
+#endif // LUACXX_QLOCALE_INCLUDED

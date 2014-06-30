@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QCURSOR_INCLUDED
-#define LUA_CXX_QCURSOR_INCLUDED
+#ifndef LUACXX_QCURSOR_INCLUDED
+#define LUACXX_QCURSOR_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QCursor;
 
@@ -25,4 +25,4 @@ struct Metatable<QCursor>
 
 extern "C" int luaopen_luacxx_QCursor(lua_State* const);
 
-#endif // LUA_CXX_QCURSOR_INCLUDED
+#endif // LUACXX_QCURSOR_INCLUDED

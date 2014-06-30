@@ -1,7 +1,7 @@
-#ifndef LUA_CXX_QCONICALGRADIENT_INCLUDED
-#define LUA_CXX_QCONICALGRADIENT_INCLUDED
+#ifndef LUACXX_QCONICALGRADIENT_INCLUDED
+#define LUACXX_QCONICALGRADIENT_INCLUDED
 
-#include "../lua-cxx/stack.hpp"
+#include "../luacxx/stack.hpp"
 
 class QConicalGradient;
 
@@ -25,4 +25,4 @@ struct Metatable<QConicalGradient>
 
 extern "C" int luaopen_luacxx_QConicalGradient(lua_State* const);
 
-#endif // LUA_CXX_QCONICALGRADIENT_INCLUDED
+#endif // LUACXX_QCONICALGRADIENT_INCLUDED
