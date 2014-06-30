@@ -6,7 +6,7 @@
 #include <functional>
 
 #include "luacxx/range.hpp"
-#include "Qt/QObject.hpp"
+#include "Qt5Core/QObject.hpp"
 
 #include <QObject>
 #include <QPoint>

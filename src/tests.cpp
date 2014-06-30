@@ -15,10 +15,10 @@
 
 #include <memory>
 
-#include "Qt/QString.hpp"
-#include "Qt/QChar.hpp"
-#include "Qt/QVariant.hpp"
-#include "Qt/QObject.hpp"
+#include "Qt5Core/QString.hpp"
+#include "Qt5Core/QChar.hpp"
+#include "Qt5Core/QVariant.hpp"
+#include "Qt5Core/QObject.hpp"
 
 #include "luacxx/module/DirectoryModuleLoader.hpp"
 #include <QDir>
