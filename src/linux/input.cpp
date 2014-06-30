@@ -1,20 +1,12 @@
 #include "input.hpp"
 
-#include "type/function.hpp"
-#include "thread.hpp"
-#include "linux/input.hpp"
+#include "../luacxx/convert/callable.hpp"
+#include "../luacxx/convert/numeric.hpp"
+#include "../luacxx/thread.hpp"
 
-/*
+#include <linux/input.h>
 
-linux/input.h
-
-The structs for this header were not bound, as they are not used by libevdev
-and they're a bit more difficult to bind. However, there are examples
-elsewhere for structs if you want to wire them up.
-
-*/
-
-int luaopen_luacxx_linux_input(lua_State* const state)
+int luaopen_linux_input(lua_State* const state)
 {
     lua::thread env(state);
 
@@ -878,5 +870,3 @@ int luaopen_luacxx_linux_input(lua_State* const state)
 
     return 0;
 }
-
-#endif /* _INPUT_H */

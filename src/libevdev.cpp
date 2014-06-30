@@ -56,9 +56,9 @@ int _libevdev_get_repeat(lua_State* const state)
     return 3;
 }
 
-int luaopen_luacxx_libevdev(lua_State* const state)
+int luaopen_libevdev(lua_State* const state)
 {
-    luaL_requiref(state, "luacxx.linux.input", luaopen_luacxx_linux_input, false);
+    luaL_requiref(state, "linux.input", luaopen_linux_input, false);
 
     lua::thread env(state);
 

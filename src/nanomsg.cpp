@@ -283,7 +283,7 @@ int _errno(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_nanomsg(lua_State* const state)
+int luaopen_nanomsg(lua_State* const state)
 {
     lua::thread env(state);
 

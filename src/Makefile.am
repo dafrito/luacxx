@@ -1,28 +1,19 @@
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = src/rainback.pc
+pkgconfig_DATA = rainback.pc
 
 lib_LTLIBRARIES = libluacxx.la
 
 libluacxx_la_CPPFLAGS = \
 	-Wall \
 	@stdcxx11_CFLAGS@ \
-	-I$(top_srcdir) \
-	@Qt5Core_CFLAGS@ -fPIC \
-	@Qt5Gui_CFLAGS@ \
 	@gobject_introspection_CFLAGS@ \
-	@lua_CFLAGS@ \
-	@ncurses_CFLAGS@ \
-	@libevdev_CFLAGS@ \
-	@nanomsg_CFLAGS@
+	@Qt5Core_CFLAGS@ -fPIC\
+	@lua_CFLAGS@
 
 libluacxx_la_LIBADD = \
-	@Qt5Core_LIBS@ \
-	@Qt5Gui_LIBS@ \
 	@gobject_introspection_LIBS@ \
-	@lua_LIBS@ \
-	@ncurses_LIBS@ \
-	@libevdev_LIBS@ \
-	@nanomsg_LIBS@
+	@Qt5Core_LIBS@ \
+	@lua_LIBS@
 
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
@@ -73,6 +64,7 @@ runtest_CXXFLAGS = \
 
 runtest_LDADD = \
 	libluacxx.la \
+	libluacxx-Qt5Core.la \
 	@BOOST_LDFLAGS@ \
 	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
@@ -89,126 +81,152 @@ nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
 moc_tests.cpp: tests.hpp
 	$(QT_MOC) -o $@ $<
 
-libluacxx_la_SOURCES += \
+lib_LTLIBRARIES += libluacxx-Qt5Core.la
+
+libluacxx_Qt5Core_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS)
+
+libluacxx_Qt5Core_la_LIBADD = \
+	@Qt5Core_LIBS@ \
+	libluacxx.la
+
+libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_Qt5Core_la_SOURCES = \
 	luacxx/module/DirectoryModuleLoader.cpp \
-	Qt/QObject.cpp \
-	Qt/QVariant.cpp \
-	Qt/QPoint.cpp \
-	Qt/QPointF.cpp \
-	Qt/QSize.cpp \
-	Qt/QSizeF.cpp \
-	Qt/QRect.cpp \
-	Qt/QRectF.cpp \
-	Qt/QQuaternion.cpp \
-	Qt/Qt_1.cpp \
-	Qt/Qt_2.cpp \
-	Qt/Qt_3.cpp \
-	Qt/Qt_4.cpp \
-	Qt/QCoreApplication.cpp \
-	Qt/QStringList.cpp \
-	Qt/QMimeData.cpp \
-	Qt/QElapsedTimer.cpp \
-	Qt/QEvent.cpp \
-	Qt/QEventLoop.cpp \
-	Qt/QEventFilter.cpp \
-	Qt/QObjectSlot.cpp
+	Qt5Core/QObject.cpp \
+	Qt5Core/QVariant.cpp \
+	Qt5Core/QStringList.cpp \
+	Qt5Core/QCoreApplication.cpp \
+	Qt5Core/QPoint.cpp \
+	Qt5Core/QPointF.cpp \
+	Qt5Core/QSize.cpp \
+	Qt5Core/QSizeF.cpp \
+	Qt5Core/QRect.cpp \
+	Qt5Core/QRectF.cpp \
+	Qt5Core/Qt_1.cpp \
+	Qt5Core/Qt_2.cpp \
+	Qt5Core/Qt_3.cpp \
+	Qt5Core/Qt_4.cpp \
+	Qt5Core/QUrl.cpp \
+	Qt5Core/QMimeData.cpp \
+	Qt5Core/QElapsedTimer.cpp \
+	Qt5Core/QEvent.cpp \
+	Qt5Core/QEventLoop.cpp \
+	Qt5Core/QEventFilter.cpp \
+	Qt5Core/QObjectSlot.cpp
 
 nobase_pkginclude_HEADERS += \
 	luacxx/module/DirectoryModuleLoader.hpp \
-	Qt/QObject.hpp \
-	Qt/QObjectSlot.hpp \
-	Qt/QRect.hpp \
-	Qt/QRectF.hpp \
-	Qt/QChar.hpp \
-	Qt/QString.hpp \
-	Qt/QPoint.hpp \
-	Qt/QPointF.hpp \
-	Qt/QElapsedTimer.hpp \
-	Qt/QVariant.hpp \
-	Qt/QCoreApplication.hpp \
-	Qt/QEvent.hpp \
-	Qt/QEventLoop.hpp \
-	Qt/QStringList.hpp \
-	Qt/QMimeData.hpp \
-	Qt/QEventFilter.hpp \
-	Qt/Qt.hpp \
-	Qt/QSize.hpp \
-	Qt/QObservable.hpp
+	Qt5Core/QObject.hpp \
+	Qt5Core/QObjectSlot.hpp \
+	Qt5Core/QRect.hpp \
+	Qt5Core/QRectF.hpp \
+	Qt5Core/QChar.hpp \
+	Qt5Core/QString.hpp \
+	Qt5Core/QPoint.hpp \
+	Qt5Core/QPointF.hpp \
+	Qt5Core/QUrl.hpp \
+	Qt5Core/QElapsedTimer.hpp \
+	Qt5Core/QVariant.hpp \
+	Qt5Core/QCoreApplication.hpp \
+	Qt5Core/QEvent.hpp \
+	Qt5Core/QEventLoop.hpp \
+	Qt5Core/QStringList.hpp \
+	Qt5Core/QMimeData.hpp \
+	Qt5Core/QEventFilter.hpp \
+	Qt5Core/Qt.hpp \
+	Qt5Core/QSize.hpp \
+	Qt5Core/QObservable.hpp
 
 endif
 
 if BUILD_Qt5Gui
 
-libluacxx_la_SOURCES += \
-	Qt/QWindow.cpp \
-	Qt/QGuiApplication.cpp \
-	Qt/QOpenGLContext.cpp \
-	Qt/QOpenGLContextGroup.cpp \
-	Qt/QOpenGLFunctions.cpp \
-	Qt/QSurfaceFormat.cpp \
-	Qt/QMatrix.cpp \
-	Qt/QCursor.cpp \
-	Qt/QClipboard.cpp \
-	Qt/QDrag.cpp \
-	Qt/QIcon.cpp \
-	Qt/QInputMethod.cpp \
-	Qt/QPalette.cpp \
-	Qt/QScreen.cpp \
-	Qt/QImage.cpp \
-	Qt/QFont.cpp \
-	Qt/QPainterPath.cpp \
-	Qt/QBrush.cpp \
-	Qt/QSurface.cpp \
-	Qt/QGradient.cpp \
-	Qt/QLinearGradient.cpp \
-	Qt/QPen.cpp \
-	Qt/QTransform.cpp \
-	Qt/QColor.cpp \
-	Qt/QPixmap.cpp \
-	Qt/QBitmap.cpp \
-	Qt/QPainter.cpp \
-	Qt/QPaintDevice.cpp \
-	Qt/QRegion.cpp \
-	Qt/QVector2D.cpp \
-	Qt/QVector3D.cpp \
-	Qt/QVector4D.cpp \
-	Qt/QBackingStore.cpp
+lib_LTLIBRARIES += libluacxx-Qt5Gui.la
+
+libluacxx_Qt5Gui_la_CPPFLAGS = \
+	$(libluacxx_Qt5Core_la_CPPFLAGS) \
+	@Qt5Gui_CFLAGS@ -fPIC
+
+libluacxx_Qt5Gui_la_LIBADD = \
+	@Qt5Gui_LIBS@ \
+	libluacxx-Qt5Core.la
+
+libluacxx_Qt5Gui_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_Qt5Gui_la_SOURCES = \
+	Qt5Gui/QQuaternion.cpp \
+	Qt5Gui/QRegion.cpp \
+	Qt5Gui/QVector2D.cpp \
+	Qt5Gui/QVector3D.cpp \
+	Qt5Gui/QVector4D.cpp \
+	Qt5Gui/QWindow.cpp \
+	Qt5Gui/QPen.cpp \
+	Qt5Gui/QBrush.cpp \
+	Qt5Gui/QResizeEvent.cpp \
+	Qt5Gui/QExposeEvent.cpp \
+	Qt5Gui/QGuiApplication.cpp \
+	Qt5Gui/QOpenGLContext.cpp \
+	Qt5Gui/QOpenGLContextGroup.cpp \
+	Qt5Gui/QOpenGLFunctions.cpp \
+	Qt5Gui/QSurfaceFormat.cpp \
+	Qt5Gui/QMatrix.cpp \
+	Qt5Gui/QCursor.cpp \
+	Qt5Gui/QClipboard.cpp \
+	Qt5Gui/QDrag.cpp \
+	Qt5Gui/QIcon.cpp \
+	Qt5Gui/QInputMethod.cpp \
+	Qt5Gui/QPalette.cpp \
+	Qt5Gui/QScreen.cpp \
+	Qt5Gui/QImage.cpp \
+	Qt5Gui/QFont.cpp \
+	Qt5Gui/QPainterPath.cpp \
+	Qt5Gui/QSurface.cpp \
+	Qt5Gui/QGradient.cpp \
+	Qt5Gui/QLinearGradient.cpp \
+	Qt5Gui/QTransform.cpp \
+	Qt5Gui/QColor.cpp \
+	Qt5Gui/QPixmap.cpp \
+	Qt5Gui/QBitmap.cpp \
+	Qt5Gui/QPainter.cpp \
+	Qt5Gui/QPaintDevice.cpp \
+	Qt5Gui/QBackingStore.cpp
 
 nobase_pkginclude_HEADERS += \
-	Qt/QPen.hpp \
-	Qt/QBrush.hpp \
-	Qt/QTransform.hpp \
-	Qt/QGradient.hpp \
-	Qt/QLinearGradient.hpp \
-	Qt/QColor.hpp \
-	Qt/QPainter.hpp \
-	Qt/QImage.hpp \
-	Qt/QFont.hpp \
-	Qt/QPainterPath.hpp \
-	Qt/QPaintDevice.hpp \
-	Qt/QWindow.hpp \
-	Qt/QGuiApplication.hpp \
-	Qt/QBackingStore.hpp \
-	Qt/QPixmap.hpp \
-	Qt/QBitmap.hpp \
-	Qt/QSurfaceFormat.hpp \
-	Qt/QMatrix.hpp \
-	Qt/QCursor.hpp \
-	Qt/QClipboard.hpp \
-	Qt/QDrag.hpp \
-	Qt/QIcon.hpp \
-	Qt/QInputMethod.hpp \
-	Qt/QPalette.hpp \
-	Qt/QVector2D.hpp \
-	Qt/QVector3D.hpp \
-	Qt/QVector4D.hpp \
-	Qt/QQuaternion.hpp \
-	Qt/QOpenGLContext.hpp \
-	Qt/QOpenGLContextGroup.hpp \
-	Qt/QOpenGLFunctions.hpp \
-	Qt/QScreen.hpp \
-	Qt/Qt.hpp \
-	Qt/QRegion.hpp
+	Qt5Gui/QPen.hpp \
+	Qt5Gui/QBrush.hpp \
+	Qt5Gui/QTransform.hpp \
+	Qt5Gui/QGradient.hpp \
+	Qt5Gui/QLinearGradient.hpp \
+	Qt5Gui/QColor.hpp \
+	Qt5Gui/QPainter.hpp \
+	Qt5Gui/QImage.hpp \
+	Qt5Gui/QFont.hpp \
+	Qt5Gui/QPainterPath.hpp \
+	Qt5Gui/QPaintDevice.hpp \
+	Qt5Gui/QWindow.hpp \
+	Qt5Gui/QGuiApplication.hpp \
+	Qt5Gui/QBackingStore.hpp \
+	Qt5Gui/QPixmap.hpp \
+	Qt5Gui/QBitmap.hpp \
+	Qt5Gui/QSurfaceFormat.hpp \
+	Qt5Gui/QMatrix.hpp \
+	Qt5Gui/QCursor.hpp \
+	Qt5Gui/QClipboard.hpp \
+	Qt5Gui/QDrag.hpp \
+	Qt5Gui/QIcon.hpp \
+	Qt5Gui/QInputMethod.hpp \
+	Qt5Gui/QPalette.hpp \
+	Qt5Gui/QVector2D.hpp \
+	Qt5Gui/QVector3D.hpp \
+	Qt5Gui/QVector4D.hpp \
+	Qt5Gui/QQuaternion.hpp \
+	Qt5Gui/QOpenGLContext.hpp \
+	Qt5Gui/QOpenGLContextGroup.hpp \
+	Qt5Gui/QOpenGLFunctions.hpp \
+	Qt5Gui/QScreen.hpp \
+	Qt5Gui/QRegion.hpp
 
 endif
 
@@ -230,7 +248,19 @@ endif
 
 if BUILD_ncurses
 
-libluacxx_la_SOURCES += \
+lib_LTLIBRARIES += libluacxx-ncurses.la
+
+libluacxx_ncurses_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@ncurses_CFLAGS@
+
+libluacxx_ncurses_la_LIBADD = \
+	@ncurses_LIBS@ \
+	libluacxx.la
+
+libluacxx_ncurses_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_ncurses_la_SOURCES = \
 	ncurses.cpp \
 	ncurses/curs_add_wch.cpp \
 	ncurses/curs_add_wchstr.cpp \
@@ -302,7 +332,19 @@ endif
 
 if BUILD_nanomsg
 
-libluacxx_la_SOURCES += \
+lib_LTLIBRARIES += libluacxx-nanomsg.la
+
+libluacxx_nanomsg_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@nanomsg_CFLAGS@
+
+libluacxx_nanomsg_la_LIBADD = \
+	@nanomsg_LIBS@ \
+	libluacxx.la
+
+libluacxx_nanomsg_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_nanomsg_la_SOURCES = \
 	nanomsg.cpp
 
 nobase_pkginclude_HEADERS += \
@@ -312,7 +354,19 @@ endif
 
 if BUILD_libevdev
 
-libluacxx_la_SOURCES += \
+lib_LTLIBRARIES += libluacxx-libevdev.la
+
+libluacxx_libevdev_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@libevdev_CFLAGS@
+
+libluacxx_libevdev_la_LIBADD = \
+	@libevdev_LIBS@ \
+	libluacxx.la
+
+libluacxx_libevdev_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_libevdev_la_SOURCES = \
 	libevdev.cpp
 
 nobase_pkginclude_HEADERS += \
@@ -322,10 +376,42 @@ endif
 
 if BUILD_libinput
 
-libluacxx_la_SOURCES += \
+lib_LTLIBRARIES += libluacxx-libinput.la
+
+libluacxx_libinput_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@libinput_CFLAGS@
+
+libluacxx_libinput_la_LIBADD = \
+	@libinput_LIBS@ \
+	libluacxx.la
+
+libluacxx_libinput_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_libinput_la_SOURCES = \
 	libinput.cpp
 
 nobase_pkginclude_HEADERS += \
 	libinput.hpp
+
+endif
+
+if BUILD_linux
+
+lib_LTLIBRARIES += libluacxx-linux.la
+
+libluacxx_linux_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS)
+
+libluacxx_linux_la_LIBADD = \
+	libluacxx.la
+
+libluacxx_linux_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_linux_la_SOURCES = \
+	linux/input.cpp
+
+nobase_pkginclude_HEADERS += \
+	linux/input.hpp
 
 endif

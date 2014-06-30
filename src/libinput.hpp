@@ -7,6 +7,8 @@
 #include "luacxx/convert/callable.hpp"
 #include "luacxx/convert/string.hpp"
 
+#include <libinput.h>
+
 /*
 
 =head1 NAME
@@ -60,6 +62,6 @@ namespace lua {
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_libinput(lua_State* const);
+extern "C" int luaopen_libinput(lua_State* const);
 
 #endif // LUACXX_LIBINPUT_INCLUDED

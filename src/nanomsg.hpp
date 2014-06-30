@@ -127,6 +127,6 @@ struct Metatable<nn_iovec>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_nanomsg(lua_State* const);
+extern "C" int luaopen_nanomsg(lua_State* const);
 
-#endif // LUACXX_NCURSES_INCLUDED
+#endif // LUACXX_NANOMSG_INCLUDED

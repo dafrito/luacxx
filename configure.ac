@@ -37,6 +37,11 @@ PKG_CHECK_MODULES(lua, [lua >= 5.0],
     [AC_MSG_ERROR([Lua is required to build rainback])]
 )
 
+AC_CHECK_HEADER(["linux/input.h"],
+    [AM_CONDITIONAL([BUILD_linux], [true])],
+    [AM_CONDITIONAL([BUILD_linux], [false])]
+)
+
 PKG_CHECK_MODULES(Qt5Core, [Qt5Core],
     [AM_CONDITIONAL([BUILD_Qt5Core], [true])],
     [AM_CONDITIONAL([BUILD_Qt5Core], [false])]

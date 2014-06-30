@@ -36,6 +36,6 @@ struct Metatable<libevdev>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_evdev(lua_State* const);
+extern "C" int luaopen_libevdev(lua_State* const);
 
 #endif // LUACXX_LIBEVDEV_INCLUDED

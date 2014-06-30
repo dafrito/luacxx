@@ -43,7 +43,7 @@ void ncurses_chtype_metatable(const lua::index& mt)
 
 } // namespace lua
 
-int luaopen_luacxx_ncurses(lua_State* const state)
+int luaopen_ncurses(lua_State* const state)
 {
     lua::thread env(state);
 

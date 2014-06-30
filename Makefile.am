@@ -2,7 +2,17 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 
 lua:
-	LUA_CPATH='./src/.libs/lib?.so;;' lua
+	test -d lua || mkdir lua
+	test -f $@/luacxx.so || ln -s ../src/.libs/libluacxx.so $@/luacxx.so
+	test -f $@/ncurses.so || ln -s ../src/.libs/libluacxx-ncurses.so $@/ncurses.so
+	test -f $@/Qt5Core.so || ln -s ../src/.libs/libluacxx-Qt5Core.so $@/Qt5Core.so
+	test -f $@/Qt5Gui.so || ln -s ../src/.libs/libluacxx-Qt5Gui.so $@/Qt5Gui.so
+	test -f $@/nanomsg.so || ln -s ../src/.libs/libluacxx-nanomsg.so $@/nanomsg.so
+	test -f $@/libinput.so || ln -s ../src/.libs/libluacxx-libinput.so $@/libinput.so
+	test -f $@/libevdev.so || ln -s ../src/.libs/libluacxx-libevdev.so $@/libevdev.so
+	test -f $@/linux.so || ln -s ../src/.libs/libluacxx-linux.so $@/linux.so
+	cd lua && lua
+.PHONY: lua
 
 checkdebug: $(TESTS)
 	cd tests && gdb ./src/.libs/lt-runtest

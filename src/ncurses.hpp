@@ -149,6 +149,6 @@ void ncurses_wresize(lua_State* const state);
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_ncurses(lua_State* const);
+extern "C" int luaopen_ncurses(lua_State* const);
 
 #endif // LUACXX_NCURSES_INCLUDED
