@@ -11,7 +11,7 @@ int _libevdev_new_from_fd(lua_State* const state)
 {
     libevdev* dev;
     lua::push(state, libevdev_new_from_fd(
-        lua::get<int>(state),
+        lua::get<int>(state, 1),
         &dev
     ));
     lua::push(state, dev);
