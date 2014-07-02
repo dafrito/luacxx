@@ -134,8 +134,9 @@ BOOST_AUTO_TEST_CASE(reference)
     ref = lua::push(env, "No Time");
     lua_pop(env, 1);
 
-    env << ref;
-    BOOST_CHECK_EQUAL(lua::get<const char*>(env, -1), "No Time");
+    BOOST_CHECK_EQUAL(lua_gettop(env), 0);
+    BOOST_CHECK_EQUAL(ref.get<const char*>(), "No Time");
+    BOOST_CHECK_EQUAL(lua_gettop(env), 0);
 }
 
 BOOST_AUTO_TEST_CASE(link_and_conversions)

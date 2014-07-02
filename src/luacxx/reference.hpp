@@ -146,6 +146,12 @@ void release()
     }
 }
 
+template <class T>
+auto get() -> decltype(lua::get<T>(*this))
+{
+    return lua::get<T>(*this);
+}
+
 /*
 
 =head4 operator=(T source)
