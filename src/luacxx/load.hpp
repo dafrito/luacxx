@@ -5,9 +5,14 @@
 
 #include "algorithm.hpp"
 
-class QDir;
-class QFile;
-class QString;
+#include "config.hpp"
+#ifdef HAVE_Qt5Core
+
+#include <QDir>
+#include <QFile>
+#include <QString>
+
+#endif
 
 namespace lua {
 
@@ -28,11 +33,13 @@ QFile, or a std::istream.
 If compilation errors occur, a lua::error will be thrown.
 
 */
-lua::index load_file(lua_State* const state, QFile& file);
 lua::index load_file(lua_State* const state, const std::string& filename);
-lua::index load_file(lua_State* const state, const QString& filename);
 lua::index load_file(lua_State* const state, const char* file);
 lua::index load_file(lua_State* const state, std::istream& stream, const std::string& name);
+#ifdef HAVE_Qt5Core
+lua::index load_file(lua_State* const state, QFile& file);
+lua::index load_file(lua_State* const state, const QString& filename);
+#endif
 
 /*
 
@@ -67,7 +74,9 @@ specify a filter list on the directory itself:
     lua::run_dir(state, dir, true);
 
 */
+#ifdef HAVE_Qt5Core
 void run_dir(lua_State* const state, const QDir& dir, const bool recurse);
+#endif
 
 /*
 
