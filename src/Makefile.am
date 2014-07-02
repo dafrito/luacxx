@@ -64,21 +64,25 @@ runtest_CXXFLAGS = \
 
 runtest_LDADD = \
 	libluacxx.la \
-	libluacxx-Qt5Core.la \
 	@BOOST_LDFLAGS@ \
 	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 runtest_SOURCES = \
-	tests.cpp
+	tests/main.cpp \
+	tests/luacxx_without_conversions.cpp
 
 if BUILD_Qt5Core
 
+runtest_LDADD += libluacxx-Qt5Core.la
+
+runtest_SOURCES += tests/Qt5Core.cpp
+
 runtest_MOC_SOURCES = \
-	moc_tests.cpp
+	moc_Qt5Core.cpp
 
 nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
 
-moc_tests.cpp: tests.hpp
+moc_Qt5Core.cpp: tests/Qt5Core.hpp
 	$(QT_MOC) -o $@ $<
 
 lib_LTLIBRARIES += libluacxx-Qt5Core.la
