@@ -1,5 +1,5 @@
-#ifndef LUA_CXX_CHAR_AS_LETTER_HEADER
-#define LUA_CXX_CHAR_AS_LETTER_HEADER
+#ifndef LUA_CXX_CHAR_HEADER
+#define LUA_CXX_CHAR_HEADER
 
 #include "../stack.hpp"
 
@@ -30,4 +30,4 @@ struct Store<char>
 
 } // namespace lua
 
-#endif // LUA_CXX_CHAR_AS_LETTER_HEADER
+#endif // LUA_CXX_CHAR_HEADER
