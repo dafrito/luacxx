@@ -1,7 +1,7 @@
 #include "numeric.hpp"
 #include "../algorithm.hpp"
 
-void lua::store_lua_Integer(lua_Integer& destination, const lua::index& source)
+void lua::store_lua_Integer(long& destination, const lua::index& source)
 {
     if (source.type().number()) {
         destination = lua_tointeger(source.state(), source.pos());

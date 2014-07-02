@@ -61,20 +61,20 @@ struct Store<lua_Number>
 };
 
 template <>
-struct Push<lua_Integer>
+struct Push<long>
 {
-    static void push(lua_State* const state, const lua_Integer& source)
+    static void push(lua_State* const state, const long& source)
     {
         lua_pushinteger(state, source);
     }
 };
 
-void store_lua_Integer(lua_Integer& destination, const lua::index& source);
+void store_lua_Integer(long& destination, const lua::index& source);
 
 template <>
-struct Store<lua_Integer>
+struct Store<long>
 {
-    static void store(lua_Integer& destination, const lua::index& source)
+    static void store(long& destination, const lua::index& source)
     {
         store_lua_Integer(destination, source);
     }
