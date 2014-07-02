@@ -1,5 +1,5 @@
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = rainback.pc
+pkgconfig_DATA = ../luacxx.pc
 
 lib_LTLIBRARIES = libluacxx.la
 

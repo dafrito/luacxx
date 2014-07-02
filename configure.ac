@@ -1,6 +1,6 @@
 AC_PREREQ([2.68])
 
-AC_INIT([rainback], [0.1], [dafrito@gmail.com], [rainback], [http://www.rainback.com])
+AC_INIT([luacxx], [0.1], [dafrito@gmail.com], [luacxx], [http://www.github.com/dafrito/luacxx])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AC_SUBST([PACKAGE_DESCRIPTION], ["Lua-based programming tool"])
 
@@ -34,7 +34,7 @@ AX_HAVE_QT_MOC
 
 PKG_CHECK_MODULES(lua, [lua >= 5.0],
     [],
-    [AC_MSG_ERROR([Lua is required to build rainback])]
+    [AC_MSG_ERROR([Lua is required to build Luacxx])]
 )
 
 AC_CHECK_HEADER(["linux/input.h"],
@@ -77,5 +77,5 @@ PKG_CHECK_MODULES(gobject_introspection, [gobject-introspection-no-export-1.0],
     [AM_CONDITIONAL([BUILD_gobject_introspection], [false])]
 )
 
-AC_CONFIG_FILES([src/rainback.pc Makefile src/Makefile src/rainback.spec])
+AC_CONFIG_FILES([luacxx.pc Makefile src/Makefile luacxx.spec])
 AC_OUTPUT

@@ -36,7 +36,7 @@ run-nanosend:
 	LUA_PATH='$(top_srcdir)/?.lua;;' LUA_CPATH='./.libs/lib?.so;;' ./luacxx $(top_srcdir)/demo.lua send ipc:///tmp/pipeline.ipc "Hello!"
 
 RPMFLAGS ?= --ba
-SRCRPM=rainback-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
+SRCRPM=luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
 export RPMDIR ?= $$HOME/rpmbuild
 
 rpm:
@@ -50,7 +50,7 @@ rpm:
 		[ -e `basename $$filename` ] || ln -s $$filename; \
 	done
 	rm -f $(SRCRPM)
-	ln -s $(RPMDIR)/SRPMS/rainback-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $(SRCRPM)
+	ln -s $(RPMDIR)/SRPMS/luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@`rpmbuild -E '%{?dist}' rpm.spec`.src.rpm $(SRCRPM)
 .PHONY: rpm
 
 $(RPMDIR):
