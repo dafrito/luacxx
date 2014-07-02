@@ -1,6 +1,6 @@
-acme = acme or {};
+demo = demo or {};
 
-function acme.ncurses_getch()
+function demo.ncurses_getch()
     require "luacxx.ncurses";
 
     initscr();

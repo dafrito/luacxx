@@ -1,6 +1,6 @@
-acme = acme or {};
+demo = demo or {};
 
-function acme.qt_window(...)
+function demo.qt_window(...)
     require "luacxx.QRect";
     require "luacxx.QGuiApplication";
     require "luacxx.QWindow";

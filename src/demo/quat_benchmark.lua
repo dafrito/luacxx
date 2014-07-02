@@ -1,22 +1,25 @@
-acme = acme or {};
+demo = demo or {};
 
 local function printf(msg, ...)
     print(string.format(msg, ...));
 end;
 
-function acme.quat_benchmark()
-    require "luacxx.QQuaternion";
-    require "luacxx.QElapsedTimer";
-    require "luacxx.QVector2D";
-    require "luacxx.QVector3D";
-    require "luacxx.QVector4D";
-    require "acme.math";
+function demo.quat_benchmark()
+    require "Qt5Gui.QQuaternion";
+    require "Qt5Core.QElapsedTimer";
+    require "Qt5Gui.QVector2D";
+    require "Qt5Gui.QVector3D";
+    require "Qt5Gui.QVector4D";
+    require "demo.math";
 
     local MAX = 10000;
     print("quat_benchmark MAX=" .. MAX);
     print("");
 
     for i=1, 5 do
+        for k, v in pairs(QElapsedTimer) do
+            print(k, v);
+        end
         timer = QElapsedTimer:new();
         timer:start();
         quat = QQuaternion.benchmark(MAX);

@@ -1,4 +1,4 @@
-acme = acme or {};
+demo = demo or {};
 
 local function printf(msg, ...)
     print(string.format(msg, ...));
@@ -30,8 +30,8 @@ local function nanosend(url, msg)
     return nn_shutdown(sock, how);
 end;
 
-function acme.nanomsg_ipc(cmd, ...)
-    require "luacxx.nanomsg"
+function demo.nanomsg_ipc(cmd, ...)
+    require "nanomsg"
     print("ARG", cmd, ...);
 
     if cmd == "recv" then
