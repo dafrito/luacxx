@@ -119,7 +119,7 @@ lua::index lua::load_string(lua_State* const state, const char* input)
     return lua::index(state, -1);
 }
 
-#ifdef HAVE_QT_CORE
+#ifdef HAVE_Qt5Core
 
 #include <QDir>
 #include <QFile>
@@ -206,4 +206,4 @@ void lua::run_dir(lua_State* const state, const QDir& dir, const bool recurse)
     }
 }
 
-#endif // HAVE_QT_CORE
+#endif // HAVE_Qt5Core
