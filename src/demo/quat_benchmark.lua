@@ -17,9 +17,6 @@ function demo.quat_benchmark()
     print("");
 
     for i=1, 5 do
-        for k, v in pairs(QElapsedTimer) do
-            print(k, v);
-        end
         timer = QElapsedTimer:new();
         timer:start();
         quat = QQuaternion.benchmark(MAX);
