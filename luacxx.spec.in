@@ -11,7 +11,7 @@ Name: @PACKAGE_NAME@
 # Change all release values back to 1 when bumping to a new version
 Version:	@PACKAGE_VERSION@
 Release:	@PACKAGE_RELEASE@%{?dist}
-Summary:	Bridge between Lua and C++
+Summary:	C++11 bindings and modules for Lua
 
 Group:		Applications/Internet
 License:	MIT
@@ -26,7 +26,7 @@ BuildRequires: lua-devel >= %{luaver}
 BuildRequires: make automake autoconf libtool gcc-c++ boost-test boost-devel qt-devel
 
 %description
-Lua-cxx is a template-based binding between C++11 and Lua 5.2.
+Luacxx is a C++11 binding to Lua. It also contains many modules for C and C++ libraries.
 
 %prep
 %setup -q
