@@ -217,9 +217,9 @@ template <typename Callee, typename RV, typename Arg, typename... Parameters>
 struct Invoke
 {
     template <typename... Arguments>
-    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    static int invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
-        Invoke<Callee, RV, Parameters...>::template invoke<Arguments..., Arg>(
+        return Invoke<Callee, RV, Parameters...>::template invoke<Arguments..., Arg>(
             func, index, arguments..., lua::get<Arg>(index++)
         );
     }
@@ -229,10 +229,10 @@ template <typename Callee, typename RV>
 struct Invoke<Callee, RV, ArgStop>
 {
     template <typename... Arguments>
-    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    static int invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
-        lua::clear(index.state());
         lua::push(index.state(), func(arguments...));
+        return 1;
     }
 };
 
@@ -240,10 +240,10 @@ template <typename Callee>
 struct Invoke<Callee, void, ArgStop>
 {
     template <typename... Arguments>
-    static void invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    static int invoke(const Callee& func, lua::index& index, Arguments... arguments)
     {
-        lua::clear(index.state());
         func(arguments...);
+        return 0;
     }
 };
 
@@ -312,8 +312,7 @@ int invoke_callable(lua_State* const state)
     }
 
     lua::index index(state, 1);
-    Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(wrapped, index);
-    return 1;
+    return Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(wrapped, index);
 }
 
 template <typename RV, typename... Args>
