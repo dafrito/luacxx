@@ -51,7 +51,7 @@ luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
 luacxx_LDADD = libluacxx.la
 
 luacxx_SOURCES = \
-	acme/luacxx.cpp
+	luacxx/luacxx.cpp
 
 check_PROGRAMS = runtest
 TESTS = $(check_PROGRAMS)
