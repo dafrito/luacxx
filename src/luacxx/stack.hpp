@@ -1689,3 +1689,4 @@ T* make(lua_State* const state, Args... args)
 #endif // LUACXX_STACK_INCLUDED
 
 #include "convert/builtin.hpp"
+#include "convert/const_char_p.hpp"

@@ -1,6 +1,7 @@
 #include "luacxx/thread.hpp"
 #include "luacxx/algorithm.hpp"
 #include "luacxx/load.hpp"
+#include "luacxx/convert/char_p.hpp"
 #include "luacxx/convert/string.hpp"
 #include "luacxx/convert/numeric.hpp"
 

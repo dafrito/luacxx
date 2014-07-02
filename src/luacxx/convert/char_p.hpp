@@ -10,7 +10,7 @@ struct Push<char*>
 {
     static void push(lua_State* const state, const char* const source)
     {
-        lua::push(state, source);
+        lua_pushstring(state, source);
     }
 };
 
