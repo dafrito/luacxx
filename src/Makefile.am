@@ -69,6 +69,7 @@ runtest_LDADD = \
 
 runtest_SOURCES = \
 	tests/main.cpp \
+	tests/luacxx_convert_vector.cpp \
 	tests/luacxx_without_conversions.cpp
 
 if BUILD_Qt5Core
