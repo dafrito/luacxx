@@ -137,6 +137,20 @@ if test x$with_nanomsg = xyes; then
 fi;
 AM_CONDITIONAL([BUILD_nanomsg], [test x$with_nanomsg = xyes])
 
+AC_ARG_WITH([egl],
+    [AS_HELP_STRING([--with-egl], [build egl module])],
+    [],
+    [with_egl=$luacxx_with_default]
+)
+if test x$with_egl = xyes; then
+    PKG_CHECK_MODULES(egl, [egl],
+        [with_egl=yes],
+        [with_egl=no]
+    )
+    AC_DEFINE([HAVE_egl], [1], [Defined if egl is available])
+fi;
+AM_CONDITIONAL([BUILD_egl], [test x$with_egl = xyes])
+
 AC_ARG_WITH([gobject-introspection],
     [AS_HELP_STRING([--with-gobject-introspection], [build gobject-introspection module])],
     [],

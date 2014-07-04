@@ -400,6 +400,28 @@ nobase_pkginclude_HEADERS += \
 
 endif
 
+if BUILD_egl
+
+lib_LTLIBRARIES += libluacxx-egl.la
+
+libluacxx_egl_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@egl_CFLAGS@
+
+libluacxx_egl_la_LIBADD = \
+	@egl_LIBS@ \
+	libluacxx.la
+
+libluacxx_egl_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_egl_la_SOURCES = \
+	egl.cpp
+
+nobase_pkginclude_HEADERS += \
+	egl.hpp
+
+endif
+
 if BUILD_linux
 
 lib_LTLIBRARIES += libluacxx-linux.la
