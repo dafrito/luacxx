@@ -165,5 +165,24 @@ if test x$with_gobject_introspection = xyes; then
 fi;
 AM_CONDITIONAL([BUILD_gobject_introspection], [test x$with_gobject_introspection = xyes])
 
+AC_ARG_WITH([llvm],
+    [AS_HELP_STRING([--with-llvm], [build modules for LLVM])],
+    [],
+    [with_llvm=$luacxx_with_default]
+)
+AC_SUBST(llvm_CFLAGS)
+AC_SUBST(llvm_LIBS)
+if test x$with_llvm = xyes; then
+    AC_CHECK_PROG([with_llvm], [llvm-config], [yes], [no])
+
+    llvm_CFLAGS=`llvm-config --cxxflags`
+    llvm_LIBS=`llvm-config --ldflags`
+
+    AC_DEFINE([HAVE_llvm], [1], [Defined if LLVM is available])
+else
+    with_llvm=no
+fi;
+AM_CONDITIONAL([BUILD_llvm], [test x$with_llvm = xyes])
+
 AC_CONFIG_FILES([luacxx.pc Makefile src/Makefile luacxx.spec])
 AC_OUTPUT

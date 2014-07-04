@@ -72,6 +72,27 @@ runtest_SOURCES = \
 	tests/luacxx_convert_vector.cpp \
 	tests/luacxx_without_conversions.cpp
 
+if BUILD_llvm
+
+lib_LTLIBRARIES += libluacxx-llvm.la
+
+libluacxx_llvm_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS)
+
+libluacxx_llvm_la_LIBADD = \
+	libluacxx.la \
+	@llvm_LIBS@
+
+libluacxx_llvm_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_llvm_la_SOURCES = \
+	llvm/IR/IRBuilder.cpp
+
+nobase_pkginclude_HEADERS += \
+	llvm/IR/IRBuilder.hpp
+
+endif
+
 if BUILD_Qt5Core
 
 runtest_LDADD += libluacxx-Qt5Core.la

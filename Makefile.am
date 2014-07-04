@@ -9,7 +9,8 @@ luacxx_libraries = \
 	libinput \
 	libevdev \
 	linux \
-	egl
+	egl \
+	llvm
 
 lua:
 	test -d lua || mkdir lua
