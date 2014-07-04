@@ -1172,7 +1172,7 @@ template <class Value, lua::userdata_storage storage = lua::userdata_storage::va
 struct Construct
 {
     template <class... Rest>
-    static void construct(lua_State* const state, Rest... args)
+    static void construct(lua_State* const state, Rest&&... args)
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value>(state, storage);
@@ -1685,7 +1685,7 @@ specified arguments.
 */
 
 template <class T, class... Args>
-T* make(lua_State* const state, Args... args)
+T* make(lua_State* const state, Args&&... args)
 {
     Construct<T>::construct(state, args...);
     return lua::get<T*>(state, -1);
