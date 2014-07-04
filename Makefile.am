@@ -1,19 +1,33 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 
+luacxx_libraries = \
+	ncurses \
+	Qt5Core \
+	Qt5Gui \
+	nanomsg \
+	libinput \
+	libevdev \
+	linux \
+
 lua:
 	test -d lua || mkdir lua
 	test -f $@/luacxx.so || ln -s ../src/.libs/libluacxx.so $@/luacxx.so
-	test -f $@/ncurses.so || ln -s ../src/.libs/libluacxx-ncurses.so $@/ncurses.so
-	test -f $@/Qt5Core.so || ln -s ../src/.libs/libluacxx-Qt5Core.so $@/Qt5Core.so
-	test -f $@/Qt5Gui.so || ln -s ../src/.libs/libluacxx-Qt5Gui.so $@/Qt5Gui.so
-	test -f $@/nanomsg.so || ln -s ../src/.libs/libluacxx-nanomsg.so $@/nanomsg.so
-	test -f $@/libinput.so || ln -s ../src/.libs/libluacxx-libinput.so $@/libinput.so
-	test -f $@/libevdev.so || ln -s ../src/.libs/libluacxx-libevdev.so $@/libevdev.so
-	test -f $@/linux.so || ln -s ../src/.libs/libluacxx-linux.so $@/linux.so
 	test -d $@/demo || ln -s ../$(top_srcdir)/src/demo $@/demo
 	test -f $@/luacxx || ln -s ../src/luacxx $@/luacxx
+	for lib in $(luacxx_libraries); do \
+		test -f $@/$$lib.so || ln -s ../src/.libs/libluacxx-ncurses.so $@/$$lib.so; \
+	done;
 .PHONY: lua
+
+LUA_LIB_DIR="$(libdir)/lua/5.2/"
+
+install-exec-hook:
+	mkdir -p $(DESTDIR)/$(LUA_LIB_DIR)
+	ln -s $(libdir)/libluacxx.so $(DESTDIR)/$(LUA_LIB_DIR)
+	for lib in $(luacxx_libraries); do \
+		ln -s $(libdir)/libluacxx-$$lib.so $(DESTDIR)/$(LUA_LIB_DIR)/$$lib.so
+	done;
 
 checkdebug: $(TESTS)
 	cd tests && gdb ./src/.libs/lt-runtest
