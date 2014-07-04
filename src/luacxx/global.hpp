@@ -96,6 +96,13 @@ struct Store<lua::global>
 };
 
 template <class T>
+void store(T& destination, const lua::global& source)
+{
+    lua::Store<T>::store(destination, lua::push(source));
+    lua_pop(source.state(), 1);
+}
+
+template <class T>
 typename std::remove_const<typename std::remove_reference<T>::type>::type
 get(const lua::global& source)
 {
