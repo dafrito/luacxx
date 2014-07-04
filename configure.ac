@@ -186,3 +186,15 @@ AM_CONDITIONAL([BUILD_llvm], [test x$with_llvm = xyes])
 
 AC_CONFIG_FILES([luacxx.pc Makefile src/Makefile luacxx.spec])
 AC_OUTPUT
+
+AC_MSG_RESULT([
+    Qt5Core                 ${with_Qt5Core}
+    Qt5Gui                  ${with_Qt5Gui}
+    ncurses                 ${with_ncurses}
+    libinput                ${with_libinput}
+    libevdev                ${with_libevdev}
+    nanomsg                 ${with_nanomsg}
+    llvm                    ${with_llvm}
+    gobject-introspection   ${with_gobject_introspection}
+    egl                     ${with_egl}
+])
