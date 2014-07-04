@@ -32,10 +32,10 @@ install-exec-hook:
 	done;
 
 checkdebug: $(TESTS)
-	cd tests && gdb ./src/.libs/lt-runtest
+	gdb ./src/.libs/lt-runtest
 
 checkvalgrind:
-	cd tests && valgrind -v --leak-check=full ./src/.libs/lt-runtest
+	valgrind -v --leak-check=full ./src/.libs/lt-runtest
 
 valgrind:
 	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;./src/.libs/libluacxx-?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./src/.libs/lt-luacxx $(top_srcdir)/src/demo.lua
