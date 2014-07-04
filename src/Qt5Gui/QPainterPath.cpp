@@ -320,30 +320,69 @@ int QPainterPath_quadTo(lua_State* const state)
     );
     return 0;
 }
-
-/*
-
-QPolygonF   toFillPolygon(const QTransform & matrix) const
-QPolygonF   toFillPolygon(const QMatrix & matrix = QMatrix()) const
-QList<QPolygonF>    toFillPolygons(const QTransform & matrix) const
-QList<QPolygonF>    toFillPolygons(const QMatrix & matrix = QMatrix()) const
-QList<QPolygonF>    toSubpathPolygons(const QTransform & matrix) const
-QList<QPolygonF>    toSubpathPolygons(const QMatrix & matrix = QMatrix()) const
-
-*/
 int QPainterPath_toFillPolygon(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        // QPolygonF toFillPolygon(const QMatrix & matrix = QMatrix()) const
+        lua::push(state, self->toFillPolygon());
+        return 1;
+    }
+
+    if (lua::is_type<QTranform>(state, 2)) {
+        // QPolygonF toFillPolygon(const QTransform & matrix) const
+        lua::push(state, self->toFillPolygon(lua::get<const QTransform&>(state, 2)));
+        return 1;
+    }
+
+    // QPolygonF toFillPolygon(const QMatrix & matrix) const
+    lua::push(state, self->toFillPolygon(lua::get<const QMatrix&>(state, 2)));
+    return 1;
 }
 
 int QPainterPath_toFillPolygons(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+    QList<QPolygonF> fillPolygons;
+
+    if (lua_gettop(state) == 1) {
+        fillPolygons = self->toFillPolygons();
+    } else if (lua::is_type<QTranform>(state, 2)) {
+        fillPolygons = self->toFillPolygons(
+            lua::get<const QTransform&>(state, 2)
+        );
+    } else {
+        fillPolygons = self->toFillPolygons(lua::get<const QMatrix&>(state, 2));
+    }
+
+    lua_createtable(state, fillPolygons.size(), 0);
+    for (int i = 0; i < fillPolygons.size(); ++i) {
+        lua::table::insert(lua::index(state, -1), fillPolygons[i]);
+    }
+    return 1;
 }
 
 int QPainterPath_toSubpathPolygons(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QPainterPath*>(state, 1);
+    QList<QPolygonF> fillPolygons;
+
+    if (lua_gettop(state) == 1) {
+        fillPolygons = self->toSubpathPolygons();
+    } else if (lua::is_type<QTranform>(state, 2)) {
+        fillPolygons = self->toSubpathPolygons(
+            lua::get<const QTransform&>(state, 2)
+        );
+    } else {
+        fillPolygons = self->toSubpathPolygons(lua::get<const QMatrix&>(state, 2));
+    }
+
+    lua_createtable(state, fillPolygons.size(), 0);
+    for (int i = 0; i < fillPolygons.size(); ++i) {
+        lua::table::insert(lua::index(state, -1), fillPolygons[i]);
+    }
+    return 1;
 }
 
 /*
