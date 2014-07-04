@@ -1,16 +1,16 @@
-demo = demo or {};
+acme = acme or {};
 
 local function printf(msg, ...)
     print(string.format(msg, ...));
 end;
 
-function demo.quat_benchmark()
+function acme.quat_benchmark()
     require "Qt5Gui.QQuaternion";
     require "Qt5Core.QElapsedTimer";
     require "Qt5Gui.QVector2D";
     require "Qt5Gui.QVector3D";
     require "Qt5Gui.QVector4D";
-    require "demo.math";
+    require "acme.math";
 
     local MAX = 10000;
     print("quat_benchmark MAX=" .. MAX);

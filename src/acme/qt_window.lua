@@ -1,19 +1,19 @@
-demo = demo or {};
+acme = acme or {};
 
-function demo.qt_window(...)
-    require "luacxx.QRect";
-    require "luacxx.QGuiApplication";
-    require "luacxx.QWindow";
-    require "luacxx.QEventFilter";
-    require "luacxx.QEvent";
-    require "luacxx.QBackingStore";
-    require "luacxx.QPainter";
-    require "luacxx.QElapsedTimer";
-    require "luacxx.QVector3D";
-    require "luacxx.Qt";
-    require "luacxx.QRegion";
+function acme.qt_window(...)
+    require "Qt.QRect";
+    require "Qt.QGuiApplication";
+    require "Qt.QWindow";
+    require "Qt.QEventFilter";
+    require "Qt.QEvent";
+    require "Qt.QBackingStore";
+    require "Qt.QPainter";
+    require "Qt.QElapsedTimer";
+    require "Qt.QVector3D";
+    require "Qt.Qt";
+    require "Qt.QRegion";
 
-    local qApp = QGuiApplication:new("demo", ...);
+    local qApp = QGuiApplication:new("acme", ...);
 
     window = QWindow:new();
     store = QBackingStore:new(window);

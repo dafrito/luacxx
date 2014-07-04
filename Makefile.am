@@ -14,10 +14,11 @@ luacxx_libraries = \
 lua:
 	test -d lua || mkdir lua
 	test -f $@/luacxx.so || ln -s ../src/.libs/libluacxx.so $@/luacxx.so
-	test -d $@/demo || ln -s ../$(top_srcdir)/src/demo $@/demo
+	test -d $@/acme || ln -s ../$(top_srcdir)/src/acme $@/acme
 	test -f $@/luacxx || ln -s ../src/luacxx $@/luacxx
+	test -f $@/demo.lua || ln -s ../$(top_srcdir)/src/demo.lua $@/demo.lua
 	for lib in $(luacxx_libraries); do \
-		test -f $@/$$lib.so || ln -s ../src/.libs/libluacxx-ncurses.so $@/$$lib.so; \
+		test -f $@/$$lib.so || ln -s ../src/.libs/libluacxx-$$lib.so $@/$$lib.so; \
 	done;
 .PHONY: lua
 
@@ -37,19 +38,28 @@ checkvalgrind:
 	cd tests && valgrind -v --leak-check=full ./src/.libs/lt-runtest
 
 valgrind:
-	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;./src/.libs/libluacxx-?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./src/.libs/lt-luacxx $(top_srcdir)/src/demo/main.lua
+	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;./src/.libs/libluacxx-?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./src/.libs/lt-luacxx $(top_srcdir)/src/demo.lua
 
 run: lua
-	cd lua && ./luacxx demo/main.lua
+	cd lua && ./luacxx demo.lua
 
 debug: lua
 	cd lua && gdb ../src/.libs/lt-luacxx
 
+run-gtk_gstreamer:
+	cd lua && ./luacxx demo.lua gtk_gstreamer
+
+run-qt_window:
+	cd lua && ./luacxx demo.lua qt_window
+
+run-ncurses_getch:
+	cd lua && ./luacxx demo.lua ncurses_getch
+
 run-nanorecv:
-	cd lua && ./luacxx demo/main.lua recv ipc:///tmp/pipeline.ipc
+	cd lua && ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
 
 run-nanosend:
-	cd lua && ./luacxx demo/main.lua send ipc:///tmp/pipeline.ipc "Hello!"
+	cd lua && ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
 
 RPMFLAGS ?= --ba
 SRCRPM=luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
