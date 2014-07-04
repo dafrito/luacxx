@@ -222,6 +222,12 @@ void get_all(std::vector<T>& results, lua::index index)
     }
 }
 
+template <class T>
+void get_all(std::vector<T>& results, lua_State* const state, const int pos)
+{
+    return lua::get_all(results, lua::index(state, pos));
+}
+
 /*
 
 =head2 Lua function invocation

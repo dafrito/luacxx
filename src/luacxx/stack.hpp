@@ -1553,6 +1553,13 @@ void store(T& destination, const lua::index& source)
     lua::Store<T>::store(destination, source);
 }
 
+template <class T>
+void store(T& destination, lua_State* const state, const int pos)
+{
+    // Forward to the struct (for convenience)
+    lua::Store<T>::store(destination, lua::index(state, pos));
+}
+
 template <class Source, class Name>
 template <class T>
 void lua::link<Source, Name>::operator>>(T& destination)
