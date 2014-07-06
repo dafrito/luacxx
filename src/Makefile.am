@@ -444,6 +444,50 @@ nobase_pkginclude_HEADERS += \
 
 endif
 
+if BUILD_drm
+
+lib_LTLIBRARIES += libluacxx-drm.la
+
+libluacxx_drm_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	$(drm_CFLAGS)
+
+libluacxx_drm_la_LIBADD = \
+	$(drm_LIBS) \
+	libluacxx.la
+
+libluacxx_drm_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_drm_la_SOURCES = \
+	xf86drmMode.cpp
+
+nobase_pkginclude_HEADERS += \
+	xf86drmMode.hpp
+
+endif
+
+if BUILD_gbm
+
+lib_LTLIBRARIES += libluacxx-gbm.la
+
+libluacxx_gbm_la_CPPFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	$(gbm_CFLAGS)
+
+libluacxx_gbm_la_LIBADD = \
+	$(gbm_LIBS) \
+	libluacxx.la
+
+libluacxx_gbm_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_gbm_la_SOURCES = \
+	gbm.cpp
+
+nobase_pkginclude_HEADERS += \
+	gbm.hpp
+
+endif
+
 if BUILD_linux
 
 lib_LTLIBRARIES += libluacxx-linux.la

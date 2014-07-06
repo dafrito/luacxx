@@ -151,6 +151,34 @@ if test x$with_egl = xyes; then
 fi;
 AM_CONDITIONAL([BUILD_egl], [test x$with_egl = xyes])
 
+AC_ARG_WITH([gbm],
+    [AS_HELP_STRING([--with-gbm], [build gbm module])],
+    [],
+    [with_gbm=$luacxx_with_default]
+)
+if test x$with_gbm = xyes; then
+    PKG_CHECK_MODULES(gbm, [gbm],
+        [with_gbm=yes],
+        [with_gbm=no]
+    )
+    AC_DEFINE([HAVE_gbm], [1], [Defined if gbm is available])
+fi;
+AM_CONDITIONAL([BUILD_gbm], [test x$with_gbm = xyes])
+
+AC_ARG_WITH([drm],
+    [AS_HELP_STRING([--with-drm], [build drm module])],
+    [],
+    [with_drm=$luacxx_with_default]
+)
+if test x$with_drm = xyes; then
+    PKG_CHECK_MODULES(drm, [libdrm],
+        [with_drm=yes],
+        [with_drm=no]
+    )
+    AC_DEFINE([HAVE_drm], [1], [Defined if drm is available])
+fi;
+AM_CONDITIONAL([BUILD_drm], [test x$with_drm = xyes])
+
 AC_ARG_WITH([gobject-introspection],
     [AS_HELP_STRING([--with-gobject-introspection], [build gobject-introspection module])],
     [],
@@ -197,4 +225,6 @@ AC_MSG_RESULT([
     llvm                    ${with_llvm}
     gobject-introspection   ${with_gobject_introspection}
     egl                     ${with_egl}
+    gbm                     ${with_gbm}
+    drm                     ${with_drm}
 ])

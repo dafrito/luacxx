@@ -10,6 +10,8 @@ luacxx_libraries = \
 	libevdev \
 	linux \
 	egl \
+	gbm \
+	drm \
 	llvm
 
 lua:
