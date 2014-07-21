@@ -7,7 +7,7 @@ libluacxx_la_CPPFLAGS = \
 	-Wall \
 	@stdcxx11_CFLAGS@ \
 	@gobject_introspection_CFLAGS@ \
-	@Qt5Core_CFLAGS@ -fPIC\
+	@Qt5Core_CFLAGS@ -fPIC \
 	@lua_CFLAGS@
 
 libluacxx_la_LIBADD = \
