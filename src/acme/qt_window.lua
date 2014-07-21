@@ -1,17 +1,18 @@
 acme = acme or {};
 
 function acme.qt_window(...)
-    require "Qt.QRect";
-    require "Qt.QGuiApplication";
-    require "Qt.QWindow";
-    require "Qt.QEventFilter";
-    require "Qt.QEvent";
-    require "Qt.QBackingStore";
-    require "Qt.QPainter";
-    require "Qt.QElapsedTimer";
-    require "Qt.QVector3D";
-    require "Qt.Qt";
-    require "Qt.QRegion";
+    require "Qt5Core.QRect";
+    require "Qt5Core.QElapsedTimer";
+    require "Qt5Core.Qt";
+    require "Qt5Core.QEventFilter";
+    require "Qt5Core.QEvent";
+
+    require "Qt5Gui.QGuiApplication";
+    require "Qt5Gui.QWindow";
+    require "Qt5Gui.QBackingStore";
+    require "Qt5Gui.QPainter";
+    require "Qt5Gui.QVector3D";
+    require "Qt5Gui.QRegion";
 
     local qApp = QGuiApplication:new("acme", ...);
 
