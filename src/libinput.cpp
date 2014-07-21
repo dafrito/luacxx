@@ -1,7 +1,7 @@
 #include "libinput.hpp"
 
-#include "luacxx/convert/callable.hpp"
-#include "luacxx/thread.hpp"
+#include "convert/callable.hpp"
+#include "thread.hpp"
 #include "linux/input.hpp"
 
 #include <libinput.h>

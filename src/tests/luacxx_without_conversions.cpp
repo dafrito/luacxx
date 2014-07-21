@@ -1,9 +1,9 @@
 #include "main.hpp"
 
-#include "luacxx/thread.hpp"
-#include "luacxx/stack.hpp"
-#include "luacxx/algorithm.hpp"
-#include "luacxx/load.hpp"
+#include "thread.hpp"
+#include "stack.hpp"
+#include "algorithm.hpp"
+#include "load.hpp"
 
 BOOST_AUTO_TEST_CASE(luacxx_without_conversions)
 {

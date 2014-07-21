@@ -1,7 +1,7 @@
 #ifndef LUACXX_QBACKINGSTORE_INCLUDED
 #define LUACXX_QBACKINGSTORE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QBackingStore;
 

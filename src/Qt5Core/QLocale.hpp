@@ -1,7 +1,7 @@
 #ifndef LUACXX_QLOCALE_INCLUDED
 #define LUACXX_QLOCALE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QLocale;
 

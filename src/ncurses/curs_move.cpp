@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
 
-#include "../luacxx/thread.hpp"
+#include "../thread.hpp"
 
 // http://invisible-island.net/ncurses/man/curs_move.3x.html
 

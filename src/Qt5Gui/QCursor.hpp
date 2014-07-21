@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCURSOR_INCLUDED
 #define LUACXX_QCURSOR_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QCursor;
 

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QSET_INCLUDED
 #define LUACXX_QSET_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 /*
 
 class QSet;

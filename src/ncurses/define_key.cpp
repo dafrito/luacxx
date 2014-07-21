@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
 
-#include "../luacxx/thread.hpp"
+#include "../thread.hpp"
 
 // http://invisible-island.net/ncurses/man/define_key.3x.html
 

@@ -1,5 +1,5 @@
 #include "nanomsg.hpp"
-#include "luacxx/thread.hpp"
+#include "thread.hpp"
 
 #include <nanomsg/bus.h>
 #include <nanomsg/ipc.h>

@@ -2,8 +2,8 @@
 
 #include "../Qt5Core/QEvent.hpp"
 #include "../Qt5Core/QSize.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 
 void lua::QResizeEvent_metatable(const lua::index& mt)
 {

@@ -1,7 +1,7 @@
 #ifndef luacxx_llvm_IRBuilder_INCLUDED
 #define luacxx_llvm_IRBuilder_INCLUDED
 
-#include "../../luacxx/stack.hpp"
+#include "../../stack.hpp"
 
 #define __STDC_LIMIT_MACROS
 #define __STDC_CONSTANT_MACROS

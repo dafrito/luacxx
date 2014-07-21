@@ -1,11 +1,11 @@
 #ifndef LUACXX_NANOMSG_INCLUDED
 #define LUACXX_NANOMSG_INCLUDED
 
-#include "luacxx/stack.hpp"
-#include "luacxx/algorithm.hpp"
-#include "luacxx/convert/numeric.hpp"
-#include "luacxx/convert/callable.hpp"
-#include "luacxx/convert/string.hpp"
+#include "stack.hpp"
+#include "algorithm.hpp"
+#include "convert/numeric.hpp"
+#include "convert/callable.hpp"
+#include "convert/string.hpp"
 
 #include <nanomsg/nn.h>
 #include <nanomsg/reqrep.h>

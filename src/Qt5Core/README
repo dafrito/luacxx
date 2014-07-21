@@ -5,8 +5,6 @@ Lua-cxx Qt support
 =head1 SYNOPSIS
 
     #include <luacxx/stack.hpp>
-    #include <luacxx/type/standard.hpp>
-    #include <luacxx/type/function.hpp>
 
     #include <QWindow>
 

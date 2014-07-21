@@ -1,6 +1,6 @@
 #include "DirectoryModuleLoader.hpp"
 
-#include "luacxx/load.hpp"
+#include "load.hpp"
 
 void DirectoryModuleLoader::resolve(QFile& file, const std::string& module)
 {

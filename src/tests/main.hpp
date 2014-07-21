@@ -5,7 +5,7 @@
 
 #include <functional>
 
-#include "luacxx/range.hpp"
+#include "range.hpp"
 
 #include <sstream>
 

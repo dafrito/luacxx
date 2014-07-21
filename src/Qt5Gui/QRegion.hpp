@@ -1,7 +1,7 @@
 #ifndef LUACXX_QREGION_INCLUDED
 #define LUACXX_QREGION_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QRegion>
 
 namespace lua {

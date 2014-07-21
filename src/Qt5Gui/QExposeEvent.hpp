@@ -1,7 +1,7 @@
 #ifndef LUACXX_QEXPOSEEVENT_INCLUDED
 #define LUACXX_QEXPOSEEVENT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QExposeEvent>
 

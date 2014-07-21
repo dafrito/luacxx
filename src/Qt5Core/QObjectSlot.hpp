@@ -1,7 +1,7 @@
 #ifndef LUACXX_QOBJECTSLOT_INCLUDED
 #define LUACXX_QOBJECTSLOT_INCLUDED
 
-#include "../luacxx/reference.hpp"
+#include "../reference.hpp"
 
 #include <QObject>
 #include <QMetaObject>

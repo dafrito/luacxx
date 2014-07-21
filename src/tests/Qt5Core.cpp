@@ -2,23 +2,23 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "luacxx/thread.hpp"
-#include "luacxx/stack.hpp"
-#include "luacxx/algorithm.hpp"
-#include "luacxx/load.hpp"
-#include "luacxx/reference.hpp"
+#include "thread.hpp"
+#include "stack.hpp"
+#include "algorithm.hpp"
+#include "load.hpp"
+#include "reference.hpp"
 
-#include "luacxx/convert/string.hpp"
-#include "luacxx/convert/char.hpp"
-#include "luacxx/convert/callable.hpp"
-#include "luacxx/convert/numeric.hpp"
+#include "convert/string.hpp"
+#include "convert/char.hpp"
+#include "convert/callable.hpp"
+#include "convert/numeric.hpp"
 
 #include "Qt5Core/QString.hpp"
 #include "Qt5Core/QChar.hpp"
 #include "Qt5Core/QVariant.hpp"
 #include "Qt5Core/QObject.hpp"
 
-#include "luacxx/module/DirectoryModuleLoader.hpp"
+#include "module/DirectoryModuleLoader.hpp"
 #include <QDir>
 #include <QPoint>
 

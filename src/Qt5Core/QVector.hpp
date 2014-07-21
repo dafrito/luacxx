@@ -1,8 +1,8 @@
 #ifndef LUACXX_QVECTOR_INCLUDED
 #define LUACXX_QVECTOR_INCLUDED
 
-#include "../luacxx/stack.hpp"
-#include "../luacxx/convert/callable.hpp"
+#include "../stack.hpp"
+#include "../convert/callable.hpp"
 
 #include <QVector>
 

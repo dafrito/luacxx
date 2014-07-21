@@ -33,9 +33,9 @@
 
 */
 
-#include "../luacxx/stack.hpp"
-#include "../luacxx/reference.hpp"
-#include "../luacxx/algorithm.hpp"
+#include "../stack.hpp"
+#include "../reference.hpp"
+#include "../algorithm.hpp"
 
 #include <QObject>
 

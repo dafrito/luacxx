@@ -1,7 +1,7 @@
 #ifndef LUACXX_QSURFACE_INCLUDED
 #define LUACXX_QSURFACE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QSurface>
 
 /*

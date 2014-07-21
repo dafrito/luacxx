@@ -1,7 +1,7 @@
 #ifndef LUACXX_QOPENGLCONTEXT_INCLUDED
 #define LUACXX_QOPENGLCONTEXT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QOpenGLContext;
 

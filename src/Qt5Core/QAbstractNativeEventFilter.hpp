@@ -1,7 +1,7 @@
 #ifndef LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
 #define LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QAbstractNativeEventFilter;
 

@@ -3,7 +3,7 @@
 
 #include <QChar>
 
-#include "../luacxx/convert/string.hpp"
+#include "../convert/string.hpp"
 #include "QString.hpp"
 
 namespace lua {

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QABSTRACTSOCKET_INCLUDED
 #define LUACXX_QABSTRACTSOCKET_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QAbstractSocket;
 

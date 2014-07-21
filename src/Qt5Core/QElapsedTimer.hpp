@@ -1,7 +1,7 @@
 #ifndef LUACXX_QELAPSEDTIMER_INCLUDED
 #define LUACXX_QELAPSEDTIMER_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QElapsedTimer;
 

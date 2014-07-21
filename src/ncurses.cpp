@@ -1,5 +1,5 @@
 #include "ncurses.hpp"
-#include "luacxx/thread.hpp"
+#include "thread.hpp"
 #include <cstring>
 
 int ncurses_MEVENT_index(lua_State* const state)

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QBITMAP_INCLUDED
 #define LUACXX_QBITMAP_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QBitmap>
 

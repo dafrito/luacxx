@@ -1,6 +1,6 @@
 #include "QDrag.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QPixmap.hpp"
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QPoint.hpp"

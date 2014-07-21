@@ -1,7 +1,7 @@
 #ifndef LUACXX_QGRADIENT_INCLUDED
 #define LUACXX_QGRADIENT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QGradient;
 

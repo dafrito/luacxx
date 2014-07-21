@@ -1,7 +1,7 @@
 #ifndef LUACXX_QRESIZEEVENT_INCLUDED
 #define LUACXX_QRESIZEEVENT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QResizeEvent>
 
 namespace lua {

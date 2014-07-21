@@ -1,6 +1,6 @@
 #include "QFontMetrics.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "../Qt5Core/QRect.hpp"
 #include "../Qt5Core/QSize.hpp"
 #include "../Qt5Core/QString.hpp"

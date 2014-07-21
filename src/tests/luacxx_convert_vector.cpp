@@ -1,12 +1,12 @@
 #include "main.hpp"
 
-#include "luacxx/thread.hpp"
-#include "luacxx/stack.hpp"
-#include "luacxx/algorithm.hpp"
-#include "luacxx/load.hpp"
+#include "thread.hpp"
+#include "stack.hpp"
+#include "algorithm.hpp"
+#include "load.hpp"
 
-#include "luacxx/convert/vector.hpp"
-#include "luacxx/convert/numeric.hpp"
+#include "convert/vector.hpp"
+#include "convert/numeric.hpp"
 
 BOOST_AUTO_TEST_CASE(luacxx_convert_vector)
 {

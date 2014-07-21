@@ -6,9 +6,9 @@
 #include "QEvent.hpp"
 #include "QTranslator.hpp"
 
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/convert/numeric.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../convert/numeric.hpp"
+#include "../thread.hpp"
 
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>

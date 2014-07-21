@@ -1,7 +1,7 @@
 #ifndef LUACXX_QMIMEDATA_INCLUDED
 #define LUACXX_QMIMEDATA_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QMimeData;
 

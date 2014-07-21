@@ -13,10 +13,10 @@
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/IR/IRBuilder.h>
 
-#include "../../luacxx/algorithm.hpp"
-#include "../../luacxx/thread.hpp"
-#include "../../luacxx/convert/callable.hpp"
-#include "../../luacxx/convert/numeric.hpp"
+#include "../../algorithm.hpp"
+#include "../../thread.hpp"
+#include "../../convert/callable.hpp"
+#include "../../convert/numeric.hpp"
 
 using namespace llvm;
 

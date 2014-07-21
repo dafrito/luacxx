@@ -2,9 +2,9 @@
 
 #include "QChar.hpp"
 #include "QString.hpp"
-#include "../luacxx/algorithm.hpp"
-#include "../luacxx/convert/string.hpp"
-#include "../luacxx/convert/numeric.hpp"
+#include "../algorithm.hpp"
+#include "../convert/string.hpp"
+#include "../convert/numeric.hpp"
 
 #include <unordered_map>
 #include <QStringList>

@@ -1,7 +1,7 @@
 #include "GObject.hpp"
 #include "GIBaseInfo.hpp"
 
-#include "../luacxx/convert/callable.hpp"
+#include "../convert/callable.hpp"
 
 #include <girepository.h>
 

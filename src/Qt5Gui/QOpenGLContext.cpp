@@ -1,6 +1,6 @@
 #include "QOpenGLContext.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QScreen.hpp"
 #include "QOpenGLContextGroup.hpp"
 #include "QOpenGLFunctions.hpp"

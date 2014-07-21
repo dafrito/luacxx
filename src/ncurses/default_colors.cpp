@@ -1,6 +1,6 @@
 #include "../ncurses.hpp"
 
-#include "../luacxx/thread.hpp"
+#include "../thread.hpp"
 
 // http://invisible-island.net/ncurses/man/default_colors.3x.html
 

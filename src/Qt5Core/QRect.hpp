@@ -1,7 +1,7 @@
 #ifndef LUACXX_QRECT_INCLUDED
 #define LUACXX_QRECT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QRect>
 

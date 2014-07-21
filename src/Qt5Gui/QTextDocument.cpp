@@ -1,6 +1,6 @@
 #include "QTextDocument.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QUrl.hpp"
 #include "../Qt5Core/QVariant.hpp"
 #include "../Qt5Core/QVector.hpp"

@@ -1,9 +1,9 @@
-#include "luacxx/algorithm.hpp"
+#include "algorithm.hpp"
 
-#include "luacxx/error.hpp"
-#include "luacxx/convert/string.hpp"
-#include "luacxx/convert/numeric.hpp"
-#include "luacxx/convert/callable.hpp"
+#include "error.hpp"
+#include "convert/string.hpp"
+#include "convert/numeric.hpp"
+#include "convert/callable.hpp"
 
 #include <cassert>
 #include <string>

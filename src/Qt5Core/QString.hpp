@@ -1,7 +1,7 @@
 #ifndef LUACXX_TYPE_QSTRING_INCLUDED
 #define LUACXX_TYPE_QSTRING_INCLUDED
 
-#include "../luacxx/convert/string.hpp"
+#include "../convert/string.hpp"
 
 #include <QString>
 

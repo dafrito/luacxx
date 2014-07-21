@@ -1,10 +1,10 @@
 #include "xf86drmMode.hpp"
 
-#include "luacxx/stack.hpp"
-#include "luacxx/thread.hpp"
-#include "luacxx/convert/numeric.hpp"
-#include "luacxx/convert/callable.hpp"
-#include "luacxx/convert/vector.hpp"
+#include "stack.hpp"
+#include "thread.hpp"
+#include "convert/numeric.hpp"
+#include "convert/callable.hpp"
+#include "convert/vector.hpp"
 
 #include <drm/drm_mode.h>
 #include <xf86drmMode.h>

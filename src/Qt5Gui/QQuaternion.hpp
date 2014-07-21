@@ -1,7 +1,7 @@
 #ifndef LUACXX_QQUATERNION_INCLUDED
 #define LUACXX_QQUATERNION_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QQuaternion>
 
 namespace lua {

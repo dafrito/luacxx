@@ -1,7 +1,7 @@
 #ifndef LUACXX_QSIZE_INCLUDED
 #define LUACXX_QSIZE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QSize;
 

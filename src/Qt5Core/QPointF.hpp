@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPOINTF_INCLUDED
 #define LUACXX_QPOINTF_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QPointF;
 

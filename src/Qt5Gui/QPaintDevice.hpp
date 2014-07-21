@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPAINTDEVICE_INCLUDED
 #define LUACXX_QPAINTDEVICE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QPaintDevice>
 
 namespace lua {

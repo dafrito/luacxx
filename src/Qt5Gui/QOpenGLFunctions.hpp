@@ -1,7 +1,7 @@
 #ifndef LUACXX_QOPENGLFUNCTIONS_INCLUDED
 #define LUACXX_QOPENGLFUNCTIONS_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QOpenGLFunctions;
 

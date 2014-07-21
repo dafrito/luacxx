@@ -1,7 +1,7 @@
 #ifndef LUACXX_LIBEVDEV_INCLUDED
 #define LUACXX_LIBEVDEV_INCLUDED
 
-#include "luacxx/stack.hpp"
+#include "stack.hpp"
 
 /*
 

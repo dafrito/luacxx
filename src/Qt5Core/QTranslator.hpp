@@ -1,7 +1,7 @@
 #ifndef LUACXX_QTRANSLATOR_INCLUDED
 #define LUACXX_QTRANSLATOR_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QTranslator;
 

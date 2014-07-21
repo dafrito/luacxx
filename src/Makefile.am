@@ -19,39 +19,39 @@ libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
 	config.hpp \
-	luacxx/algorithm.hpp \
-	luacxx/stack.hpp \
-	luacxx/error.hpp \
-	luacxx/global.hpp \
-	luacxx/load.hpp \
-	luacxx/range.hpp \
-	luacxx/reference.hpp \
-	luacxx/thread.hpp \
-	luacxx/type.hpp \
-	luacxx/convert/numeric.cpp
-	luacxx/convert/builtin.hpp
-	luacxx/convert/callable.hpp
-	luacxx/convert/char.hpp
-	luacxx/convert/char_pointer.hpp
-	luacxx/convert/numeric.hpp
-	luacxx/convert/shared_ptr.hpp
-	luacxx/convert/string.hpp
-	luacxx/convert/void.hpp
-	luacxx/module/ModuleLoader.hpp
+	algorithm.hpp \
+	stack.hpp \
+	error.hpp \
+	global.hpp \
+	load.hpp \
+	range.hpp \
+	reference.hpp \
+	thread.hpp \
+	type.hpp \
+	convert/numeric.cpp
+	convert/builtin.hpp
+	convert/callable.hpp
+	convert/char.hpp
+	convert/char_pointer.hpp
+	convert/numeric.hpp
+	convert/shared_ptr.hpp
+	convert/string.hpp
+	convert/void.hpp
+	module/ModuleLoader.hpp
 
 libluacxx_la_SOURCES = \
-	luacxx/algorithm.cpp \
-	luacxx/load.cpp \
-	luacxx/stack.cpp \
-	luacxx/thread.cpp \
-	luacxx/convert/numeric.cpp
+	algorithm.cpp \
+	load.cpp \
+	stack.cpp \
+	thread.cpp \
+	convert/numeric.cpp
 
 bin_PROGRAMS = luacxx
 luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
 luacxx_LDADD = libluacxx.la
 
 luacxx_SOURCES = \
-	luacxx/luacxx.cpp
+	luacxx.cpp
 
 check_PROGRAMS = runtest
 TESTS = $(check_PROGRAMS)
@@ -119,7 +119,7 @@ libluacxx_Qt5Core_la_LIBADD = \
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Core_la_SOURCES = \
-	luacxx/module/DirectoryModuleLoader.cpp \
+	module/DirectoryModuleLoader.cpp \
 	Qt5Core/QObject.cpp \
 	Qt5Core/QVariant.cpp \
 	Qt5Core/QStringList.cpp \
@@ -143,7 +143,7 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QObjectSlot.cpp
 
 nobase_pkginclude_HEADERS += \
-	luacxx/module/DirectoryModuleLoader.hpp \
+	module/DirectoryModuleLoader.hpp \
 	Qt5Core/QObject.hpp \
 	Qt5Core/QObjectSlot.hpp \
 	Qt5Core/QRect.hpp \
@@ -261,12 +261,12 @@ if BUILD_gobject_introspection
 libluacxx_la_SOURCES += \
 	Gtk/GIBaseInfo.cpp \
 	Gtk/GObject.cpp \
-	luacxx/search/GIRepository.cpp
+	search/GIRepository.cpp
 
 nobase_pkginclude_HEADERS += \
 	Gtk/GIBaseInfo.hpp \
 	Gtk/GObject.hpp \
-	luacxx/search/GIRepository.hpp
+	search/GIRepository.hpp
 
 endif
 

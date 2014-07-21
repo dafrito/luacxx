@@ -1,6 +1,6 @@
 #include "QCryptographicHash.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QByteArray.hpp"
 
 #include <QCryptographicHash>

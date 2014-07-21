@@ -1,9 +1,9 @@
 #include "egl.hpp"
 
-#include "luacxx/convert/callable.hpp"
-#include "luacxx/convert/numeric.hpp"
-#include "luacxx/convert/vector.hpp"
-#include "luacxx/thread.hpp"
+#include "convert/callable.hpp"
+#include "convert/numeric.hpp"
+#include "convert/vector.hpp"
+#include "thread.hpp"
 
 #include <EGL/egl.h>
 

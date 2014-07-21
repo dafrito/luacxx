@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCOREAPPLICATION_INCLUDED
 #define LUACXX_QCOREAPPLICATION_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <vector>
 #include <sstream>
 #include <cstring>

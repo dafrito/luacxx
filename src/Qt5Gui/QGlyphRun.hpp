@@ -1,7 +1,7 @@
 #ifndef LUACXX_QGLYPHRUN_INCLUDED
 #define LUACXX_QGLYPHRUN_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QGlyphRun;
 

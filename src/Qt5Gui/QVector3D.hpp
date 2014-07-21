@@ -1,7 +1,7 @@
 #ifndef LUACXX_QVECTOR3D_INCLUDED
 #define LUACXX_QVECTOR3D_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QVector3D;
 

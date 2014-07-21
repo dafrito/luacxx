@@ -1,9 +1,9 @@
 #include "QQuaternion.hpp"
 
 #include "QVector3D.hpp"
-#include "../luacxx/convert/numeric.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/numeric.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 
 int QQuaternion_setVector(lua_State* const state)
 {

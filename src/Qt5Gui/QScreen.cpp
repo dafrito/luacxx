@@ -1,8 +1,8 @@
 #include "QScreen.hpp"
 
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/convert/numeric.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../convert/numeric.hpp"
+#include "../thread.hpp"
 #include "../Qt5Core/QRect.hpp"
 #include "../Qt5Core/QSize.hpp"
 #include "QPixmap.hpp"

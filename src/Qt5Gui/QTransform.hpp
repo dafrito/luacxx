@@ -1,7 +1,7 @@
 #ifndef LUACXX_QTRANSFORM_INCLUDED
 #define LUACXX_QTRANSFORM_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QTransform;
 

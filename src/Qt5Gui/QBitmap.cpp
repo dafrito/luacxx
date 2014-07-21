@@ -1,6 +1,6 @@
 #include "QBitmap.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QPixmap.hpp"
 
 int QBitmap_transformed(lua_State* const state)

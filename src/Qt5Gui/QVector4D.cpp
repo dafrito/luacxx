@@ -1,6 +1,6 @@
 #include "QVector4D.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 
 #include <QVector4D>
 

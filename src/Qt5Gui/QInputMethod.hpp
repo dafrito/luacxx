@@ -1,7 +1,7 @@
 #ifndef LUACXX_QINPUTMETHOD_INCLUDED
 #define LUACXX_QINPUTMETHOD_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QInputMethod>
 
 namespace lua {

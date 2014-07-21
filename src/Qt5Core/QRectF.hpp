@@ -1,7 +1,7 @@
 #ifndef LUACXX_QRECTF_INCLUDED
 #define LUACXX_QRECTF_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QRectF;
 

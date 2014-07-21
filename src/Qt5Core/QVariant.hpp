@@ -1,7 +1,7 @@
 #ifndef LUACXX_TYPE_QVARIANT_INCLUDED
 #define LUACXX_TYPE_QVARIANT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QVariant>
 

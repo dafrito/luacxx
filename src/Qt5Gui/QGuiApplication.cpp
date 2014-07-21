@@ -3,9 +3,9 @@
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QEventLoop.hpp"
 
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/convert/numeric.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../convert/numeric.hpp"
+#include "../thread.hpp"
 #include "QClipboard.hpp"
 #include "../Qt5Core/QObject.hpp"
 #include "QPalette.hpp"

@@ -1,6 +1,6 @@
 #include "QEvent.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QSize.hpp"
 
 std::string QEvent_type(QEvent* event);

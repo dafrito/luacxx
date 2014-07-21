@@ -1,7 +1,7 @@
 #ifndef LUACXX_MODULE_LOADER_INCLUDED
 #define LUACXX_MODULE_LOADER_INCLUDED
 
-#include "luacxx/stack.hpp"
+#include "stack.hpp"
 
 #include <string>
 

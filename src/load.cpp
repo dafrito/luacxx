@@ -1,5 +1,5 @@
-#include "luacxx/load.hpp"
-#include "luacxx/error.hpp"
+#include "load.hpp"
+#include "error.hpp"
 
 #include "config.hpp"
 #include <fstream>

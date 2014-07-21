@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPALETTE_INCLUDED
 #define LUACXX_QPALETTE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QPalette>
 
 // http://qt-project.org/doc/qt-5/qpalette.html

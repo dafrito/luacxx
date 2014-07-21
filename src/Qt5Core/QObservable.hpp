@@ -1,10 +1,10 @@
 #ifndef LUACXX_QOBSERVABLE_INCLUDED
 #define LUACXX_QOBSERVABLE_INCLUDED
 
-#include "../luacxx/stack.hpp"
-#include "../luacxx/reference.hpp"
-#include "../luacxx/algorithm.hpp"
-#include "../luacxx/convert/string.hpp"
+#include "../stack.hpp"
+#include "../reference.hpp"
+#include "../algorithm.hpp"
+#include "../convert/string.hpp"
 #include "QEvent.hpp"
 #include <iostream>
 

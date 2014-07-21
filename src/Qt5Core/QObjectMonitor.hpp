@@ -1,7 +1,7 @@
 #ifndef LUACXX_QOBJECTMONITOR_INCLUDED
 #define LUACXX_QOBJECTMONITOR_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QObject>
 

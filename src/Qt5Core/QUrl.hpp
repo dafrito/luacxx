@@ -1,7 +1,7 @@
 #ifndef LUACXX_QURL_INCLUDED
 #define LUACXX_QURL_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <QUrl>
 
 namespace lua {

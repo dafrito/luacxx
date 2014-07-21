@@ -1,8 +1,8 @@
 #include "QSurface.hpp"
 
 #include "../Qt5Core/QObject.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 
 void lua::QSurface_metatable(const lua::index& mt)
 {

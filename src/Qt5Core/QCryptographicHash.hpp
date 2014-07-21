@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
 #define LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QCryptographicHash;
 

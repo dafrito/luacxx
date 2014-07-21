@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPAINTERPATH_INCLUDED
 #define LUACXX_QPAINTERPATH_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QPainterPath>
 

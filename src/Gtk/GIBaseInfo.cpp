@@ -1,7 +1,7 @@
 #include "GIBaseInfo.hpp"
 #include "GObject.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/convert/string.hpp"
+#include "../convert/callable.hpp"
+#include "../convert/string.hpp"
 #include <sstream>
 
 // Print this info's name and type

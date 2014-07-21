@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCOLOR_INCLUDED
 #define LUACXX_QCOLOR_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QColor;
 

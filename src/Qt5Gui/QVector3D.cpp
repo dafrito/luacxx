@@ -1,7 +1,7 @@
 #include "QVector3D.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/convert/numeric.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../convert/numeric.hpp"
+#include "../thread.hpp"
 
 #include <QVector2D>
 #include <QVector3D>

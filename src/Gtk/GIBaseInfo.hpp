@@ -1,7 +1,7 @@
 #ifndef LUACXX_TYPE_GIBASEINFO_INCLUDED
 #define LUACXX_TYPE_GIBASEINFO_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 #include <girepository.h>
 
 namespace lua {

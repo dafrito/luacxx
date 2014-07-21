@@ -1,9 +1,9 @@
 #ifndef LUACXX_QWINDOW_INCLUDED
 #define LUACXX_QWINDOW_INCLUDED
 
-#include "../luacxx/stack.hpp"
-#include "../luacxx/convert/string.hpp"
-#include "../luacxx/convert/callable.hpp"
+#include "../stack.hpp"
+#include "../convert/string.hpp"
+#include "../convert/callable.hpp"
 
 #include <QWindow>
 

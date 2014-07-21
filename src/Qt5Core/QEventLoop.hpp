@@ -1,7 +1,7 @@
 #ifndef LUACXX_QEVENTLOOP_INCLUDED
 #define LUACXX_QEVENTLOOP_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QEventLoop;
 

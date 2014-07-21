@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCLIPBOARD_INCLUDED
 #define LUACXX_QCLIPBOARD_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <QClipboard>
 

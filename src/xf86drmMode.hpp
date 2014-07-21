@@ -27,7 +27,7 @@ xf86drmMode.h uses the following license:
 
 */
 
-#include "luacxx/stack.hpp"
+#include "stack.hpp"
 
 namespace lua {
 

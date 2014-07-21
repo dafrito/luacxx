@@ -1,8 +1,8 @@
 #ifndef LUACXX_QT_INCLUDED
 #define LUACXX_QT_INCLUDED
 
-#include "../luacxx/stack.hpp"
-#include "../luacxx/global.hpp"
+#include "../stack.hpp"
+#include "../global.hpp"
 #include <Qt>
 
 namespace lua {

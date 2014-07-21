@@ -1,7 +1,7 @@
 #ifndef LUACXX_QOFFSCREENSURFACE_INCLUDED
 #define LUACXX_QOFFSCREENSURFACE_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QOffscreenSurface;
 

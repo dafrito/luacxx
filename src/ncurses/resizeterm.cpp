@@ -1,5 +1,5 @@
 #include "../ncurses.hpp"
-#include "../luacxx/thread.hpp"
+#include "../thread.hpp"
 
 // http://invisible-island.net/ncurses/man/resizeterm.3x.html
 

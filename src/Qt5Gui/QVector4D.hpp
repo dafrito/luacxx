@@ -1,7 +1,7 @@
 #ifndef LUACXX_QVECTOR4D_INCLUDED
 #define LUACXX_QVECTOR4D_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 class QVector4D;
 

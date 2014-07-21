@@ -1,7 +1,7 @@
 #include "QUrl.hpp"
 
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 
 // http://qt-project.org/doc/qt-5/qurl.html
 

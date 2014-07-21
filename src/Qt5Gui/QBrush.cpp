@@ -1,6 +1,6 @@
 #include "QBrush.hpp"
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "QGradient.hpp"
 #include "QMatrix.hpp"
 #include "QPixmap.hpp"

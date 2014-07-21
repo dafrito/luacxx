@@ -1,7 +1,7 @@
 #ifndef LUACXX_GOBJECT_INCLUDED
 #define LUACXX_GOBJECT_INCLUDED
 
-#include "../luacxx/stack.hpp"
+#include "../stack.hpp"
 
 #include <glib-object.h>
 

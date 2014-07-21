@@ -1,7 +1,7 @@
 #include "QRegion.hpp"
 
-#include "../luacxx/convert/callable.hpp"
-#include "../luacxx/thread.hpp"
+#include "../convert/callable.hpp"
+#include "../thread.hpp"
 #include "../Qt5Core/QRect.hpp"
 
 int QRegion_contains(lua_State* const state)
