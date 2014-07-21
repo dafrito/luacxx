@@ -616,14 +616,14 @@ BOOST_AUTO_TEST_CASE(raw_char)
 
 #ifdef HAVE_gobject_introspection
 
-#include "gobject-introspection.hpp"
+#include "luacxx/search/GIRepository.hpp"
 
 BOOST_AUTO_TEST_CASE(gobject_introspection)
 {
     auto env = lua::create();
 
     env["package"]["cpath"] = ".libs/lib?.so";
-    lua::run_string(env, "require 'luacxx.gobject_introspection'");
+    lua::run_string(env, "require 'luacxx.search.GIRepository'");
     lua::run_string(env, "require 'Gtk'");
     lua::run_string(env, "return Gtk.rgb_to_hsv");
     lua::run_string(env, "return Gtk.Application");

@@ -1,6 +1,6 @@
 #include "GIRepository.hpp"
 
-#include "../../Gtk/GIBaseInfo.hpp"
+#include "../Gtk/GIBaseInfo.hpp"
 #include "../thread.hpp"
 #include "../algorithm.hpp"
 #include "../convert/string.hpp"
