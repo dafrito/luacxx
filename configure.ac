@@ -26,7 +26,7 @@ AC_TYPE_SIZE_T
 AX_CXX_COMPILE_STDCXX_11([noext],[stdcxx11_CFLAGS])
 AC_SUBST([stdcxx11_CFLAGS])
 
-# Check for Boost. It's used for unit tets
+# Check for Boost. It's used for unit tests
 AX_BOOST_BASE([], [:], [:])
 AX_BOOST_UNIT_TEST_FRAMEWORK
 
