@@ -31,7 +31,7 @@ install-exec-hook:
 	mkdir -p $(DESTDIR)/$(LUA_LIB_DIR)
 	ln -s $(libdir)/libluacxx.so $(DESTDIR)/$(LUA_LIB_DIR)
 	for lib in $(luacxx_libraries); do \
-		ln -s $(libdir)/libluacxx-$$lib.so $(DESTDIR)/$(LUA_LIB_DIR)/$$lib.so
+		ln -s $(libdir)/libluacxx-$$lib.so $(DESTDIR)/$(LUA_LIB_DIR)/$$lib.so; \
 	done;
 
 checkdebug: $(TESTS)
