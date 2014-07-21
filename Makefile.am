@@ -40,20 +40,31 @@ checkdebug: $(TESTS)
 checkvalgrind:
 	valgrind -v --leak-check=full ./src/.libs/lt-runtest
 
+VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes
+
 valgrind:
-	LUA_PATH='$(top_srcdir)/src/?.lua;;' LUA_CPATH='./src/.libs/lib?.so;./src/.libs/libluacxx-?.so;;' valgrind -v --num-callers=40 --leak-check=full --trace-children=yes ./src/.libs/lt-luacxx $(top_srcdir)/src/demo.lua
+	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
 
 run: lua
-	cd lua && ./luacxx demo.lua
+	cd lua && ./luacxx demo.lua Gst
 
 debug: lua
 	cd lua && gdb ../src/.libs/lt-luacxx
+
+run-quat_benchmark:
+	cd lua && ./luacxx demo.lua quat_benchmark
 
 run-gtk_gstreamer:
 	cd lua && ./luacxx demo.lua gtk_gstreamer
 
 run-qt_window:
 	cd lua && ./luacxx demo.lua qt_window
+
+run-cairo:
+	cd lua && ./luacxx demo.lua cairo
+
+run-Gst:
+	cd lua && ./luacxx demo.lua Gst
 
 run-ncurses_getch:
 	cd lua && ./luacxx demo.lua ncurses_getch
