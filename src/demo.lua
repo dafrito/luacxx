@@ -5,6 +5,8 @@ require "acme.quat_benchmark"
 require "acme.ncurses_getch"
 require "acme.nanorecv";
 require "acme.nanosend";
+require "acme.cairo";
+require "acme.Gst";
 
 local name = select(3, ...);
 
