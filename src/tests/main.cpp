@@ -246,6 +246,15 @@ BOOST_AUTO_TEST_CASE(value_userdata)
     BOOST_CHECK_EQUAL(42, foo->get());
 }
 
+BOOST_AUTO_TEST_CASE(push_metatable)
+{
+    auto env = lua::create();
+
+    // Does push_metatable add trash to the environment?
+    lua::push(env, Counter(42));
+    BOOST_CHECK_EQUAL(lua_gettop(env), 1);
+}
+
 BOOST_AUTO_TEST_CASE(lambda_with_wrap)
 {
     auto env = lua::create();
