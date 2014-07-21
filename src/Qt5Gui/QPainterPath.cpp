@@ -330,7 +330,7 @@ int QPainterPath_toFillPolygon(lua_State* const state)
         return 1;
     }
 
-    if (lua::is_type<QTranform>(state, 2)) {
+    if (lua::is_type<QTransform>(state, 2)) {
         // QPolygonF toFillPolygon(const QTransform & matrix) const
         lua::push(state, self->toFillPolygon(lua::get<const QTransform&>(state, 2)));
         return 1;
@@ -348,7 +348,7 @@ int QPainterPath_toFillPolygons(lua_State* const state)
 
     if (lua_gettop(state) == 1) {
         fillPolygons = self->toFillPolygons();
-    } else if (lua::is_type<QTranform>(state, 2)) {
+    } else if (lua::is_type<QTransform>(state, 2)) {
         fillPolygons = self->toFillPolygons(
             lua::get<const QTransform&>(state, 2)
         );
@@ -370,7 +370,7 @@ int QPainterPath_toSubpathPolygons(lua_State* const state)
 
     if (lua_gettop(state) == 1) {
         fillPolygons = self->toSubpathPolygons();
-    } else if (lua::is_type<QTranform>(state, 2)) {
+    } else if (lua::is_type<QTransform>(state, 2)) {
         fillPolygons = self->toSubpathPolygons(
             lua::get<const QTransform&>(state, 2)
         );
