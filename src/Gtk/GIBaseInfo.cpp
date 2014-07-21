@@ -1,8 +1,10 @@
 #include "GIBaseInfo.hpp"
 #include "GObject.hpp"
 #include "../luacxx/convert/callable.hpp"
+#include "../luacxx/convert/string.hpp"
 #include <sstream>
 
+// Print this info's name and type
 std::string lua::GIInfoType_tostring(GIInfoType info_type)
 {
     switch (info_type) {
@@ -61,7 +63,7 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
             g_base_info_unref(arg_info);
         }
         str << ")";
-        break;
+        return str.str();
     }
     case GI_INFO_TYPE_STRUCT:
     {
@@ -82,7 +84,7 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
         }
 
         str << "\n};";
-        break;
+        return str.str();
     }
     case GI_INFO_TYPE_FIELD:
     {
@@ -90,7 +92,7 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
         auto field_info = g_field_info_get_type(info);
         str << lua::GIBaseInfo_tostring(field_info) << " " << g_base_info_get_name(info) << ';';
         g_base_info_unref(field_info);
-        break;
+        return str.str();
     }
     case GI_INFO_TYPE_TYPE:
     {
@@ -101,7 +103,7 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
         } else {
             str << g_type_tag_to_string(g_type_info_get_tag(info));
         }
-        break;
+        return str.str();
     }
     case GI_INFO_TYPE_ARG:
     {
@@ -111,15 +113,16 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
         switch (g_arg_info_get_direction(info)) {
         case GI_DIRECTION_OUT:
             str << name << "*";
-            break;
+            return str.str();
         case GI_DIRECTION_INOUT:
             str << name << "&";
-            break;
+            return str.str();
         case GI_DIRECTION_IN:
             str << name;
-            break;
+            return str.str();
         }
-        break;
+
+        throw std::logic_error("Unreachable");
     }
     case GI_INFO_TYPE_OBJECT:
     {
@@ -140,7 +143,7 @@ std::string lua::GIBaseInfo_tostring(GIBaseInfo* info)
         }
 
         str << "\n};";
-        break;
+        return str.str();
     }
     case GI_INFO_TYPE_INTERFACE:
     {
@@ -368,9 +371,6 @@ int lua::GIBaseInfo_call(lua_State* const state)
     }
     }
 
-    // Arrange the return value
-    lua_replace(state, 1);
-    lua_settop(state, 1);
     return 1;
 }
 
@@ -378,21 +378,10 @@ void lua::GIBaseInfo_metatable(const lua::index& mt)
 {
     mt["__call"] = lua::GIBaseInfo_call;
     mt["__index"] = GIBaseInfo_index;
-    mt["__tostring"] = lua_CFunction([](lua_State* const state) {
-        // Print this info's name and type
-        auto info = lua::get<GIBaseInfo*>(state, 1);
-        lua_settop(state, 0);
-
-        // Send the string back to Lua
-        lua::push(state, lua::GIBaseInfo_tostring(info));
-        return 1;
-    });
+    mt["__tostring"] = lua::GIBaseInfo_tostring;
 
     mt["Destroy"] = lua_CFunction([](lua_State* const state) {
-        auto info = lua::get<GIBaseInfo*>(state, 1);
-        if (info) {
-            g_base_info_unref(info);
-        }
+        g_base_info_unref(lua::get<GIBaseInfo*>(state, 1));
         return 0;
     });
 }

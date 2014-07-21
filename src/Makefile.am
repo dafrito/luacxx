@@ -261,14 +261,12 @@ if BUILD_gobject_introspection
 libluacxx_la_SOURCES += \
 	Gtk/GIBaseInfo.cpp \
 	Gtk/GObject.cpp \
-	Gtk/GIRepository.cpp \
-	gobject-introspection.cpp
+	luacxx/search/GIRepository.cpp
 
 nobase_pkginclude_HEADERS += \
 	Gtk/GIBaseInfo.hpp \
 	Gtk/GObject.hpp \
-	Gtk/GIRepository.hpp \
-	gobject-introspection.hpp
+	luacxx/search/GIRepository.hpp
 
 endif
 
