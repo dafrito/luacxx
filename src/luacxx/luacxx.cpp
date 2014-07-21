@@ -35,13 +35,45 @@ int main(int argc, char** argv)
 
     lua_atpanic(env, on_panic);
 
-    auto LUA_CPATH = std::getenv("LUA_CPATH");
-    if (LUA_CPATH) {
+    auto default_cpath = env["package"]["cpath"].get<std::string>();
+    while (default_cpath.find(";;") != std::string::npos) {
+        default_cpath.replace(
+            default_cpath.find(";;"),
+            2,
+            ";"
+        );
+    }
+
+    std::string LUA_CPATH(std::getenv("LUA_CPATH"));
+    if (!LUA_CPATH.empty()) {
+        while (LUA_CPATH.find(";;") != std::string::npos) {
+            LUA_CPATH.replace(
+                LUA_CPATH.find(";;"),
+                2,
+                default_cpath
+            );
+        }
         env["package"]["cpath"] = LUA_CPATH;
     }
 
-    auto LUA_PATH = std::getenv("LUA_PATH");
-    if (LUA_PATH) {
+    auto default_path = env["package"]["path"].get<std::string>();
+    while (default_path.find(";;") != std::string::npos) {
+        default_path.replace(
+            default_path.find(";;"),
+            2,
+            ";"
+        );
+    }
+
+    std::string LUA_PATH(std::getenv("LUA_PATH"));
+    if (!LUA_PATH.empty()) {
+        while (LUA_PATH.find(";;") != std::string::npos) {
+            LUA_PATH.replace(
+                LUA_PATH.find(";;"),
+                2,
+                default_path
+            );
+        }
         env["package"]["path"] = LUA_PATH;
     }
 
