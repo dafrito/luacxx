@@ -26,5 +26,6 @@ print("These are the available programs:");
 for name, _ in pairs(acme) do
     print("", name);
 end;
+
 print("\nRun one by passing the program name as an argument, like this:");
 print("\tmake run-ncurses_getch");
