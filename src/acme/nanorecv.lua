@@ -7,6 +7,11 @@ end;
 function acme.nanorecv(url)
     require "nanomsg";
 
+    if url == nil then
+        print("USAGE: nanorecv <url>");
+        return;
+    end;
+
     local sock = nn_socket(AF_SP, NN_PULL);
     assert(sock >= 0);
 

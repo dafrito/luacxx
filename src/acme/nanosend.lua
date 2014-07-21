@@ -7,6 +7,11 @@ end;
 function acme.nanosend(url, msg)
     require "nanomsg";
 
+    if url == nil or msg == nil then
+        print("USAGE: nanosend <url> <msg>");
+        return;
+    end;
+
     local sz_msg = #msg + 1; -- include the '\0'
     local sock = nn_socket(AF_SP, NN_PUSH);
     assert(sock >= 0);
