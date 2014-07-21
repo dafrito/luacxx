@@ -1098,7 +1098,7 @@ void push_metatable(lua_State* const state, T* const value)
 {
     // Check for a cached metatable first.
     auto class_name = Metatable<T>::name;
-    if (std::char_traits<char>::length(class_name) > 0) {
+    if (class_name && std::char_traits<char>::length(class_name) > 0) {
         // Push whatever we find.
         lua_getfield(state, LUA_REGISTRYINDEX, class_name);
     } else {
