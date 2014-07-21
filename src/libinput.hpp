@@ -17,7 +17,7 @@ libinput 0.3.0 - http://www.freedesktop.org/wiki/Software/libinput/
 
 =head1 SYNOPSIS
 
-    require "luacxx.libinput";
+    require "libinput";
 
 =head1 DESCRIPTION
 
