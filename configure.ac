@@ -46,8 +46,8 @@ AC_ARG_WITH([linux],
 )
 if test x$with_linux = xyes; then
     AC_CHECK_HEADER(["linux/input.h"],
-        [with_Qt5Core=yes],
-        [with_Qt5Core=no]
+        [with_linux=yes],
+        [with_linux=no]
     )
     AC_DEFINE([HAVE_linux], [1], [Defined if linux is available])
 fi;
