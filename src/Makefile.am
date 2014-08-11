@@ -37,7 +37,7 @@ nobase_pkginclude_HEADERS = \
 	convert/shared_ptr.hpp
 	convert/string.hpp
 	convert/void.hpp
-	module/ModuleLoader.hpp
+	load/ModuleLoader.hpp
 
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
@@ -119,7 +119,7 @@ libluacxx_Qt5Core_la_LIBADD = \
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Core_la_SOURCES = \
-	module/DirectoryModuleLoader.cpp \
+	load/DirectoryModuleLoader.cpp \
 	Qt5Core/QObject.cpp \
 	Qt5Core/QVariant.cpp \
 	Qt5Core/QStringList.cpp \
@@ -143,7 +143,7 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QObjectSlot.cpp
 
 nobase_pkginclude_HEADERS += \
-	module/DirectoryModuleLoader.hpp \
+	load/DirectoryModuleLoader.hpp \
 	Qt5Core/QObject.hpp \
 	Qt5Core/QObjectSlot.hpp \
 	Qt5Core/QRect.hpp \
