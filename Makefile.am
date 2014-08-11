@@ -28,10 +28,12 @@ lua:
 LUA_LIB_DIR="$(libdir)/lua/5.2/"
 
 install-exec-hook:
-	mkdir -p $(DESTDIR)/$(LUA_LIB_DIR)
-	ln -s $(libdir)/libluacxx.so $(DESTDIR)/$(LUA_LIB_DIR)
+	mkdir -p $(DESTDIR)$(LUA_LIB_DIR)
+	test -f $(DESTDIR)$(LUA_LIB_DIR)/libluacxx.so || \
+		ln -s $(libdir)/libluacxx.so $(DESTDIR)$(LUA_LIB_DIR);
 	for lib in $(luacxx_libraries); do \
-		ln -s $(libdir)/libluacxx-$$lib.so $(DESTDIR)/$(LUA_LIB_DIR)/$$lib.so; \
+		test -f $(DESTDIR)$(LUA_LIB_DIR)/$$lib.so || \
+			ln -s $(libdir)/libluacxx-$$lib.so $(DESTDIR)$(LUA_LIB_DIR)/$$lib.so; \
 	done;
 
 checkdebug: $(TESTS)
