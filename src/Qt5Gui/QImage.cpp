@@ -34,12 +34,22 @@ int QImage_loadFromData(lua_State* const state)
     return 0;
 }
 
+int QImage_mirrored(lua_State* const state)
+{
+    return 0;
+}
+
 int QImage_pixel(lua_State* const state)
 {
     return 0;
 }
 
 int QImage_pixelIndex(lua_State* const state)
+{
+    return 0;
+}
+
+int QImage_rgbSwapped(lua_State* const state)
 {
     return 0;
 }
@@ -105,12 +115,12 @@ void lua::QImage_metatable(const lua::index& mt)
     mt["isNull"] = &QImage::isNull;
     mt["load"] = QImage_load;
     mt["loadFromData"] = QImage_loadFromData;
-    mt["mirrored"] = &QImage::mirrored;
+    mt["mirrored"] = QImage_mirrored;
     mt["offset"] = &QImage::offset;
     mt["pixel"] = QImage_pixel;
     mt["pixelIndex"] = QImage_pixelIndex;
     mt["rect"] = &QImage::rect;
-    mt["rgbSwapped"] = &QImage::rgbSwapped;
+    mt["rgbSwapped"] = QImage_rgbSwapped;
     mt["save"] = QImage_save;
     mt["scaled"] = QImage_scaled;
     mt["scaledToHeight"] = &QImage::scaledToHeight;

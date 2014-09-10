@@ -3,6 +3,31 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
+int QSurfaceFormat_setOption(lua_State* const state)
+{
+    auto self = lua::get<QSurfaceFormat*>(state, 1);
+    if (lua_gettop(state) > 2) {
+        self->setOption(
+            lua::get<QSurfaceFormat::FormatOption>(state, 2),
+            lua::get<bool>(state, 3)
+        );
+    } else {
+        self->setOption(
+            lua::get<QSurfaceFormat::FormatOption>(state, 2)
+        );
+    }
+    return 0;
+}
+
+int QSurfaceFormat_testOption(lua_State* const state)
+{
+    auto self = lua::get<QSurfaceFormat*>(state, 1);
+    lua::push(state, self->testOption(
+        lua::get<QSurfaceFormat::FormatOption>(state, 2)
+    ));
+    return 1;
+}
+
 void lua::QSurfaceFormat_metatable(const lua::index& mt)
 {
     mt["alphaBufferSize"] = &QSurfaceFormat::alphaBufferSize;
@@ -22,7 +47,7 @@ void lua::QSurfaceFormat_metatable(const lua::index& mt)
     mt["setGreenBufferSize"] = &QSurfaceFormat::setGreenBufferSize;
     mt["setMajorVersion"] = &QSurfaceFormat::setMajorVersion;
     mt["setMinorVersion"] = &QSurfaceFormat::setMinorVersion;
-    mt["setOption"] = &QSurfaceFormat::setOption;
+    mt["setOption"] = QSurfaceFormat_setOption;
     mt["setProfile"] = &QSurfaceFormat::setProfile;
     mt["setRedBufferSize"] = &QSurfaceFormat::setRedBufferSize;
     mt["setRenderableType"] = &QSurfaceFormat::setRenderableType;
@@ -34,7 +59,7 @@ void lua::QSurfaceFormat_metatable(const lua::index& mt)
     mt["stencilBufferSize"] = &QSurfaceFormat::stencilBufferSize;
     mt["stereo"] = &QSurfaceFormat::stereo;
     mt["swapBehavior"] = &QSurfaceFormat::swapBehavior;
-    mt["testOption"] = &QSurfaceFormat::testOption;
+    mt["testOption"] = QSurfaceFormat_testOption;
     mt["version"] = &QSurfaceFormat::version;
 
     #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
