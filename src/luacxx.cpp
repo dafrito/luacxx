@@ -44,8 +44,8 @@ int main(int argc, char** argv)
         );
     }
 
-    std::string LUA_CPATH(std::getenv("LUA_CPATH"));
-    if (!LUA_CPATH.empty()) {
+    if (std::getenv("LUA_CPATH") != nullptr) {
+        std::string LUA_CPATH(std::getenv("LUA_CPATH"));
         while (LUA_CPATH.find(";;") != std::string::npos) {
             LUA_CPATH.replace(
                 LUA_CPATH.find(";;"),
@@ -65,16 +65,18 @@ int main(int argc, char** argv)
         );
     }
 
-    std::string LUA_PATH(std::getenv("LUA_PATH"));
-    if (!LUA_PATH.empty()) {
-        while (LUA_PATH.find(";;") != std::string::npos) {
-            LUA_PATH.replace(
-                LUA_PATH.find(";;"),
-                2,
-                default_path
-            );
+    if (std::getenv("LUA_PATH") != nullptr) {
+        std::string LUA_PATH(std::getenv("LUA_PATH"));
+        if (!LUA_PATH.empty()) {
+            while (LUA_PATH.find(";;") != std::string::npos) {
+                LUA_PATH.replace(
+                    LUA_PATH.find(";;"),
+                    2,
+                    default_path
+                );
+            }
+            env["package"]["path"] = LUA_PATH;
         }
-        env["package"]["path"] = LUA_PATH;
     }
 
     if (argc == 1) {
