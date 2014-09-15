@@ -48,7 +48,7 @@ valgrind:
 	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
 
 run: lua
-	cd lua && ./luacxx demo.lua Gst
+	cd lua && ./luacxx demo.lua qt_window
 
 debug: lua
 	cd lua && gdb ../src/.libs/lt-luacxx
