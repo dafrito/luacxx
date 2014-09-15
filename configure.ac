@@ -1,6 +1,6 @@
 AC_PREREQ([2.68])
 
-AC_INIT([luacxx], [3.2], [dafrito@gmail.com], [luacxx], [http://www.github.com/dafrito/luacxx])
+AC_INIT([luacxx], [1.1], [dafrito@gmail.com], [luacxx], [http://www.github.com/dafrito/luacxx])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AC_SUBST([PACKAGE_DESCRIPTION], ["C++11 bindings and modules for Lua"])
 
