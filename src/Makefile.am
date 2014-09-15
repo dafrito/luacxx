@@ -109,11 +109,14 @@ moc_Qt5Core.cpp: tests/Qt5Core.hpp
 
 lib_LTLIBRARIES += libluacxx-Qt5Core.la
 
+# Include Qt5Gui for QEvent support
 libluacxx_Qt5Core_la_CPPFLAGS = \
-	$(libluacxx_la_CPPFLAGS)
+	$(libluacxx_la_CPPFLAGS) \
+	@Qt5Gui_CFLAGS@
 
 libluacxx_Qt5Core_la_LIBADD = \
 	@Qt5Core_LIBS@ \
+	@Qt5Gui_LIBS@ \
 	libluacxx.la
 
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
@@ -190,8 +193,6 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QWindow.cpp \
 	Qt5Gui/QPen.cpp \
 	Qt5Gui/QBrush.cpp \
-	Qt5Gui/QResizeEvent.cpp \
-	Qt5Gui/QExposeEvent.cpp \
 	Qt5Gui/QGuiApplication.cpp \
 	Qt5Gui/QOpenGLContext.cpp \
 	Qt5Gui/QOpenGLContextGroup.cpp \

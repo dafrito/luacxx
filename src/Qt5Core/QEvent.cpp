@@ -1,21 +1,43 @@
 #include "QEvent.hpp"
 #include "../convert/callable.hpp"
+#include "../convert/string.hpp"
 #include "../thread.hpp"
 #include "QSize.hpp"
+
+#ifdef HAVE_Qt5Gui
+#include <QResizeEvent>
+#include <QExposeEvent>
+#endif
 
 std::string QEvent_type(QEvent* event);
 std::string QEvent_tostring(QEvent* event);
 
-void lua::QEvent_metatable(const lua::index& mt)
+void lua::QEvent_metatable(const lua::index& mt, QEvent* const event)
 {
     mt["accept"] = &QEvent::accept;
     mt["ignore"] = &QEvent::ignore;
     mt["setAccepted"] = &QEvent::setAccepted;
     mt["isAccepted"] = &QEvent::isAccepted;
     mt["spontaneous"] = &QEvent::spontaneous;
-    mt["type"] = QEvent_type;
+    mt["type"] = &QEvent::type;
 
     mt["__tostring"] = QEvent_tostring;
+
+#ifdef HAVE_Qt5Gui
+    if (event) {
+        switch (event->type()) {
+        case QEvent::Resize:
+            mt["oldSize"] = &QResizeEvent::oldSize;
+            mt["size"] = &QResizeEvent::size;
+            break;
+        case QEvent::Expose:
+            mt["region"] = &QExposeEvent::region;
+            break;
+        default:
+            break;
+        }
+    }
+#endif
 }
 
 std::string QEvent_typename(QEvent* event)
@@ -41,15 +63,11 @@ std::string QEvent_typename(QEvent* event)
     return str.str();
 }
 
-std::string QEvent_type(QEvent* event)
-{
-    return QEvent_typename(event);
-}
-
 std::string QEvent_tostring(QEvent* event)
 {
     std::stringstream str;
     str << QEvent_typename(event) << "@" << event;
+
     return str.str();
 }
 

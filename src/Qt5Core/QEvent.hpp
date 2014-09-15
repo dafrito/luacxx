@@ -7,17 +7,35 @@
 
 namespace lua {
 
-void QEvent_metatable(const lua::index& mt);
+void QEvent_metatable(const lua::index& mt, QEvent* const event);
 
 template <>
 struct Metatable<QEvent>
 {
     static constexpr const char* name = "QEvent";
 
-    static bool metatable(const lua::index& mt, QEvent* const)
+    static bool metatable(const lua::index& mt, QEvent* const event)
     {
-        lua::QEvent_metatable(mt);
-        return true;
+        lua::QEvent_metatable(mt, event);
+        return false;
+    }
+};
+
+template<>
+struct Push<QEvent::Type>
+{
+    static void push(lua_State* const state, const QEvent::Type& source)
+    {
+        lua_pushinteger(state, source);
+    }
+};
+
+template<>
+struct Store<QEvent::Type>
+{
+    static void store(QEvent::Type& destination, const lua::index& source)
+    {
+        destination = static_cast<QEvent::Type>(lua_tointeger(source.state(), source.pos()));
     }
 };
 
