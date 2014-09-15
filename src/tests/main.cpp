@@ -620,19 +620,12 @@ BOOST_AUTO_TEST_CASE(raw_char)
 
 BOOST_AUTO_TEST_CASE(gobject_introspection)
 {
-    if (true) {
-        std::cerr << "Skipping Gtk tests for now, as Gtk support doesn't yet work.\n";
-        return;
-    }
     auto env = lua::create();
 
     env["package"]["cpath"] = ".libs/lib?.so";
     lua::run_string(env, "require 'luacxx.search.GIRepository'");
     lua::run_string(env, "require 'Gtk'");
-    lua::run_string(env, "return Gtk.rgb_to_hsv");
-    lua::run_string(env, "return Gtk.Application");
-    lua::run_string(env, "return Gtk.Application.new()");
-    lua::run_string(env, "app = Gtk.Application.new();");
+    lua::run_string(env, "app = gtk_application_new()");
 }
 
 #endif // HAVE_gobject_introspection

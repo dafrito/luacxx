@@ -9,18 +9,39 @@
 
 #include <iostream>
 
-int g_irepository_introspect(lua_State* const state)
+/*
+
+=head1 NAME
+
+require "luacxx.search.GIRepository"
+
+=head1 DESCRIPTION
+
+This searcher provides automatic bindings for libraries that support GObject
+introspection (e.g.  Gtk, Gdk, Pango, GStreamer). Luacxx does not attempt to
+override or augment libraries loaded in this fashion, so binding quality is
+dependent on the underlying library.
+
+*/
+
+/*
+
+=head2 introspect_namespace(name) [lua]
+
+Returns a string describing the specified namespace.
+
+*/
+int introspect_namespace(lua_State* const state)
 {
-    auto gi_namespace = lua::get<std::string>(state, lua_upvalueindex(1));
-    lua::clear(state);
+    auto gi_namespace = lua::get<const char*>(state, 1);
 
     std::stringstream str;
 
-    int n_infos = g_irepository_get_n_infos(nullptr, gi_namespace.c_str());
+    int n_infos = g_irepository_get_n_infos(nullptr, gi_namespace);
 
     str << gi_namespace << ": namespace";
     for (int i = 0; i < n_infos; ++i) {
-        GIBaseInfo* entry = g_irepository_get_info(nullptr, gi_namespace.c_str(), i);
+        GIBaseInfo* entry = g_irepository_get_info(nullptr, gi_namespace, i);
         if (!entry) {
             continue;
         }
@@ -34,62 +55,78 @@ int g_irepository_introspect(lua_State* const state)
     }
 
     lua::push(state, str.str());
-    return lua::size(state);
+    return 1;
 }
 
-void
-print_attributes (GIBaseInfo *info)
-{
-  GIAttributeIter iter = { 0, };
-  char *name;
-  char *value;
-  while (g_base_info_iterate_attributes (info, &iter, &name, &value))
-    {
-      g_print ("attribute name: %s value: %s", name, value);
-    }
-}
+/*
 
-// gi_import(namespace_name);
-int gi_import(lua_State* const state)
+=head2 install_namespace(name) [lua]
+
+Installs all symbols from the given namespace into the global Lua environment.
+
+*/
+int install_namespace(lua_State* const state)
 {
     auto namespace_name = lua::get<const char*>(state, 1);
     auto n_infos = g_irepository_get_n_infos(nullptr, namespace_name);
 
     for (int i = 0; i < n_infos; ++i) {
         GIBaseInfo* const info = g_irepository_get_info(nullptr, namespace_name, i);
-        lua::push(state, info);
 
         auto info_type = g_base_info_get_type(info);
         auto type_name = lua::GIInfoType_tostring(info_type);
 
+        auto install_method = [&](GIFunctionInfo* method_info) {
+            lua::push(state, method_info);
+
+            auto value_name = g_function_info_get_symbol(method_info);
+            if (value_name == nullptr) {
+                value_name = g_base_info_get_attribute(method_info, "c:identifier");
+                if (value_name == nullptr) {
+                    value_name = g_base_info_get_name(method_info);
+                }
+            }
+            if (value_name != nullptr) {
+                //std::cerr << "luacxx: Loaded " << namespace_name << " method named " << g_function_info_get_symbol(method_info) << std::endl;
+                lua_setglobal(state, value_name);
+            }
+        };
+
         switch (info_type) {
+        case GI_INFO_TYPE_CALLBACK:
+        {
+            // Callbacks are unused.
+            continue;
+        }
         case GI_INFO_TYPE_FUNCTION:
         {
+            lua::push(state, info);
             lua_setglobal(state, g_function_info_get_symbol(info));
-            std::cerr << "luacxx: Loaded " << namespace_name << " " << type_name << " symbol named " << g_function_info_get_symbol(info) << std::endl;
+            //std::cerr << "luacxx: Loaded " << namespace_name << " " << type_name << " symbol named " << g_function_info_get_symbol(info) << std::endl;
             break;
         }
         case GI_INFO_TYPE_STRUCT:
         {
             for (int i = 0; i < g_struct_info_get_n_methods(info); ++i) {
-                GIFunctionInfo* method_info = g_struct_info_get_method(info, i);
-                lua::push(state, method_info);
-
-                auto value_name = g_function_info_get_symbol(method_info);
-                if (value_name == nullptr) {
-                    value_name = g_base_info_get_attribute(method_info, "c:identifier");
-                    if (value_name == nullptr) {
-                        value_name = g_base_info_get_name(method_info);
-                    }
-                }
-                if (value_name != nullptr) {
-                    std::cerr << "luacxx: Loaded " << namespace_name << " struct method named " << g_function_info_get_symbol(method_info) << std::endl;
-                    lua_setglobal(state, value_name);
-                }
+                install_method(g_struct_info_get_method(info, i));
             }
-
             break;
         }
+        case GI_INFO_TYPE_OBJECT:
+        {
+            for (int i = 0; i < g_object_info_get_n_methods(info); ++i) {
+                install_method(g_object_info_get_method(info, i));
+            }
+            break;
+        }
+        case GI_INFO_TYPE_INTERFACE:
+        {
+            for (int i = 0; i < g_interface_info_get_n_methods(info); ++i) {
+                install_method(g_interface_info_get_method(info, i));
+            }
+            break;
+        }
+        case GI_INFO_TYPE_FLAGS:
         case GI_INFO_TYPE_ENUM:
         {
             auto n_values = g_enum_info_get_n_values(info);
@@ -103,11 +140,12 @@ int gi_import(lua_State* const state)
 
                 const char* value_name = g_base_info_get_attribute(value_info, "c:identifier");
                 if (value_name) {
-                    std::cerr << "luacxx: Loaded " << namespace_name << " enum value named " << value_name << std::endl;
+                    //std::cerr << "luacxx: Loaded " << namespace_name << " enum value named " << value_name << std::endl;
                     lua_setglobal(state, value_name);
                 } else {
                     std::cerr << "luacxx: No useful name available for "
                         << namespace_name << " enum value named" << g_base_info_get_name(info) << std::endl;
+                    lua_pop(state, 1);
                 }
             }
 
@@ -115,8 +153,7 @@ int gi_import(lua_State* const state)
         }
         case GI_INFO_TYPE_CONSTANT:
         {
-            std::cerr << "luacxx: Loaded " << namespace_name << " constant value named " << g_base_info_get_name(info) << std::endl;
-            std::cerr << lua::dump(state) << std::endl;
+            //std::cerr << "luacxx: Loaded " << namespace_name << " constant value named " << g_base_info_get_name(info) << std::endl;
 
             // Get the value as a variant
             GIArgument arg;
@@ -188,11 +225,13 @@ int gi_import(lua_State* const state)
             }
             }
 
+            lua::push(state, info);
             lua_setglobal(state, value_name);
             break;
         }
         default:
         {
+            lua::push(state, info);
             lua_setglobal(state, g_base_info_get_name(info));
             std::cerr << "luacxx: No binding available for "
                 << namespace_name << " " << type_name
@@ -200,12 +239,41 @@ int gi_import(lua_State* const state)
         }
         }
     }
-
     return 0;
 }
 
-// A package.seachers loader that requires a GIRepository-visible namespace.
-int gi_search(lua_State* const state)
+/*
+
+=head2 get_loaded_namespaces() [lua]
+
+Returns a list of all loaded namespaces.
+
+*/
+int get_loaded_namespaces(lua_State* const state)
+{
+    auto namespace_list = g_irepository_get_loaded_namespaces(nullptr);
+
+    auto table = lua::push(state, lua::value::table);
+    auto name = namespace_list;
+    while (*name) {
+        lua::table::insert(table, *name);
+        ++name;
+    }
+
+    g_free(namespace_list);
+    return 1;
+}
+
+/*
+
+=head2 find_namespace(name) [lua]
+
+Searches for the specified namespace using the GIRepository. This method is
+used as a package.searchers loader whenever luacxx.search.GIRepository is
+required.
+
+*/
+int find_namespace(lua_State* const state)
 {
     // Look for the namespace by name, which should be given as the first argument (e.g. "cairo")
     auto name = lua::get<const char*>(state, 1);
@@ -218,35 +286,18 @@ int gi_search(lua_State* const state)
         &err
     );
     if (err) {
-        // Didn't find it, which is a normal condition.
+        // Didn't find it, which is a normal condition, so just return our error.
         lua::push(state, err->message);
         return 1;
     }
 
-    // Found a namespace , so push a function to load it into the environment
-    lua::push(state, gi_import, name);
+    // Found a namespace, so push a function to load it into the environment
+    lua::push(state, install_namespace, name);
     return 2;
-}
-
-// Returns a list of all loaded namespaces.
-int gi_get_loaded_namespaces(lua_State* const state)
-{
-    lua::clear(state);
-    auto namespace_list = g_irepository_get_loaded_namespaces(nullptr);
-    auto i = namespace_list;
-
-    auto table = lua::push(state, lua::value::table);
-    while (*i) {
-        lua::table::insert(table, *i);
-        ++i;
-    }
-    g_free(namespace_list);
-
-    return 1;
 }
 
 int luaopen_luacxx_search_GIRepository(lua_State* const state)
 {
-    lua::table::insert(lua::global(state, "package")["searchers"], gi_search);
+    lua::table::insert(lua::global(state, "package")["searchers"], find_namespace);
     return 0;
 }
