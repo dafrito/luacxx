@@ -39,10 +39,10 @@ install-exec-hook:
 checkdebug: $(TESTS)
 	gdb ./src/.libs/lt-runtest
 
-checkvalgrind:
-	valgrind -v --leak-check=full ./src/.libs/lt-runtest
-
 VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes
+
+checkvalgrind:
+	$(VALGRIND) ./src/.libs/lt-runtest
 
 valgrind:
 	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
