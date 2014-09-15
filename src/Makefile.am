@@ -123,6 +123,12 @@ libluacxx_Qt5Core_la_LIBADD = \
 	@Qt5Gui_LIBS@ \
 	libluacxx.la
 
+# It's necessary to include these since Qt likes to have global static objects
+# that are destroyed on exit. If Qt's libraries are loaded from Lua, then Lua
+# will unload Qt's source code without removing the registered exit handler.
+luacxx_CPPFLAGS += @Qt5Core_CFLAGS@ @Qt5Gui_CFLAGS@
+luacxx_LDADD += $(libluacxx_Qt5Core_la_LIBADD)
+
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Core_la_SOURCES = \
