@@ -165,24 +165,84 @@ Luacxx has been built successfully using the following versions:
 
 =head1 OPTIONAL DEPENDENCIES
 
-=head3 Linux kernel
+=head2 Linux kernel
 
 If available, bindings for the Linux kernel headers will be compiled.
 
     yum install kernel-headers
 
-=head3 gobject-introspection
+This binding is minimal; see linux/* for what is available.
+
+=head2 Qt 5 - http://qt-project.org/doc/qt-5/index.html
+
+This binding is mostly complete for Qt5Core, Qt5Gui, and Qt5Network; see
+Qt5Core/*, Qt5Gui/*, et all for what is supported.
+
+=head2 libevdev
+
+If available, bindings for the evdev input library will be compiled.
+
+    yum install libevdev-devel
+
+This binding is complete; see libevdev.hpp for information.
+
+=head2 gobject-introspection
 
 If available, Gtk's GObject introspection model will be available to Lua.
 
     yum install gobject-introspection-devel
 
-=head3 libinput
+This binding is functional, but not complete. See search/GIRepository.cpp for more
+details.
+
+=head2 libinput - http://wayland.freedesktop.org/libinput/doc/latest/index.html
 
 If available, bindings for the libinput input handling library will be
 compiled.
 
     yum install mtdev-devel systemd-devel
+
+This binding is complete; see libinput.hpp for more information.
+
+=head2 ncurses - http://invisible-island.net/ncurses/ncurses.html
+
+If available, bindings for the ncurses terminal library will be compiled.
+
+    yum install ncurses-devel
+
+This binding is complete; see ncurses.hpp for more information.
+
+=head2 gbm - http://www.mesa3d.org/
+
+If available, bindings for Mesa's generic buffer management will be compiled.
+
+    yum install mesa-libgbm-devel
+
+This binding is complete; see gbm.hpp for more information.
+
+=head2 nanomsg - http://nanomsg.org/
+
+If available, bindings for the nanomsg IPC library will be compiled.
+
+    yum install nanomsg-devel
+
+This binding is complete; see nanomsg.hpp for further information.
+
+=head2 DRM - http://dri.freedesktop.org/wiki/
+
+If available, bindings for the direct rendering manager will be compiled.
+
+    yum install libdrm-devel
+
+This binding is partially complete; see xf86drmMode.hpp for information.
+
+=head2 EGL - https://www.khronos.org/registry/egl/
+
+If available, bindings for the EGL graphics standard will be compiled.
+
+    yum install mesa-libEGL-devel
+
+This binding is complete; see egl.hpp for further information.
 
 =head1 BUILD PROCESS
 
