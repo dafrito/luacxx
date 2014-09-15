@@ -36,8 +36,6 @@ struct Store<std::vector<T>>
             throw lua::error(str.str());
         }
 
-        std::cerr << "Storing table\n";
-
         auto num_elements = lua_rawlen(source.state(), source.pos());
         auto target_index = destination.size();
         destination.resize(destination.size() + num_elements);
