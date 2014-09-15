@@ -1,3 +1,4 @@
+#define BOOST_TEST_MODULE Qt5Core
 #include "Qt5Core.hpp"
 
 #include <boost/test/unit_test.hpp>

@@ -1,3 +1,4 @@
+#define BOOST_TEST_MODULE luacxx_without_conversions
 #include "main.hpp"
 
 #include "thread.hpp"

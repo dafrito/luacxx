@@ -53,23 +53,36 @@ luacxx_LDADD = libluacxx.la
 luacxx_SOURCES = \
 	luacxx.cpp
 
-check_PROGRAMS = runtest
-TESTS = $(check_PROGRAMS)
+check_PROGRAMS = \
+	test_luacxx \
+	test_luacxx_without_conversions
 
-runtest_CXXFLAGS = \
+test_luacxx_CXXFLAGS = \
 	$(libluacxx_la_CPPFLAGS) \
 	@BOOST_CPPFLAGS@ \
 	-DBOOST_TEST_DYN_LINK \
 	-DTEST_DIR=\"$(top_srcdir)/src/tests/\"
 
-runtest_LDADD = \
+test_luacxx_LDADD = \
 	libluacxx.la \
 	@BOOST_LDFLAGS@ \
 	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
-runtest_SOURCES = \
-	tests/main.cpp \
-	tests/luacxx_convert_vector.cpp \
+test_luacxx_SOURCES = \
+	tests/main.cpp
+
+test_luacxx_without_conversions_CXXFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@BOOST_CPPFLAGS@ \
+	-DBOOST_TEST_DYN_LINK \
+	-DTEST_DIR=\"$(top_srcdir)/src/tests/\"
+
+test_luacxx_without_conversions_LDADD = \
+	libluacxx.la \
+	@BOOST_LDFLAGS@ \
+	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
+
+test_luacxx_without_conversions_SOURCES = \
 	tests/luacxx_without_conversions.cpp
 
 if BUILD_llvm
@@ -94,15 +107,6 @@ nobase_pkginclude_HEADERS += \
 endif
 
 if BUILD_Qt5Core
-
-runtest_LDADD += libluacxx-Qt5Core.la
-
-runtest_SOURCES += tests/Qt5Core.cpp
-
-runtest_MOC_SOURCES = \
-	moc_Qt5Core.cpp
-
-nodist_runtest_SOURCES = $(runtest_MOC_SOURCES)
 
 moc_Qt5Core.cpp: tests/Qt5Core.hpp
 	$(QT_MOC) -o $@ $<
@@ -167,6 +171,24 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/Qt.hpp \
 	Qt5Core/QSize.hpp \
 	Qt5Core/QObservable.hpp
+
+check_PROGRAMS += test_Qt5Core
+
+test_Qt5Core_CXXFLAGS = \
+	$(test_luacxx_CXXFLAGS) \
+	$(libluacxx_Qt5Core_la_CPPFLAGS)
+
+test_Qt5Core_LDADD = \
+	$(test_luacxx_LDADD) \
+	libluacxx-Qt5Core.la
+
+test_Qt5Core_SOURCES = \
+	tests/Qt5Core.cpp
+
+test_Qt5Core_MOC_SOURCES = \
+	moc_Qt5Core.cpp
+
+nodist_test_Qt5Core_SOURCES = $(test_Qt5Core_MOC_SOURCES)
 
 endif
 
@@ -506,3 +528,5 @@ nobase_pkginclude_HEADERS += \
 	linux/input.hpp
 
 endif
+
+TESTS = $(check_PROGRAMS)
