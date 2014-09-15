@@ -1696,3 +1696,6 @@ T* make(lua_State* const state, Args&&... args)
 
 #include "convert/builtin.hpp"
 #include "convert/const_char_p.hpp"
+#ifndef LUACXX_EXCLUDE_NUMERIC_CONVERSION
+#include "convert/numeric.hpp"
+#endif

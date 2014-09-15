@@ -1,4 +1,5 @@
 #define BOOST_TEST_MODULE luacxx_without_conversions
+#define LUACXX_EXCLUDE_NUMERIC_CONVERSION
 #include "main.hpp"
 
 #include "thread.hpp"
