@@ -62,11 +62,20 @@ run-gtk_gstreamer:
 run-qt_window:
 	cd lua && ./luacxx demo.lua qt_window
 
+valgrind-qt_window:
+	cd lua && $(VALGRIND) ./luacxx demo.lua qt_window
+
 run-cairo:
 	cd lua && ./luacxx demo.lua cairo
 
+valgrind-cairo:
+	cd lua && $(VALGRIND) ./luacxx demo.lua cairo
+
 run-Gst:
 	cd lua && ./luacxx demo.lua Gst
+
+valgrind-Gst:
+	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
 
 run-ncurses_getch:
 	cd lua && ./luacxx demo.lua ncurses_getch
@@ -74,8 +83,14 @@ run-ncurses_getch:
 run-nanorecv:
 	cd lua && ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
 
+valgrind-nanorecv:
+	cd lua && $(VALGRIND) ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
+
 run-nanosend:
 	cd lua && ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
+
+valgrind-nanosend:
+	cd lua && $(VALGRIND) ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
 
 RPMFLAGS ?= --ba
 SRCRPM=luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
