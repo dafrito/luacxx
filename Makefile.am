@@ -21,7 +21,7 @@ lua:
 	test -f $@/luacxx || ln -s ../src/luacxx $@/luacxx
 	test -f $@/demo.lua || ln -s ../$(top_srcdir)/src/demo.lua $@/demo.lua
 	for lib in $(luacxx_libraries); do \
-		test -f $@/$$lib.so || ln -s ../src/.libs/libluacxx-$$lib.so $@/$$lib.so; \
+		test -h $@/$$lib.so || ln -s ../src/.libs/libluacxx-$$lib.so $@/$$lib.so; \
 	done;
 .PHONY: lua
 
