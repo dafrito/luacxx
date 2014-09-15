@@ -35,7 +35,7 @@ function acme.qt_window(...)
 
         painter:begin(store:paintDevice());
         painter:fillRect(0, 0, window:width(), window:height(), Qt.white);
-        painter:drawText(15, 15, "I love my Jenny!");
+        painter:drawText(15, 15, "Hello, world!");
         painter:endPainting();
 
         store:endPaint();
