@@ -305,17 +305,17 @@ int luaopen_nanomsg(lua_State* const state)
     env["ETERM"] = ETERM;
     env["ETIMEDOUT"] = ETIMEDOUT;
 
-    // http://nanomsg.org/v0.4/nn_allocmsg.3.html
+    // http://nanomsg.org/v0.4/nn_allocmsg.7.html
     env["nn_allocmsg"] = nn_allocmsg;
 
-    // http://nanomsg.org/v0.4/nn_bind.3.html
+    // http://nanomsg.org/v0.4/nn_bind.7.html
     env["nn_bind"] = nn_bind;
     env["NN_SOCKADDR_MAX"] = NN_SOCKADDR_MAX;
 
-    // http://nanomsg.org/v0.4/nn_close.3.html
+    // http://nanomsg.org/v0.4/nn_close.7.html
     env["nn_close"] = nn_close;
 
-    // http://nanomsg.org/v0.4/nn_cmsg.3.html
+    // http://nanomsg.org/v0.4/nn_cmsg.7.html
     env["nn_cmsghdr"] = lua::value::table;
     env["nn_cmsghdr"]["new"] = nn_cmsghdr_new;
 
@@ -325,22 +325,22 @@ int luaopen_nanomsg(lua_State* const state)
     env["NN_CMSG_SPACE"] = _NN_CMSG_SPACE;
     env["NN_CMSG_LEN"] = _NN_CMSG_LEN;
 
-    // http://nanomsg.org/v0.4/nn_connect.3.html
+    // http://nanomsg.org/v0.4/nn_connect.7.html
     env["nn_connect"] = nn_connect;
 
-    // http://nanomsg.org/v0.4/nn_device.3.html
+    // http://nanomsg.org/v0.4/nn_device.7.html
     env["nn_device"] = nn_device;
 
-    // http://nanomsg.org/v0.4/nn_env.3.html
+    // http://nanomsg.org/v0.4/nn_env.7.html
     // n/a
 
-    // http://nanomsg.org/v0.4/nn_errno.3.html
+    // http://nanomsg.org/v0.4/nn_errno.7.html
     env["nn_errno"] = nn_errno;
 
-    // http://nanomsg.org/v0.4/nn_freemsg.3.html
+    // http://nanomsg.org/v0.4/nn_freemsg.7.html
     env["nn_freemsg"] = _nn_freemsg;
 
-    // http://nanomsg.org/v0.4/nn_getsockopt.3.html
+    // http://nanomsg.org/v0.4/nn_getsockopt.7.html
     env["nn_getsockopt"] = nn_getsockopt;
 
     env["NN_DOMAIN"] = NN_DOMAIN;
@@ -361,7 +361,7 @@ int luaopen_nanomsg(lua_State* const state)
 
     env["ENOPROTOOPT"] = ENOPROTOOPT;
 
-    // http://nanomsg.org/v0.4/nn_poll.3.html
+    // http://nanomsg.org/v0.4/nn_poll.7.html
     env["nn_poll"] = nn_poll;
 
     env["nn_pollfd"] = lua::value::table;
@@ -370,10 +370,10 @@ int luaopen_nanomsg(lua_State* const state)
     env["NN_POLLIN"] = NN_POLLIN;
     env["NN_POLLOUT"] = NN_POLLOUT;
 
-    // http://nanomsg.org/v0.4/nn_reallocmsg.3.html
+    // http://nanomsg.org/v0.4/nn_reallocmsg.7.html
     env["nn_reallocmsg"] = nn_reallocmsg;
 
-    // http://nanomsg.org/v0.4/nn_recvmsg.3.html
+    // http://nanomsg.org/v0.4/nn_recvmsg.7.html
     env["nn_recvmsg"] = nn_recvmsg;
 
     env["nn_msghdr"] = lua::value::table;
@@ -384,16 +384,16 @@ int luaopen_nanomsg(lua_State* const state)
 
     env["NN_DONTWAIT"] = NN_DONTWAIT;
 
-    // http://nanomsg.org/v0.4/nn_recv.3.html
+    // http://nanomsg.org/v0.4/nn_recv.7.html
     env["nn_recv"] = _nn_recv;
 
-    // http://nanomsg.org/v0.4/nn_send.3.html
+    // http://nanomsg.org/v0.4/nn_send.7.html
     env["nn_send"] = _nn_send;
 
-    // http://nanomsg.org/v0.4/nn_sendmsg.3.html
+    // http://nanomsg.org/v0.4/nn_sendmsg.7.html
     env["nn_sendmsg"] = nn_sendmsg;
 
-    // http://nanomsg.org/v0.4/nn_setsockopt.3.html
+    // http://nanomsg.org/v0.4/nn_setsockopt.7.html
     env["nn_setsockopt"] = nn_setsockopt;
 
     env["NN_LINGER"] = NN_LINGER;
@@ -408,22 +408,22 @@ int luaopen_nanomsg(lua_State* const state)
     env["NN_IPV4ONLY"] = NN_IPV4ONLY;
     env["NN_SOCKET_NAME"] = NN_SOCKET_NAME;
 
-    // http://nanomsg.org/v0.4/nn_shutdown.3.html
+    // http://nanomsg.org/v0.4/nn_shutdown.7.html
     env["nn_shutdown"] = nn_shutdown;
 
-    // http://nanomsg.org/v0.4/nn_socket.3.html
+    // http://nanomsg.org/v0.4/nn_socket.7.html
     env["nn_socket"] = nn_socket;
 
     env["AF_SP"] = AF_SP;
     env["AF_SP_RAW"] = AF_SP_RAW;
 
-    // http://nanomsg.org/v0.4/nn_strerror.3.html
+    // http://nanomsg.org/v0.4/nn_strerror.7.html
     env["nn_strerror"] = nn_strerror;
 
-    // http://nanomsg.org/v0.4/nn_symbol.3.html
+    // http://nanomsg.org/v0.4/nn_symbol.7.html
     env["nn_symbol"] = _nn_symbol;
 
-    // http://nanomsg.org/v0.4/nn_symbol_info.3.html
+    // http://nanomsg.org/v0.4/nn_symbol_info.7.html
     env["nn_symbol_info"] = nn_symbol_info;
 
     env["nn_symbol_properties"] = lua::value::table;
@@ -452,32 +452,32 @@ int luaopen_nanomsg(lua_State* const state)
     env["NN_UNIT_PRIORITY"] = NN_UNIT_PRIORITY;
     env["NN_UNIT_BOOLEAN"] = NN_UNIT_BOOLEAN;
 
-    // http://nanomsg.org/v0.4/nn_term.3.html
+    // http://nanomsg.org/v0.4/nn_term.7.html
     env["term"] = nn_term;
 
-    // http://nanomsg.org/v0.4/nn_bus.3.html
+    // http://nanomsg.org/v0.4/nn_bus.7.html
     env["NN_PROTO_BUS"] = NN_PROTO_BUS;
 
     env["NN_BUS"] = NN_BUS;
 
-    // http://nanomsg.org/v0.4/nn_inproc.3.html
+    // http://nanomsg.org/v0.4/nn_inproc.7.html
     env["NN_INPROC"] = NN_INPROC;
 
-    // http://nanomsg.org/v0.4/nn_ipc.3.html
+    // http://nanomsg.org/v0.4/nn_ipc.7.html
     env["NN_IPC"] = NN_IPC;
 
-    // http://nanomsg.org/v0.4/nn_pair.3.html
+    // http://nanomsg.org/v0.4/nn_pair.7.html
     env["NN_PROTO_PAIR"] = NN_PROTO_PAIR;
 
     env["NN_PAIR"] = NN_PAIR;
 
-    // http://nanomsg.org/v0.4/nn_pipeline.3.html
+    // http://nanomsg.org/v0.4/nn_pipeline.7.html
     env["NN_PROTO_PIPELINE"] = NN_PROTO_PIPELINE;
 
     env["NN_PUSH"] = NN_PUSH;
     env["NN_PULL"] = NN_PULL;
 
-    // http://nanomsg.org/v0.4/nn_pubsub.3.html
+    // http://nanomsg.org/v0.4/nn_pubsub.7.html
     env["NN_PROTO_PUBSUB"] = NN_PROTO_PUBSUB;
 
     env["NN_PUB"] = NN_PUB;
@@ -486,7 +486,7 @@ int luaopen_nanomsg(lua_State* const state)
     env["NN_SUB_SUBSCRIBE"] = NN_SUB_SUBSCRIBE;
     env["NN_SUB_UNSUBSCRIBE"] = NN_SUB_UNSUBSCRIBE;
 
-    // http://nanomsg.org/v0.4/nn_reqrep.3.html
+    // http://nanomsg.org/v0.4/nn_reqrep.7.html
     env["NN_PROTO_REQREP"] = NN_PROTO_REQREP;
 
     env["NN_REQ"] = NN_REQ;
@@ -494,7 +494,7 @@ int luaopen_nanomsg(lua_State* const state)
 
     env["NN_REQ_RESEND_IVL"] = NN_REQ_RESEND_IVL;
 
-    // http://nanomsg.org/v0.4/nn_survey.3.html
+    // http://nanomsg.org/v0.4/nn_survey.7.html
     env["NN_PROTO_SURVEY"] = NN_PROTO_SURVEY;
 
     env["NN_SURVEYOR"] = NN_SURVEYOR;
@@ -502,7 +502,7 @@ int luaopen_nanomsg(lua_State* const state)
 
     env["NN_SURVEYOR_DEADLINE"] = NN_SURVEYOR_DEADLINE;
 
-    // http://nanomsg.org/v0.4/nn_tcp.3.html
+    // http://nanomsg.org/v0.4/nn_tcp.7.html
     env["NN_TCP"] = NN_TCP;
     env["NN_TCP_NODELAY"] = NN_TCP_NODELAY;
 
