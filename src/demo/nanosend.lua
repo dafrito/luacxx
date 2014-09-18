@@ -1,10 +1,10 @@
-acme = acme or {};
+demo = demo or {};
 
 local function printf(msg, ...)
     print(string.format(msg, ...));
 end;
 
-function acme.nanosend(url, msg)
+function demo.nanosend(url, msg)
     require "nanomsg";
 
     if url == nil or msg == nil then

@@ -1,6 +1,6 @@
-acme = acme or {};
+demo = demo or {};
 
-function acme.gtk_gstreamer()
+function demo.gtk_gstreamer()
     require "luacxx.gir"
     require "Gst"
 

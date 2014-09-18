@@ -17,7 +17,7 @@ luacxx_libraries = \
 lua:
 	test -d lua || mkdir lua
 	test -f $@/luacxx.so || ln -s ../src/.libs/libluacxx.so $@/luacxx.so
-	test -d $@/acme || ln -s ../$(top_srcdir)/src/acme $@/acme
+	test -d $@/demo || ln -s ../$(top_srcdir)/src/demo $@/demo
 	test -f $@/luacxx || ln -s ../src/luacxx $@/luacxx
 	test -f $@/demo.lua || ln -s ../$(top_srcdir)/src/demo.lua $@/demo.lua
 	for lib in $(luacxx_libraries); do \

@@ -1,6 +1,6 @@
-acme = acme or {};
+demo = demo or {};
 
-function acme.cairo()
+function demo.cairo()
     require "luacxx.search.GIRepository";
     require "cairo";
 

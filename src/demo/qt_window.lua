@@ -1,6 +1,6 @@
-acme = acme or {};
+demo = demo or {};
 
-function acme.qt_window(...)
+function demo.qt_window(...)
     require "Qt5Core.QRect";
     require "Qt5Core.QElapsedTimer";
     require "Qt5Core.Qt";
@@ -14,7 +14,7 @@ function acme.qt_window(...)
     require "Qt5Gui.QVector3D";
     require "Qt5Gui.QRegion";
 
-    local qApp = QGuiApplication:new("acme", ...);
+    local qApp = QGuiApplication:new("demo", ...);
 
     window = QWindow:new();
     store = QBackingStore:new(window);

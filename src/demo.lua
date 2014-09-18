@@ -1,18 +1,18 @@
 #!/usr/bin/env luacxx
 
-require "acme.qt_window"
-require "acme.quat_benchmark"
-require "acme.ncurses_getch"
-require "acme.nanorecv";
-require "acme.nanosend";
-require "acme.cairo";
-require "acme.Gst";
+require "demo.qt_window"
+require "demo.quat_benchmark"
+require "demo.ncurses_getch"
+require "demo.nanorecv";
+require "demo.nanosend";
+require "demo.cairo";
+require "demo.Gst";
 
 local name = select(3, ...);
 
-if name and acme[name] then
+if name and demo[name] then
     print("Running " .. name);
-    local runner = acme[name];
+    local runner = demo[name];
     if runner ~= nil then
         return runner(select(4, ...));
     end;
@@ -23,7 +23,7 @@ if name then
 end;
 
 print("These are the available programs:");
-for name, _ in pairs(acme) do
+for name, _ in pairs(demo) do
     print("", name);
 end;
 

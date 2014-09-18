@@ -1,6 +1,6 @@
-acme = acme or {};
+demo = demo or {};
 
-function acme.Gst()
+function demo.Gst()
     require "luacxx.search.GIRepository";
     require "Gst";
 

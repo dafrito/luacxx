@@ -1,10 +1,10 @@
-acme = acme or {};
+demo = demo or {};
 
 local function printf(msg, ...)
     print(string.format(msg, ...));
 end;
 
-function acme.nanorecv(url)
+function demo.nanorecv(url)
     require "nanomsg";
 
     if url == nil then
