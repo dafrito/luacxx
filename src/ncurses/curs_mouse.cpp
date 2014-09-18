@@ -82,6 +82,15 @@ int _wmouse_trafo(lua_State* const state)
     return 3;
 }
 
+int _mousemask(lua_State* const state)
+{
+    auto newmask = lua::get<mmask_t>(state, 1);
+    mmask_t oldmask;
+    mmask_t allmask = mousemask(newmask, &oldmask);
+    lua::push(state, allmask, oldmask);
+    return 2;
+}
+
 void lua::ncurses_curs_mouse(lua_State* const state)
 {
     lua::thread env(state);
@@ -89,7 +98,7 @@ void lua::ncurses_curs_mouse(lua_State* const state)
     env["has_mouse"] = has_mouse;
     env["getmouse"] = _getmouse;
     env["ungetmouse"] = ungetmouse;
-    env["mousemask"] = std::function<chtype(chtype, chtype*)>(mousemask);
+    env["mousemask"] = _mousemask;
     env["wenclose"] = wenclose;
     env["mouse_trafo"] = _mouse_trafo;
     env["wmouse_trafo"] = _wmouse_trafo;
