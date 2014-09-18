@@ -487,9 +487,6 @@ int luaopen_nanomsg(lua_State* const state)
     env["NN_SUB_UNSUBSCRIBE"] = NN_SUB_UNSUBSCRIBE;
 
     // http://nanomsg.org/v0.4/nn_reqrep.3.html
-    env["nn_req_send"] = nn_req_send;
-    env["nn_req_recv"] = nn_req_recv;
-
     env["NN_PROTO_REQREP"] = NN_PROTO_REQREP;
 
     env["NN_REQ"] = NN_REQ;
