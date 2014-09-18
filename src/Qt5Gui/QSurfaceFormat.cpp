@@ -6,6 +6,7 @@
 int QSurfaceFormat_setOption(lua_State* const state)
 {
     auto self = lua::get<QSurfaceFormat*>(state, 1);
+    #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     if (lua_gettop(state) > 2) {
         self->setOption(
             lua::get<QSurfaceFormat::FormatOption>(state, 2),
@@ -16,15 +17,26 @@ int QSurfaceFormat_setOption(lua_State* const state)
             lua::get<QSurfaceFormat::FormatOption>(state, 2)
         );
     }
+    #else
+    self->setOption(
+        lua::get<QSurfaceFormat::FormatOptions>(state, 2)
+    );
+    #endif
     return 0;
 }
 
 int QSurfaceFormat_testOption(lua_State* const state)
 {
     auto self = lua::get<QSurfaceFormat*>(state, 1);
+    #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     lua::push(state, self->testOption(
         lua::get<QSurfaceFormat::FormatOption>(state, 2)
     ));
+    #else
+    lua::push(state, self->testOption(
+        lua::get<QSurfaceFormat::FormatOptions>(state, 2)
+    ));
+    #endif
     return 1;
 }
 

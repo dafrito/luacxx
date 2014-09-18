@@ -20,6 +20,26 @@ struct Metatable<QSurfaceFormat>
     }
 };
 
+template<>
+struct Push<QSurfaceFormat::FormatOptions>
+{
+    static void push(lua_State* const state, const QSurfaceFormat::FormatOptions& source)
+    {
+        lua_pushinteger(state, source);
+    }
+};
+
+template<>
+struct Store<QSurfaceFormat::FormatOptions>
+{
+    static void store(QSurfaceFormat::FormatOptions& destination, const lua::index& source)
+    {
+        destination = static_cast<QSurfaceFormat::FormatOptions>(
+            lua_tointeger(source.state(), source.pos())
+        );
+    }
+};
+
 }; // namespace lua
 
 extern "C" int luaopen_Qt5Gui_QSurfaceFormat(lua_State* const);
