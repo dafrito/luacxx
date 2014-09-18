@@ -138,7 +138,7 @@ conventions is preferred over that of C++.
 
     ../configure --prefix=$HOME
 
-    make -j 4
+    make
 
 =head1 REQUIRED DEPENDENCIES
 
@@ -336,14 +336,14 @@ work:
 Followed by the build process
 
     ./configure --prefix=$HOME
-    make -j 4
+    make
     make install
 
 For a system-wide install on Fedora, ./configure --prefix=/usr would be
 sufficient:
 
     ./configure --prefix=/usr
-    make -j 4
+    make
     make install
 
 If you wish to examine the files that will be installed, DESTDIR is a better
@@ -354,7 +354,7 @@ the creation can take place at a safe location:
 
     # Same as a system-wide install
     ./configure --prefix=/usr
-    make -j 4
+    make
 
     # ...but install to a temporary directory
     mkdir -p ~/tmp/luacxx
