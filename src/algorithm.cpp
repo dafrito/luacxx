@@ -184,9 +184,9 @@ lua::index lua::top(lua_State* const state)
     return lua::index(state, -1);
 }
 
-int lua::size(lua_State* const state)
+unsigned int lua::size(lua_State* const state)
 {
-    return lua_gettop(state);
+    return static_cast<unsigned int>(lua_gettop(state));
 }
 
 int lua::size(const lua::index& index)

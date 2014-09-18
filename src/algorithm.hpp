@@ -145,7 +145,7 @@ Returns lua_gettop(state).
 
 */
 
-int size(lua_State* const state);
+unsigned int size(lua_State* const state);
 
 /*
 
