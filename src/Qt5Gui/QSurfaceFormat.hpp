@@ -35,7 +35,7 @@ struct Store<QSurfaceFormat::FormatOptions>
     static void store(QSurfaceFormat::FormatOptions& destination, const lua::index& source)
     {
         destination = static_cast<QSurfaceFormat::FormatOptions>(
-            lua_tointeger(source.state(), source.pos())
+            static_cast<int>(lua_tointeger(source.state(), source.pos()))
         );
     }
 };
