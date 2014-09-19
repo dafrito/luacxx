@@ -28,15 +28,16 @@ nobase_pkginclude_HEADERS = \
 	reference.hpp \
 	thread.hpp \
 	type.hpp \
-	convert/numeric.cpp
-	convert/builtin.hpp
-	convert/callable.hpp
-	convert/char.hpp
-	convert/char_pointer.hpp
-	convert/numeric.hpp
-	convert/shared_ptr.hpp
-	convert/string.hpp
-	convert/void.hpp
+	convert/builtin.hpp \
+	convert/callable.hpp \
+	convert/char.hpp \
+	convert/char_p.hpp \
+	convert/const_char_p.hpp \
+	convert/numeric.hpp \
+	convert/shared_ptr.hpp \
+	convert/string.hpp \
+	convert/vector.hpp \
+	convert/void.hpp \
 	load/ModuleLoader.hpp
 
 libluacxx_la_SOURCES = \
