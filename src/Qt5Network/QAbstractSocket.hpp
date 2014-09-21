@@ -23,6 +23,6 @@ struct Metatable<QAbstractSocket>
 
 }; // namespace lua
 
-extern "C" int luaopen_luacxx_QAbstractSocket(lua_State* const);
+extern "C" int luaopen_Qt5Network_QAbstractSocket(lua_State* const);
 
 #endif // LUACXX_QABSTRACTSOCKET_INCLUDED

@@ -1,7 +1,7 @@
 #include "QAbstractSocket.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
-#include "QIODevice.hpp"
+#include "../Qt5Core/QIODevice.hpp"
 
 #include <QAbstractSocket>
 
@@ -44,6 +44,11 @@ int QAbstractSocket_waitForDisconnected(lua_State* const state)
     return 0;
 }
 
+int QAbstractSocket_error(lua_State* const state)
+{
+    return 0;
+}
+
 void lua::QAbstractSocket_metatable(const lua::index& mt)
 {
     lua::QIODevice_metatable(mt);
@@ -52,16 +57,16 @@ void lua::QAbstractSocket_metatable(const lua::index& mt)
     mt["bind"] = QAbstractSocket_bind;
     mt["connectToHost"] = QAbstractSocket_connectToHost;
     mt["disconnectFromHost"] = &QAbstractSocket::disconnectFromHost;
-    mt["error"] = &QAbstractSocket::error;
+    mt["error"] = QAbstractSocket_error;
     mt["flush"] = &QAbstractSocket::flush;
     mt["isValid"] = &QAbstractSocket::isValid;
-    mt["localAddress"] = &QAbstractSocket::localAddress;
+    //mt["localAddress"] = &QAbstractSocket::localAddress;
     mt["localPort"] = &QAbstractSocket::localPort;
     mt["pauseMode"] = &QAbstractSocket::pauseMode;
-    mt["peerAddress"] = &QAbstractSocket::peerAddress;
+    //mt["peerAddress"] = &QAbstractSocket::peerAddress;
     mt["peerName"] = &QAbstractSocket::peerName;
     mt["peerPort"] = &QAbstractSocket::peerPort;
-    mt["proxy"] = &QAbstractSocket::proxy;
+    //mt["proxy"] = &QAbstractSocket::proxy;
     mt["readBufferSize"] = &QAbstractSocket::readBufferSize;
     mt["resume"] = &QAbstractSocket::resume;
     mt["setPauseMode"] = &QAbstractSocket::setPauseMode;
@@ -77,20 +82,14 @@ void lua::QAbstractSocket_metatable(const lua::index& mt)
     mt["waitForDisconnected"] = QAbstractSocket_waitForDisconnected;
 }
 
-int QAbstractSocket_new(lua_State* const state)
+int luaopen_Qt5Network_QAbstractSocket(lua_State* const state)
 {
-    lua::make<QAbstractSocket>(state);
-    // TODO Set up object-specific methods
+    luaL_requiref(state, "Qt5Core.QIODevice", luaopen_Qt5Core_QIODevice, false);
 
-    return 1;
-}
-
-int luaopen_luacxx_QAbstractSocket(lua_State* const state)
-{
     lua::thread env(state);
 
     env["QAbstractSocket"] = lua::value::table;
-    env["QAbstractSocket"]["new"] = QAbstractSocket_new;
+    auto t = env["QAbstractSocket"];
 
     // enum QAbstractSocket::BindFlag
     // flags QAbstractSocket::BindMode
