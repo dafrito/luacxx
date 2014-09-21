@@ -1388,7 +1388,6 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
 {
     if (!userdata) {
         throw lua::error("The source userdata is nil, so it cannot be stored.");
-        return;
     }
     // Carefully retrieve the value from the userdata.
     switch (userdata->storage()) {
