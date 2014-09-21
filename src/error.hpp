@@ -56,54 +56,82 @@ class error : public std::runtime_error
     unsigned int _traceback;
 
 public:
-    error(const std::string& what) :
-        std::runtime_error("lua::error"),
-        _what(what),
-        _traceback(what.size())
-    {
-    }
 
-    error() :
-        std::runtime_error("lua::error"),
-        _what("An unspecified Lua error occurred."),
-        _traceback(_what.size())
-    {
-    }
+/*
 
-    virtual const char* what() const noexcept override
-    {
-        return _what.c_str();
-    }
+=head1 METHODS
 
-    const bool has_traceback() const
-    {
-        return _what.size() <= _traceback;
-    }
+=head2 lua::error(lua_State* const state, const std::string& what)
 
-    const std::string message() const
-    {
-        if (!has_traceback()) {
-            return _what;
-        }
-        return _what.substr(0, _traceback);
-    }
+=head2 lua::error(const std::string& what)
 
-    const std::string traceback() const
-    {
-        if (!has_traceback()) {
-            return "";
-        }
-        return _what.substr(_traceback + 1);
-    }
+=head2 lua::error()
 
-    void set_traceback(const std::string& traceback)
-    {
-        if (!has_traceback()) {
-            _what += "\n" + traceback;
-        } else {
-            _what = message() + "\n" + traceback;
-        }
+*/
+
+error(lua_State* const state, const std::string& what);
+
+error(const std::string& what) :
+    std::runtime_error("lua::error"),
+    _what(what),
+    _traceback(what.size())
+{
+}
+
+error() :
+    std::runtime_error("lua::error"),
+    _what("An unspecified Lua error occurred."),
+    _traceback(_what.size())
+{
+}
+
+virtual const char* what() const noexcept override
+{
+    return _what.c_str();
+}
+
+const bool has_traceback() const
+{
+    return _what.size() <= _traceback;
+}
+
+const std::string message() const
+{
+    if (!has_traceback()) {
+        return _what;
     }
+    return _what.substr(0, _traceback);
+}
+
+/*
+
+=head2 std::string traceback = error.traceback();
+
+Returns the traceback associated with this error.
+
+=head2 error.set_traceback(const std::string& traceback)
+
+Sets the traceback to the given string.
+
+*/
+
+const std::string traceback() const
+{
+    if (!has_traceback()) {
+        return "";
+    }
+    return _what.substr(_traceback + 1);
+}
+
+void set_traceback(const std::string& traceback)
+{
+    if (!has_traceback()) {
+        _what += "\n" + traceback;
+    } else {
+        _what = message() + "\n" + traceback;
+    }
+}
+
 };
 
 } // namespace lua
