@@ -150,6 +150,7 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/Qt_3.cpp \
 	Qt5Core/Qt_4.cpp \
 	Qt5Core/QUrl.cpp \
+	Qt5Core/QIODevice.cpp \
 	Qt5Core/QMimeData.cpp \
 	Qt5Core/QElapsedTimer.cpp \
 	Qt5Core/QEvent.cpp \
@@ -168,6 +169,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QPoint.hpp \
 	Qt5Core/QPointF.hpp \
 	Qt5Core/QUrl.hpp \
+	Qt5Core/QIODevice.hpp \
 	Qt5Core/QElapsedTimer.hpp \
 	Qt5Core/QVariant.hpp \
 	Qt5Core/QCoreApplication.hpp \
