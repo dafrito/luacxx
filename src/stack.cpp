@@ -46,8 +46,6 @@ int lua::__gc(lua_State* const state)
         if (free_userdata.type().function()) {
             lua::call(free_userdata, lua::index(state, 1));
         }
-
-        userdata_block->~userdata_block();
     } catch (lua::error& ex) {
         std::cerr << "Error occurred during Lua garbage collection: " << ex.what();
     }

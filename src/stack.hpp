@@ -774,6 +774,7 @@ save C data as upvalues to a C function.
 
 // Discriminant for how userdata is stored
 enum class userdata_storage {
+    destroyed,
     value,
     pointer,
     shared_ptr
@@ -789,9 +790,19 @@ public:
     {
     }
 
-    lua::userdata_storage storage()
+    const lua::userdata_storage storage() const
     {
         return static_cast<lua::userdata_storage>(_storage);
+    }
+
+    bool destroyed() const
+    {
+        return storage() == userdata_storage::destroyed;
+    }
+
+    ~userdata_block()
+    {
+        _storage = static_cast<char>(userdata_storage::destroyed);
     }
 };
 
@@ -1066,6 +1077,11 @@ int free_userdata(lua_State* const state)
     auto userdata_block = reinterpret_cast<lua::userdata_block*>(block + sizeof(Stored));
 
     switch (userdata_block->storage()) {
+    case userdata_storage::destroyed:
+    {
+        // The object has already been destroyed, so just leave.
+        return 0;
+    }
     case userdata_storage::pointer:
     {
         // Don't do anything for pointers; Lua does not own them, so Lua should not destroy them.
@@ -1087,6 +1103,8 @@ int free_userdata(lua_State* const state)
         break;
     }
 
+    // Finally, destroy the userdata block itself
+    userdata_block->~userdata_block();
 
     return 0;
 }
@@ -1374,6 +1392,8 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
     }
     // Carefully retrieve the value from the userdata.
     switch (userdata->storage()) {
+    case lua::userdata_storage::destroyed:
+        throw lua::error("The source userdata has been destroyed, so it can no longer be accessed.");
     case lua::userdata_storage::value:
         destination = *static_cast<T*>(data);
         break;
@@ -1405,6 +1425,8 @@ static void store_full_userdata(T*& destination, lua::userdata_block* userdata, 
     case lua::userdata_storage::shared_ptr:
         destination = static_cast<std::shared_ptr<T>*>(data)->get();
         break;
+    case lua::userdata_storage::destroyed:
+        throw lua::error("The source userdata has been destroyed, so it can no longer be accessed.");
     }
 }
 
@@ -1426,6 +1448,8 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
     case lua::userdata_storage::pointer:
     case lua::userdata_storage::value:
         throw lua::error("The provided Lua userdata does not hold a shared_ptr");
+    case lua::userdata_storage::destroyed:
+        throw lua::error("The provided Lua userdata has been destroyed, so it can no longer be accessed.");
     }
 }
 
