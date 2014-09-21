@@ -32,7 +32,8 @@ install-exec-hook:
 	test -f $(DESTDIR)$(LUA_LIB_DIR)/libluacxx.so || \
 		ln -s $(libdir)/libluacxx.so $(DESTDIR)$(LUA_LIB_DIR);
 	for lib in $(luacxx_libraries); do \
-		test -f $(DESTDIR)$(LUA_LIB_DIR)/$$lib.so || \
+		test ! -f $(libdir)/libluacxx-$$lib.so || \
+			test -f $(DESTDIR)$(LUA_LIB_DIR)/$$lib.so || \
 			ln -s $(libdir)/libluacxx-$$lib.so $(DESTDIR)$(LUA_LIB_DIR)/$$lib.so; \
 	done;
 
