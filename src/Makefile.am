@@ -200,6 +200,31 @@ nodist_test_Qt5Core_SOURCES = $(test_Qt5Core_MOC_SOURCES)
 
 endif
 
+if BUILD_Qt5Network
+
+moc_Qt5Network.cpp: tests/Qt5Network.hpp
+	$(QT_MOC) -o $@ $<
+
+lib_LTLIBRARIES += libluacxx-Qt5Network.la
+
+libluacxx_Qt5Network_la_CPPFLAGS = \
+	$(libluacxx_Qt5Core_la_CPPFLAGS) \
+	@Qt5Network_CFLAGS@
+
+libluacxx_Qt5Network_la_LIBADD = \
+	@Qt5Network_LIBS@ \
+	$(libluacxx_Qt5Core_la_LIBADD)
+
+libluacxx_Qt5Network_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_Qt5Network_la_SOURCES = \
+	Qt5Network/QAbstractSocket.cpp
+
+nobase_pkginclude_HEADERS += \
+	Qt5Network/QAbstractSocket.hpp
+
+endif
+
 if BUILD_Qt5Gui
 
 lib_LTLIBRARIES += libluacxx-Qt5Gui.la

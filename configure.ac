@@ -67,6 +67,20 @@ if test x$with_Qt5Core = xyes; then
 fi;
 AM_CONDITIONAL([BUILD_Qt5Core], [test x$with_Qt5Core = xyes])
 
+AC_ARG_WITH([Qt5Network],
+    [AS_HELP_STRING([--with-Qt5Network], [build Qt5Network module])],
+    [],
+    [with_Qt5Network=$luacxx_with_default]
+)
+if test x$with_Qt5Network = xyes; then
+    PKG_CHECK_MODULES(Qt5Network, [Qt5Network],
+        [with_Qt5Network=yes],
+        [with_Qt5Network=no]
+    )
+    AC_DEFINE([HAVE_Qt5Network], [1], [Defined if Qt5Network is available])
+fi;
+AM_CONDITIONAL([BUILD_Qt5Network], [test x$with_Qt5Network = xyes])
+
 AC_ARG_WITH([Qt5Gui],
     [AS_HELP_STRING([--with-Qt5Gui], [build Qt5Gui module])],
     [],
@@ -217,6 +231,7 @@ AC_OUTPUT
 
 AC_MSG_RESULT([
     Qt5Core                 ${with_Qt5Core}
+    Qt5Network              ${with_Qt5Network}
     Qt5Gui                  ${with_Qt5Gui}
     ncurses                 ${with_ncurses}
     libinput                ${with_libinput}
