@@ -175,7 +175,7 @@ This binding is minimal; see linux/* for what is available.
 
 =head2 Qt 5 - http://qt-project.org/doc/qt-5/index.html
 
-This binding is mostly complete for Qt5Core, Qt5Gui, and Qt5Network; see
+This binding is mostly complete for Qt5Core and Qt5Gui; see
 Qt5Core/*, Qt5Gui/*, et all for what is supported.
 
 =head2 libevdev
