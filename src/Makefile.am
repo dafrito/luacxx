@@ -259,10 +259,12 @@ libluacxx_Qt5Network_la_LIBADD = \
 libluacxx_Qt5Network_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Network_la_SOURCES = \
-	Qt5Network/QAbstractSocket.cpp
+	Qt5Network/QAbstractSocket.cpp \
+	Qt5Network/QLocalSocket.cpp
 
 nobase_pkginclude_HEADERS += \
-	Qt5Network/QAbstractSocket.hpp
+	Qt5Network/QAbstractSocket.hpp \
+	Qt5Network/QLocalSocket.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-Qt5Network.pc
 
