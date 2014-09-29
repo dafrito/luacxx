@@ -46,7 +46,7 @@ void nn_symbol_properties_metatable(const lua::index& mt);
 template <>
 struct Metatable<nn_symbol_properties>
 {
-    static constexpr const char* name = "nn_symbol_properties";
+    constexpr static const char* name = "nn_symbol_properties";
 
     static bool metatable(const lua::index& mt, nn_symbol_properties* const)
     {
@@ -60,7 +60,7 @@ void nn_req_handle_metatable(const lua::index& mt);
 template <>
 struct Metatable<nn_req_handle>
 {
-    static constexpr const char* name = "nn_req_handle";
+    constexpr static const char* name = "nn_req_handle";
 
     static bool metatable(const lua::index& mt, nn_req_handle* const)
     {
@@ -74,7 +74,7 @@ void nn_pollfd_metatable(const lua::index& mt);
 template <>
 struct Metatable<nn_pollfd>
 {
-    static constexpr const char* name = "nn_pollfd";
+    constexpr static const char* name = "nn_pollfd";
 
     static bool metatable(const lua::index& mt, nn_pollfd* const)
     {
@@ -88,7 +88,7 @@ void nn_msghdr_metatable(const lua::index& mt);
 template <>
 struct Metatable<nn_msghdr>
 {
-    static constexpr const char* name = "nn_msghdr";
+    constexpr static const char* name = "nn_msghdr";
 
     static bool metatable(const lua::index& mt, nn_msghdr* const)
     {
@@ -102,7 +102,7 @@ void nn_cmsghdr_metatable(const lua::index& mt);
 template <>
 struct Metatable<nn_cmsghdr>
 {
-    static constexpr const char* name = "nn_cmsghdr";
+    constexpr static const char* name = "nn_cmsghdr";
 
     static bool metatable(const lua::index& mt, nn_cmsghdr* const)
     {
@@ -116,7 +116,7 @@ void nn_iovec_metatable(const lua::index& mt);
 template <>
 struct Metatable<nn_iovec>
 {
-    static constexpr const char* name = "nn_iovec";
+    constexpr static const char* name = "nn_iovec";
 
     static bool metatable(const lua::index& mt, nn_iovec* const)
     {
