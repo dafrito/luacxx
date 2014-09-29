@@ -178,6 +178,8 @@ This binding is minimal; see linux/* for what is available.
 This binding is mostly complete for Qt5Core and Qt5Gui; see
 Qt5Core/*, Qt5Gui/*, et all for what is supported.
 
+This binding is only partially complete for Qt5Network and Qt5Widgets.
+
 =head2 libevdev
 
 If available, bindings for the evdev input library will be compiled.
