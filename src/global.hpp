@@ -9,7 +9,7 @@ namespace lua {
 
 class global
 {
-    lua_State* const _state;
+    lua_State* _state;
     std::string _name;
 
 public:
