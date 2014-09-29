@@ -228,8 +228,6 @@ test_Qt5Core_MOC_SOURCES = \
 
 nodist_test_Qt5Core_SOURCES = $(test_Qt5Core_MOC_SOURCES)
 
-check_PROGRAMS += test_Qt5Core
-
 pkgconfig_DATA += pkg-config/luacxx-Qt5Core.pc
 
 pkg-config/luacxx-Qt5Core.pc: pkg-config/Qt5Core.pc.head
