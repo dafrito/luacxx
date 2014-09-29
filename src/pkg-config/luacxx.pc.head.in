@@ -1,0 +1,7 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx
+Description: Lua bindings for C++
+Version: @PACKAGE_VERSION@
+Requires: lua >= 5.0

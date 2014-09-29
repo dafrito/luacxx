@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-Qt5Core
+Description: Luacxx bindings for Qt5Core
+Version: 5.3

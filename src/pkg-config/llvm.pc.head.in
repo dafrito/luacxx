@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-llvm
+Description: Luacxx bindings for LLVM
+Version: @PACKAGE_VERSION@

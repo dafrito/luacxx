@@ -226,7 +226,25 @@ else
 fi;
 AM_CONDITIONAL([BUILD_llvm], [test x$with_llvm = xyes])
 
-AC_CONFIG_FILES([luacxx.pc Makefile src/Makefile luacxx.spec])
+AC_CONFIG_FILES([
+    Makefile
+    src/Makefile
+    luacxx.spec
+    src/pkg-config/luacxx.pc.head
+    src/pkg-config/llvm.pc.head
+    src/pkg-config/Qt5Core.pc.head
+    src/pkg-config/Qt5Network.pc.head
+    src/pkg-config/Qt5Gui.pc.head
+    src/pkg-config/gobject-introspection.pc.head
+    src/pkg-config/ncurses.pc.head
+    src/pkg-config/nanomsg.pc.head
+    src/pkg-config/libevdev.pc.head
+    src/pkg-config/libinput.pc.head
+    src/pkg-config/egl.pc.head
+    src/pkg-config/drm.pc.head
+    src/pkg-config/gbm.pc.head
+    src/pkg-config/linux.pc.head
+])
 AC_OUTPUT
 
 AC_MSG_RESULT([

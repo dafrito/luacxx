@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-libinput
+Description: Luacxx bindings for libinput
+Version: @PACKAGE_VERSION@

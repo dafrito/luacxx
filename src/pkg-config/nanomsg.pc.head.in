@@ -1,0 +1,7 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-nanomsg
+Description: Luacxx bindings for nanomsg
+Version: @PACKAGE_VERSION@
+Requires: luacxx libnanomsg

@@ -1,0 +1,7 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-ncurses
+Description: Luacxx bindings for ncurses
+Version: @PACKAGE_VERSION@
+Requires: luacxx ncursesw

@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-egl
+Description: Luacxx bindings for EGL
+Version: @PACKAGE_VERSION@

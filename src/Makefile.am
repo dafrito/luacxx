@@ -1,5 +1,4 @@
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = ../luacxx.pc
 
 lib_LTLIBRARIES = libluacxx.la
 
@@ -47,6 +46,13 @@ libluacxx_la_SOURCES = \
 	stack.cpp \
 	thread.cpp \
 	convert/numeric.cpp
+
+pkgconfig_DATA = pkg-config/luacxx.pc
+
+pkg-config/luacxx.pc: pkg-config/luacxx.pc.head
+	cat $< >$@
+	echo "Libs: -L$(libdir) -lluacxx $(libluacxx_la_LIBADD)" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_la_CPPFLAGS)" >>$@
 
 bin_PROGRAMS = luacxx
 luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
@@ -105,6 +111,14 @@ libluacxx_llvm_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	llvm/IR/IRBuilder.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-llvm.pc
+
+pkg-config/luacxx-llvm.pc: pkg-config/llvm.pc.head
+	cat $< >$@
+	echo "Requires: luacxx" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-llvm @llvm_LIBS@" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_llvm_la_CPPFLAGS)" >>$@
 
 endif
 
@@ -200,6 +214,16 @@ test_Qt5Core_MOC_SOURCES = \
 
 nodist_test_Qt5Core_SOURCES = $(test_Qt5Core_MOC_SOURCES)
 
+check_PROGRAMS += test_Qt5Core
+
+pkgconfig_DATA += pkg-config/luacxx-Qt5Core.pc
+
+pkg-config/luacxx-Qt5Core.pc: pkg-config/Qt5Core.pc.head
+	cat $< >$@
+	echo "Requires: luacxx Qt5Core" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-Qt5Core" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_Qt5Core_la_CPPFLAGS)" >>$@
+
 endif
 
 if BUILD_Qt5Network
@@ -224,6 +248,14 @@ libluacxx_Qt5Network_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	Qt5Network/QAbstractSocket.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-Qt5Network.pc
+
+pkg-config/luacxx-Qt5Network.pc: pkg-config/Qt5Network.pc.head
+	cat $< >$@
+	echo "Requires: luacxx Qt5Network" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-Qt5Network" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_Qt5Network_la_CPPFLAGS)" >>$@
 
 endif
 
@@ -326,6 +358,11 @@ nobase_pkginclude_HEADERS += \
 	Gtk/GObject.hpp \
 	search/GIRepository.hpp
 
+pkgconfig_DATA += pkg-config/luacxx-gobject-introspection.pc
+
+pkg-config/luacxx-gobject-introspection.pc: pkg-config/gobject-introspection.pc.head
+	cat $< >$@
+
 endif
 
 if BUILD_ncurses
@@ -410,6 +447,14 @@ libluacxx_ncurses_la_SOURCES = \
 nobase_pkginclude_HEADERS += \
 	ncurses.hpp
 
+pkgconfig_DATA += pkg-config/luacxx-ncurses.pc
+
+pkg-config/luacxx-ncurses.pc: pkg-config/ncurses.pc.head
+	cat $< >$@
+	echo "Requires: luacxx ncursesw" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-ncurses" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_ncurses_la_CPPFLAGS)" >>$@
+
 endif
 
 if BUILD_nanomsg
@@ -431,6 +476,13 @@ libluacxx_nanomsg_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	nanomsg.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-nanomsg.pc
+
+pkg-config/luacxx-nanomsg.pc: pkg-config/nanomsg.pc.head
+	cat $< >$@
+	echo "Libs: $(libluacxx_nanomsg_la_LIBADD)" >>$@
+	echo "Cflags: $(libluacxx_nanomsg_la_CPPFLAGS)" >>$@
 
 endif
 
@@ -454,6 +506,14 @@ libluacxx_libevdev_la_SOURCES = \
 nobase_pkginclude_HEADERS += \
 	libevdev.hpp
 
+pkgconfig_DATA += pkg-config/luacxx-libevdev.pc
+
+pkg-config/luacxx-libevdev.pc: pkg-config/libevdev.pc.head
+	cat $< >$@
+	echo "Requires: luacxx libevdev" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-libevdev" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_libevdev_la_CPPFLAGS)" >>$@
+
 endif
 
 if BUILD_libinput
@@ -475,6 +535,14 @@ libluacxx_libinput_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	libinput.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-libinput.pc
+
+pkg-config/luacxx-libinput.pc: pkg-config/libinput.pc.head
+	cat $< >$@
+	echo "Requires: luacxx libinput" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-libinput" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_libinput_la_CPPFLAGS)" >>$@
 
 endif
 
@@ -498,6 +566,14 @@ libluacxx_egl_la_SOURCES = \
 nobase_pkginclude_HEADERS += \
 	egl.hpp
 
+pkgconfig_DATA += pkg-config/luacxx-egl.pc
+
+pkg-config/luacxx-egl.pc: pkg-config/egl.pc.head
+	cat $< >$@
+	echo "Requires: luacxx egl" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-egl" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_egl_la_CPPFLAGS)" >>$@
+
 endif
 
 if BUILD_drm
@@ -519,6 +595,14 @@ libluacxx_drm_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	xf86drmMode.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-drm.pc
+
+pkg-config/luacxx-drm.pc: pkg-config/drm.pc.head
+	cat $< >$@
+	echo "Requires: luacxx libdrm" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-drm" >> $@
+	echo "Cflags: -I$(includedir) $(libluacxx_drm_la_CPPFLAGS)" >>$@
 
 endif
 
@@ -542,6 +626,14 @@ libluacxx_gbm_la_SOURCES = \
 nobase_pkginclude_HEADERS += \
 	gbm.hpp
 
+pkgconfig_DATA += pkg-config/luacxx-gbm.pc
+
+pkg-config/luacxx-gbm.pc: pkg-config/gbm.pc.head
+	cat $< >$@
+	echo "Requires: luacxx gbm" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-gbm" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_gbm_la_CPPFLAGS)" >>$@
+
 endif
 
 if BUILD_linux
@@ -561,6 +653,13 @@ libluacxx_linux_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	linux/input.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-linux.pc
+
+pkg-config/luacxx-linux.pc: pkg-config/linux.pc.head
+	cat $< >$@
+	echo "Requires: luacxx" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_linux_la_CPPFLAGS)" >>$@
 
 endif
 

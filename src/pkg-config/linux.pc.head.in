@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-linux
+Description: Luacxx bindings for linux kernel headers
+Version: @PACKAGE_VERSION@

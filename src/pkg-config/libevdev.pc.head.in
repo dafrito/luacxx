@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-libevdev
+Description: Luacxx bindings for libevdev
+Version: @PACKAGE_VERSION@

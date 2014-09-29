@@ -1,0 +1,7 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-gobject-introspection
+Description: Luacxx bindings for GObject introspection
+Version: @PACKAGE_VERSION@
+Requires: luacxx gobject-introspection-no-export-1.0
