@@ -23,7 +23,7 @@ struct Metatable<QObject>
     }
 };
 
-void qmetamethod_metatable(const lua::index& mt);
+void QMetaMethod_metatable(const lua::index& mt);
 
 template <>
 struct Metatable<QMetaMethod>
@@ -32,7 +32,7 @@ struct Metatable<QMetaMethod>
 
     static bool metatable(const lua::index& mt, const QMetaMethod* const)
     {
-        lua::qmetamethod_metatable(mt);
+        lua::QMetaMethod_metatable(mt);
         return true;
     }
 };

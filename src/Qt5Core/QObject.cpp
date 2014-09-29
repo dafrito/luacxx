@@ -145,7 +145,7 @@ void lua::QObject_metatable(const lua::index& mt)
     });
 }
 
-void lua::qmetamethod_metatable(const lua::index& mt)
+void lua::QMetaMethod_metatable(const lua::index& mt)
 {
     mt["signature"] = lua_CFunction([](lua_State* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
