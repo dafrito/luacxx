@@ -1,7 +1,6 @@
 #include "load.hpp"
 #include "error.hpp"
 
-#include "config.hpp"
 #include <fstream>
 #include <sstream>
 

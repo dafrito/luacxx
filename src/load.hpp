@@ -1,11 +1,12 @@
 #ifndef LUACXX_LOADERS_INCLUDED
 #define LUACXX_LOADERS_INCLUDED
 
+#include <config.hpp>
+
 #include <string>
 
 #include "algorithm.hpp"
 
-#include "config.hpp"
 #ifdef HAVE_Qt5Core
 
 #include <QDir>

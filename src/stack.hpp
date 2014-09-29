@@ -1,9 +1,10 @@
 #ifndef LUACXX_STACK_INCLUDED
 #define LUACXX_STACK_INCLUDED
 
+#include <config.hpp>
+
 #include "type.hpp"
 #include "error.hpp"
-#include "config.hpp"
 
 #include <memory>
 #include <type_traits>
