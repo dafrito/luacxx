@@ -1,0 +1,189 @@
+
+=head1 SYNOPSIS
+
+    #include "../cairo.hpp"
+    #include "../thread.hpp"
+
+    #include "../convert/callable.hpp"
+    #include "../convert/numeric.hpp"
+
+    // http://cairographics.org/manual/cairo-cairo-device-t.html
+
+    void lua::cairo_device_t(lua_State* const state)
+    {
+        lua::thread env(state);
+
+        env["cairo_device_reference"] = cairo_device_reference;
+        env["cairo_device_destroy"] = cairo_device_destroy;
+        env["cairo_device_status"] = cairo_device_status;
+        env["cairo_device_finish"] = cairo_device_finish;
+        env["cairo_device_flush"] = cairo_device_flush;
+    }
+
+=head1 DESCRIPTION
+
+Luacxx bindings adhere to the original library's API wherever possible.  They
+do not modify the API's naming conventions, method structure, or object
+hierarchy. Nor do they do anything more aggressive like creating a new
+abstraction layer. This means that the original library's documentation can be
+used for learning an API, rather than having to learn something slightly
+different.
+
+The benefit of being able to use their documentation means that, as a binding
+writer, you should write according to the documentation, not their source code.
+Undocumented features shouldn't be bound, unless those features are essential
+for the library's operation.
+
+Bindings larger than one hpp+cpp pair should get their own directory. Use the
+original library's organizational structure (preferably their documentation's
+structure) when laying out multifile bindings.
+
+In spite of the adherence described above, there are several areas where the
+binding may deviate for usability reasons, and these are enumerated below. This
+happens in situations where the API uses a level of detail that Lua can't
+easily reproduce - such as using pointers as outvalues or passing pointers to
+functions.
+
+It's my opinion that deviations here are warranted, as strict adherence would
+make APIs harder to use without providing much of a benefit. In other words,
+it's already something that will need to be looked up on a first go, so it's
+better to have a single standard that the programmer can anticipate.
+
+=head3 Enumerations
+
+C Enumerations should be treated as integer constants. Do not attempt to make
+the values more readable or non-numeric. Push and store support must be defined
+for enum classes to make them behave as expected:
+
+    template<>
+    struct Push<QEvent::Type>
+    {
+        static void push(lua_State* const state, const QEvent::Type& source)
+        {
+            lua_pushinteger(state, source);
+        }
+    };
+
+    template<>
+    struct Store<QEvent::Type>
+    {
+        static void store(QEvent::Type& destination, const lua::index& source)
+        {
+            destination = static_cast<QEvent::Type>(
+                lua_tointeger(source.state(), source.pos())
+            );
+        }
+    };
+
+=head3 Structs
+
+Structs should be constructible according to their documentation. Do not provide
+undocumented constructors, unless it is assumed that the struct should be constructed
+manually (e.g. a point or size struct).
+
+Access to struct members should be provided via a metatable. It's somewhat painful to
+construct a metatable for a struct like this, but it must be done:
+
+If the struct is intended to be opaque, then only its documented public methods
+should be bound.
+
+Do not turn structs into classes. C libraries should never be converted to
+using an object model. Keep objects out unless the library actually uses C++
+methods.
+
+=head3 Objects
+
+Objects should map to tables with a special metatable. The naming and casing
+for members should match exactly, unless the name collides with a Lua keyword
+(e.g. end). In this case, an alias should be constructed, so as to not force users
+to use `obj["end"]()`.
+
+It's very common for objects to have public constructors. In this case, a "new"
+constructor method should be used. Specifically, please do not use the table's
+__call metamethod, as this creates ambiguity for Lua libraries that support
+partial functions, as shown below:
+
+    local curried = partial(Vector, "new", 50);
+
+    // Does this call Vector("new, 50, 50) or Vector:new(50, 50) ?
+    local vec = curried(50);
+
+=head3 Pointers and ownership
+
+Object ownership must be considered for all incoming and outgoing pointers,
+just as must be done in C. Lua's lifecycle is determined by its own reference
+model, so once a function returns, all objects created during the bound
+function must be accounted for in some fashion.
+
+Most pointer in APIs do not imply ownership beyond the duration of the function
+call. In these cases, the method can be bound directly without further
+consideration. Do not add extra condtionals testing for null pointers; the
+lower-level C code or the higher-level Lua code is responsible for this
+security.
+
+If a function returns a pointer to a new object owned by the caller, that
+object's lifecycle must be then transferred to Lua, so that it may be properly
+destroyed.
+
+By convention, Luacxx will invoke a "destroy" object method before
+garbage-collection. This method is useful if the object has non-trivial
+cleanup, though it's rarely necessary to implement in practice. The "destroy"
+method must be idempotent.
+
+Luacxx will also invoke a "free_userdata" method during garbage collection,
+which, by default, will invoke the object's destructor for values (pointers
+are destroyed in this fashion, but their data is not). After this point, all
+references to that object's data are illegal. The userdata is marked as
+destroyed. The "free_userdata" method must be idempotent, so as to allow the
+programmer to invoke it immediately if needed, rather than waiting for the
+next garbage collection cycle.
+
+=head3 Handling out arguments as placement constructors
+
+Functions and methods that use pointers as out-arguments can provide an
+implementation that provides that out-argument implicitly through Lua's memory
+model. For demonstration, consider the following method:
+
+    cairo_bool_t cairo_recording_surface_get_extents(
+        cairo_surface_t* surface,
+        cairo_rectangle_t* extents
+    );
+
+    Get the extents of the recording-surface.
+
+    surface :
+        a cairo_recording_surface_t
+
+    extents :
+        the cairo_rectangle_t to be assigned the extents
+
+    Returns :
+        TRUE if the surface is bounded, of recording type, and not in an error state, otherwise FALSE
+
+In this case, the extents rectangle is never owned by the callee, nor is the
+value used by the callee. This function behaves as a (albeit unusual) placement
+constructor. In these instances, the binding can detect and omit this value
+being necessary by creating and returning it through Lua:
+
+    auto surface = lua::get<cairo_surface_t*>(state, 1);
+
+    if (lua::size(state) > 1) {
+        // Extents rectangle was provided explicitly, so use it
+        auto extents = lua::get<cairo_rectangle_t*>(state, 2);
+        lua::push(state, cairo_recording_surface_get_extents(
+            surface,
+            extents
+        ));
+        return 1;
+    }
+
+    // Create the extents implicitly
+    cairo_rectangle_t extents;
+    lua::push(state, cairo_recording_surface_get_extents(
+        surface,
+        extents
+    ));
+    return 2;
+
+Don't be too aggressive in allowing implicit arguments. Generally speaking,
+either none are provided, or they are all expected to be.
