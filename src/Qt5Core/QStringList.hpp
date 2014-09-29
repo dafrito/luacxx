@@ -2,6 +2,8 @@
 #define LUACXX_QSTRINGLIST_INCLUDED
 
 #include "../stack.hpp"
+#include "QString.hpp"
+
 #include <QStringList>
 
 namespace lua {

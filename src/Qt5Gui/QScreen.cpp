@@ -8,6 +8,7 @@
 #include "QPixmap.hpp"
 #include "QTransform.hpp"
 #include "../Qt5Core/QObject.hpp"
+#include "../Qt5Core/QList.hpp"
 
 void lua::QScreen_metatable(const lua::index& mt)
 {
