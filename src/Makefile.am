@@ -3,7 +3,6 @@ pkgconfigdir = $(libdir)/pkgconfig
 lib_LTLIBRARIES = libluacxx.la
 
 libluacxx_la_CPPFLAGS = \
-	-Wall \
 	@stdcxx11_CFLAGS@ \
 	@gobject_introspection_CFLAGS@ \
 	@Qt5Core_CFLAGS@ -fPIC \
