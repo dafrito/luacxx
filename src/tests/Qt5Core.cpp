@@ -18,6 +18,7 @@
 #include "Qt5Core/QChar.hpp"
 #include "Qt5Core/QVariant.hpp"
 #include "Qt5Core/QObject.hpp"
+#include "Qt5Core/QList.hpp"
 
 #include "load/DirectoryModuleLoader.hpp"
 #include <QDir>
@@ -249,4 +250,27 @@ BOOST_AUTO_TEST_CASE(test_QElapsedTimer)
     lua::run_string(env, "foo:start()");
     lua::run_string(env, "elapsed = foo:nsecsElapsed()");
     BOOST_CHECK(env["elapsed"].type().number());
+}
+
+BOOST_AUTO_TEST_CASE(test_QList)
+{
+    auto env = lua::create();
+
+    QList<int> nums = {1, 2, 3};
+    env["nums"] = nums;
+
+    auto num = lua::run_string<int>(env, "return nums:at(1)");
+    lua::push(env, nums.begin());
+    BOOST_CHECK_EQUAL(2, num);
+    auto class_name = lua::run_string<std::string>(env, "return nums.__class");
+    BOOST_CHECK_EQUAL(std::string("QList<int>"), class_name);
+}
+
+BOOST_AUTO_TEST_CASE(test_QString)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, "foo = 'notime'");
+    auto foo = env["foo"].get<QString>();
+    BOOST_CHECK(QString("notime") == foo);
 }

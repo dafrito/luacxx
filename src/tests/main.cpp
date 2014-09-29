@@ -137,6 +137,17 @@ BOOST_AUTO_TEST_CASE(reference)
     BOOST_CHECK_EQUAL(lua_gettop(env), 0);
     BOOST_CHECK_EQUAL(ref.get<const char*>(), "No Time");
     BOOST_CHECK_EQUAL(lua_gettop(env), 0);
+
+    env["Foo"] = lua::value::table;
+
+    // Can references be constructed from lua locations?
+    lua::reference Foo(env["Foo"]);
+
+    // Does lua::reference support operator[]?
+    Foo["Bar"] = 42;
+
+    // Do changes to references refer back to the original environment or just a copy?
+    BOOST_CHECK_EQUAL(env["Foo"]["Bar"].get<int>(), 42);
 }
 
 BOOST_AUTO_TEST_CASE(link_and_conversions)
@@ -603,6 +614,18 @@ BOOST_AUTO_TEST_CASE(error_support)
 
     // Do callables allow superfluous arguments?
     BOOST_CHECK_NO_THROW(lua::run_string(env, "call(false, 1, 2, 3)"));
+}
+
+BOOST_AUTO_TEST_CASE(callable_with_automatic_conversions)
+{
+    auto env = lua::create();
+
+    env["get_number"] = lua::callable([](lua_State* const state) {
+        lua::push(state, 42);
+        return 1;
+    });
+
+    BOOST_CHECK_EQUAL(42, lua::run_string<int>(env, "return get_number()"));
 }
 
 BOOST_AUTO_TEST_CASE(raw_char)
