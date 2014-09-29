@@ -19,16 +19,16 @@ struct Store<const char*>
 {
     static void store(const char*& destination, const lua::index& source)
     {
-        if (source.type().string()) {
-            destination = lua_tostring(source.state(), source.pos());
-        } else if (source.type().number()) {
-            lua_pushvalue(source.state(), source.pos());
-            destination = lua_tolstring(source.state(), -1, nullptr);
-            lua_pop(source.state(), 1);
-        }
-        if (!destination) {
-            destination = "";
-        }
+        destination = lua_tostring(source.state(), source.pos());
+    }
+};
+
+template <>
+struct Get<const char*>
+{
+    static const char* get(const lua::index& source)
+    {
+        return lua_tostring(source.state(), source.pos());
     }
 };
 
