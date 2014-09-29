@@ -152,7 +152,11 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QObject.cpp \
 	Qt5Core/QVariant.cpp \
 	Qt5Core/QStringList.cpp \
+	Qt5Core/QByteArray.cpp \
 	Qt5Core/QCoreApplication.cpp \
+	Qt5Core/QLocale.cpp \
+	Qt5Core/QMargins.cpp \
+	Qt5Core/QModelIndex.cpp \
 	Qt5Core/QPoint.cpp \
 	Qt5Core/QPointF.cpp \
 	Qt5Core/QSize.cpp \
@@ -163,8 +167,11 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/Qt_2.cpp \
 	Qt5Core/Qt_3.cpp \
 	Qt5Core/Qt_4.cpp \
+	Qt5Core/QAbstractItemModel.cpp \
 	Qt5Core/QUrl.cpp \
 	Qt5Core/QIODevice.cpp \
+	Qt5Core/QFileDevice.cpp \
+	Qt5Core/QFile.cpp \
 	Qt5Core/QMimeData.cpp \
 	Qt5Core/QElapsedTimer.cpp \
 	Qt5Core/QEvent.cpp \
@@ -174,18 +181,25 @@ libluacxx_Qt5Core_la_SOURCES = \
 
 nobase_pkginclude_HEADERS += \
 	load/DirectoryModuleLoader.hpp \
+	Qt5Core/QString.hpp \
+	Qt5Core/QChar.hpp \
+	Qt5Core/QList.hpp \
 	Qt5Core/QObject.hpp \
 	Qt5Core/QObjectSlot.hpp \
 	Qt5Core/QRect.hpp \
 	Qt5Core/QRectF.hpp \
-	Qt5Core/QChar.hpp \
-	Qt5Core/QString.hpp \
 	Qt5Core/QPoint.hpp \
 	Qt5Core/QPointF.hpp \
+	Qt5Core/QLocale.hpp \
+	Qt5Core/QMargins.hpp \
+	Qt5Core/QModelIndex.hpp \
 	Qt5Core/QUrl.hpp \
 	Qt5Core/QIODevice.hpp \
+	Qt5Core/QFileDevice.hpp \
+	Qt5Core/QFile.hpp \
 	Qt5Core/QElapsedTimer.hpp \
 	Qt5Core/QVariant.hpp \
+	Qt5Core/QByteArray.hpp \
 	Qt5Core/QCoreApplication.hpp \
 	Qt5Core/QEvent.hpp \
 	Qt5Core/QEventLoop.hpp \
@@ -193,6 +207,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QMimeData.hpp \
 	Qt5Core/QEventFilter.hpp \
 	Qt5Core/Qt.hpp \
+	Qt5Core/QAbstractItemModel.hpp \
 	Qt5Core/QSize.hpp \
 	Qt5Core/QObservable.hpp
 
