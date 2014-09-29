@@ -61,6 +61,17 @@ struct Store<lua_Number>
 };
 
 template <>
+struct Metatable<lua_Number>
+{
+    static constexpr const char* name = "lua_Number";
+
+    static bool metatable(const lua::index& mt, lua_Number* const)
+    {
+        return true;
+    }
+};
+
+template <>
 struct Push<long>
 {
     static void push(lua_State* const state, const long& source)
@@ -77,6 +88,17 @@ struct Store<long>
     static void store(long& destination, const lua::index& source)
     {
         store_lua_Integer(destination, source);
+    }
+};
+
+template <>
+struct Metatable<lua_Integer>
+{
+    static constexpr const char* name = "lua_Integer";
+
+    static bool metatable(const lua::index& mt, lua_Integer* const)
+    {
+        return true;
     }
 };
 
@@ -101,6 +123,17 @@ struct Store<lua_Unsigned>
 };
 
 template <>
+struct Metatable<lua_Unsigned>
+{
+    static constexpr const char* name = "lua_Unsigned";
+
+    static bool metatable(const lua::index& mt, lua_Unsigned* const)
+    {
+        return true;
+    }
+};
+
+template <>
 struct Push<bool>
 {
     static void push(lua_State* const state, const bool& source)
@@ -115,6 +148,17 @@ struct Store<bool>
     static void store(bool& destination, const lua::index& source)
     {
         destination = lua_toboolean(source.state(), source.pos());
+    }
+};
+
+template <>
+struct Metatable<bool>
+{
+    static constexpr const char* name = "bool";
+
+    static bool metatable(const lua::index& mt, bool* const)
+    {
+        return true;
     }
 };
 
@@ -139,6 +183,17 @@ struct Store<int>
 };
 
 template <>
+struct Metatable<int>
+{
+    static constexpr const char* name = "int";
+
+    static bool metatable(const lua::index& mt, int* const)
+    {
+        return true;
+    }
+};
+
+template <>
 struct Push<short>
 {
     static void push(lua_State* const state, const short& value)
@@ -155,6 +210,17 @@ struct Store<short>
         lua_Integer sink;
         lua::store(sink, source);
         destination = sink;
+    }
+};
+
+template <>
+struct Metatable<short>
+{
+    static constexpr const char* name = "short";
+
+    static bool metatable(const lua::index& mt, short* const)
+    {
+        return true;
     }
 };
 
@@ -179,6 +245,17 @@ struct Store<unsigned short>
 };
 
 template <>
+struct Metatable<unsigned short>
+{
+    static constexpr const char* name = "unsigned short";
+
+    static bool metatable(const lua::index& mt, unsigned short* const)
+    {
+        return true;
+    }
+};
+
+template <>
 struct Push<unsigned long>
 {
     static void push(lua_State* const state, const unsigned long& value)
@@ -193,6 +270,17 @@ struct Store<unsigned long>
     static void store(unsigned long& destination, const lua::index& source)
     {
         destination = lua::get<lua_Unsigned>(source);
+    }
+};
+
+template <>
+struct Metatable<unsigned long>
+{
+    static constexpr const char* name = "unsigned long";
+
+    static bool metatable(const lua::index& mt, unsigned long* const)
+    {
+        return true;
     }
 };
 
@@ -217,6 +305,17 @@ struct Store<long long>
 };
 
 template <>
+struct Metatable<long long>
+{
+    static constexpr const char* name = "long long";
+
+    static bool metatable(const lua::index& mt, long long* const)
+    {
+        return true;
+    }
+};
+
+template <>
 struct Push<float>
 {
     static void push(lua_State* const state, const float& value)
@@ -233,6 +332,17 @@ struct Store<float>
         lua_Number sink;
         lua::store(sink, source);
         destination = static_cast<float>(sink);
+    }
+};
+
+template <>
+struct Metatable<float>
+{
+    static constexpr const char* name = "float";
+
+    static bool metatable(const lua::index& mt, float* const)
+    {
+        return true;
     }
 };
 
