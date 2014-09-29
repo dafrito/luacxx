@@ -324,12 +324,86 @@ struct Push<RV(*)(Args...)>
     }
 };
 
+template <typename RV>
+struct Push<RV(*)(lua_State* const)>
+{
+    static void push(lua_State* const state, RV(*func)(lua_State* const))
+    {
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            lua::push(state, func(state));
+            lua_replace(state, 1);
+            lua_settop(state, 1);
+            return 1;
+        }));
+    }
+};
+
+template <>
+struct Push<void(*)(lua_State* const)>
+{
+    static void push(lua_State* const state, void(*func)(lua_State* const))
+    {
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            func(state);
+            return 0;
+        }));
+    }
+};
+
+template <>
+struct Push<std::function<void(lua_State* const)>>
+{
+    static void push(lua_State* const state, const std::function<void(lua_State* const)>& func)
+    {
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            func(state);
+            return 0;
+        }));
+    }
+};
+
+template <typename RV>
+struct Push<std::function<RV(lua_State* const)>>
+{
+    static void push(lua_State* const state, const std::function<RV(lua_State* const)>& func)
+    {
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            lua::push(state, func(state));
+            lua_replace(state, 1);
+            lua_settop(state, 1);
+            return 1;
+        }));
+    }
+};
+
+template <typename Object, typename... Args>
+struct Push<void(Object::*)(Args...)>
+{
+    static void push(lua_State* const state, void(Object::* func)(Args...))
+    {
+        lua::push(state, std::function<void(Object*, Args...)>(
+            std::mem_fn(func)
+        ));
+    }
+};
+
 template <typename RV, typename Object, typename... Args>
 struct Push<RV(Object::*)(Args...)>
 {
     static void push(lua_State* const state, RV(Object::* func)(Args...))
     {
         lua::push(state, std::function<RV(Object*, Args...)>(
+            std::mem_fn(func)
+        ));
+    }
+};
+
+template <typename Object, typename... Args>
+struct Push<void(Object::*)(Args...) const>
+{
+    static void push(lua_State* const state, void(Object::* func)(Args...) const)
+    {
+        lua::push(state, std::function<void(Object*, Args...)>(
             std::mem_fn(func)
         ));
     }
@@ -346,6 +420,113 @@ struct Push<RV(Object::*)(Args...) const>
     }
 };
 
+
+template <typename Object>
+struct Push<void(Object::*)(lua_State* const state)>
+{
+    static void push(lua_State* const state, void(Object::* func)(lua_State* const))
+    {
+        auto inner = std::function<void(Object*, lua_State* const)>(
+            std::mem_fn(func)
+        );
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            inner(
+                lua::get<Object*>(state, 1),
+                state
+            );
+            return 0;
+        }));
+    }
+};
+
+template <typename RV, typename Object>
+struct Push<RV(Object::*)(lua_State* const state)>
+{
+    static void push(lua_State* const state, RV(Object::* func)(lua_State* const))
+    {
+        auto inner = std::function<RV(Object*, lua_State* const)>(
+            std::mem_fn(func)
+        );
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            lua::push(state, inner(
+                lua::get<Object*>(state, 1),
+                state
+            ));
+            return 1;
+        }));
+    }
+};
+
+template <typename Object>
+struct Push<void(Object::*)(lua_State* const state) const>
+{
+    static void push(lua_State* const state, void(Object::* func)(lua_State* const) const)
+    {
+        auto inner = std::function<void(Object*, lua_State* const)>(
+            std::mem_fn(func)
+        );
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            inner(
+                lua::get<Object*>(state, 1),
+                state
+            );
+            return 1;
+        }));
+    }
+};
+
+template <typename RV, typename Object>
+struct Push<RV(Object::*)(lua_State* const state) const>
+{
+    static void push(lua_State* const state, RV(Object::* func)(lua_State* const) const)
+    {
+        auto inner = std::function<RV(Object*, lua_State* const)>(
+            std::mem_fn(func)
+        );
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            lua::push(state, inner(
+                lua::get<Object*>(state, 1),
+                state
+            ));
+            return 1;
+        }));
+    }
+};
+
+template <typename Object>
+struct Push<int(Object::*)(lua_State* const state)>
+{
+    static void push(lua_State* const state, int(Object::* func)(lua_State* const))
+    {
+        auto inner = std::function<int(Object*, lua_State* const)>(
+            std::mem_fn(func)
+        );
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            return inner(
+                lua::get<Object*>(state, 1),
+                state
+            );
+        }));
+    }
+};
+
+template <typename Object>
+struct Push<int(Object::*)(lua_State* const state) const>
+{
+    static void push(lua_State* const state, int(Object::* func)(lua_State* const) const)
+    {
+        auto inner = std::function<int(Object*, lua_State* const)>(
+            std::mem_fn(func)
+        );
+        lua::push(state, lua::callable([=](lua_State* const state) {
+            return inner(
+                lua::get<Object*>(state, 1),
+                state
+            );
+        }));
+    }
+};
+
 template <typename RV, typename... Args>
 struct Push<std::function<RV(Args...)>>
 {
@@ -356,31 +537,13 @@ struct Push<std::function<RV(Args...)>>
     }
 };
 
-template <typename RV>
-struct Push<RV(*)(lua_State* const)>
+template <typename... Args>
+struct Push<std::function<void(Args...)>>
 {
-    static void push(lua_State* const state, RV(*func)(lua_State* const))
+    static void push(lua_State* const state, const std::function<void(Args...)>& callable)
     {
-        lua::push(state, lua::callable([=](lua_State* const state) {
-            lua::push(state, func(state));
-            lua_replace(state, 1);
-            lua_settop(state, 1);
-            return 1;
-        }));
-    }
-};
-
-template <typename RV>
-struct Push<std::function<RV(lua_State* const)>>
-{
-    static void push(lua_State* const state, const std::function<RV(lua_State* const)>& func)
-    {
-        lua::push(state, lua::callable([=](lua_State* const state) {
-            lua::push(state, func(state));
-            lua_replace(state, 1);
-            lua_settop(state, 1);
-            return 1;
-        }));
+        Construct<std::function<void(Args...)>>::construct(state, callable);
+        lua_pushcclosure(state, invoke_callable<void, Args...>, 1);
     }
 };
 
