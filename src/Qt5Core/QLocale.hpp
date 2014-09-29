@@ -3,7 +3,7 @@
 
 #include "../stack.hpp"
 
-class QLocale;
+#include <QLocale>
 
 namespace lua {
 
