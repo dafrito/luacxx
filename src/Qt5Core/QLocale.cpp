@@ -55,6 +55,61 @@ int QLocale_toDate(lua_State* const state)
     return 0;
 }
 
+int QLocale_toDateTime(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toDouble(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toFloat(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toInt(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toLongLong(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toShort(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toUShort(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toUInt(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toULongLong(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toString(lua_State* const state)
+{
+    return 0;
+}
+
+int QLocale_toTime(lua_State* const state)
+{
+    return 0;
+}
+
 void lua::QLocale_metatable(const lua::index& mt)
 {
     mt["amText"] = &QLocale::amText;
@@ -89,18 +144,18 @@ void lua::QLocale_metatable(const lua::index& mt)
     mt["timeFormat"] = QLocale_timeFormat;
     mt["toCurrencyString"] = QLocale_toCurrencyString;
     mt["toDate"] = QLocale_toDate;
-    mt["toDateTime"] = &QLocale::toDateTime;
-    mt["toDouble"] = &QLocale::toDouble;
-    mt["toFloat"] = &QLocale::toFloat;
-    mt["toInt"] = &QLocale::toInt;
-    mt["toLongLong"] = &QLocale::toLongLong;
+    mt["toDateTime"] = QLocale_toDateTime;
+    mt["toDouble"] = QLocale_toDouble;
+    mt["toFloat"] = QLocale_toFloat;
+    mt["toInt"] = QLocale_toInt;
+    mt["toLongLong"] = QLocale_toLongLong;
     mt["toLower"] = &QLocale::toLower;
-    mt["toShort"] = &QLocale::toShort;
-    mt["toString"] = &QLocale::toString;
-    mt["toTime"] = &QLocale::toTime;
-    mt["toUInt"] = &QLocale::toUInt;
-    mt["toULongLong"] = &QLocale::toULongLong;
-    mt["toUShort"] = &QLocale::toUShort;
+    mt["toShort"] = QLocale_toShort;
+    mt["toString"] = QLocale_toString;
+    mt["toTime"] = QLocale_toTime;
+    mt["toUInt"] = QLocale_toUInt;
+    mt["toULongLong"] = QLocale_toULongLong;
+    mt["toUShort"] = QLocale_toUShort;
     mt["toUpper"] = &QLocale::toUpper;
     mt["uiLanguages"] = &QLocale::uiLanguages;
     mt["weekdays"] = &QLocale::weekdays;
@@ -139,6 +194,12 @@ int QLocale_new(lua_State* const state)
     case 4:
     default:
         // QLocale(Language language, Script script, Country country)
+        lua::make<QLocale>(state,
+            lua::get<QLocale::Language>(state, 2),
+            lua::get<QLocale::Script>(state, 3),
+            lua::get<QLocale::Country>(state, 4)
+        );
+        break;
     }
 
     return 1;
@@ -438,7 +499,7 @@ int luaopen_Qt5Core_QLocale(lua_State* const state)
 
     // enum QLocale::Language
     t["AnyLanguage"] = QLocale::AnyLanguage;
-    t["C  1"] = QLocale::C  1;
+    t["C"] = QLocale::C;
     t["Abkhazian"] = QLocale::Abkhazian;
     t["Oromo"] = QLocale::Oromo;
     t["Afan"] = QLocale::Afan;
