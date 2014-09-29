@@ -397,6 +397,14 @@ nodist_test_Qt5Gui_SOURCES = $(test_Qt5Gui_MOC_SOURCES)
 
 check_PROGRAMS += test_Qt5Gui
 
+pkgconfig_DATA += pkg-config/luacxx-Qt5Gui.pc
+
+pkg-config/luacxx-Qt5Gui.pc: pkg-config/Qt5Gui.pc.head
+	cat $< >$@
+	echo "Requires: luacxx Qt5Gui" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-Qt5Gui" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_Qt5Gui_la_CPPFLAGS)" >>$@
+
 endif
 
 if BUILD_Qt5Widgets
