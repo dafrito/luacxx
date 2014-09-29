@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_QVARIANT_INCLUDED
-#define LUACXX_TYPE_QVARIANT_INCLUDED
+#ifndef luacxx_Qt5Core_QVariant_INCLUDED
+#define luacxx_Qt5Core_QVariant_INCLUDED
 
 #include "../stack.hpp"
 
@@ -45,4 +45,4 @@ struct Get<QVariant>
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_QVARIANT_INCLUDED
+#endif // luacxx_Qt5Core_QVariant_INCLUDED

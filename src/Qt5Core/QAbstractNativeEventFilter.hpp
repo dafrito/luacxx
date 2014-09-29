@@ -1,5 +1,5 @@
-#ifndef LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
-#define LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
+#ifndef luacxx_QAbstractNativeEventFilter_INCLUDED
+#define luacxx_QAbstractNativeEventFilter_INCLUDED
 
 #include "../stack.hpp"
 
@@ -25,4 +25,4 @@ struct Metatable<QAbstractNativeEventFilter>
 
 extern "C" int luaopen_Qt5Core_QAbstractNativeEventFilter(lua_State* const);
 
-#endif // LUACXX_QABSTRACTNATIVEEVENTFILTER_INCLUDED
+#endif // luacxx_QAbstractNativeEventFilter_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_GIBASEINFO_INCLUDED
-#define LUACXX_TYPE_GIBASEINFO_INCLUDED
+#ifndef luacxx_Gtk_GIBaseInfo_INCLUDED
+#define luacxx_Gtk_GIBaseInfo_INCLUDED
 
 #include "../stack.hpp"
 #include <girepository.h>
@@ -25,4 +25,4 @@ struct Metatable<GIBaseInfo>
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_GIBASEINFO_INCLUDED
+#endif // luacxx_Gtk_GIBaseInfo_INCLUDED

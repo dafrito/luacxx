@@ -1,5 +1,5 @@
-#ifndef LUACXX_QTRANSLATOR_INCLUDED
-#define LUACXX_QTRANSLATOR_INCLUDED
+#ifndef luacxx_QTranslator_INCLUDED
+#define luacxx_QTranslator_INCLUDED
 
 #include "../stack.hpp"
 
@@ -25,4 +25,4 @@ struct Metatable<QTranslator>
 
 extern "C" int luaopen_Qt5Core_QTranslator(lua_State* const);
 
-#endif // LUACXX_QTRANSLATOR_INCLUDED
+#endif // luacxx_QTranslator_INCLUDED

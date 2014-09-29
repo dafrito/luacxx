@@ -1,5 +1,5 @@
-#ifndef LUACXX_QCOREAPPLICATION_INCLUDED
-#define LUACXX_QCOREAPPLICATION_INCLUDED
+#ifndef luacxx_QCoreApplication_INCLUDED
+#define luacxx_QCoreApplication_INCLUDED
 
 #include "../stack.hpp"
 #include <vector>
@@ -120,4 +120,4 @@ struct Metatable<QCoreApplication>
 
 extern "C" int luaopen_Qt5Core_QCoreApplication(lua_State* const);
 
-#endif // LUACXX_QCOREAPPLICATION_INCLUDED
+#endif // luacxx_QCoreApplication_INCLUDED

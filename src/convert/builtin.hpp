@@ -1,5 +1,5 @@
-#ifndef LUACXX_CONVERT_BUILTIN_INCLUDED
-#define LUACXX_CONVERT_BUILTIN_INCLUDED
+#ifndef luacxx_convert_builtin_INCLUDED
+#define luacxx_convert_builtin_INCLUDED
 
 #include "../stack.hpp"
 
@@ -193,4 +193,4 @@ struct Store<lua::userdata_block*>
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_BUILTIN_INCLUDED
+#endif // luacxx_convert_builtin_INCLUDED

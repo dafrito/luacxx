@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_FUNCTION_INCLUDED
-#define LUACXX_TYPE_FUNCTION_INCLUDED
+#ifndef luacxx_convert_callable_INCLUDED
+#define luacxx_convert_callable_INCLUDED
 
 #include <functional>
 #include <sstream>
@@ -479,4 +479,4 @@ static lua::index push_closure(lua_State* const state, lua_CFunction callable, U
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_FUNCTION_INCLUDED
+#endif // luacxx_convert_callable_INCLUDED

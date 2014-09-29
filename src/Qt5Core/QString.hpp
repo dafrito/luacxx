@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_QSTRING_INCLUDED
-#define LUACXX_TYPE_QSTRING_INCLUDED
+#ifndef luacxx_Qt5Core_QString_INCLUDED
+#define luacxx_Qt5Core_QString_INCLUDED
 
 #include "../convert/string.hpp"
 
@@ -27,4 +27,4 @@ struct Store<QString>
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_QSTRING_INCLUDED
+#endif // luacxx_Qt5Core_QString_INCLUDED

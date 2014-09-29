@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_QCHAR_INCLUDED
-#define LUACXX_TYPE_QCHAR_INCLUDED
+#ifndef luacxx_QChar_INCLUDED
+#define luacxx_QChar_INCLUDED
 
 #include <QChar>
 
@@ -28,4 +28,4 @@ struct Store<QChar>
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_QCHAR_INCLUDED
+#endif // luacxx_QChar_INCLUDED

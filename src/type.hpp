@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_INCLUDED
-#define LUACXX_TYPE_INCLUDED
+#ifndef luacxx_type_INCLUDED
+#define luacxx_type_INCLUDED
 
 #include <lua.hpp>
 
@@ -125,4 +125,4 @@ public:
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_INCLUDED
+#endif // luacxx_type_INCLUDED

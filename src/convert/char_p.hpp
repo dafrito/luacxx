@@ -1,5 +1,5 @@
-#ifndef LUACXX_TYPE_CHAR_POINTER_INCLUDED
-#define LUACXX_TYPE_CHAR_POINTER_INCLUDED
+#ifndef luacxx_convert_char_p_INCLUDED
+#define luacxx_convert_char_p_INCLUDED
 
 #include "../stack.hpp"
 
@@ -16,4 +16,4 @@ struct Push<char*>
 
 } // namespace lua
 
-#endif // LUACXX_TYPE_CHAR_POINTER_INCLUDED
+#endif // luacxx_convert_char_p_INCLUDED

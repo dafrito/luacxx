@@ -1,5 +1,5 @@
-#ifndef LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
-#define LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
+#ifndef luacxx_QCryptographicHash_INCLUDED
+#define luacxx_QCryptographicHash_INCLUDED
 
 #include "../stack.hpp"
 
@@ -25,4 +25,4 @@ struct Metatable<QCryptographicHash>
 
 extern "C" int luaopen_Qt5Core_QCryptographicHash(lua_State* const);
 
-#endif // LUACXX_QCRYPTOGRAPHICHASH_INCLUDED
+#endif // luacxx_QCryptographicHash_INCLUDED
