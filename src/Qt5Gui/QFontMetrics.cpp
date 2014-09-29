@@ -9,36 +9,42 @@
 
 // http://qt-project.org/doc/qt-5/qfontmetrics.html
 
+int QFontMetrics_boundingRect(lua_State* const state)
+{
+    return 0;
+}
+
+int QFontMetrics_width(lua_State* const state)
+{
+    return 0;
+}
+
 void lua::QFontMetrics_metatable(const lua::index& mt)
 {
-    mt["ascent"] = &QAbstractSocket::ascent;
-    mt["averageCharWidth"] = &QAbstractSocket::averageCharWidth;
-    mt["boundingRect"] = &QAbstractSocket::boundingRect;
-    mt["boundingRect"] = &QAbstractSocket::boundingRect;
-    mt["boundingRect"] = &QAbstractSocket::boundingRect;
-    mt["boundingRect"] = &QAbstractSocket::boundingRect;
-    mt["descent"] = &QAbstractSocket::descent;
-    mt["elidedText"] = &QAbstractSocket::elidedText;
-    mt["height"] = &QAbstractSocket::height;
-    mt["inFont"] = &QAbstractSocket::inFont;
-    mt["inFontUcs4"] = &QAbstractSocket::inFontUcs4;
-    mt["leading"] = &QAbstractSocket::leading;
-    mt["leftBearing"] = &QAbstractSocket::leftBearing;
-    mt["lineSpacing"] = &QAbstractSocket::lineSpacing;
-    mt["lineWidth"] = &QAbstractSocket::lineWidth;
-    mt["maxWidth"] = &QAbstractSocket::maxWidth;
-    mt["minLeftBearing"] = &QAbstractSocket::minLeftBearing;
-    mt["minRightBearing"] = &QAbstractSocket::minRightBearing;
-    mt["overlinePos"] = &QAbstractSocket::overlinePos;
-    mt["rightBearing"] = &QAbstractSocket::rightBearing;
-    mt["size"] = &QAbstractSocket::size;
-    mt["strikeOutPos"] = &QAbstractSocket::strikeOutPos;
-    mt["swap"] = &QAbstractSocket::swap;
-    mt["tightBoundingRect"] = &QAbstractSocket::tightBoundingRect;
-    mt["underlinePos"] = &QAbstractSocket::underlinePos;
-    mt["width"] = &QAbstractSocket::width;
-    mt["width"] = &QAbstractSocket::width;
-    mt["xHeight"] = &QAbstractSocket::xHeight;
+    mt["ascent"] = &QFontMetrics::ascent;
+    mt["averageCharWidth"] = &QFontMetrics::averageCharWidth;
+    mt["boundingRect"] = QFontMetrics_boundingRect;
+    mt["descent"] = &QFontMetrics::descent;
+    mt["elidedText"] = &QFontMetrics::elidedText;
+    mt["height"] = &QFontMetrics::height;
+    mt["inFont"] = &QFontMetrics::inFont;
+    mt["inFontUcs4"] = &QFontMetrics::inFontUcs4;
+    mt["leading"] = &QFontMetrics::leading;
+    mt["leftBearing"] = &QFontMetrics::leftBearing;
+    mt["lineSpacing"] = &QFontMetrics::lineSpacing;
+    mt["lineWidth"] = &QFontMetrics::lineWidth;
+    mt["maxWidth"] = &QFontMetrics::maxWidth;
+    mt["minLeftBearing"] = &QFontMetrics::minLeftBearing;
+    mt["minRightBearing"] = &QFontMetrics::minRightBearing;
+    mt["overlinePos"] = &QFontMetrics::overlinePos;
+    mt["rightBearing"] = &QFontMetrics::rightBearing;
+    mt["size"] = &QFontMetrics::size;
+    mt["strikeOutPos"] = &QFontMetrics::strikeOutPos;
+    mt["swap"] = &QFontMetrics::swap;
+    mt["tightBoundingRect"] = &QFontMetrics::tightBoundingRect;
+    mt["underlinePos"] = &QFontMetrics::underlinePos;
+    mt["width"] = QFontMetrics_width;
+    mt["xHeight"] = &QFontMetrics::xHeight;
 }
 
 int QFontMetrics_new(lua_State* const state)
