@@ -379,6 +379,96 @@ nobase_pkginclude_HEADERS += \
 
 endif
 
+if BUILD_Qt5Widgets
+
+lib_LTLIBRARIES += libluacxx-Qt5Widgets.la
+
+libluacxx_Qt5Widgets_la_CPPFLAGS = \
+	$(libluacxx_Qt5Gui_la_CPPFLAGS) \
+	@Qt5Widgets_CFLAGS@
+
+libluacxx_Qt5Widgets_la_LIBADD = \
+	@Qt5Widgets_LIBS@ \
+	$(libluacxx_Qt5Guila_LIBADD)
+
+libluacxx_Qt5Widgets_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_Qt5Widgets_la_SOURCES = \
+	Qt5Widgets/QAbstractScrollArea.cpp \
+	Qt5Widgets/QAction.cpp \
+	Qt5Widgets/QActionGroup.cpp \
+	Qt5Widgets/QApplication.cpp \
+	Qt5Widgets/QCompleter.cpp \
+	Qt5Widgets/QDockWidget.cpp \
+	Qt5Widgets/QFrame.cpp \
+	Qt5Widgets/QGraphicsEffect.cpp \
+	Qt5Widgets/QGraphicsItem.cpp \
+	Qt5Widgets/QGraphicsLayoutItem.cpp \
+	Qt5Widgets/QGraphicsObject.cpp \
+	Qt5Widgets/QGraphicsProxyWidget.cpp \
+	Qt5Widgets/QGraphicsScene.cpp \
+	Qt5Widgets/QGraphicsView.cpp \
+	Qt5Widgets/QGraphicsWidget.cpp \
+	Qt5Widgets/QGraphicsItemGroup.cpp \
+	Qt5Widgets/QGraphicsTransform.cpp \
+	Qt5Widgets/QAbstractItemView.cpp \
+	Qt5Widgets/QLabel.cpp \
+	Qt5Widgets/QLayout.cpp \
+	Qt5Widgets/QLayoutItem.cpp \
+	Qt5Widgets/QLineEdit.cpp \
+	Qt5Widgets/QMainWindow.cpp \
+	Qt5Widgets/QMenu.cpp \
+	Qt5Widgets/QMenuBar.cpp \
+	Qt5Widgets/QSizePolicy.cpp \
+	Qt5Widgets/QStatusBar.cpp \
+	Qt5Widgets/QStyle.cpp \
+	Qt5Widgets/QTabBar.cpp \
+	Qt5Widgets/QTabWidget.cpp \
+	Qt5Widgets/QWidget.cpp
+
+nobase_pkginclude_HEADERS += \
+	Qt5Widgets/QAbstractScrollArea.hpp \
+	Qt5Widgets/QAction.hpp \
+	Qt5Widgets/QActionGroup.hpp \
+	Qt5Widgets/QApplication.hpp \
+	Qt5Widgets/QCompleter.hpp \
+	Qt5Widgets/QDockWidget.hpp \
+	Qt5Widgets/QFrame.hpp \
+	Qt5Widgets/QGraphicsEffect.hpp \
+	Qt5Widgets/QGraphicsItem.hpp \
+	Qt5Widgets/QGraphicsLayoutItem.hpp \
+	Qt5Widgets/QGraphicsObject.hpp \
+	Qt5Widgets/QGraphicsProxyWidget.hpp \
+	Qt5Widgets/QGraphicsScene.hpp \
+	Qt5Widgets/QGraphicsView.hpp \
+	Qt5Widgets/QGraphicsWidget.hpp \
+	Qt5Widgets/QGraphicsItemGroup.hpp \
+	Qt5Widgets/QGraphicsTransform.hpp \
+	Qt5Widgets/QAbstractItemView.hpp \
+	Qt5Widgets/QLabel.hpp \
+	Qt5Widgets/QLayout.hpp \
+	Qt5Widgets/QLayoutItem.hpp \
+	Qt5Widgets/QLineEdit.hpp \
+	Qt5Widgets/QMainWindow.hpp \
+	Qt5Widgets/QMenu.hpp \
+	Qt5Widgets/QMenuBar.hpp \
+	Qt5Widgets/QSizePolicy.hpp \
+	Qt5Widgets/QStatusBar.hpp \
+	Qt5Widgets/QStyle.hpp \
+	Qt5Widgets/QTabBar.hpp \
+	Qt5Widgets/QTabWidget.hpp \
+	Qt5Widgets/QWidget.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-Qt5Widgets.pc
+
+pkg-config/luacxx-Qt5Widgets.pc: pkg-config/Qt5Widgets.pc.head
+	cat $< >$@
+	echo "Requires: luacxx Qt5Widgets" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-Qt5Widgets" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_Qt5Widgets_la_CPPFLAGS)" >>$@
+
+endif
+
 if BUILD_gobject_introspection
 
 libluacxx_la_SOURCES += \

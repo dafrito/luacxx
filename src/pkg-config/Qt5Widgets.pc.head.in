@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-Qt5Widgets
+Description: Luacxx bindings for Qt5Widgets
+Version: @PACKAGE_VERSION@

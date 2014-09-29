@@ -95,6 +95,20 @@ if test x$with_Qt5Gui = xyes; then
 fi;
 AM_CONDITIONAL([BUILD_Qt5Gui], [test x$with_Qt5Gui = xyes])
 
+AC_ARG_WITH([Qt5Widgets],
+    [AS_HELP_STRING([--with-Qt5Widgets], [build Qt5Widgets module])],
+    [],
+    [with_Qt5Widgets=$luacxx_with_default]
+)
+if test x$with_Qt5Widgets = xyes; then
+    PKG_CHECK_MODULES(Qt5Widgets, [Qt5Widgets],
+        [with_Qt5Widgets=yes],
+        [with_Qt5Widgets=no]
+    )
+    AC_DEFINE([HAVE_Qt5Widgets], [1], [Defined if Qt5Widgets is available])
+fi;
+AM_CONDITIONAL([BUILD_Qt5Widgets], [test x$with_Qt5Widgets = xyes])
+
 AC_ARG_WITH([ncurses],
     [AS_HELP_STRING([--with-ncurses], [build ncurses module])],
     [],
@@ -235,6 +249,7 @@ AC_CONFIG_FILES([
     src/pkg-config/Qt5Core.pc.head
     src/pkg-config/Qt5Network.pc.head
     src/pkg-config/Qt5Gui.pc.head
+    src/pkg-config/Qt5Widgets.pc.head
     src/pkg-config/gobject-introspection.pc.head
     src/pkg-config/ncurses.pc.head
     src/pkg-config/nanomsg.pc.head
@@ -251,6 +266,7 @@ AC_MSG_RESULT([
     Qt5Core                 ${with_Qt5Core}
     Qt5Network              ${with_Qt5Network}
     Qt5Gui                  ${with_Qt5Gui}
+    Qt5Widgets              ${with_Qt5Widgets}
     ncurses                 ${with_ncurses}
     libinput                ${with_libinput}
     libevdev                ${with_libevdev}
