@@ -41,6 +41,7 @@ nobase_pkginclude_HEADERS = \
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
 	error.cpp \
+	reference.cpp \
 	load.cpp \
 	stack.cpp \
 	thread.cpp \

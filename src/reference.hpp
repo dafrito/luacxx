@@ -56,6 +56,8 @@ namespace {
 
 namespace lua {
 
+class thread;
+
 class reference
 {
 
@@ -82,6 +84,8 @@ reference(lua_State* const $state) :
 {
 }
 
+reference(lua::thread& env);
+
 reference(const lua::reference& other) :
     _state(other.state()),
     _id(LUA_NOREF)
@@ -90,6 +94,22 @@ reference(const lua::reference& other) :
         lua_rawgeti(state(), LUA_REGISTRYINDEX, other.id());
         _id = luaL_ref(state(), LUA_REGISTRYINDEX);
     }
+}
+
+template <class Value>
+reference(Value value) :
+    _state(value.state()),
+    _id(LUA_NOREF)
+{
+    *this = value;
+}
+
+template <class Value>
+reference(lua_State* const state, Value value) :
+    _state(state),
+    _id(LUA_NOREF)
+{
+    *this = value;
 }
 
 lua_State* const state() const
@@ -146,10 +166,10 @@ void release()
     }
 }
 
-template <class T>
-auto get() -> decltype(lua::get<T>(*this))
+template <class Type>
+auto get() -> decltype(lua::get<Type>(*this))
 {
-    return lua::get<T>(*this);
+    return lua::get<Type>(*this);
 }
 
 /*
@@ -158,10 +178,11 @@ auto get() -> decltype(lua::get<T>(*this))
 
 */
 
-template <class T>
-reference& operator=(T source)
+template <class Source>
+reference& operator=(Source source)
 {
-    lua::store(*this, source);
+    lua::store(*this, lua::push(state(), source));
+    lua_pop(state(), 1);
     return *this;
 }
 
