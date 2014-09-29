@@ -294,6 +294,7 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QVector2D.cpp \
 	Qt5Gui/QVector3D.cpp \
 	Qt5Gui/QVector4D.cpp \
+	Qt5Gui/QPolygonF.cpp \
 	Qt5Gui/QWindow.cpp \
 	Qt5Gui/QPen.cpp \
 	Qt5Gui/QBrush.cpp \
@@ -302,6 +303,7 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QOpenGLContextGroup.cpp \
 	Qt5Gui/QOpenGLFunctions.cpp \
 	Qt5Gui/QSurfaceFormat.cpp \
+	Qt5Gui/QKeySequence.cpp \
 	Qt5Gui/QMatrix.cpp \
 	Qt5Gui/QCursor.cpp \
 	Qt5Gui/QClipboard.cpp \
@@ -311,7 +313,14 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QPalette.cpp \
 	Qt5Gui/QScreen.cpp \
 	Qt5Gui/QImage.cpp \
+	Qt5Gui/QMovie.cpp \
+	Qt5Gui/QPicture.cpp \
 	Qt5Gui/QFont.cpp \
+	Qt5Gui/QFontInfo.cpp \
+	Qt5Gui/QImageIOHandler.cpp \
+	Qt5Gui/QImageReader.cpp \
+	Qt5Gui/QImageWriter.cpp \
+	Qt5Gui/QFontMetrics.cpp \
 	Qt5Gui/QPainterPath.cpp \
 	Qt5Gui/QSurface.cpp \
 	Qt5Gui/QGradient.cpp \
@@ -325,6 +334,7 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QBackingStore.cpp
 
 nobase_pkginclude_HEADERS += \
+	Qt5Gui/Qt5Gui.hpp \
 	Qt5Gui/QPen.hpp \
 	Qt5Gui/QBrush.hpp \
 	Qt5Gui/QTransform.hpp \
@@ -333,7 +343,13 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QColor.hpp \
 	Qt5Gui/QPainter.hpp \
 	Qt5Gui/QImage.hpp \
+	Qt5Gui/QMovie.hpp \
 	Qt5Gui/QFont.hpp \
+	Qt5Gui/QFontInfo.hpp \
+	Qt5Gui/QImageIOHandler.hpp \
+	Qt5Gui/QImageReader.hpp \
+	Qt5Gui/QImageWriter.hpp \
+	Qt5Gui/QFontMetrics.hpp \
 	Qt5Gui/QPainterPath.hpp \
 	Qt5Gui/QPaintDevice.hpp \
 	Qt5Gui/QWindow.hpp \
@@ -342,6 +358,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QPixmap.hpp \
 	Qt5Gui/QBitmap.hpp \
 	Qt5Gui/QSurfaceFormat.hpp \
+	Qt5Gui/QKeySequence.hpp \
 	Qt5Gui/QMatrix.hpp \
 	Qt5Gui/QCursor.hpp \
 	Qt5Gui/QClipboard.hpp \
@@ -352,6 +369,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QVector2D.hpp \
 	Qt5Gui/QVector3D.hpp \
 	Qt5Gui/QVector4D.hpp \
+	Qt5Gui/QPolygonF.hpp \
 	Qt5Gui/QQuaternion.hpp \
 	Qt5Gui/QOpenGLContext.hpp \
 	Qt5Gui/QOpenGLContextGroup.hpp \
