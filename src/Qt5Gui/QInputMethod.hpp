@@ -1,7 +1,7 @@
 #ifndef LUACXX_QINPUTMETHOD_INCLUDED
 #define LUACXX_QINPUTMETHOD_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QInputMethod>
 
 namespace lua {

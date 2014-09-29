@@ -1,7 +1,7 @@
 #ifndef LUACXX_QDRAG_INCLUDED
 #define LUACXX_QDRAG_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QDrag;
 

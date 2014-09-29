@@ -1,7 +1,7 @@
 #ifndef LUACXX_QTEXTDOCUMENT_INCLUDED
 #define LUACXX_QTEXTDOCUMENT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QTextDocument;
 

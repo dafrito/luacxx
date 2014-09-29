@@ -1,7 +1,7 @@
 #ifndef LUACXX_QFONTMETRICS_INCLUDED
 #define LUACXX_QFONTMETRICS_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QFontMetrics;
 

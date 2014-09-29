@@ -1,7 +1,7 @@
 #ifndef LUACXX_QVECTOR2D_INCLUDED
 #define LUACXX_QVECTOR2D_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QVector2D;
 

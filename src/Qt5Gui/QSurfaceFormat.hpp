@@ -1,7 +1,7 @@
 #ifndef LUACXX_QSURFACEFORMAT_INCLUDED
 #define LUACXX_QSURFACEFORMAT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QSurfaceFormat>
 
 namespace lua {

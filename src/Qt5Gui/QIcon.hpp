@@ -1,7 +1,7 @@
 #ifndef LUACXX_QICON_INCLUDED
 #define LUACXX_QICON_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QIcon>
 
 namespace lua {

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QGUIAPPLICATION_INCLUDED
 #define LUACXX_QGUIAPPLICATION_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 #include <QGuiApplication>
 

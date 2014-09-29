@@ -1,7 +1,7 @@
 #ifndef LUACXX_QBITMAP_INCLUDED
 #define LUACXX_QBITMAP_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 #include <QBitmap>
 

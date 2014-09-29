@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPAINTER_INCLUDED
 #define LUACXX_QPAINTER_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QPainter>
 
 namespace lua {

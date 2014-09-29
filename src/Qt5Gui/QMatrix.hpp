@@ -1,7 +1,7 @@
 #ifndef LUACXX_QMATRIX_INCLUDED
 #define LUACXX_QMATRIX_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QMatrix;
 

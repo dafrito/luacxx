@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPEN_INCLUDED
 #define LUACXX_QPEN_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QPen>
 
 namespace lua {

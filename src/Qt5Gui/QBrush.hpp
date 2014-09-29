@@ -1,7 +1,7 @@
 #ifndef LUACXX_QBRUSH_INCLUDED
 #define LUACXX_QBRUSH_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QBrush;
 

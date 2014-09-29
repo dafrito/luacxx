@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPAINTERPATH_INCLUDED
 #define LUACXX_QPAINTERPATH_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 #include <QPainterPath>
 

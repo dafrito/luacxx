@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCOLOR_INCLUDED
 #define LUACXX_QCOLOR_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QColor;
 

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QIMAGE_INCLUDED
 #define LUACXX_QIMAGE_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 #include <QImage>
 

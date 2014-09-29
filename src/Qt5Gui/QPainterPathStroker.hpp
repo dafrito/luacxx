@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPAINTERPATHSTROKER_INCLUDED
 #define LUACXX_QPAINTERPATHSTROKER_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 #include <QPainterPathStroker>
 

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QSCREEN_INCLUDED
 #define LUACXX_QSCREEN_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QScreen>
 
 namespace lua {

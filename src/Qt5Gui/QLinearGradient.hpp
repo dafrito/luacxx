@@ -1,7 +1,7 @@
 #ifndef LUACXX_QLINEARGRADIENT_INCLUDED
 #define LUACXX_QLINEARGRADIENT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QLinearGradient;
 

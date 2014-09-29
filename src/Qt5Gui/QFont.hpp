@@ -1,7 +1,7 @@
 #ifndef LUACXX_QFONT_INCLUDED
 #define LUACXX_QFONT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QFont>
 
 namespace lua {

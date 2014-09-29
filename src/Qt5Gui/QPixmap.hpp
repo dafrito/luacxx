@@ -1,7 +1,7 @@
 #ifndef LUACXX_QPIXMAP_INCLUDED
 #define LUACXX_QPIXMAP_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QPixmap>
 
 // https://qt-project.org/doc/qt-5/qpixmap.html

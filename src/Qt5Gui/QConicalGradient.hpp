@@ -1,7 +1,7 @@
 #ifndef LUACXX_QCONICALGRADIENT_INCLUDED
 #define LUACXX_QCONICALGRADIENT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 class QConicalGradient;
 

@@ -1,7 +1,7 @@
 #ifndef LUACXX_QRAWFONT_INCLUDED
 #define LUACXX_QRAWFONT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 #include <QRawFont>
 
 namespace lua {
