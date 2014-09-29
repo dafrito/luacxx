@@ -376,6 +376,27 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QScreen.hpp \
 	Qt5Gui/QRegion.hpp
 
+test_Qt5Gui_CXXFLAGS = \
+	$(test_luacxx_CXXFLAGS) \
+	$(libluacxx_Qt5Gui_la_CPPFLAGS)
+
+test_Qt5Gui_LDADD = \
+	$(test_luacxx_LDADD) \
+	libluacxx-Qt5Gui.la
+
+test_Qt5Gui_SOURCES = \
+	tests/Qt5Gui.cpp
+
+test_Qt5Gui_MOC_SOURCES = \
+	moc_Qt5Gui.cpp
+
+moc_Qt5Gui.cpp: tests/Qt5Gui.hpp
+	$(QT_MOC) -o $@ $<
+
+nodist_test_Qt5Gui_SOURCES = $(test_Qt5Gui_MOC_SOURCES)
+
+check_PROGRAMS += test_Qt5Gui
+
 endif
 
 if BUILD_Qt5Widgets
