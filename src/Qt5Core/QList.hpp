@@ -1,5 +1,5 @@
-#ifndef LUACXX_QLIST_INCLUDED
-#define LUACXX_QLIST_INCLUDED
+#ifndef luacxx_QList_INCLUDED
+#define luacxx_QList_INCLUDED
 
 #include "../stack.hpp"
 /*
@@ -25,4 +25,4 @@ struct Metatable<QList>
 extern "C" int luaopen_Qt5Core_QList(lua_State* const);
 */
 
-#endif // LUACXX_QLIST_INCLUDED
+#endif // luacxx_QList_INCLUDED
