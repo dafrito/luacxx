@@ -34,8 +34,8 @@ IN THE SOFTWARE.
 
 "nanomsg" is a trademark of 250bpm s.r.o.
 
-As much as possible, the Lua-cxx binding to nanomsg uses the same license as
-ncurses itself.
+As much as possible, this Luacxx binding uses the same license as nanomsg
+itself.
 
 */
 
