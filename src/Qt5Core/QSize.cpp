@@ -2,6 +2,8 @@
 #include "../convert/callable.hpp"
 #include "../convert/numeric.hpp"
 #include "../thread.hpp"
+#include "../algorithm.hpp"
+#include "QVariant.hpp"
 
 #include <QSize>
 
@@ -61,6 +63,32 @@ int luaopen_Qt5Core_QSize(lua_State* const state)
 
     env["QSize"] = lua::value::table;
     env["QSize"]["new"] = QSize_new;
+
+    lua::set_qvariant_push_handler(QVariant::Size, [](lua_State* const state, const QVariant& source) {
+        auto target = lua::push(state, lua::value::table);
+
+        auto size = source.toSize();
+        target["width"] = size.width();
+        target["height"] = size.height();
+    });
+
+    lua::set_qvariant_store_handler(QVariant::Size, [](QVariant& sink, const lua::index& size) {
+        if (!size.type().table()) {
+            throw lua::error("Size must be a table");
+        }
+
+        if (lua::table::length(size) > 0) {
+            sink.setValue(QSize(
+                size[1].get<int>(),
+                size[2].get<int>()
+            ));
+        } else {
+            sink.setValue(QSize(
+                size["width"].get<int>(),
+                size["height"].get<int>()
+            ));
+        }
+    });
 
     return 0;
 }

@@ -1,6 +1,8 @@
 #include "QRectF.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+#include "../algorithm.hpp"
+#include "QVariant.hpp"
 
 #include <QRectF>
 
@@ -125,6 +127,38 @@ int luaopen_Qt5Core_QRectF(lua_State* const state)
 
     env["QRectF"] = lua::value::table;
     env["QRectF"]["new"] = QRectF_new;
+
+    lua::set_qvariant_push_handler(QVariant::RectF, [](lua_State* const state, const QVariant& source) {
+        auto target = lua::push(state, lua::value::table);
+
+        auto rect = source.toRectF();
+        target["x"] = rect.x();
+        target["y"] = rect.y();
+        target["width"] = rect.width();
+        target["height"] = rect.height();
+    });
+
+    lua::set_qvariant_store_handler(QVariant::RectF, [](QVariant& sink, const lua::index& rect) {
+        if (!rect.type().table()) {
+            throw lua::error("Rect must be a table");
+        }
+
+        if (lua::table::length(rect) > 0) {
+            sink.setValue(QRect(
+                rect[1].get<qreal>(),
+                rect[2].get<qreal>(),
+                rect[3].get<qreal>(),
+                rect[4].get<qreal>()
+            ));
+        } else {
+            sink.setValue(QRectF(
+                rect["x"].get<qreal>(),
+                rect["y"].get<qreal>(),
+                rect["width"].get<qreal>(),
+                rect["height"].get<qreal>()
+            ));
+        }
+    });
 
     return 0;
 }
