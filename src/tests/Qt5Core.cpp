@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(directory_module_loader)
     BOOST_CHECK_EQUAL(lua::call<int>(env["bar"], 2), 42);
 }
 
-BOOST_AUTO_TEST_CASE(qt)
+BOOST_AUTO_TEST_CASE(test_QElapsedTimer)
 {
     auto env = lua::create();
     env["package"]["cpath"] = ".libs/libluacxx-?.so";
