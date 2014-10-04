@@ -37,7 +37,7 @@ PKG_CHECK_MODULES(lua, [lua >= 5.0],
     [AC_MSG_ERROR([Lua is required to build Luacxx])]
 )
 
-luacxx_with_default=yes
+luacxx_with_default=no
 
 AC_ARG_WITH([linux],
     [AS_HELP_STRING([--with-linux], [build linux module])],
