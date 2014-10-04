@@ -18,7 +18,7 @@
 
 =head1 NAME
 
-stack.hpp - core API
+stack.hpp - Lua stack management and userdata support
 
 =head1 SYNOPSIS
 
