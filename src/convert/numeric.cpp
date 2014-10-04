@@ -62,4 +62,3 @@ void lua::store_lua_Unsigned(lua_Unsigned& destination, lua_State* const state, 
     }
     destination = 0;
 }
-

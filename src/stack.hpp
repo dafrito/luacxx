@@ -769,7 +769,6 @@ struct Metatable<void>
     }
 };
 
-
 template <class T>
 inline void call_destructor(T& value)
 {
