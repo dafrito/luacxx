@@ -31,6 +31,11 @@ public:
     {
     }
 
+    type_info(int value) :
+        type_info(static_cast<lua::type>(value))
+    {
+    }
+
     const char* name() const {
         // Lua provides lua_typename for this behavior presumably to allow
         // localization, but I prefer just having these be inline here as
