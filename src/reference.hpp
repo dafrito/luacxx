@@ -2,6 +2,7 @@
 #define LUACXX_REFERENCE_INCLUDED
 
 #include "stack.hpp"
+#include "link.hpp"
 #include "algorithm.hpp"
 
 /*
@@ -167,10 +168,7 @@ void release()
 }
 
 template <class Type>
-auto get() -> decltype(lua::get<Type>(*this))
-{
-    return lua::get<Type>(*this);
-}
+auto get() -> decltype(lua::Get<Type>::get(state(), -1));
 
 /*
 
@@ -179,11 +177,12 @@ auto get() -> decltype(lua::get<Type>(*this))
 */
 
 template <class Source>
-reference& operator=(Source source)
+reference& operator=(Source source);
+
+template <class Name>
+lua::link<lua::reference, Name> operator[](Name name)
 {
-    lua::store(*this, lua::push(state(), source));
-    lua_pop(state(), 1);
-    return *this;
+    return lua::link<lua::reference, Name>(*this, name);
 }
 
 /*
@@ -217,18 +216,36 @@ struct Push<lua::reference>
 template <>
 struct Store<lua::reference>
 {
-    static void store(lua::reference& destination, const lua::index& source)
+    static void store(lua::reference& destination, lua_State* const state, const int source)
     {
-        if (source.type().nil()) {
+        if (lua_type(state, source) == LUA_TNIL) {
             destination.release();
             return;
         }
-        destination.set_state(source.state());
+        destination.set_state(state);
         destination.acquire();
-        lua_pushvalue(source.state(), source.pos());
-        lua_rawseti(source.state(), LUA_REGISTRYINDEX, destination.id());
+        lua_pushvalue(state, source);
+        lua_rawseti(state, LUA_REGISTRYINDEX, destination.id());
     }
 };
+
+template <class Type>
+auto lua::reference::get() -> decltype(lua::Get<Type>::get(state(), -1))
+{
+    lua::Push<lua::reference>::push(state(), *this);
+    auto rv = lua::Get<Type>::get(state(), -1);
+    lua_pop(state(), 1);
+    return rv;
+}
+
+template <class Source>
+reference& lua::reference::operator=(Source source)
+{
+    lua::Push<Source>::push(state(), source);
+    lua::Store<lua::reference>::store(*this, state(), -1);
+    lua_pop(state(), 1);
+    return *this;
+}
 
 } // namespace lua
 

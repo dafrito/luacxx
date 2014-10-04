@@ -1,8 +1,10 @@
 #include "numeric.hpp"
 #include "../algorithm.hpp"
 
-void lua::store_lua_Integer(long& destination, const lua::index& source)
+void lua::store_lua_Integer(long& destination, lua_State* const state, const int source_pos)
 {
+    lua::index source(state, source_pos);
+
     if (source.type().number()) {
         destination = lua_tointeger(source.state(), source.pos());
         return;
@@ -30,8 +32,10 @@ void lua::store_lua_Integer(long& destination, const lua::index& source)
     destination = 0;
 }
 
-void lua::store_lua_Unsigned(lua_Unsigned& destination, const lua::index& source)
+void lua::store_lua_Unsigned(lua_Unsigned& destination, lua_State* const state, const int source_pos)
 {
+    lua::index source(state, source_pos);
+
     if (source.type().number()) {
         destination = lua_tounsigned(source.state(), source.pos());
         return;

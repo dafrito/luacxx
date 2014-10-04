@@ -15,20 +15,38 @@ struct Push<const char*>
 };
 
 template <>
+struct Push<const char*&>
+{
+    static void push(lua_State* const state, const char*& source)
+    {
+        lua_pushstring(state, source);
+    }
+};
+
+template <size_t N>
+struct Push<const char (&)[N]>
+{
+    static void push(lua_State* const state, const char* source)
+    {
+        lua_pushstring(state, source);
+    }
+};
+
+template <>
 struct Store<const char*>
 {
-    static void store(const char*& destination, const lua::index& source)
+    static void store(const char*& destination, lua_State* const state, const int source)
     {
-        destination = lua_tostring(source.state(), source.pos());
+        destination = lua_tostring(state, source);
     }
 };
 
 template <>
 struct Get<const char*>
 {
-    static const char* get(const lua::index& source)
+    static const char* get(lua_State* const state, const int source)
     {
-        return lua_tostring(source.state(), source.pos());
+        return lua_tostring(state, source);
     }
 };
 

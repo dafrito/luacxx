@@ -1,9 +1,13 @@
+#include "stack.hpp"
+
+#include "convert/const_char_p.hpp"
+#include "convert/string.hpp"
+#include "convert/char_p.hpp"
+#include "convert/numeric.hpp"
+
 #include "thread.hpp"
 #include "algorithm.hpp"
 #include "load.hpp"
-#include "convert/char_p.hpp"
-#include "convert/string.hpp"
-#include "convert/numeric.hpp"
 
 #include <iostream>
 

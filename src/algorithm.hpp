@@ -2,6 +2,8 @@
 #define LUACXX_ALGORITHM_INCLUDED
 
 #include "stack.hpp"
+#include "index.hpp"
+#include "value.hpp"
 
 #include <stdexcept>
 #include <string>
@@ -199,6 +201,115 @@ Swaps the two values at the given stack positions.
 
 */
 void swap(const lua::index& a, const lua::index& b);
+
+/*
+
+=head2 lua::store(T& destination, const lua::value& value)
+
+Stores the specified Lua value (e.g. global, thread) into the specified Lua
+destination.
+
+*/
+
+template <class T>
+void store(T& destination, const lua::value& value)
+{
+    lua::Store<T>::store(destination, lua::push(destination.state(), value));
+    lua_pop(destination.state(), 1);
+}
+
+/*
+
+=head2 lua::store(T& destination, const lua::index& source)
+
+Store the value at the given index into the object specified by destination.
+
+    lua::push(state, 42);
+
+    int foo = 0;
+    lua::store(foo, lua::index(state, -1));
+    assert(foo == 42);
+
+Internally, this refers to the lua::Store<T> struct, so behavior can be
+specialized for new types. For instance, this is the definition for
+lua::Store<std::string>:
+
+    template <>
+    struct Store<std::string>
+    {
+        static void store(std::string& destination, const lua::index& source)
+        {
+            destination = lua::get<const char*>(source);
+        }
+    };
+
+*/
+
+template <class T>
+void store(T& destination, const lua::index& source)
+{
+    // Forward to the struct (for convenience)
+    lua::Store<T>::store(destination, source.state(), source.pos());
+}
+
+template <class T>
+void store(T& destination, lua_State* const state, const int pos)
+{
+    lua::Store<T>::store(destination, state, pos);
+}
+
+/*
+
+=head2 T lua::get<T>(Source source)
+
+Retrieves the value at the given source (typically just a lua::index) as
+the specified type.
+
+    int value = lua::get<int>(lua::index(state, 1));
+
+*/
+
+template <class T, class Source>
+T get(Source source)
+{
+    auto index = lua::push(source);
+    decltype(lua::Get<T>::get(source.state(), -1)) rv = lua::Get<T>::get(index.state(), -1);
+    lua_pop(index.state(), 1);
+    return rv;
+}
+
+template <class T>
+auto get(const lua::index& source) -> decltype(lua::Get<T>::get(source.state(), source.pos()))
+{
+    return lua::Get<T>::get(source.state(), source.pos());
+}
+
+template <>
+void get<void>(const lua::index& source);
+
+template <class T>
+T get(lua_State* const state, const int pos)
+{
+    return lua::Get<T>::get(state, pos);
+}
+
+/*
+
+=head2 T* lua::make<T>(state, Args... args)
+
+Create a userdata of type T on the Lua stack, calling T's constructor with the
+specified arguments.
+
+    Sum* sum = lua::make<Sum>(state, lua_tointeger(state, -1));
+
+*/
+
+template <class T, class... Args>
+T* make(lua_State* const state, Args&&... args)
+{
+    Construct<T>::construct(state, args...);
+    return lua::get<T*>(state, -1);
+}
 
 /*
 

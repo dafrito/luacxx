@@ -19,6 +19,8 @@ nobase_pkginclude_HEADERS = \
 	config.hpp \
 	algorithm.hpp \
 	stack.hpp \
+	link.hpp \
+	index.hpp \
 	error.hpp \
 	global.hpp \
 	load.hpp \
@@ -26,7 +28,7 @@ nobase_pkginclude_HEADERS = \
 	reference.hpp \
 	thread.hpp \
 	type.hpp \
-	convert/builtin.hpp \
+	value.hpp \
 	convert/callable.hpp \
 	convert/char.hpp \
 	convert/char_p.hpp \

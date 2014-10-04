@@ -2,6 +2,7 @@
 #define LUACXX_GLOBAL_INCLUDED
 
 #include "stack.hpp"
+#include "algorithm.hpp"
 
 #include <string>
 
@@ -51,16 +52,16 @@ public:
     }
 
     template <class T>
+    lua::link<lua::global, T> operator[](T&& name)
+    {
+        return lua::link<lua::global, T>(*this, name);
+    }
+
+    template <class T>
     void operator>>(T& destination)
     {
         lua::push(_state, *this) >> destination;
         lua_pop(_state, 1);
-    }
-
-    template <class T>
-    lua::link<lua::global, T> operator[](T&& name) const
-    {
-        return lua::link<lua::global, T>(*this, name);
     }
 
     template <class T>
@@ -88,17 +89,18 @@ struct Push<lua::global>
 template <>
 struct Store<lua::global>
 {
-    static void store(lua::global& global, const lua::index& source)
+    static void store(lua::global& global, lua_State* const state, const int source)
     {
-        lua_pushvalue(source.state(), source.pos());
-        lua_setglobal(global.state(), global.name().c_str());
+        lua_pushvalue(state, source);
+        lua_setglobal(state, global.name().c_str());
     }
 };
 
 template <class T>
 void store(T& destination, const lua::global& source)
 {
-    lua::Store<T>::store(destination, lua::push(source));
+    lua::push(source);
+    lua::Store<T>::store(destination, source.state(), -1);
     lua_pop(source.state(), 1);
 }
 

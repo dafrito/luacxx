@@ -94,12 +94,12 @@ public:
 
     T operator*()
     {
-        return lua::get<T>(_state, _pos);
+        return lua::Get<T>::get(_state, _pos);
     }
 
     T get() const
     {
-        return lua::get<T>(_state, _pos);
+        return lua::Get<T>::get(_state, _pos);
     }
 
     explicit operator bool() const

@@ -15,10 +15,10 @@ BOOST_AUTO_TEST_CASE(luacxx_without_conversions)
     BOOST_CHECK(!env["foo"].type().number());
     BOOST_CHECK(env["foo"].type().userdata());
 
-    // const char* conversion is implicit
+    // Is const char* conversion implicit?
     env["bar"] = "notime";
-    BOOST_CHECK(env["bar"].type().string());
-    BOOST_CHECK(!env["bar"].type().userdata());
+    BOOST_CHECK(!env["bar"].type().string());
+    BOOST_CHECK(env["bar"].type().userdata());
 
     env["baz"] = true;
     BOOST_CHECK(!env["baz"].type().boolean());

@@ -153,15 +153,15 @@ struct Push<lua_CFunction>
 template <>
 struct Store<lua_CFunction>
 {
-    static void store(lua_CFunction& destination, const lua::index& source)
+    static void store(lua_CFunction& destination, lua_State* const state, const int source)
     {
-        destination = lua_tocfunction(source.state(), source.pos());
+        destination = lua_tocfunction(state, source);
     }
 };
 
 static int invoke_callable(lua_State* const state)
 {
-    auto callable = lua::get<lua::callable*>(lua::index(state, lua_upvalueindex(1)));
+    auto callable = lua::Get<lua::callable*>::get(state, lua_upvalueindex(1));
     try {
         return (*callable)(state);
     } catch (lua::error& ex) {
@@ -184,15 +184,15 @@ struct Push<lua::callable>
 template <>
 struct Store<lua::callable>
 {
-    static void store(lua::callable& destination, const lua::index& source)
+    static void store(lua::callable& destination, lua_State* const state, const int source)
     {
-        if (source.type().nil()) {
+        if (lua_type(state, source) == LUA_TNIL) {
             destination = nullptr;
             return;
         }
-        lua_getupvalue(source.state(), source.pos(), 1);
-        lua::store_userdata<lua::userdata_storage::value>(destination, lua::index(source.state(), -1));
-        lua_pop(source.state(), 1);
+        lua_getupvalue(state, source, 1);
+        lua::store_userdata<lua::userdata_storage::value>(destination, state, -1);
+        lua_pop(state, 1);
     }
 };
 
@@ -201,7 +201,7 @@ struct Metatable<lua::callable>
 {
     static constexpr const char* name = "lua::callable";
 
-    static bool metatable(const lua::index& table, void* const value)
+    static bool metatable(lua_State* const state, const int table, void* const value)
     {
         return false;
     }
@@ -552,7 +552,7 @@ struct Metatable<std::function<Func>>
 {
     static constexpr const char* name = "std::function";
 
-    static bool metatable(const lua::index& table, void* const value)
+    static bool metatable(lua_State* const state, const int table, void* const value)
     {
         return false;
     }
