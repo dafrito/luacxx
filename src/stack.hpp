@@ -1,5 +1,5 @@
-#ifndef LUACXX_STACK_INCLUDED
-#define LUACXX_STACK_INCLUDED
+#ifndef luacxx_stack_INCLUDED
+#define luacxx_stack_INCLUDED
 
 #include <config.hpp>
 

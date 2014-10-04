@@ -1,5 +1,5 @@
-#ifndef LUACXX_CONVERT_STRING_INCLUDED
-#define LUACXX_CONVERT_STRING_INCLUDED
+#ifndef luacxx_convert_string_INCLUDED
+#define luacxx_convert_string_INCLUDED
 
 #include "../stack.hpp"
 
@@ -36,4 +36,4 @@ struct Get<const std::string&>
 
 } // namespace lua
 
-#endif // LUACXX_CONVERT_STRING_INCLUDED
+#endif // luacxx_convert_string_INCLUDED

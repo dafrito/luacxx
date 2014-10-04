@@ -1,5 +1,5 @@
-#ifndef LUACXX_GLOBAL_INCLUDED
-#define LUACXX_GLOBAL_INCLUDED
+#ifndef luacxx_global_INCLUDED
+#define luacxx_global_INCLUDED
 
 #include "stack.hpp"
 #include "algorithm.hpp"
@@ -117,4 +117,4 @@ get(const lua::global& source)
 
 } // namespace lua
 
-#endif // LUACXX_GLOBAL_INCLUDED
+#endif // luacxx_global_INCLUDED

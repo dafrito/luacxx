@@ -1,5 +1,5 @@
-#ifndef LUACXX_RANGE_INCLUDED
-#define LUACXX_RANGE_INCLUDED
+#ifndef luacxx_range_INCLUDED
+#define luacxx_range_INCLUDED
 
 #include "stack.hpp"
 
@@ -185,4 +185,4 @@ public:
 
 } // namespace lua
 
-#endif // LUACXX_RANGE_INCLUDED
+#endif // luacxx_range_INCLUDED

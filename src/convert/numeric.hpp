@@ -1,5 +1,5 @@
-#ifndef LUACXX_CONVERT_NUMERIC_INCLUDED
-#define LUACXX_CONVERT_NUMERIC_INCLUDED
+#ifndef luacxx_convert_numeric_INCLUDED
+#define luacxx_convert_numeric_INCLUDED
 
 #include "../stack.hpp"
 #include "../algorithm.hpp"
@@ -349,4 +349,4 @@ struct Metatable<float>
 
 } // namespace lua
 
-#endif // LUACXX_CONVERT_NUMERIC_INCLUDED
+#endif // luacxx_convert_numeric_INCLUDED
