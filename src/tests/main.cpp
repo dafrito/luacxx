@@ -638,6 +638,105 @@ BOOST_AUTO_TEST_CASE(raw_char)
     BOOST_CHECK_EQUAL(lua::get<std::string>(env, 1), "c");
 }
 
+struct Named {
+    const char* name;
+
+    Named(const char* name) :
+        name(name)
+    {
+    }
+};
+
+struct Value {
+    int version;
+    const char* value;
+
+    Value(const char* value, int version) :
+        version(version),
+        value(value)
+    {
+    }
+};
+
+struct Child : public Named, public Value {
+
+
+Child() :
+    Named("Child"), Value("Boog", 42)
+    {
+    }
+};
+
+namespace lua {
+
+template<>
+struct Metatable<Named>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("Named");
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    {
+        return true;
+    }
+};
+
+template<>
+struct Metatable<Value>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("Value");
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    {
+        return true;
+    }
+};
+
+template<>
+struct Metatable<Child>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("Child");
+        _info.add_cast<Named, Child>();
+        _info.add_cast<Value, Child>();
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    {
+        auto userdata = lua::get<lua::userdata_block*>(state, pos - 1);
+
+        return true;
+    }
+};
+
+
+} // namespace lua
+
+BOOST_AUTO_TEST_CASE(multiple_inheritance)
+{
+    auto env = lua::create();
+
+    auto child = lua::make<Child>(env);
+    auto child_as_value = static_cast<Value*>(child);
+    auto child_as_named = static_cast<Named*>(child);
+
+    // Does multiple inheritance require that the two superclasses have
+    // distinct, rather than identical, pointer addresses?
+    BOOST_REQUIRE(static_cast<void*>(child_as_value) != static_cast<void*>(child_as_named));
+
+    BOOST_CHECK_EQUAL(child_as_value, lua::get<Value*>(env, -1));
+    BOOST_CHECK_EQUAL(child_as_named, lua::get<Named*>(env, -1));
+}
+
 #ifdef HAVE_gobject_introspection
 
 #include "search/GIRepository.hpp"
