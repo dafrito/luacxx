@@ -2,8 +2,6 @@
 #define luacxx_Qt5Core_QString_INCLUDED
 
 #include "Qt5Core.hpp"
-#include "../convert/string.hpp"
-#include "../convert/const_char_p.hpp"
 
 #include <QString>
 
