@@ -1,6 +1,7 @@
 #include "QIODevice.hpp"
-#include "../convert/callable.hpp"
 #include "../thread.hpp"
+
+#include "QObject.hpp"
 
 // https://qt-project.org/doc/qt-5/qiodevice.html
 
@@ -31,6 +32,8 @@ int QIODevice_write(lua_State* const state)
 
 void lua::QIODevice_metatable(lua_State* const state, const int pos)
 {
+    lua::QObject_metatable(state, pos);
+
     lua::index mt(state, pos);
 
     mt["atEnd"] = &QIODevice::atEnd;
