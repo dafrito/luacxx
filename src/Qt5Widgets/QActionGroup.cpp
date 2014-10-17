@@ -5,7 +5,7 @@
 #include <QActionGroup>
 
 #include "../Qt5Core/QList.hpp"
-#include "../Qt5Core/QAction.hpp"
+#include "QAction.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Gui/QIcon.hpp"
 #include "../Qt5Core/QObject.hpp"
