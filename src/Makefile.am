@@ -536,6 +536,28 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QTabWidget.hpp \
 	Qt5Widgets/QWidget.hpp
 
+test_Qt5Widgets_CXXFLAGS = \
+	$(test_luacxx_CXXFLAGS) \
+	$(libluacxx_Qt5Widgets_la_CPPFLAGS)
+
+test_Qt5Widgets_LDADD = \
+	$(test_luacxx_LDADD) \
+	libluacxx-Qt5Gui.la \
+	libluacxx-Qt5Widgets.la
+
+test_Qt5Widgets_SOURCES = \
+	tests/Qt5Widgets.cpp
+
+test_Qt5Widgets_MOC_SOURCES = \
+	moc_Qt5Widgets.cpp
+
+moc_Qt5Widgets.cpp: tests/Qt5Widgets.hpp
+	$(QT_MOC) -o $@ $<
+
+nodist_test_Qt5Widgets_SOURCES = $(test_Qt5Widgets_MOC_SOURCES)
+
+check_PROGRAMS += test_Qt5Widgets
+
 pkgconfig_DATA += pkg-config/luacxx-Qt5Widgets.pc
 
 pkg-config/luacxx-Qt5Widgets.pc: pkg-config/Qt5Widgets.pc.head
