@@ -5,7 +5,20 @@
 
 #include <functional>
 
+#include "stack.hpp"
+
+#include "convert/const_char_p.hpp"
+#include "convert/numeric.hpp"
+#include "convert/string.hpp"
+#include "convert/char.hpp"
+#include "convert/callable.hpp"
+#include "convert/shared_ptr.hpp"
+
 #include "range.hpp"
+#include "thread.hpp"
+#include "algorithm.hpp"
+#include "load.hpp"
+#include "reference.hpp"
 
 #include <sstream>
 

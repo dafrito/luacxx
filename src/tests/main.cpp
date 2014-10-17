@@ -1,18 +1,6 @@
 #define BOOST_TEST_MODULE luacxx
 #include "main.hpp"
 
-#include "thread.hpp"
-#include "stack.hpp"
-#include "algorithm.hpp"
-#include "load.hpp"
-#include "reference.hpp"
-
-#include "convert/const_char_p.hpp"
-#include "convert/numeric.hpp"
-#include "convert/string.hpp"
-#include "convert/char.hpp"
-#include "convert/callable.hpp"
-
 #include <boost/test/unit_test.hpp>
 
 #include <memory>
