@@ -1,9 +1,8 @@
 #define BOOST_TEST_MODULE luacxx_without_conversions
-#define LUACXX_EXCLUDE_NUMERIC_CONVERSION
-#include "main.hpp"
+#include <boost/test/unit_test.hpp>
 
-#include "thread.hpp"
 #include "stack.hpp"
+#include "thread.hpp"
 #include "algorithm.hpp"
 #include "load.hpp"
 
