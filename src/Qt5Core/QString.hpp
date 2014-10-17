@@ -12,7 +12,7 @@ struct Push<QString>
 {
     static void push(lua_State* const state, const QString& source)
     {
-        lua::push(state, source.toUtf8().constData());
+        lua::Push<const char*>::push(state, source.toUtf8().constData());
     }
 };
 

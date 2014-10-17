@@ -19,7 +19,7 @@ int QActionGroup_addAction(lua_State* const state)
     if (lua::size(state) > 2) {
         lua::push(state, self->addAction(
             lua::get<const QIcon&>(state, 2),
-            lua::get<const QString&>(state, 3)
+            lua::Get<const QString&>::get(state, 3)
         ));
         return 1;
     }
