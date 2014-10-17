@@ -286,7 +286,7 @@ template <>
 void get<void>(const lua::index& source);
 
 template <class T>
-T get(lua_State* const state, const int pos)
+auto get(lua_State* const state, const int pos) -> decltype(lua::Get<T>::get(state, pos))
 {
     return lua::Get<T>::get(state, pos);
 }
