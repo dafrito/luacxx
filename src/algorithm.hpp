@@ -443,10 +443,10 @@ simple C types, as shown in the example:
 
 */
 
-template <class T>
+template <class Value>
 int make_malloc(lua_State* const state)
 {
-    lua::malloc(state, sizeof(T));
+    Construct<Value>::construct(state);
     return 1;
 }
 
