@@ -136,11 +136,11 @@ std::string lua::dump(lua_State* const state)
     for (lua::index iter(state, 1); iter; ++iter) {
         switch (iter.type().get()) {
         case lua::type::boolean:
-            str << (lua::get<bool>(iter) ? "true" : "false");
+            str << (lua_toboolean(state, iter.pos()) ? "true" : "false");
             break;
         case lua::type::string:
         {
-            auto value = lua::get<std::string>(iter);
+            std::string value(lua_tostring(state, iter.pos()));
             if (value.size() > 30) {
                 str << '"' << value.substr(0, 30) << "\"...";
             } else {
@@ -149,16 +149,23 @@ std::string lua::dump(lua_State* const state)
             break;
         }
         case lua::type::number:
-            str << lua::get<std::string>(iter);
+        {
+            // Push a copy so we don't corrupt the original numeric value by
+            // converting it to a string.
+            lua_pushvalue(state, iter.pos());
+            str << lua_tostring(state, -1);
+            lua_pop(state, 1);
             break;
+        }
         case lua::type::userdata:
         {
-            auto name = lua::class_id(iter);
-            if (name) {
+            auto name = lua::class_name(iter);
+            if (!name.empty()) {
                 str << name << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
             } else {
                 str << iter.type().name() << "(size=" << lua_rawlen(iter.state(), iter.pos()) << ')';
             }
+            str << "@" << lua_topointer(iter.state(), iter.pos());
             break;
         }
         case lua::type::table:
