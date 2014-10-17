@@ -198,7 +198,7 @@ std::string memory_address(const lua::index& index)
 
 lua::index lua::top(lua_State* const state)
 {
-    return lua::index(state, -1);
+    return lua::index(state, lua_gettop(state));
 }
 
 unsigned int lua::size(lua_State* const state)
