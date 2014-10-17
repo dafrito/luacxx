@@ -195,12 +195,17 @@ BOOST_AUTO_TEST_CASE(qobject_methods)
     BOOST_CHECK_EQUAL(env["point"].type().name(), "userdata");
 
     BOOST_CHECK_EQUAL(lua::run_string<int>(env, "return point:getX()"), 2);
+    BOOST_CHECK_EQUAL(point.getY(), 3);
 
     lua::run_string(env, "point:setX(point:getX() * 2)");
     BOOST_CHECK_EQUAL(point.getX(), 4);
 
     lua::run_string(env, "point:setY(point:getY() + 3)");
     BOOST_CHECK_EQUAL(point.getY(), 6);
+
+    lua::run_string(env, "px, py = point:values()");
+    BOOST_CHECK_EQUAL(env["px"].get<int>(), 4);
+    BOOST_CHECK_EQUAL(env["py"].get<int>(), 6);
 }
 
 BOOST_AUTO_TEST_CASE(directory_module_loader)

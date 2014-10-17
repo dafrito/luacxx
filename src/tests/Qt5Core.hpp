@@ -51,6 +51,12 @@ public:
         return _y;
     }
 
+    Q_INVOKABLE int values(lua_State* const state)
+    {
+        lua::push(state, _x, _y);
+        return 2;
+    }
+
 signals:
     void xChanged() const;
     void yChanged() const;
