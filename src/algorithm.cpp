@@ -27,6 +27,21 @@ static int on_error(lua_State* const state)
     return 1;
 }
 
+template <>
+void lua::assert_type<lua::error>(const char* category, const lua::type& expected, const lua::index& given)
+{
+    if (given.type() == expected) {
+        return;
+    }
+    std::stringstream str;
+    str << category;
+    str << ": ";
+    str << "Lua stack value at index " << given.pos() << " must be a ";
+    str << lua::type_info(expected).name();
+    str << " but a " << given.type().name() << " was given instead.";
+    throw lua::error(given.state(), str.str());
+}
+
 void lua::invoke(const lua::index& callable)
 {
     auto state = callable.state();

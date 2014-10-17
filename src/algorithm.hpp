@@ -127,6 +127,9 @@ void assert_type(const char* category, const lua::type& expected, const lua::ind
     throw Error(str.str());
 }
 
+template <>
+void assert_type<lua::error>(const char* category, const lua::type& expected, const lua::index& given);
+
 /*
 
 =head4 lua::index top = lua::top(state)
