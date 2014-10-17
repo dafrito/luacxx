@@ -5,5 +5,7 @@ lua::error::error(lua_State* const state, const std::string& what) :
     _what(what),
     _traceback(what.size())
 {
-    set_traceback(lua::traceback(state, 1));
+    std::stringstream str;
+    str << lua::dump(state) << std::endl << lua::traceback(state, 1);
+    set_traceback(str.str());
 }
