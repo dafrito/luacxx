@@ -15,11 +15,12 @@
 #include "QWidget.hpp"
 #include "QStyle.hpp"
 
-void lua::QApplication_metatable(const lua::index& mt)
+void lua::QApplication_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
-    lua::QGuiApplication_metatable(mt);
+    lua::QObject_metatable(state, pos);
+    lua::QGuiApplication_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["styleSheet"] = &QApplication::styleSheet;
 }
 

@@ -5,8 +5,12 @@
 
 #include <girepository.h>
 
-GIBaseInfo* get_base_info(const lua::index& index)
+lua::userdata_type lua::Metatable<GObject>::info("GObject");
+
+GIBaseInfo* get_base_info(lua_State* const state, const int pos)
 {
+    lua::index index(state, pos);
+
     auto state = index.state();
     auto obj = lua::get<GObject*>(index);
     if (!obj) {
@@ -110,8 +114,9 @@ int lua::GObject_tostring(lua_State* const state)
     return 1;
 }
 
-void lua::GObject_metatable(const lua::index& mt)
+void lua::GObject_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["__index"] = lua::GObject_index;
     mt["__tostring"] = lua::GObject_tostring;
     mt["Destroy"] = lua::GObject_destroy;

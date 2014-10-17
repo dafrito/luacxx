@@ -1,0 +1,6 @@
+#ifndef LUACXX_QT5WIDGETS_INCLUDED
+#define LUACXX_QT5WIDGETS_INCLUDED
+
+#include "../Qt5Core/Qt5Core.hpp"
+
+#endif // LUACXX_QT5WIDGETS_INCLUDED

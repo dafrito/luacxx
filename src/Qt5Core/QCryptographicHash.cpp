@@ -8,7 +8,7 @@
 int QCryptographicHash_addData(lua_State* const state)
 {
     auto self = lua::get<QCryptographicHash*>(state, 1);
-    if (lua::class_name(state, 2) == lua::Metatable<QByteArray>::name) {
+    if (lua::is_type<QByteArray>(state, 2)) {
         self->addData(lua::get<const QByteArray&>(state, 2));
         return 0;
     }
@@ -22,8 +22,10 @@ int QCryptographicHash_addData(lua_State* const state)
     return 0;
 }
 
-void lua::QCryptographicHash_metatable(const lua::index& mt)
+void lua::QCryptographicHash_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["addData"] = QCryptographicHash_addData;
     mt["reset"] = &QCryptographicHash::reset;
     mt["result"] = &QCryptographicHash::result;

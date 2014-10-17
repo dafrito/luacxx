@@ -34,10 +34,11 @@ int QDrag_exec(lua_State* const state)
     return 1;
 }
 
-void lua::QDrag_metatable(const lua::index& mt)
+void lua::QDrag_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["defaultAction"] = &QDrag::defaultAction;
     mt["dragCursor"] = &QDrag::dragCursor;
     mt["exec"] = QDrag_exec;

@@ -4,21 +4,9 @@
 #include "Qt5Gui.hpp"
 #include <QSurfaceFormat>
 
+LUA_METATABLE_BUILT(QSurfaceFormat);
+
 namespace lua {
-
-void QSurfaceFormat_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QSurfaceFormat>
-{
-    static constexpr const char* name = "QSurfaceFormat";
-
-    static bool metatable(const lua::index& mt, QSurfaceFormat* const)
-    {
-        lua::QSurfaceFormat_metatable(mt);
-        return true;
-    }
-};
 
 template<>
 struct Push<QSurfaceFormat::FormatOptions>
@@ -32,10 +20,10 @@ struct Push<QSurfaceFormat::FormatOptions>
 template<>
 struct Store<QSurfaceFormat::FormatOptions>
 {
-    static void store(QSurfaceFormat::FormatOptions& destination, const lua::index& source)
+    static void store(QSurfaceFormat::FormatOptions& destination, lua_State* const state, const int source)
     {
         destination = static_cast<QSurfaceFormat::FormatOptions>(
-            static_cast<int>(lua_tointeger(source.state(), source.pos()))
+            static_cast<int>(lua_tointeger(state, source))
         );
     }
 };

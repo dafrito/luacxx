@@ -1,7 +1,8 @@
 #ifndef LUACXX_QOBSERVABLE_INCLUDED
 #define LUACXX_QOBSERVABLE_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
+
 #include "../reference.hpp"
 #include "../algorithm.hpp"
 #include "../convert/string.hpp"
@@ -49,12 +50,21 @@ int QObservable_event(lua_State* const state)
 template <class T>
 struct Metatable<QObservable<T>>
 {
-    static constexpr const char* name = "QObservable";
-
-    static bool metatable(const lua::index& mt, QObservable<T>* const value)
+    static const userdata_type& info()
     {
+        static userdata_type _info;
+        std::string str("QObservable<");
+        str += Metatable<T>::info().name();
+        str += ">";
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, QObservable<T>* const value)
+    {
+        lua::index mt(state, pos);
+
         mt["event"] = QObservable_event<T>;
-        return lua::Metatable<T>::metatable(mt, value);
+        return lua::Metatable<T>::metatable(state, pos, value);
     }
 };
 

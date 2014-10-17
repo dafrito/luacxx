@@ -28,8 +28,9 @@ int QStyle_unpolish(lua_State* const state)
     return 0;
 }
 
-void lua::QStyle_metatable(const lua::index& mt)
+void lua::QStyle_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["combinedLayoutSpacing"] = &QStyle::combinedLayoutSpacing;
     mt["drawItemPixmap"] = &QStyle::drawItemPixmap;
     mt["drawItemText"] = QStyle_drawItemText;

@@ -7,13 +7,24 @@
 #include "../Qt5Core/QRectF.hpp"
 #include "../Qt5Core/QPointF.hpp"
 #include "../Qt5Core/Qt.hpp"
-#include "../Qt5Core/QPolygon.hpp"
+#include "QPolygon.hpp"
 #include "../Qt5Core/QVector.hpp"
 
-void lua::QPolygonF_metatable(const lua::index& mt)
+int QPolygonF_translate(lua_State* const state)
 {
-    lua::QVector_metatable<QPointF>(mt);
+    return 0;
+}
 
+int QPolygonF_translated(lua_State* const state)
+{
+    return 0;
+}
+
+void lua::QPolygonF_metatable(lua_State* const state, const int pos)
+{
+    lua::QVector_metatable<QPointF>(state, pos);
+
+    lua::index mt(state, pos);
     mt["boundingRect"] = &QPolygonF::boundingRect;
     mt["containsPoint"] = &QPolygonF::containsPoint;
     mt["intersected"] = &QPolygonF::intersected;

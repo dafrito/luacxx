@@ -97,8 +97,9 @@ int QPalette_setColorGroup(lua_State* const state)
     return 0;
 }
 
-void lua::QPalette_metatable(const lua::index& mt)
+void lua::QPalette_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["alternateBase"] = &QPalette::alternateBase;
     mt["base"] = &QPalette::base;
     mt["brightText"] = &QPalette::brightText;
@@ -166,8 +167,7 @@ int QPalette_new(lua_State* const state)
         return 1;
     }
 
-    auto name = lua::class_name(state, 2);
-    if (name == lua::Metatable<QPalette>::name) {
+    if (lua::is_type<QPalette>(state, 2)) {
         // QPalette(const QPalette & p)
         lua::make<QPalette>(state,
             lua::get<const QPalette&>(state, 2)

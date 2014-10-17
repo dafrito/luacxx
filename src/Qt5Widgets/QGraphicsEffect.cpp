@@ -7,10 +7,11 @@
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QRectF.hpp"
 
-void lua::QGraphicsEffect_metatable(const lua::index& mt)
+void lua::QGraphicsEffect_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["boundingRect"] = &QGraphicsEffect::boundingRect;
     mt["boundingRectFor"] = &QGraphicsEffect::boundingRectFor;
     mt["isEnabled"] = &QGraphicsEffect::isEnabled;

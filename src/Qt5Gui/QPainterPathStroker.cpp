@@ -21,8 +21,9 @@ int QPainterPathStroker_setDashPattern(lua_State* const state)
     return 0;
 }
 
-void lua::QPainterPathStroker_metatable(const lua::index& mt)
+void lua::QPainterPathStroker_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["capStyle"] = &QPainterPathStroker::capStyle;
     mt["createStroke"] = &QPainterPathStroker::createStroke;
     mt["curveThreshold"] = &QPainterPathStroker::curveThreshold;

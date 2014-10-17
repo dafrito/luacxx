@@ -3,10 +3,9 @@
 #include "../thread.hpp"
 #include "../Qt5Core/QString.hpp"
 
-#include <QColor>
-
-void lua::QColor_metatable(const lua::index& mt)
+void lua::QColor_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["alpha"] = &QColor::alpha;
     mt["alphaF"] = &QColor::alphaF;
     mt["black"] = &QColor::black;
@@ -88,7 +87,7 @@ int QColor_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_Qt5Core_QColor(lua_State* const state)
+int luaopen_Qt5Gui_QColor(lua_State* const state)
 {
     lua::thread env(state);
 

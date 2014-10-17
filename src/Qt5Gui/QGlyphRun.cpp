@@ -7,8 +7,9 @@
 #include <QRectF>
 #include <QGlyphRun>
 
-void lua::QGlyphRun_metatable(const lua::index& mt)
+void lua::QGlyphRun_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["boundingRect"] = &QGlyphRun::boundingRect;
     mt["clear"] = &QGlyphRun::clear;
     mt["flags"] = &QGlyphRun::flags;

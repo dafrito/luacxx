@@ -5,23 +5,7 @@
 
 #include <QBitmap>
 
-namespace lua {
-
-void QBitmap_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QBitmap>
-{
-    static constexpr const char* name = "QBitmap";
-
-    static bool metatable(const lua::index& mt, QBitmap* const)
-    {
-        lua::QBitmap_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QBitmap);
 
 extern "C" int luaopen_Qt5Gui_QBitmap(lua_State* const);
 

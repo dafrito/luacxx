@@ -23,10 +23,6 @@ int QGraphicsScene_addEllipse(lua_State* const state)
 {
     return 0;
 }
-int QGraphicsScene_addItem(lua_State* const state)
-{
-    return 0;
-}
 int QGraphicsScene_addLine(lua_State* const state)
 {
     return 0;
@@ -93,15 +89,36 @@ int QGraphicsScene_setSelectionArea(lua_State* const state)
 }
 int QGraphicsScene_update(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsScene*>(state, 1);
+    if (lua::size(state) == 2) {
+        self->update(lua::get<const QRectF&>(state, 2));
+    } else if (lua::size(state) == 1) {
+        self->update();
+    } else {
+        self->update(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        );
+    }
     return 0;
 }
 
-void lua::QGraphicsScene_metatable(const lua::index& mt)
+int QGraphicsScene_addItem(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsScene*>(state, 1);
+    self->addItem(lua::get<QGraphicsItem*>(state, 2));
+    return 0;
+}
+
+void lua::QGraphicsScene_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
     mt["activePanel"] = &QGraphicsScene::activePanel;
     mt["activeWindow"] = &QGraphicsScene::activeWindow;
     mt["addEllipse"] = QGraphicsScene_addEllipse;
-    mt["addItem"] = &QGraphicsScene::addItem;
+    mt["addItem"] = QGraphicsScene_addItem;
     mt["addLine"] = QGraphicsScene_addLine;
     mt["addPath"] = QGraphicsScene_addPath;
     mt["addPixmap"] = &QGraphicsScene::addPixmap;

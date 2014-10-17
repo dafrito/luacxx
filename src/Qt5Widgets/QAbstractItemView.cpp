@@ -4,7 +4,7 @@
 
 #include <QAbstractItemView>
 
-void lua::QAbstractItemView_metatable(const lua::index& mt)
+void lua::QAbstractItemView_metatable(lua_State* const state, const int pos)
 {
     // TODO Set up metatable methods for this class
 }

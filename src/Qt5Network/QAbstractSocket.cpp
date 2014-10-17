@@ -49,10 +49,11 @@ int QAbstractSocket_error(lua_State* const state)
     return 0;
 }
 
-void lua::QAbstractSocket_metatable(const lua::index& mt)
+void lua::QAbstractSocket_metatable(lua_State* const state, const int pos)
 {
-    lua::QIODevice_metatable(mt);
+    lua::QIODevice_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["abort"] = &QAbstractSocket::abort;
     mt["bind"] = QAbstractSocket_bind;
     mt["connectToHost"] = QAbstractSocket_connectToHost;

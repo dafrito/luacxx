@@ -1,7 +1,8 @@
 #ifndef LUACXX_QOBJECTSLOT_INCLUDED
 #define LUACXX_QOBJECTSLOT_INCLUDED
 
-#include "../reference.hpp"
+#include "Qt5Core.hpp"
+#include "reference.hpp"
 
 #include <QObject>
 #include <QMetaObject>

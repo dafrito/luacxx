@@ -1,7 +1,7 @@
 #ifndef luacxx_Qt5Core_QVariant_INCLUDED
 #define luacxx_Qt5Core_QVariant_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 
 #include <QVariant>
 
@@ -14,7 +14,7 @@ void set_qvariant_push_handler(const int type, const std::function<void(lua_Stat
 void set_qvariant_store_handler(const int type, const std::function<void(QVariant&, const lua::index&)>& handler);
 
 void push_qvariant(lua_State* const state, const QVariant& value);
-void store_qvariant(QVariant& destination, const lua::index& source);
+void store_qvariant(QVariant& destination, lua_State* const state, const int source);
 
 template<>
 struct Push<QVariant>
@@ -28,16 +28,16 @@ struct Push<QVariant>
 template<>
 struct Store<QVariant>
 {
-    static void store(QVariant& destination, const lua::index& index)
+    static void store(QVariant& destination, lua_State* const state, const int index)
     {
-        store_qvariant(destination, index);
+        store_qvariant(destination, state, index);
     }
 };
 
 template<>
 struct Get<QVariant>
 {
-    static QVariant get(const lua::index& index)
+    static QVariant get(lua_State* const state, const int index)
     {
         throw std::logic_error("Extracting QVariants is not yet allowed");
     }

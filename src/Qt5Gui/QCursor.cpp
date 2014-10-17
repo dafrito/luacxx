@@ -9,8 +9,9 @@
 
 // http://qt-project.org/doc/qt-4.8/qcursor.html
 
-void lua::QCursor_metatable(const lua::index& mt)
+void lua::QCursor_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["bitmap"] = &QCursor::bitmap;
     mt["hotSpot"] = &QCursor::hotSpot;
     mt["mask"] = &QCursor::mask;

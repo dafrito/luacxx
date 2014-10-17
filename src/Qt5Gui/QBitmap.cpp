@@ -8,10 +8,11 @@ int QBitmap_transformed(lua_State* const state)
     return 0;
 }
 
-void lua::QBitmap_metatable(const lua::index& mt)
+void lua::QBitmap_metatable(lua_State* const state, const int pos)
 {
-    lua::QPixmap_metatable(mt);
+    lua::QPixmap_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["clear"] = &QBitmap::clear;
     mt["swap"] = &QBitmap::swap;
     mt["transformed"] = QBitmap_transformed;

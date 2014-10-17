@@ -47,6 +47,9 @@ libluacxx_la_SOURCES = \
 	load.cpp \
 	stack.cpp \
 	thread.cpp \
+	convert/callable.cpp \
+	convert/const_char_p.cpp \
+	convert/char.cpp \
 	convert/numeric.cpp
 
 pkgconfig_DATA = pkg-config/luacxx.pc
@@ -169,20 +172,27 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/Qt_2.cpp \
 	Qt5Core/Qt_3.cpp \
 	Qt5Core/Qt_4.cpp \
+	Qt5Core/QAbstractNativeEventFilter.cpp \
 	Qt5Core/QAbstractItemModel.cpp \
 	Qt5Core/QUrl.cpp \
 	Qt5Core/QIODevice.cpp \
 	Qt5Core/QFileDevice.cpp \
 	Qt5Core/QFile.cpp \
 	Qt5Core/QMimeData.cpp \
+	Qt5Core/QTranslator.cpp \
 	Qt5Core/QElapsedTimer.cpp \
 	Qt5Core/QEvent.cpp \
 	Qt5Core/QEventLoop.cpp \
 	Qt5Core/QEventFilter.cpp \
-	Qt5Core/QObjectSlot.cpp
+	Qt5Core/QObjectSlot.cpp \
+	Qt5Core/QDateTime.cpp \
+	Qt5Core/QDate.cpp \
+	Qt5Core/QTime.cpp \
+	Qt5Core/QTimeZone.cpp
 
 nobase_pkginclude_HEADERS += \
 	load/DirectoryModuleLoader.hpp \
+	Qt5Core/Qt5Core.hpp \
 	Qt5Core/QString.hpp \
 	Qt5Core/QChar.hpp \
 	Qt5Core/QList.hpp \
@@ -200,6 +210,8 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QFileDevice.hpp \
 	Qt5Core/QFile.hpp \
 	Qt5Core/QElapsedTimer.hpp \
+	Qt5Core/QAbstractNativeEventFilter.hpp \
+	Qt5Core/QTranslator.hpp \
 	Qt5Core/QVariant.hpp \
 	Qt5Core/QByteArray.hpp \
 	Qt5Core/QCoreApplication.hpp \
@@ -211,7 +223,11 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/Qt.hpp \
 	Qt5Core/QAbstractItemModel.hpp \
 	Qt5Core/QSize.hpp \
-	Qt5Core/QObservable.hpp
+	Qt5Core/QObservable.hpp \
+	Qt5Core/QDateTime.hpp \
+	Qt5Core/QDate.hpp \
+	Qt5Core/QTime.hpp \
+	Qt5Core/QTimeZone.hpp
 
 check_PROGRAMS += test_Qt5Core
 
@@ -296,8 +312,10 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QVector2D.cpp \
 	Qt5Gui/QVector3D.cpp \
 	Qt5Gui/QVector4D.cpp \
+	Qt5Gui/QPolygon.cpp \
 	Qt5Gui/QPolygonF.cpp \
 	Qt5Gui/QWindow.cpp \
+	Qt5Gui/QColor.cpp \
 	Qt5Gui/QPen.cpp \
 	Qt5Gui/QBrush.cpp \
 	Qt5Gui/QGuiApplication.cpp \
@@ -328,12 +346,12 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QGradient.cpp \
 	Qt5Gui/QLinearGradient.cpp \
 	Qt5Gui/QTransform.cpp \
-	Qt5Gui/QColor.cpp \
 	Qt5Gui/QPixmap.cpp \
 	Qt5Gui/QBitmap.cpp \
 	Qt5Gui/QPainter.cpp \
 	Qt5Gui/QPaintDevice.cpp \
-	Qt5Gui/QBackingStore.cpp
+	Qt5Gui/QBackingStore.cpp \
+	Qt5Gui/QTextOption.cpp
 
 nobase_pkginclude_HEADERS += \
 	Qt5Gui/Qt5Gui.hpp \
@@ -371,13 +389,15 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QVector2D.hpp \
 	Qt5Gui/QVector3D.hpp \
 	Qt5Gui/QVector4D.hpp \
+	Qt5Gui/QPolygon.hpp \
 	Qt5Gui/QPolygonF.hpp \
 	Qt5Gui/QQuaternion.hpp \
 	Qt5Gui/QOpenGLContext.hpp \
 	Qt5Gui/QOpenGLContextGroup.hpp \
 	Qt5Gui/QOpenGLFunctions.hpp \
 	Qt5Gui/QScreen.hpp \
-	Qt5Gui/QRegion.hpp
+	Qt5Gui/QRegion.hpp \
+	Qt5Gui/QTextOption.hpp
 
 test_Qt5Gui_CXXFLAGS = \
 	$(test_luacxx_CXXFLAGS) \
@@ -458,6 +478,7 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QWidget.cpp
 
 nobase_pkginclude_HEADERS += \
+	Qt5Widgets/Qt5Widgets.hpp \
 	Qt5Widgets/QAbstractScrollArea.hpp \
 	Qt5Widgets/QAction.hpp \
 	Qt5Widgets/QActionGroup.hpp \

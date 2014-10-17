@@ -40,8 +40,9 @@ std::string QQuaternion_tostring(const QQuaternion& quat)
     return str.str();
 }
 
-void lua::QQuaternion_metatable(const lua::index& mt)
+void lua::QQuaternion_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["conjugate"] = &QQuaternion::conjugate;
     mt["isIdentity"] = &QQuaternion::isIdentity;
     mt["isNull"] = &QQuaternion::isNull;

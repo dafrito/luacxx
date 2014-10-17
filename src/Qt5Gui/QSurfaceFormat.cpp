@@ -40,8 +40,9 @@ int QSurfaceFormat_testOption(lua_State* const state)
     return 1;
 }
 
-void lua::QSurfaceFormat_metatable(const lua::index& mt)
+void lua::QSurfaceFormat_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["alphaBufferSize"] = &QSurfaceFormat::alphaBufferSize;
     mt["blueBufferSize"] = &QSurfaceFormat::blueBufferSize;
     mt["depthBufferSize"] = &QSurfaceFormat::depthBufferSize;
@@ -96,7 +97,7 @@ int QSurfaceFormat_new(lua_State* const state)
         lua::make<QSurfaceFormat>(state);
         return 1;
     }
-    if (lua::class_name(state, 2) == lua::Metatable<QSurfaceFormat>::name) {
+    if (lua::is_type<QSurfaceFormat>(state, 2)) {
         lua::make<QSurfaceFormat>(state, lua::get<const QSurfaceFormat&>(state, 2));
         return 1;
     }

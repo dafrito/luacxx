@@ -70,16 +70,16 @@ As much as is possible, this binding uses the same license as ncurses itself.
 
 namespace lua {
 
-void ncurses_MEVENT_metatable(const lua::index& mt);
+void ncurses_MEVENT_metatable(lua_State* const state, const int mt);
 
 template <>
 struct Metatable<MEVENT>
 {
     static constexpr const char* name = "MEVENT";
 
-    static bool metatable(const lua::index& mt, MEVENT* const)
+    static bool metatable(lua_State* const state, const int mt, MEVENT* const)
     {
-        lua::ncurses_MEVENT_metatable(mt);
+        lua::ncurses_MEVENT_metatable(state, mt);
         return true;
     }
 };

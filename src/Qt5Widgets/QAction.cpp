@@ -29,10 +29,11 @@ int QAction_showStatusText(lua_State* const state)
     return 0;
 }
 
-void lua::QAction_metatable(const lua::index& mt)
+void lua::QAction_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["actionGroup"] = &QAction::actionGroup;
     mt["activate"] = &QAction::activate;
     mt["associatedGraphicsWidgets"] = &QAction::associatedGraphicsWidgets;

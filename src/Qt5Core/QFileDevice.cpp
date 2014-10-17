@@ -6,8 +6,10 @@
 
 #include "QString.hpp"
 
-void lua::QFileDevice_metatable(const lua::index& mt)
+void lua::QFileDevice_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["error"] = &QFileDevice::error;
     mt["fileName"] = &QFileDevice::fileName;
     mt["flush"] = &QFileDevice::flush;

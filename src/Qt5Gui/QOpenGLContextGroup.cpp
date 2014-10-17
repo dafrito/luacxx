@@ -4,8 +4,9 @@
 
 #include <QOpenGLContextGroup>
 
-void lua::QOpenGLContextGroup_metatable(const lua::index& mt)
+void lua::QOpenGLContextGroup_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["shares"] = &QOpenGLContextGroup::shares;
 }
 

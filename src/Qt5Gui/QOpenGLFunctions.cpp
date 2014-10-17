@@ -4,8 +4,9 @@
 
 #include <QOpenGLFunctions>
 
-void lua::QOpenGLFunctions_metatable(const lua::index& mt)
+void lua::QOpenGLFunctions_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["glActiveTexture"] = &QOpenGLFunctions::glActiveTexture;
     mt["glAttachShader"] = &QOpenGLFunctions::glAttachShader;
     mt["glBindAttribLocation"] = &QOpenGLFunctions::glBindAttribLocation;

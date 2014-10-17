@@ -15,8 +15,9 @@ int QConicalGradient_setCenter(lua_State* const state)
     return 0;
 }
 
-void lua::QConicalGradient_metatable(const lua::index& mt)
+void lua::QConicalGradient_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["angle"] = &QConicalGradient::angle;
     mt["center"] = &QConicalGradient::center;
     mt["setAngle"] = &QConicalGradient::setAngle;

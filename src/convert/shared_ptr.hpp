@@ -10,7 +10,11 @@ namespace lua {
 template <class T>
 struct Metatable<std::shared_ptr<T>>
 {
-    static constexpr const char* name = Metatable<T>::name;
+    static const userdata_type& info()
+    {
+        static userdata_type _info("shared_ptr");
+        return _info;
+    }
 
     static bool metatable(const lua::index& mt, std::shared_ptr<T>* const source)
     {

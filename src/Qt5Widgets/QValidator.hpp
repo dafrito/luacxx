@@ -1,27 +1,11 @@
 #ifndef luacxx_QValidator_INCLUDED
 #define luacxx_QValidator_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QValidator;
 
-namespace lua {
-
-void QValidator_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QValidator>
-{
-    static constexpr const char* name = "QValidator";
-
-    static bool metatable(const lua::index& mt, QValidator* const)
-    {
-        lua::QValidator_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QValidator);
 
 extern "C" int luaopen_Qt5Widgets_QValidator(lua_State* const);
 

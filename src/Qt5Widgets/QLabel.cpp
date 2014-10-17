@@ -12,10 +12,11 @@
 #include "../Qt5Gui/QPixmap.hpp"
 #include "QWidget.hpp"
 
-void lua::QLabel_metatable(const lua::index& mt)
+void lua::QLabel_metatable(lua_State* const state, const int pos)
 {
-    lua::QFrame_metatable(mt);
+    lua::QFrame_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["alignment"] = &QLabel::alignment;
     mt["buddy"] = &QLabel::buddy;
     mt["hasScaledContents"] = &QLabel::hasScaledContents;

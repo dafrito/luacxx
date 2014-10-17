@@ -196,16 +196,7 @@ struct Store<lua::callable>
     }
 };
 
-template <>
-struct Metatable<lua::callable>
-{
-    static constexpr const char* name = "lua::callable";
-
-    static bool metatable(lua_State* const state, const int table, void* const value)
-    {
-        return false;
-    }
-};
+LUA_METATABLE_NAMED(lua::callable);
 
 } // namespace lua
 
@@ -550,11 +541,15 @@ struct Push<std::function<void(Args...)>>
 template <typename Func>
 struct Metatable<std::function<Func>>
 {
-    static constexpr const char* name = "std::function";
+    static const lua::userdata_type& info()
+    {
+        static lua::userdata_type info("std::function");
+        return info;
+    }
 
     static bool metatable(lua_State* const state, const int table, void* const value)
     {
-        return false;
+        return true;
     }
 };
 

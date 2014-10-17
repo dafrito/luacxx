@@ -5,23 +5,7 @@
 
 class QLinearGradient;
 
-namespace lua {
-
-void QLinearGradient_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QLinearGradient>
-{
-    static constexpr const char* name = "QLinearGradient";
-
-    static bool metatable(const lua::index& mt, QLinearGradient* const)
-    {
-        lua::QLinearGradient_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QLinearGradient);
 
 extern "C" int luaopen_Qt5Gui_QLinearGradient(lua_State* const);
 

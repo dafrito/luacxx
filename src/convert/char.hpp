@@ -17,16 +17,19 @@ struct Push<char>
 template <>
 struct Store<char>
 {
-    static void store(char& destination, const lua::index& source)
+    static void store(char& destination, lua_State* const state, const int source)
     {
-        if (source.type().string()) {
+        if (lua_isstring(state, source)) {
             size_t len = 1;
-            destination = *lua_tolstring(source.state(), source.pos(), &len);
+            destination = *lua_tolstring(state, source, &len);
         } else {
-            destination = lua_tonumber(source.state(), source.pos());
+            destination = lua_tonumber(state, source);
         }
     }
 };
+
+LUA_METATABLE_NAMED(char)
+LUA_METATABLE_NAMED(char const)
 
 } // namespace lua
 

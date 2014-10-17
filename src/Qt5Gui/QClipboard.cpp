@@ -46,8 +46,9 @@ int QClipboard_text(lua_State* const state)
     return 0;
 }
 
-void lua::QClipboard_metatable(const lua::index& mt)
+void lua::QClipboard_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["clear"] = &QClipboard::clear;
     mt["ownsClipboard"] = &QClipboard::ownsClipboard;
     mt["ownsFindBuffer"] = &QClipboard::ownsFindBuffer;

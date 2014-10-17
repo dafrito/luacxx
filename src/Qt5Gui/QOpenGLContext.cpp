@@ -16,10 +16,11 @@ int QOpenGLContext_versionFunctions(lua_State* const state)
     return 0;
 }
 
-void lua::QOpenGLContext_metatable(const lua::index& mt)
+void lua::QOpenGLContext_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["create"] = &QOpenGLContext::create;
     mt["defaultFramebufferObject"] = &QOpenGLContext::defaultFramebufferObject;
     mt["doneCurrent"] = &QOpenGLContext::doneCurrent;

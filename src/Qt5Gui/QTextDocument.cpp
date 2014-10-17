@@ -28,10 +28,11 @@ int QTextDocument_find(lua_State* const state)
     return 0;
 }
 
-void lua::QTextDocument_metatable(const lua::index& mt)
+void lua::QTextDocument_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["addResource"] = &QTextDocument::addResource;
     mt["adjustSize"] = &QTextDocument::adjustSize;
     mt["allFormats"] = &QTextDocument::allFormats;

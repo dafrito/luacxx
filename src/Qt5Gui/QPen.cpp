@@ -5,15 +5,15 @@
 #include "QBrush.hpp"
 #include <QPen>
 
-void lua::QPen_metatable(const lua::index& mt)
+void lua::QPen_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["brush"] = &QPen::brush;
     mt["capStyle"] = &QPen::capStyle;
     mt["color"] = &QPen::color;
     mt["dashOffset"] = &QPen::dashOffset;
     mt["dashPattern"] = &QPen::dashPattern;
     mt["isCosmetic"] = &QPen::isCosmetic;
-    mt["joinStyle"] = &QPen::joinStyle;
     mt["joinStyle"] = &QPen::joinStyle;
     mt["miterLimit"] = &QPen::miterLimit;
     mt["setBrush"] = &QPen::setBrush;

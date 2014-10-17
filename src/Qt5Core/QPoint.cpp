@@ -7,8 +7,10 @@
 
 #include <QPoint>
 
-void lua::QPoint_metatable(const lua::index& mt)
+void lua::QPoint_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["isNull"] = &QPoint::isNull;
     mt["manhattanLength"] = &QPoint::manhattanLength;
     mt["x"] = &QPoint::x;

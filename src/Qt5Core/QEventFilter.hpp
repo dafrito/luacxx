@@ -33,13 +33,12 @@
 
 */
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
+
 #include "../reference.hpp"
 #include "../algorithm.hpp"
 
 #include <QObject>
-
-namespace lua {
 
 class QEventFilter : public QObject
 {
@@ -76,21 +75,7 @@ bool eventFilter(QObject* watched, QEvent* event);
 
 }; // class QEventFilter
 
-void QEventFilter_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<lua::QEventFilter>
-{
-    static constexpr const char* name = "QEventFilter";
-
-    static bool metatable(const lua::index& mt, lua::QEventFilter* const)
-    {
-        lua::QEventFilter_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QEventFilter);
 
 extern "C" int luaopen_Qt5Core_QEventFilter(lua_State* const);
 

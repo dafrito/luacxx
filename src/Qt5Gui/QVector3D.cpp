@@ -6,8 +6,9 @@
 #include <QVector2D>
 #include <QVector3D>
 
-void lua::QVector3D_metatable(const lua::index& mt)
+void lua::QVector3D_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["distanceToLine"] = &QVector3D::distanceToLine;
     //mt["distanceToPlane"] = &QVector3D::distanceToPlane;
     mt["isNull"] = &QVector3D::isNull;

@@ -42,8 +42,9 @@ int QIcon_pixmap(lua_State* const state)
     return 0;
 }
 
-void lua::QIcon_metatable(const lua::index& mt)
+void lua::QIcon_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["actualSize"] = QIcon_actualSize;
     mt["addFile"] = QIcon_addFile;
     mt["addPixmap"] = QIcon_addPixmap;
@@ -70,13 +71,13 @@ int QIcon_new(lua_State* const state)
         return 1;
     }
 
-    if (lua::class_name(state, 2) == lua::Metatable<QIconEngine>::name) {
+    if (lua::is_type<QIconEngine>(state, 2)) {
         // QIcon(QIconEngine * engine)
         lua::make<QIcon>(state, lua::get<QIconEngine*>(state, 2));
         return 1;
     }
 
-    if (lua::class_name(state, 2) == lua::Metatable<QIcon>::name) {
+    if (lua::is_type<QIcon>(state, 2)) {
         // QIcon(const QIcon & other)
         lua::make<QIcon>(state, lua::get<const QIcon&>(state, 2));
         return 1;

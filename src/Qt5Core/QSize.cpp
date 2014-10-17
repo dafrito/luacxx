@@ -24,8 +24,10 @@ std::string QSize_tostring(QSize* const size)
     return str.str();
 }
 
-void lua::QSize_metatable(const lua::index& mt)
+void lua::QSize_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["boundedTo"] = &QSize::boundedTo;
     mt["expandedTo"] = &QSize::expandedTo;
     mt["height"] = &QSize::height;

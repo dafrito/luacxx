@@ -1,27 +1,11 @@
 #ifndef LUA_CXX_QGRAPHICSVIEW_INCLUDED
 #define LUA_CXX_QGRAPHICSVIEW_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
-class QGraphicsView;
+#include <QGraphicsView>
 
-namespace lua {
-
-void QGraphicsView_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QGraphicsView>
-{
-    static constexpr const char* name = "QGraphicsView";
-
-    static bool metatable(const lua::index& mt, QGraphicsView* const)
-    {
-        lua::QGraphicsView_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QGraphicsView);
 
 extern "C" int luaopen_Qt5Widgets_QGraphicsView(lua_State* const);
 

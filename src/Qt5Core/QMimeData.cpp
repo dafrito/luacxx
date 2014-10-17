@@ -4,8 +4,10 @@
 
 #include <QMimeData>
 
-void lua::QMimeData_metatable(const lua::index& mt)
+void lua::QMimeData_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     // TODO Set up metatable methods for this class
 }
 

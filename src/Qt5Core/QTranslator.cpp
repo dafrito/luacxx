@@ -16,13 +16,15 @@ int QTranslator_load(lua_State* const state)
     return 0;
 }
 
-void lua::QTranslator_metatable(const lua::index& mt)
+void lua::QTranslator_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
-    mt["isEmpty"] = &QLocale::isEmpty;
-    mt["load"] = QLocale_load;
-    mt["translate"] = &QLocale::translate;
+    lua::index mt(state, pos);
+
+    mt["isEmpty"] = &QTranslator::isEmpty;
+    mt["load"] = QTranslator_load;
+    mt["translate"] = &QTranslator::translate;
 }
 
 int QTranslator_new(lua_State* const state)

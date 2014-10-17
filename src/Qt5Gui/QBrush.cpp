@@ -14,7 +14,7 @@
 int QBrush_setColor(lua_State* const state)
 {
     auto brush = lua::get<QBrush*>(state, 1);
-    if (lua::class_name(state, 2) == lua::Metatable<QColor>::name) {
+    if (lua::is_type<QColor>(state, 2)) {
         brush->setColor(lua::get<QColor&>(state, 2));
     } else {
         brush->setColor(lua::get<Qt::GlobalColor>(state, 2));
@@ -22,8 +22,9 @@ int QBrush_setColor(lua_State* const state)
     return 0;
 }
 
-void lua::QBrush_metatable(const lua::index& mt)
+void lua::QBrush_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["color"] = &QBrush::color;
     mt["gradient"] = &QBrush::gradient;
     mt["isOpaque"] = &QBrush::isOpaque;

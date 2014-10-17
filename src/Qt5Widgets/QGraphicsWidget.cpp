@@ -50,11 +50,12 @@ int QGraphicsWidget_setShortcutEnabled(lua_State* const state)
     return 0;
 }
 
-void lua::QGraphicsWidget_metatable(const lua::index& mt)
+void lua::QGraphicsWidget_metatable(lua_State* const state, const int pos)
 {
-    lua::QGraphicsObject_metatable(mt);
-    lua::QGraphicsLayoutItem_metatable(mt);
+    lua::QGraphicsObject_metatable(state, pos);
+    lua::QGraphicsLayoutItem_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["actions"] = &QGraphicsWidget::actions;
     mt["addAction"] = &QGraphicsWidget::addAction;
     mt["addActions"] = &QGraphicsWidget::addActions;

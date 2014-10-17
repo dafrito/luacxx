@@ -5,23 +5,7 @@
 
 #include <QClipboard>
 
-namespace lua {
-
-void QClipboard_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QClipboard>
-{
-    static constexpr const char* name = "QClipboard";
-
-    static bool metatable(const lua::index& mt, QClipboard* const)
-    {
-        lua::QClipboard_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QClipboard);
 
 extern "C" int luaopen_Qt5Gui_QClipboard(lua_State* const);
 

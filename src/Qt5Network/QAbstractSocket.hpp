@@ -5,23 +5,7 @@
 
 class QAbstractSocket;
 
-namespace lua {
-
-void QAbstractSocket_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QAbstractSocket>
-{
-    static constexpr const char* name = "QAbstractSocket";
-
-    static bool metatable(const lua::index& mt, QAbstractSocket* const)
-    {
-        lua::QAbstractSocket_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QAbstractSocket);
 
 extern "C" int luaopen_Qt5Network_QAbstractSocket(lua_State* const);
 

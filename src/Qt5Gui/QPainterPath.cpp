@@ -422,8 +422,9 @@ int QPainterPath_translated(lua_State* const state)
     return 1;
 }
 
-void lua::QPainterPath_metatable(const lua::index& mt)
+void lua::QPainterPath_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["addEllipse"] = QPainterPath_addEllipse;
     mt["addPath"] = &QPainterPath::addPath;
     mt["addPolygon"] = &QPainterPath::addPolygon;
@@ -468,8 +469,9 @@ void lua::QPainterPath_metatable(const lua::index& mt)
     mt["united"] = &QPainterPath::united;
 }
 
-void lua::QPainterPath_Element_metatable(const lua::index& mt)
+void lua::QPainterPath_Element_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["isCurveTo"] = &QPainterPath::Element::isCurveTo;
     mt["isLineTo"] = &QPainterPath::Element::isLineTo;
     mt["isMoveTo"] = &QPainterPath::Element::isMoveTo;

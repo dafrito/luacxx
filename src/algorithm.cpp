@@ -1,6 +1,7 @@
 #include "algorithm.hpp"
 
 #include "error.hpp"
+#include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
 #include "convert/numeric.hpp"
 #include "convert/callable.hpp"
@@ -76,38 +77,32 @@ std::string lua::traceback(lua_State* const state, const int toplevel)
     #endif
 }
 
-const char* lua::class_id(const lua::index& index)
+const lua::userdata_type* lua::get_type_info(const lua::index& index)
 {
-    lua_getmetatable(index.state(), index.pos());
-    lua_getfield(index.state(), -1, "__class");
-    auto rv = lua_topointer(index.state(), -1);
-    lua_pop(index.state(), 1);
-    return static_cast<const char*>(rv);
+    return lua::get_type_info(index.state(), index.pos());
 }
 
-const char* lua::class_id(lua_State* const state, int pos)
+const lua::userdata_type* lua::get_type_info(lua_State* const state, int pos)
 {
-    return lua::class_id(lua::index(state, pos));
+    auto userdata_block = lua::get_userdata_block(state, pos);
+    if (!userdata_block) {
+        return nullptr;
+    }
+    return userdata_block->type();
 }
 
 std::string lua::class_name(const lua::index& index)
 {
-    auto id = lua::class_id(index);
-    if (!id) {
-        return std::string();
-    }
-
-    return std::string(id);
+    return lua::class_name(index.state(), index.pos());
 }
 
 std::string lua::class_name(lua_State* const state, int pos)
 {
-    return lua::class_name(lua::index(state, pos));
-}
-
-size_t lua::userdata_size(const lua::index& index)
-{
-    return lua_rawlen(index.state(), index.pos()) - sizeof(lua::userdata_block);
+    auto info = lua::get_type_info(state, pos);
+    if (info) {
+        return info->name();
+    }
+    return std::string();
 }
 
 std::string lua::dump(lua_State* const state)

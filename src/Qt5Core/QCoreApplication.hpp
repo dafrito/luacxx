@@ -1,7 +1,8 @@
 #ifndef luacxx_QCoreApplication_INCLUDED
 #define luacxx_QCoreApplication_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
+
 #include <vector>
 #include <sstream>
 #include <cstring>
@@ -102,21 +103,9 @@ int QCoreApplication_new(lua_State* const state)
     return 1;
 }
 
-void QCoreApplication_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QCoreApplication>
-{
-    static constexpr const char* name = "QCoreApplication";
-
-    static bool metatable(const lua::index& mt, QCoreApplication* const)
-    {
-        lua::QCoreApplication_metatable(mt);
-        return true;
-    }
-};
-
 }; // namespace lua
+
+LUA_METATABLE_BUILT(QCoreApplication)
 
 extern "C" int luaopen_Qt5Core_QCoreApplication(lua_State* const);
 

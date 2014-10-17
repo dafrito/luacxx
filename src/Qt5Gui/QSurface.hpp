@@ -12,22 +12,8 @@ QSurface - https://qt-project.org/doc/qt-5/qsurface.html
 
 */
 
-namespace lua {
+LUA_METATABLE_BUILT(QSurface);
 
-void QSurface_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QSurface>
-{
-    static constexpr const char* name = "QSurface";
-
-    static bool metatable(const lua::index& mt, QSurface* const)
-    {
-        lua::QSurface_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+extern "C" int luaopen_Qt5Gui_QSurface(lua_State* const state);
 
 #endif // LUACXX_QSURFACE_INCLUDED

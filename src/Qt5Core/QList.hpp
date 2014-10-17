@@ -1,7 +1,7 @@
 #ifndef luacxx_QList_INCLUDED
 #define luacxx_QList_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 #include "../convert/callable.hpp"
 
 #include <QList>
@@ -11,8 +11,10 @@
 namespace lua {
 
 template <class T>
-void QList_metatable(const lua::index& mt)
+void QList_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["append"] = lua::callable([](lua_State* const state) {
         auto self = lua::get<QList<T>*>(state, 1);
         if (lua::is_type<T>(state, 2)) {
@@ -133,22 +135,22 @@ void QList_metatable(const lua::index& mt)
 template <class T>
 struct Metatable<QList<T>>
 {
-    static std::string name;
-
-    static bool metatable(const lua::index& mt, QList<T>* const)
+    static const userdata_type& info()
     {
-        if (name.empty()) {
-            name += "QList<";
-            name += Metatable<T>::name;
-            name += ">";
-        }
-        lua::QList_metatable<T>(mt);
+        static userdata_type _info;
+        std::string str("QList<");
+        str += Metatable<T>::info().name();
+        str += ">";
+        _info.set_name(str);
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int mt, QList<T>* const)
+    {
+        lua::QList_metatable<T>(state, mt);
         return true;
     }
 };
-
-template <class T>
-std::string Metatable<QList<T>>::name;
 
 }; // namespace lua
 

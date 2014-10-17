@@ -5,7 +5,7 @@
 
 // http://qt-project.org/doc/qt-5/qurl.html
 
-void lua::QUrl_metatable(const lua::index& mt)
+void lua::QUrl_metatable(lua_State* const state, const int pos)
 {
 }
 

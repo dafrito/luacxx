@@ -29,8 +29,10 @@ int QIODevice_write(lua_State* const state)
     return 0;
 }
 
-void lua::QIODevice_metatable(const lua::index& mt)
+void lua::QIODevice_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["atEnd"] = &QIODevice::atEnd;
     mt["bytesAvailable"] = &QIODevice::bytesAvailable;
     mt["bytesToWrite"] = &QIODevice::bytesToWrite;

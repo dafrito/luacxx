@@ -16,10 +16,11 @@
 
 // https://qt-project.org/doc/qt-5/qmovie.html
 
-void lua::QMovie_metatable(const lua::index& mt)
+void lua::QMovie_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["backgroundColor"] = &QMovie::backgroundColor;
     mt["cacheMode"] = &QMovie::cacheMode;
     mt["currentFrameNumber"] = &QMovie::currentFrameNumber;

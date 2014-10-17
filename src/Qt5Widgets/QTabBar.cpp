@@ -23,10 +23,11 @@ int QTabBar_insertTab(lua_State* const state)
     return 0;
 }
 
-void lua::QTabBar_metatable(const lua::index& mt)
+void lua::QTabBar_metatable(lua_State* const state, const int pos)
 {
-    lua::QWidget_metatable(mt);
+    lua::QWidget_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["addTab"] = QTabBar_addTab;
     mt["count"] = &QTabBar::count;
     mt["currentIndex"] = &QTabBar::currentIndex;

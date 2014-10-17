@@ -13,10 +13,11 @@
 #include "QAbstractItemView.hpp"
 #include "../Qt5Core/QStringList.hpp"
 
-void lua::QCompleter_metatable(const lua::index& mt)
+void lua::QCompleter_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["caseSensitivity"] = &QCompleter::caseSensitivity;
     mt["completionColumn"] = &QCompleter::completionColumn;
     mt["completionCount"] = &QCompleter::completionCount;

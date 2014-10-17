@@ -1,5 +1,4 @@
 #include "QImageWriter.hpp"
-#include "../type/function.hpp"
 #include "../thread.hpp"
 
 #include <QImageWriter>
@@ -10,8 +9,9 @@
 #include "../Qt5Core/QByteArray.hpp"
 #include "../Qt5Core/QList.hpp"
 
-void lua::QImageWriter_metatable(const lua::index& mt)
+void lua::QImageWriter_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["canWrite"] = &QImageWriter::canWrite;
     mt["compression"] = &QImageWriter::compression;
     mt["device"] = &QImageWriter::device;
@@ -32,7 +32,7 @@ void lua::QImageWriter_metatable(const lua::index& mt)
     mt["write"] = &QImageWriter::write;
 }
 
-int QImageWriter_new(lua::state* const state)
+int QImageWriter_new(lua_State* const state)
 {
     // QImageWriter()
     // QImageWriter(QIODevice * device, const QByteArray & format)
@@ -43,7 +43,7 @@ int QImageWriter_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QImageWriter(lua::state* const state)
+int luaopen_luacxx_QImageWriter(lua_State* const state)
 {
     lua::thread env(state);
 
@@ -56,8 +56,8 @@ int luaopen_luacxx_QImageWriter(lua::state* const state)
     t["UnsupportedFormatError"] = QImageWriter::UnsupportedFormatError;
     t["UnknownError"] = QImageWriter::UnknownError;
 
-    mt["supportedImageFormats"] = QImageWriter::supportedImageFormats;
-    mt["supportedMimeTypes"] = QImageWriter::supportedMimeTypes;
+    t["supportedImageFormats"] = QImageWriter::supportedImageFormats;
+    t["supportedMimeTypes"] = QImageWriter::supportedMimeTypes;
 
     return 0;
 }

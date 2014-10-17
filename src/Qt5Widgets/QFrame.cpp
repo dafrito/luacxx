@@ -7,10 +7,11 @@
 #include "QWidget.hpp"
 #include "../Qt5Core/QRect.hpp"
 
-void lua::QFrame_metatable(const lua::index& mt)
+void lua::QFrame_metatable(lua_State* const state, const int pos)
 {
-    lua::QWidget_metatable(mt);
+    lua::QWidget_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["frameRect"] = &QFrame::frameRect;
     mt["frameShadow"] = &QFrame::frameShadow;
     mt["frameShape"] = &QFrame::frameShape;

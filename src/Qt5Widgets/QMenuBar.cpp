@@ -25,10 +25,11 @@ int QMenuBar_setCornerWidget(lua_State* const state)
     return 0;
 }
 
-void lua::QMenuBar_metatable(const lua::index& mt)
+void lua::QMenuBar_metatable(lua_State* const state, const int pos)
 {
-    lua::QWidget_metatable(mt);
+    lua::QWidget_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["actionAt"] = &QMenuBar::actionAt;
     mt["actionGeometry"] = &QMenuBar::actionGeometry;
     mt["activeAction"] = &QMenuBar::activeAction;

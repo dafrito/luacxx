@@ -1,5 +1,4 @@
 #include "QImageReader.hpp"
-#include "../type/function.hpp"
 #include "../thread.hpp"
 
 #include <QImageReader>
@@ -16,10 +15,26 @@
 
 // https://qt-project.org/doc/qt-5/qimagereader.html
 
-void lua::QImageReader_metatable(const lua::index& mt)
+int QImageReader_backgroundColor(lua_State* const state)
 {
+    return 0;
+}
+
+int QImageReader_imageFormat(lua_State* const state)
+{
+    return 0;
+}
+
+int QImageReader_read(lua_State* const state)
+{
+    return 0;
+}
+
+void lua::QImageReader_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
     mt["autoDetectImageFormat"] = &QImageReader::autoDetectImageFormat;
-    mt["backgroundColor"] = &QImageReader::backgroundColor;
+    mt["backgroundColor"] = QImageReader_backgroundColor;
     mt["canRead"] = &QImageReader::canRead;
     mt["clipRect"] = &QImageReader::clipRect;
     mt["currentImageNumber"] = &QImageReader::currentImageNumber;
@@ -31,7 +46,7 @@ void lua::QImageReader_metatable(const lua::index& mt)
     mt["fileName"] = &QImageReader::fileName;
     mt["format"] = &QImageReader::format;
     mt["imageCount"] = &QImageReader::imageCount;
-    mt["imageFormat"] = &QImageReader::imageFormat;
+    mt["imageFormat"] = QImageReader_imageFormat;
     mt["jumpToImage"] = &QImageReader::jumpToImage;
     mt["jumpToNextImage"] = &QImageReader::jumpToNextImage;
     mt["loopCount"] = &QImageReader::loopCount;
@@ -57,7 +72,7 @@ void lua::QImageReader_metatable(const lua::index& mt)
     mt["textKeys"] = &QImageReader::textKeys;
 }
 
-int QImageReader_new(lua::state* const state)
+int QImageReader_new(lua_State* const state)
 {
     // TODO Set up object-specific methods
     // QImageReader()
@@ -67,12 +82,12 @@ int QImageReader_new(lua::state* const state)
     return 1;
 }
 
-int QImageReader_imageFormat(lua_State* const state)
+int QImageReader_imageFormat_static(lua_State* const state)
 {
     return 0;
 }
 
-int luaopen_luacxx_QImageReader(lua::state* const state)
+int luaopen_luacxx_QImageReader(lua_State* const state)
 {
     lua::thread env(state);
 
@@ -87,7 +102,7 @@ int luaopen_luacxx_QImageReader(lua::state* const state)
     t["InvalidDataError"] = QImageReader::InvalidDataError;
     t["UnknownError"] = QImageReader::UnknownError;
 
-    t["imageFormat"] = QImageReader_imageFormat;
+    t["imageFormat"] = QImageReader_imageFormat_static;
     t["supportedImageFormats"] = QImageReader::supportedImageFormats;
     t["supportedMimeTypes"] = &QImageReader::supportedMimeTypes;
 

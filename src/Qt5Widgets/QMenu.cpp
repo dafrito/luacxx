@@ -34,8 +34,9 @@ int QMenu_popup(lua_State* const state)
     return 0;
 }
 
-void lua::QMenu_metatable(const lua::index& mt)
+void lua::QMenu_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["actionAt"] = &QMenu::actionAt;
     mt["actionGeometry"] = &QMenu::actionGeometry;
     mt["activeAction"] = &QMenu::activeAction;

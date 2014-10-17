@@ -61,16 +61,7 @@ struct Store<lua_Number>
     }
 };
 
-template <>
-struct Metatable<lua_Number>
-{
-    static constexpr const char* name = "lua_Number";
-
-    static bool metatable(lua_State* const state, const int mt, lua_Number* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(lua_Number);
 
 template <>
 struct Push<long>
@@ -92,16 +83,7 @@ struct Store<long>
     }
 };
 
-template <>
-struct Metatable<lua_Integer>
-{
-    static constexpr const char* name = "lua_Integer";
-
-    static bool metatable(lua_State* const state, const int mt, lua_Integer* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(lua_Integer);
 
 template <>
 struct Push<lua_Unsigned>
@@ -123,16 +105,7 @@ struct Store<lua_Unsigned>
     }
 };
 
-template <>
-struct Metatable<lua_Unsigned>
-{
-    static constexpr const char* name = "lua_Unsigned";
-
-    static bool metatable(lua_State* const state, const int mt, lua_Unsigned* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(lua_Unsigned);
 
 template <>
 struct Push<bool>
@@ -152,16 +125,7 @@ struct Store<bool>
     }
 };
 
-template <>
-struct Metatable<bool>
-{
-    static constexpr const char* name = "bool";
-
-    static bool metatable(lua_State* const state, const int mt, bool* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(bool)
 
 template <>
 struct Push<int>
@@ -183,16 +147,7 @@ struct Store<int>
     }
 };
 
-template <>
-struct Metatable<int>
-{
-    static constexpr const char* name = "int";
-
-    static bool metatable(lua_State* const state, const int mt, int* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(int)
 
 template <>
 struct Push<short>
@@ -214,16 +169,7 @@ struct Store<short>
     }
 };
 
-template <>
-struct Metatable<short>
-{
-    static constexpr const char* name = "short";
-
-    static bool metatable(lua_State* const state, const int mt, short* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(short)
 
 template <>
 struct Push<unsigned short>
@@ -245,16 +191,7 @@ struct Store<unsigned short>
     }
 };
 
-template <>
-struct Metatable<unsigned short>
-{
-    static constexpr const char* name = "unsigned short";
-
-    static bool metatable(lua_State* const state, const int mt, unsigned short* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(unsigned short)
 
 template <>
 struct Push<unsigned long>
@@ -274,16 +211,7 @@ struct Store<unsigned long>
     }
 };
 
-template <>
-struct Metatable<unsigned long>
-{
-    static constexpr const char* name = "unsigned long";
-
-    static bool metatable(lua_State* const state, const int mt, unsigned long* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(unsigned long)
 
 template <>
 struct Push<long long>
@@ -305,16 +233,7 @@ struct Store<long long>
     }
 };
 
-template <>
-struct Metatable<long long>
-{
-    static constexpr const char* name = "long long";
-
-    static bool metatable(lua_State* const state, const int mt, long long* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(long long)
 
 template <>
 struct Push<float>
@@ -336,16 +255,7 @@ struct Store<float>
     }
 };
 
-template <>
-struct Metatable<float>
-{
-    static constexpr const char* name = "float";
-
-    static bool metatable(lua_State* const state, const int mt, float* const)
-    {
-        return true;
-    }
-};
+LUA_METATABLE_NAMED(float)
 
 } // namespace lua
 

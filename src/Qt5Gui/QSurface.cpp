@@ -4,9 +4,11 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-void lua::QSurface_metatable(const lua::index& mt)
+void lua::QSurface_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
+
+    lua::index mt(state, pos);
     mt["format"] = &QSurface::format;
     mt["size"] = &QSurface::size;
     mt["surfaceClass"] = &QSurface::surfaceClass;

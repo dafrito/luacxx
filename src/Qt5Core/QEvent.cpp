@@ -12,8 +12,10 @@
 std::string QEvent_type(QEvent* event);
 std::string QEvent_tostring(QEvent* event);
 
-void lua::QEvent_metatable(const lua::index& mt, QEvent* const event)
+void lua::QEvent_metatable(lua_State* const state, const int pos, QEvent* const value)
 {
+    lua::index mt(state, pos);
+
     mt["accept"] = &QEvent::accept;
     mt["ignore"] = &QEvent::ignore;
     mt["setAccepted"] = &QEvent::setAccepted;
@@ -24,8 +26,8 @@ void lua::QEvent_metatable(const lua::index& mt, QEvent* const event)
     mt["__tostring"] = QEvent_tostring;
 
 #ifdef HAVE_Qt5Gui
-    if (event) {
-        switch (event->type()) {
+    if (value) {
+        switch (value->type()) {
         case QEvent::Resize:
             mt["oldSize"] = &QResizeEvent::oldSize;
             mt["size"] = &QResizeEvent::size;

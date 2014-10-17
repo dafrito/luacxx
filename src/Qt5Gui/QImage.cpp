@@ -84,8 +84,9 @@ int QImage_valid(lua_State* const state)
     return 0;
 }
 
-void lua::QImage_metatable(const lua::index& mt)
+void lua::QImage_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["allGray"] = &QImage::allGray;
     mt["bitPlaneCount"] = &QImage::bitPlaneCount;
     mt["bits"] = QImage_bits;

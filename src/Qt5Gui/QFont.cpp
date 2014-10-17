@@ -11,8 +11,9 @@ int QFont_resolve(lua_State* const state)
     return 1;
 }
 
-void lua::QFont_metatable(const lua::index& mt)
+void lua::QFont_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["bold"] = &QFont::bold;
     mt["capitalization"] = &QFont::capitalization;
     mt["defaultFamily"] = &QFont::defaultFamily;

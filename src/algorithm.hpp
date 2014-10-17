@@ -57,12 +57,10 @@ std::string dump(lua_State* const state);
 std::string class_name(const lua::index& index);
 std::string class_name(lua_State* const state, int pos);
 
-const char* class_id(const lua::index& index);
-const char* class_id(lua_State* const state, int pos);
+const userdata_type* get_type_info(const lua::index& index);
+const userdata_type* get_type_info(lua_State* const state, int pos);
 
-size_t userdata_size(const lua::index& index);
-
-template <class T>
+template <class Required>
 struct is_type
 {
     const bool is_same;
@@ -70,7 +68,7 @@ struct is_type
     is_type(const lua::index& index) :
         // Compare exactly for efficiency, but I really should
         // benchmark this to ensure the performance is worth it.
-        is_same(lua::class_id(index) == required_name())
+        is_same(lua::get_type_info(index) == required_type())
     {
     }
 
@@ -79,9 +77,9 @@ struct is_type
     {
     }
 
-    const char* required_name() const
+    const userdata_type* required_type() const
     {
-        return lua::Metatable<T>::name;
+        return &lua::Metatable<Required>::info();
     }
 
     operator bool() const

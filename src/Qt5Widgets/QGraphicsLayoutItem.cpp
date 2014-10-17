@@ -34,8 +34,9 @@ int QGraphicsLayoutItem_setSizePolicy(lua_State* const state)
     return 0;
 }
 
-void lua::QGraphicsLayoutItem_metatable(const lua::index& mt)
+void lua::QGraphicsLayoutItem_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["contentsRect"] = &QGraphicsLayoutItem::contentsRect;
     mt["effectiveSizeHint"] = QGraphicsLayoutItem_effectiveSizeHint;
     mt["geometry"] = &QGraphicsLayoutItem::geometry;

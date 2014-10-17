@@ -13,11 +13,12 @@ int QGraphicsItem_grabGesture(lua_State* const state)
     return 0;
 }
 
-void lua::QGraphicsObject_metatable(const lua::index& mt)
+void lua::QGraphicsObject_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
-    lua::QGraphicsItem_metatable(mt);
+    lua::QObject_metatable(state, pos);
+    lua::QGraphicsItem_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["grabGesture"] = QGraphicsItem_grabGesture;
     mt["ungrabGesture"] = &QGraphicsObject::ungrabGesture;
 }

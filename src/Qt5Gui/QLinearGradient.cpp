@@ -57,10 +57,11 @@ int QLinearGradient_setFinalStop(lua_State* const state)
     return 0;
 }
 
-void lua::QLinearGradient_metatable(const lua::index& mt)
+void lua::QLinearGradient_metatable(lua_State* const state, const int pos)
 {
-    lua::QGradient_metatable(mt);
+    lua::QGradient_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["finalStop"] = &QLinearGradient::finalStop;
     mt["setFinalStop"] = QLinearGradient_setFinalStop;
     mt["setStart"] = QLinearGradient_setStart;

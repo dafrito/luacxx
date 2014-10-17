@@ -4,23 +4,7 @@
 #include "Qt5Gui.hpp"
 #include <QInputMethod>
 
-namespace lua {
-
-void QInputMethod_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QInputMethod>
-{
-    static constexpr const char* name = "QInputMethod";
-
-    static bool metatable(const lua::index& mt, QInputMethod* const)
-    {
-        lua::QInputMethod_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QInputMethod);
 
 extern "C" int luaopen_Qt5Gui_QInputMethod(lua_State* const);
 

@@ -1,27 +1,11 @@
 #ifndef LUA_CXX_QLINEEDIT_INCLUDED
 #define LUA_CXX_QLINEEDIT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QLineEdit;
 
-namespace lua {
-
-void QLineEdit_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QLineEdit>
-{
-    static constexpr const char* name = "QLineEdit";
-
-    static bool metatable(const lua::index& mt, QLineEdit* const)
-    {
-        lua::QLineEdit_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QLineEdit);
 
 extern "C" int luaopen_Qt5Widgets_QLineEdit(lua_State* const);
 

@@ -10,10 +10,11 @@
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QList.hpp"
 
-void lua::QScreen_metatable(const lua::index& mt)
+void lua::QScreen_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["angleBetween"] = &QScreen::angleBetween;
     mt["availableGeometry"] = &QScreen::availableGeometry;
     mt["availableSize"] = &QScreen::availableSize;

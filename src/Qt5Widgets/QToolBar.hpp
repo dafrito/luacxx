@@ -1,27 +1,11 @@
 #ifndef luacxx_QToolBar_INCLUDED
 #define luacxx_QToolBar_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QToolBar;
 
-namespace lua {
-
-void QToolBar_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QToolBar>
-{
-    static constexpr const char* name = "QToolBar";
-
-    static bool metatable(const lua::index& mt, QToolBar* const)
-    {
-        lua::QToolBar_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QToolBar);
 
 extern "C" int luaopen_luacxx_QToolBar(lua_State* const);
 

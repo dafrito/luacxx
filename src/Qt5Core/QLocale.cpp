@@ -110,8 +110,10 @@ int QLocale_toTime(lua_State* const state)
     return 0;
 }
 
-void lua::QLocale_metatable(const lua::index& mt)
+void lua::QLocale_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["amText"] = &QLocale::amText;
     mt["bcp47Name"] = &QLocale::bcp47Name;
     mt["country"] = &QLocale::country;
@@ -176,7 +178,7 @@ int QLocale_new(lua_State* const state)
             lua::make<QLocale>(state, lua::get<const char*>(state, 2));
             break;
         }
-        if (lua::class_name(state, 2) == lua::Metatable<QLocale>::name) {
+        if (lua::is_type<QLocale>(state, 2)) {
             // QLocale(const QLocale & other)
             lua::make<QLocale>(state, lua::get<const QLocale&>(state, 2));
             break;

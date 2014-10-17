@@ -9,16 +9,17 @@ namespace lua {
 std::string GIInfoType_tostring(GIInfoType value);
 std::string GIBaseInfo_tostring(GIBaseInfo* info);
 int GIBaseInfo_call(lua_State* const state);
-void GIBaseInfo_metatable(const lua::index& mt);
+void GIBaseInfo_metatable(lua_State* const state, const int mt);
 
 template <>
 struct Metatable<GIBaseInfo>
 {
-    static constexpr const char* name = "GIBaseInfo";
+    static userdata_type info;
 
-    static bool metatable(const lua::index& mt, GIBaseInfo*)
+    static bool metatable(lua_State* const state, const int mt, GIBaseInfo*)
     {
-        lua::GIBaseInfo_metatable(mt);
+        info.set_name("GIBaseInfo");
+        lua::GIBaseInfo_metatable(state, mt);
         return true;
     }
 };

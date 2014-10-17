@@ -4,8 +4,9 @@
 
 #include <QGradient>
 
-void lua::QGradient_metatable(const lua::index& mt)
+void lua::QGradient_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["coordinateMode"] = &QGradient::coordinateMode ;
     mt["setColorAt"] = &QGradient::setColorAt ;
     mt["setCoordinateMode"] = &QGradient::setCoordinateMode ;

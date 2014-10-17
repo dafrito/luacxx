@@ -75,8 +75,9 @@ int QTransform_mapRect(lua_State* const state)
     return 1;
 }
 
-void lua::QTransform_metatable(const lua::index& mt)
+void lua::QTransform_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["m11"] = &QTransform::m11;
     mt["m12"] = &QTransform::m12;
     mt["m13"] = &QTransform::m13;

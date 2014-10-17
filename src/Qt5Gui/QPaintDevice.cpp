@@ -4,8 +4,9 @@
 
 #include <QPaintDevice>
 
-void lua::QPaintDevice_metatable(const lua::index& mt)
+void lua::QPaintDevice_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["colorCount"] = &QPaintDevice::colorCount;
     mt["depth"] = &QPaintDevice::depth;
     mt["devicePixelRatio"] = &QPaintDevice::devicePixelRatio;

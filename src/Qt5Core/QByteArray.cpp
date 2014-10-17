@@ -160,8 +160,10 @@ int QByteArray_toUShort(lua_State* const state)
     return 0;
 }
 
-void lua::QByteArray_metatable(const lua::index& mt)
+void lua::QByteArray_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["append"] = QByteArray_append;
     mt["at"] = &QByteArray::at;
     mt["capacity"] = &QByteArray::capacity;

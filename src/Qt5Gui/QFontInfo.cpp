@@ -9,8 +9,9 @@
 
 // http://qt-project.org/doc/qt-5/qfontinfo.html
 
-void lua::QFontInfo_metatable(const lua::index& mt)
+void lua::QFontInfo_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["bold"] = &QFontInfo::bold;
     mt["exactMatch"] = &QFontInfo::exactMatch;
     mt["family"] = &QFontInfo::family;

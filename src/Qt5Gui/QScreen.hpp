@@ -4,23 +4,7 @@
 #include "Qt5Gui.hpp"
 #include <QScreen>
 
-namespace lua {
-
-void QScreen_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QScreen>
-{
-    static constexpr const char* name = "QScreen";
-
-    static bool metatable(const lua::index& mt, QScreen* const)
-    {
-        lua::QScreen_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QScreen);
 
 extern "C" int luaopen_Qt5Gui_QScreen(lua_State* const);
 

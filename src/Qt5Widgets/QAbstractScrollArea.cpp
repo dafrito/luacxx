@@ -4,9 +4,11 @@
 
 #include <QAbstractScrollArea>
 
-void lua::QAbstractScrollArea_metatable(const lua::index& mt)
+#include "QFrame.hpp"
+
+void lua::QAbstractScrollArea_metatable(lua_State* const state, const int pos)
 {
-    // TODO Set up metatable methods for this class
+    lua::QFrame_metatable(state, pos);
 }
 
 int luaopen_Qt5Widgets_QAbstractScrollArea(lua_State* const state)

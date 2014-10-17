@@ -5,23 +5,7 @@
 
 class QPolygonF;
 
-namespace lua {
-
-void QPolygonF_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QPolygonF>
-{
-    static constexpr const char* name = "QPolygonF";
-
-    static bool metatable(const lua::index& mt, QPolygonF* const)
-    {
-        lua::QPolygonF_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QPolygonF);
 
 extern "C" int luaopen_luacxx_QPolygonF(lua_State* const);
 

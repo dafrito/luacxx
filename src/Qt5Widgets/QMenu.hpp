@@ -1,27 +1,11 @@
 #ifndef luacxx_QMenu_INCLUDED
 #define luacxx_QMenu_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QMenu;
 
-namespace lua {
-
-void QMenu_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QMenu>
-{
-    static constexpr const char* name = "QMenu";
-
-    static bool metatable(const lua::index& mt, QMenu* const)
-    {
-        lua::QMenu_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QMenu);
 
 extern "C" int luaopen_luacxx_QMenu(lua_State* const);
 

@@ -1,22 +1,30 @@
 #ifndef LUA_CXX_QGRAPHICSOBJECT_INCLUDED
 #define LUA_CXX_QGRAPHICSOBJECT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
-class QGraphicsObject;
+#include <QGraphicsObject>
+#include "QGraphicsItem.hpp"
+#include "../Qt5Core/QObject.hpp"
 
 namespace lua {
 
-void QGraphicsObject_metatable(const lua::index& mt);
+void QGraphicsObject_metatable(lua_State* const state, const int mt);
 
 template <>
 struct Metatable<QGraphicsObject>
 {
-    static constexpr const char* name = "QGraphicsObject";
-
-    static bool metatable(const lua::index& mt, QGraphicsObject* const)
+    static const userdata_type& info()
     {
-        lua::QGraphicsObject_metatable(mt);
+        static userdata_type _info("QGraphicsObject");
+        _info.add_cast<QGraphicsItem, QGraphicsObject>();
+        _info.add_cast<QObject, QGraphicsObject>();
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int mt, void* const)
+    {
+        lua::QGraphicsObject_metatable(state, mt);
         return true;
     }
 };

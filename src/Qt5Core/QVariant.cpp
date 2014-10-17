@@ -94,8 +94,9 @@ void lua::push_qvariant(lua_State* const state, const QVariant& value)
     }
 }
 
-void lua::store_qvariant(QVariant& destination, const lua::index& source)
+void lua::store_qvariant(QVariant& destination, lua_State* const state, const int pos)
 {
+    lua::index source(state, pos);
     switch (destination.userType()) {
         case QVariant::Invalid:
             throw lua::error("A QVariant must have a valid type");

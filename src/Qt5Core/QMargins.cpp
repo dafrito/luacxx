@@ -4,8 +4,10 @@
 
 #include <QMargins>
 
-void lua::QMargins_metatable(const lua::index& mt)
+void lua::QMargins_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["bottom"] = &QMargins::bottom;
     mt["isNull"] = &QMargins::isNull;
     mt["left"] = &QMargins::left;

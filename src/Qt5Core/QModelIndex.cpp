@@ -13,8 +13,10 @@ int QModelIndex_data(lua_State* const state)
     return 0;
 }
 
-void lua::QModelIndex_metatable(const lua::index& mt)
+void lua::QModelIndex_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["child"] = &QModelIndex::child;
     mt["column"] = &QModelIndex::column;
     mt["data"] = QModelIndex_data;

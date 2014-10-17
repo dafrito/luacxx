@@ -56,20 +56,6 @@ signals:
     void yChanged() const;
 };
 
-namespace lua {
-
-template <>
-struct Metatable<QtPoint>
-{
-    static constexpr const char* name = "QtPoint";
-
-    static bool metatable(const lua::index& mt, const QtPoint* const)
-    {
-        lua::QObject_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_QOBJECT(QtPoint)
 
 #endif // LUACXX_tests_Qt5Core_INCLUDED

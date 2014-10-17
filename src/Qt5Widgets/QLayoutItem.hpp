@@ -1,27 +1,11 @@
 #ifndef luacxx_QLayoutItem_INCLUDED
 #define luacxx_QLayoutItem_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QLayoutItem;
 
-namespace lua {
-
-void QLayoutItem_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QLayoutItem>
-{
-    static constexpr const char* name = "QLayoutItem";
-
-    static bool metatable(const lua::index& mt, QLayoutItem* const)
-    {
-        lua::QLayoutItem_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QLayoutItem);
 
 extern "C" int luaopen_Qt5Widgets_QLayoutItem(lua_State* const);
 

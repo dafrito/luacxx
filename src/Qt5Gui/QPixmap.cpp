@@ -38,10 +38,11 @@ int QPixmap_save(lua_State* const state)
     return 0;
 }
 
-void lua::QPixmap_metatable(const lua::index& mt)
+void lua::QPixmap_metatable(lua_State* const state, const int pos)
 {
-    lua::QPaintDevice_metatable(mt);
+    lua::QPaintDevice_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["createHeuristicMask"] = &QPixmap::createHeuristicMask;
     mt["createMaskFromColor"] = &QPixmap::createMaskFromColor;
     mt["depth"] = &QPixmap::depth;

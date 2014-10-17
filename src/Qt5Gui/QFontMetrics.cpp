@@ -19,8 +19,9 @@ int QFontMetrics_width(lua_State* const state)
     return 0;
 }
 
-void lua::QFontMetrics_metatable(const lua::index& mt)
+void lua::QFontMetrics_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["ascent"] = &QFontMetrics::ascent;
     mt["averageCharWidth"] = &QFontMetrics::averageCharWidth;
     mt["boundingRect"] = QFontMetrics_boundingRect;
@@ -49,7 +50,7 @@ void lua::QFontMetrics_metatable(const lua::index& mt)
 
 int QFontMetrics_new(lua_State* const state)
 {
-    if (lua::class_name(state, 2) == lua::Metatable<QFontMetrics>::name) {
+    if (lua::is_type<QFontMetrics>(state, 2)) {
         lua::make<QFontMetrics>(state, lua::get<const QFontMetrics&>(state, 2));
         return 1;
     }

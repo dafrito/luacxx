@@ -65,11 +65,12 @@ int QWindow_setPosition(lua_State* const state)
 }
 
 
-void lua::QWindow_metatable(const lua::index& mt)
+void lua::QWindow_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
-    lua::QSurface_metatable(mt);
+    lua::QObject_metatable(state, pos);
+    lua::QSurface_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["baseSize"] = &QWindow::baseSize;
     mt["contentOrientation"] = &QWindow::contentOrientation;
     mt["create"] = &QWindow::create;

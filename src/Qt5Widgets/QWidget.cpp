@@ -136,10 +136,11 @@ int QWidget_update(lua_State* const state)
     return 0;
 }
 
-void lua::QWidget_metatable(const lua::index& mt)
+void lua::QWidget_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["acceptDrops"] = &QWidget::acceptDrops;
     mt["accessibleDescription"] = &QWidget::accessibleDescription;
     mt["accessibleName"] = &QWidget::accessibleName;

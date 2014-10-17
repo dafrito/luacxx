@@ -1,7 +1,7 @@
 #ifndef LUACXX_QVECTOR_INCLUDED
 #define LUACXX_QVECTOR_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 #include "../convert/callable.hpp"
 
 #include <QVector>
@@ -113,8 +113,9 @@ int QVector_value(lua_State* const state)
 namespace lua {
 
 template <class T>
-void QVector_metatable(const lua::index& mt)
+void QVector_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["append"] = &QVector<T>::append;
     mt["at"] = &QVector<T>::at;
     mt["back"] = &QVector_back<T>;
@@ -170,11 +171,19 @@ void QVector_metatable(const lua::index& mt)
 template <class T>
 struct Metatable<QVector<T>>
 {
-    static constexpr const char* name = "QVector";
-
-    static bool metatable(const lua::index& mt, QVector<T>* const)
+    static const userdata_type& info()
     {
-        lua::QVector_metatable<T>(mt);
+        static userdata_type _info;
+        std::string str("QVector<");
+        str += Metatable<T>::info().name();
+        str += ">";
+        _info.set_name(str);
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int mt, QVector<T>* pos)
+    {
+        lua::QVector_metatable<T>(state, mt);
         return true;
     }
 };

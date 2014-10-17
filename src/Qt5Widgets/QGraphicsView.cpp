@@ -69,10 +69,11 @@ int QGraphicsView_setTransform(lua_State* const state)
     return 0;
 }
 
-void lua::QGraphicsView_metatable(const lua::index& mt)
+void lua::QGraphicsView_metatable(lua_State* const state, const int pos)
 {
-    lua::QAbstractScrollArea_metatable(mt);
+    lua::QAbstractScrollArea_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["alignment"] = &QGraphicsView::alignment;
     mt["backgroundBrush"] = &QGraphicsView::backgroundBrush;
     mt["cacheMode"] = &QGraphicsView::cacheMode;

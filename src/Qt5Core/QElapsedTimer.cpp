@@ -5,8 +5,10 @@
 
 #include <QElapsedTimer>
 
-void lua::QElapsedTimer_metatable(const lua::index& mt)
+void lua::QElapsedTimer_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["elapsed"] = &QElapsedTimer::elapsed;
     mt["hasExpired"] = &QElapsedTimer::hasExpired;
     mt["invalidate"] = &QElapsedTimer::invalidate;

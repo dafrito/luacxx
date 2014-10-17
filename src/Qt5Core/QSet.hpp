@@ -1,28 +1,12 @@
 #ifndef LUACXX_QSET_INCLUDED
 #define LUACXX_QSET_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 /*
 
 class QSet;
 
-namespace lua {
-
-void QSet_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QSet>
-{
-    static constexpr const char* name = "QSet";
-
-    static bool metatable(const lua::index& mt, QSet* const)
-    {
-        lua::QSet_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QSet)
 
 extern "C" int luaopen_Qt5Core_QSet(lua_State* const);
 */

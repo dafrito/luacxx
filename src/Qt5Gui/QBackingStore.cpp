@@ -33,8 +33,9 @@ int QBackingStore_flush(lua_State* const state)
     return 0;
 }
 
-void lua::QBackingStore_metatable(const lua::index& mt)
+void lua::QBackingStore_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["beginPaint"] = &QBackingStore::beginPaint;
     mt["endPaint"] = &QBackingStore::endPaint;
     mt["flush"] = QBackingStore_flush;

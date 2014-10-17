@@ -8,10 +8,11 @@
 #include "QAction.hpp"
 #include "../Qt5Core/Qt.hpp"
 
-void lua::QDockWidget_metatable(const lua::index& mt)
+void lua::QDockWidget_metatable(lua_State* const state, const int pos)
 {
-    lua::QWidget_metatable(mt);
+    lua::QWidget_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["allowedAreas"] = &QDockWidget::allowedAreas;
     mt["features"] = &QDockWidget::features;
     mt["isAreaAllowed"] = &QDockWidget::isAreaAllowed;

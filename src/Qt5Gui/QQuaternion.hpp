@@ -4,23 +4,7 @@
 #include "Qt5Gui.hpp"
 #include <QQuaternion>
 
-namespace lua {
-
-void QQuaternion_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QQuaternion>
-{
-    static constexpr const char* name = "QQuaternion";
-
-    static bool metatable(const lua::index& mt, QQuaternion* const)
-    {
-        lua::QQuaternion_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QQuaternion);
 
 extern "C" int luaopen_Qt5Gui_QQuaternion(lua_State* const);
 

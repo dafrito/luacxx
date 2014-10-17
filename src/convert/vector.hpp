@@ -27,8 +27,10 @@ struct Push<std::vector<T>>
 template <class T>
 struct Store<std::vector<T>>
 {
-    static void store(std::vector<T>& destination, const lua::index& source)
+    static void store(std::vector<T>& destination, lua_State* const state, const int pos)
     {
+        lua::index source(state, pos);
+
         if (!source || !source.type().table()) {
             std::stringstream str;
             str << "Lua stack value at position " << source.pos();

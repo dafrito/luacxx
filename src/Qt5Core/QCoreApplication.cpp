@@ -36,10 +36,11 @@ lua::QCoreApplicationArgs* lua::save_arguments(lua::index arg)
     return arguments;
 }
 
-void lua::QCoreApplication_metatable(const lua::index& mt)
+void lua::QCoreApplication_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["installNativeEventFilter"] = &QCoreApplication::installNativeEventFilter;
     mt["notify"] = &QCoreApplication::notify;
     mt["removeNativeEventFilter"] = &QCoreApplication::removeNativeEventFilter;

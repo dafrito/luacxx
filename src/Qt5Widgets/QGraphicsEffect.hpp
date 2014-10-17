@@ -1,27 +1,11 @@
 #ifndef luacxx_QGraphicsEffect_INCLUDED
 #define luacxx_QGraphicsEffect_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QGraphicsEffect;
 
-namespace lua {
-
-void QGraphicsEffect_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QGraphicsEffect>
-{
-    static constexpr const char* name = "QGraphicsEffect";
-
-    static bool metatable(const lua::index& mt, QGraphicsEffect* const)
-    {
-        lua::QGraphicsEffect_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QGraphicsEffect);
 
 extern "C" int luaopen_Qt5Widgets_QGraphicsEffect(lua_State* const);
 

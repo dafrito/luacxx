@@ -1614,8 +1614,9 @@ int QPainter_translate(lua_State* const state)
     return 0;
 }
 
-void lua::QPainter_metatable(const lua::index& mt)
+void lua::QPainter_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["background"] = &QPainter::background;
     mt["backgroundMode"] = &QPainter::backgroundMode;
     mt["begin"] = &QPainter::begin;

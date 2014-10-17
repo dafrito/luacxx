@@ -14,6 +14,12 @@
 #include <stdexcept>
 #include <sstream>
 
+#include <forward_list>
+#include <utility>
+
+// Used for logging purposes, but can be removed once logging is made pluggable
+#include <iostream>
+
 /*
 
 =head1 NAME
@@ -107,6 +113,16 @@ This document will detail both this headers's API as well as the relevant
 Lua C API where necessary, as knowledge of both will better able you to
 decide between their leaner, but less idiomatic, API or this library's
 more powerful, but more complex, extensions.
+
+*/
+
+namespace lua {
+
+bool is_debugging(lua_State* const state);
+
+} // namespace lua
+
+/*
 
 =head1 Creating and initializing Lua environments
 
@@ -477,6 +493,56 @@ save C data as upvalues to a C function.
 
 namespace lua {
 
+class userdata_type {
+    std::string _name;
+    std::forward_list<std::pair<const lua::userdata_type*, unsigned short>> _casts;
+
+public:
+
+    userdata_type() :
+        _name()
+    {
+    }
+
+    userdata_type(const char* name) :
+        _name(name)
+    {
+    }
+
+    const std::string& name() const
+    {
+        return _name;
+    }
+
+    bool has_name() const
+    {
+        return !_name.empty();
+    }
+
+    void set_name(const char* name)
+    {
+        _name = name;
+    }
+
+    void set_name(const std::string& name)
+    {
+        _name = name;
+    }
+
+    template <class Base, class Derived>
+    void add_cast();
+
+    bool has_casts() const
+    {
+        return !_casts.empty();
+    }
+
+    template <class Value>
+    Value* cast(void* value) const;
+
+    ~userdata_type();
+};
+
 // Discriminant for how userdata is stored
 enum class userdata_storage {
     destroyed,
@@ -488,10 +554,12 @@ enum class userdata_storage {
 // Metadata that defines the Lua userdata
 class userdata_block {
     char _storage;
+    const userdata_type* _info;
 
 public:
     userdata_block(const lua::userdata_storage& storage) :
-        _storage(static_cast<char>(storage))
+        _storage(static_cast<char>(storage)),
+        _info(nullptr)
     {
     }
 
@@ -499,6 +567,19 @@ public:
     {
         return static_cast<lua::userdata_storage>(_storage);
     }
+
+    void set_type(const userdata_type& info)
+    {
+        _info = &info;
+    }
+
+    const userdata_type* type() const
+    {
+        return _info;
+    }
+
+    template <class Value>
+    Value* cast(void* value) const;
 
     bool destroyed() const
     {
@@ -510,6 +591,26 @@ public:
         _storage = static_cast<char>(userdata_storage::destroyed);
     }
 };
+
+} // namespace lua
+
+/*
+
+=head4 size_t size = lua::object_size(state, pos)
+
+Returns the size of the object at the given userdata. This may be less than
+what lua_rawlen will return for that userdata, as Luacxx associates extra
+data at the end of the userdata for internal use.
+
+*/
+
+namespace lua {
+
+size_t object_size(lua_State* const state, const int pos);
+
+lua::userdata_block* get_userdata_block(lua_State* const state, const int pos);
+
+} // namespace lua
 
 /*
 
@@ -718,7 +819,11 @@ for their type:
     struct Metatable<Point>
     {
         // Set this object's name. Used by its value for caching.
-        static constexpr const char* name = "Point";
+        static const userdata_type& info()
+        {
+            static userdata_type _info("Point");
+            return _info;
+        }
 
         static bool metatable(lua_State* const state, int pos, Point* value)
         {
@@ -742,11 +847,17 @@ and used for all subsequent objects with that metatable's name.
 
 */
 
+namespace lua {
+
 template <class T>
 struct Metatable
 {
-    // The name for this type
-    static constexpr const char* name = "";
+    // Type information
+    static const userdata_type& info()
+    {
+        static userdata_type _info("anonymous userdata");
+        return _info;
+    }
 
     // Initialize the provided metatable for this type.
     //
@@ -761,7 +872,11 @@ struct Metatable
 template <>
 struct Metatable<void>
 {
-    static constexpr const char* name = "void";
+    static const userdata_type& info()
+    {
+        static userdata_type _info("void");
+        return _info;
+    }
 
     static bool metatable(lua_State* const state, const int pos, const void* const value)
     {
@@ -769,18 +884,81 @@ struct Metatable<void>
     }
 };
 
+template <>
+struct Metatable<lua::error>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("lua::error");
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int source, const lua::error* const)
+    {
+        return true;
+    }
+};
+
+template <class Base, class Actual>
+void userdata_type::add_cast()
+{
+    auto& info = lua::Metatable<Base>::info();
+
+    constexpr ptrdiff_t NON_NULL = 0xffff;
+
+    // Get the offset from the actual class to the base class. For most
+    // parents, this will have no effect. However, for objects with multiple
+    // parents, the non-first parents will result in a positive offset when the
+    // casts are applied.
+    auto offset = reinterpret_cast<ptrdiff_t>(
+        static_cast<Base*>(
+            reinterpret_cast<Actual*>(NON_NULL)
+        )
+    );
+
+    // A non-null value needs to be used for the cast to operate, but it will
+    // need to be removed before use.
+    offset -= static_cast<ptrdiff_t>(NON_NULL);
+
+    if (offset > 0) {
+        _casts.emplace_front(&info, offset);
+    }
+}
+
+template <class Value>
+Value* userdata_block::cast(void* value) const
+{
+    if (_info) {
+        return _info->cast<Value>(value);
+    }
+    return static_cast<Value*>(value);
+}
+
+template <class Value>
+Value* userdata_type::cast(void* value) const
+{
+    auto& info = lua::Metatable<Value>::info();
+    for (auto& cast : _casts) {
+        if (&info == cast.first) {
+            return reinterpret_cast<Value*>(reinterpret_cast<ptrdiff_t>(value) + cast.second);
+        }
+    }
+    return static_cast<Value*>(value);
+}
+
 template <class T>
 inline void call_destructor(T& value)
 {
     value.~T();
 }
 
+
 // Destroy the userdata's value, specified by the template parameter
 template <class Stored>
 int free_userdata(lua_State* const state)
 {
     char* block = static_cast<char*>(lua_touserdata(state, 1));
-    auto userdata_block = reinterpret_cast<lua::userdata_block*>(block + sizeof(Stored));
+    auto userdata_block = lua::get_userdata_block(state, 1);
 
     switch (userdata_block->storage()) {
     case userdata_storage::destroyed:
@@ -795,6 +973,7 @@ int free_userdata(lua_State* const state)
     }
     case userdata_storage::value:
     {
+        // reinterpret_cast is safe here since free_userdata must always be given an exact type.
         auto value = reinterpret_cast<Stored*>(block);
         if (value != nullptr) {
             call_destructor(*value);
@@ -802,6 +981,7 @@ int free_userdata(lua_State* const state)
         break;
     }
     case userdata_storage::shared_ptr:
+        // reinterpret_cast is safe here since free_userdata must always be given an exact type.
         auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block);
         if (value != nullptr) {
             call_destructor(*value);
@@ -815,34 +995,52 @@ int free_userdata(lua_State* const state)
     return 0;
 }
 
+int __tostring(lua_State* const state);
 int __gc(lua_State* const state);
 
 template <class T, class Stored = T>
 void push_metatable(lua_State* const state, T* const value)
 {
     // Check for a cached metatable first.
-    std::string class_name(Metatable<T>::name);
-    if (class_name != "") {
+    auto& info = Metatable<T>::info();
+    if (info.has_name()) {
         // Push whatever we find.
-        lua_pushstring(state, class_name.c_str());
+        lua_pushstring(state, info.name().c_str());
         lua_gettable(state, LUA_REGISTRYINDEX);
     } else {
         // It doesn't even have a name, so just use nil to fall through gracefully.
         lua_pushnil(state);
     }
-    auto mt = lua_absindex(state, -1);
     if (lua_type(state, -1) != LUA_TNIL) {
         // Use the cached value
+        if (is_debugging(state)) {
+            if (info.has_name()) {
+                std::cerr << "luacxx: push_metatable: Using cached metatable for " << info.name() << "." << std::endl;
+            } else {
+                std::cerr << "luacxx: push_metatable: Using cached metatable for anonymous userdata." << std::endl;
+            }
+        }
         return;
     }
+
+    if (is_debugging(state)) {
+        if (info.has_name()) {
+            std::cerr << "luacxx: push_metatable: Creating new metatable for " << info.name() << "." << std::endl;
+        } else {
+            std::cerr << "luacxx: push_metatable: Creating new anonymous metatable." << std::endl;
+        }
+    }
+
 
     // Otherwise, clean up and create a new metatable.
     lua_pop(state, 1);
     lua_newtable(state);
+    auto mt = lua_absindex(state, -1);
 
     // Setup how we destroy the object.
+    lua_pushstring(state, "__gc");
     lua_pushcclosure(state, __gc, 0);
-    lua_setfield(state, mt, "__gc");
+    lua_settable(state, mt);
 
     lua_pushstring(state, "free_userdata");
     lua_pushcfunction(state, free_userdata<Stored>);
@@ -861,14 +1059,29 @@ void push_metatable(lua_State* const state, T* const value)
     auto cacheable = Metatable<T>::metatable(state, mt, value);
 
     // Make the class name visible to callers
-    class_name = Metatable<T>::name;
-    lua_pushstring(state, class_name.c_str());
-    lua_setfield(state, mt, "__class");
+    lua_pushstring(state, "__class");
+    lua_pushstring(state, info.name().c_str());
+    lua_rawset(state, mt);
 
-    // Check if it's cacheable (and actually has a name):
-    if (cacheable) {
+    lua_pushstring(state, "__tostring");
+    lua_rawget(state, mt);
+    if (lua_type(state, -1) == LUA_TNIL) {
+        lua_pop(state, 1);
+        lua_pushstring(state, "__tostring");
+        lua_pushcfunction(state, __tostring);
+        lua_rawset(state, mt);
+    } else {
+        lua_pop(state, 1);
+    }
+
+    // Check if the metatable is cacheable and that the class actually has a name.
+    if (cacheable && info.has_name()) {
+        if (is_debugging(state)) {
+            std::cerr << "luacxx: push_metatable: Caching metatable for " << info.name() << "." << std::endl;
+        }
+
         // Cache it for the future
-        lua_pushstring(state, class_name.c_str());
+        lua_pushstring(state, info.name().c_str());
         lua_pushvalue(state, mt);
         lua_settable(state, LUA_REGISTRYINDEX);
     }
@@ -884,14 +1097,14 @@ size was given.
 
 */
 
-char* malloc(lua_State* const state, size_t size, const lua::userdata_block& userdata_block = lua::userdata_block(lua::userdata_storage::value));
+char* malloc(lua_State* const state, size_t size, const lua::userdata_storage& storage = lua::userdata_storage::value);
 
 template <class Stored>
 char* construct_userdata(lua_State* const state, lua::userdata_storage storage)
 {
     return lua::malloc(state,
         sizeof(Stored),
-        lua::userdata_block(storage)
+        storage
     );
 }
 
@@ -903,6 +1116,7 @@ struct Construct
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value>(state, storage);
+        lua::get_userdata_block(state, -1)->set_type(lua::Metatable<Value>::info());
 
         // Create a value in-place
         auto value = new (block) Value(args...);
@@ -921,6 +1135,7 @@ struct Construct<Value, lua::userdata_storage::pointer>
     {
         // Create a Lua userdata block
         auto block = construct_userdata<Value*>(state, lua::userdata_storage::pointer);
+        lua::get_userdata_block(state, -1)->set_type(lua::Metatable<Value>::info());
 
         // Create a value in-place
         auto value = new (block) Value*(args...);
@@ -939,6 +1154,7 @@ struct Construct<Value, lua::userdata_storage::shared_ptr>
     {
         // Create a Lua userdata block
         auto block = construct_userdata<std::shared_ptr<Value>>(state, lua::userdata_storage::shared_ptr);
+        lua::get_userdata_block(state, -1)->set_type(lua::Metatable<Value>::info());
 
         // Create a value in-place
         auto value = new (block) std::shared_ptr<Value>(args...);
@@ -1005,13 +1221,15 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
     case lua::userdata_storage::destroyed:
         throw lua::error("The source userdata has been destroyed, so it can no longer be accessed.");
     case lua::userdata_storage::value:
-        destination = *static_cast<T*>(data);
+        destination = *userdata->cast<T>(data);
         break;
     case lua::userdata_storage::pointer:
-        destination = **static_cast<T**>(data);
+        destination = *userdata->cast<T>(*static_cast<void**>(data));
         break;
     case lua::userdata_storage::shared_ptr:
-        destination = **static_cast<std::shared_ptr<T>*>(data);
+        destination = *userdata->cast<T>(
+            static_cast<std::shared_ptr<void>*>(data)->get()
+        );
         break;
     }
 }
@@ -1027,13 +1245,15 @@ static void store_full_userdata(T*& destination, lua::userdata_block* userdata, 
     // Get a pointer to the userdata's value.
     switch (userdata->storage()) {
     case lua::userdata_storage::value:
-        destination = static_cast<T*>(data);
+        destination = userdata->cast<T>(data);
         break;
     case lua::userdata_storage::pointer:
-        destination = *static_cast<T**>(data);
+        destination = userdata->cast<T>(*static_cast<void**>(data));
         break;
     case lua::userdata_storage::shared_ptr:
-        destination = static_cast<std::shared_ptr<T>*>(data)->get();
+        destination = userdata->cast<T>(
+            static_cast<std::shared_ptr<void>*>(data)->get()
+        );
         break;
     case lua::userdata_storage::destroyed:
         throw lua::error("The source userdata has been destroyed, so it can no longer be accessed.");
@@ -1052,7 +1272,7 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
     switch (userdata->storage()) {
     case lua::userdata_storage::shared_ptr:
     {
-        destination = *reinterpret_cast<T*>(data);
+        destination = *userdata->cast<T>(data);
         break;
     }
     case lua::userdata_storage::pointer:
@@ -1064,17 +1284,17 @@ static void store_full_userdata(T& destination, lua::userdata_block* userdata, v
 }
 
 template <lua::userdata_storage storage, class T,
-    typename std::enable_if<storage == lua::userdata_storage::pointer, int>::type = 0>
-static void store_light_userdata(T*& destination, void* data)
-{
-    destination = static_cast<T*>(data);
-}
-
-template <lua::userdata_storage storage, class T,
     typename std::enable_if<storage == lua::userdata_storage::value, int>::type = 0>
 static void store_light_userdata(T& destination, void* data)
 {
     destination = *static_cast<T*>(data);
+}
+
+template <lua::userdata_storage storage, class T,
+    typename std::enable_if<storage == lua::userdata_storage::pointer, int>::type = 0>
+static void store_light_userdata(T*& destination, void* data)
+{
+    destination = static_cast<T*>(data);
 }
 
 template <lua::userdata_storage storage, class T,
@@ -1102,10 +1322,9 @@ static void store_userdata(T& destination, lua_State* const state, const int sou
             throw lua::error(str.str());
         }
 
-        char* userdata_block = block + lua_rawlen(state, source) - sizeof(lua::userdata_block);
         store_full_userdata<storage>(
             destination,
-            reinterpret_cast<lua::userdata_block*>(userdata_block),
+            lua::get_userdata_block(state, source),
             block
         );
     }
@@ -1164,9 +1383,7 @@ struct Store<lua::userdata_block*>
             return;
         }
 
-        destination = reinterpret_cast<lua::userdata_block*>(
-            block + lua_rawlen(state, source) - sizeof(lua::userdata_block)
-        );
+        destination = lua::get_userdata_block(state, source);
     }
 };
 
@@ -1210,5 +1427,65 @@ struct Get<void>
 };
 
 } // namespace lua
+
+#define LUA_METATABLE_NAMED(name) \
+template<> \
+struct lua::Metatable<name> \
+{ \
+    static const lua::userdata_type& info() \
+    { \
+        static lua::userdata_type _info(#name); \
+        return _info; \
+    } \
+\
+    static bool metatable(lua_State* const state, const int mt, const void*) \
+    { \
+        return true; \
+    } \
+};
+
+#define LUA_METATABLE_BUILT(name) \
+namespace lua { \
+\
+void name ## _metatable(lua_State* const state, const int mt); \
+\
+template<> \
+struct Metatable<name> \
+{ \
+    static const userdata_type& info() \
+    { \
+        static userdata_type _info(#name); \
+        return _info; \
+    } \
+\
+    static bool metatable(lua_State* const state, const int mt, const void*) \
+    { \
+        name ## _metatable(state, mt); \
+        return true; \
+    } \
+}; \
+\
+};
+
+#define LUA_METATABLE_BUILT_WITH(name, builder) \
+namespace lua { \
+\
+template<> \
+struct Metatable<name> \
+{ \
+    static const userdata_type& info() \
+    { \
+        static userdata_type _info(#name); \
+        return _info; \
+    } \
+\
+    static bool metatable(lua_State* const state, const int mt, const void*) \
+    { \
+        builder (state, mt); \
+        return true; \
+    } \
+}; \
+\
+};
 
 #endif // luacxx_stack_INCLUDED

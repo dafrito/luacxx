@@ -37,10 +37,11 @@ int QActionGroup_addAction(lua_State* const state)
     return 1;
 }
 
-void lua::QActionGroup_metatable(const lua::index& mt)
+void lua::QActionGroup_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["actions"] = &QActionGroup::actions;
     mt["addAction"] = QActionGroup_addAction;
     mt["checkedAction"] = &QActionGroup::checkedAction;

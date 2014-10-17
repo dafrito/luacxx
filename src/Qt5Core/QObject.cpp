@@ -10,6 +10,7 @@
 
 #include "../algorithm.hpp"
 #include "../reference.hpp"
+#include "../link.hpp"
 #include "../convert/callable.hpp"
 
 #include <cassert>
@@ -20,8 +21,10 @@ namespace {
     QString getSignature(const QMetaMethod& method);
 }
 
-void lua::QObject_metatable(const lua::index& mt)
+void lua::QObject_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["installEventFilter"] = lua_CFunction([](lua_State* const state) {
         auto obj = lua::get<QObject*>(state, 1);
         lua::index filter_arg(state, 2);
@@ -29,7 +32,7 @@ void lua::QObject_metatable(const lua::index& mt)
 
         // Allow functions to be converted to a QEventFilter
         if (filter_arg.type().function()) {
-            auto filter = lua::make<lua::QEventFilter>(state, state);
+            auto filter = lua::make<QEventFilter>(state, state);
             filter->setDelegate(filter_arg);
             obj->installEventFilter(filter);
         } else {
@@ -125,7 +128,7 @@ void lua::QObject_metatable(const lua::index& mt)
             throw lua::error("New properties must not be added to this userdata");
         }
 
-        lua::store(propValue, lua::index(state, 3));
+        lua::store(propValue, state, 3);
         obj->setProperty(name, propValue);
 
         return 0;
@@ -145,8 +148,10 @@ void lua::QObject_metatable(const lua::index& mt)
     });
 }
 
-void lua::QMetaMethod_metatable(const lua::index& mt)
+void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["signature"] = lua_CFunction([](lua_State* const state) {
         auto method = lua::get<QMetaMethod*>(state, 1);
         lua::clear(state);

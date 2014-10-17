@@ -1,22 +1,26 @@
 #ifndef LUACXX_QEVENT_INCLUDED
 #define LUACXX_QEVENT_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 
 #include <QEvent>
 
 namespace lua {
 
-void QEvent_metatable(const lua::index& mt, QEvent* const event);
+void QEvent_metatable(lua_State* const state, const int mt, QEvent* const value);
 
 template <>
 struct Metatable<QEvent>
 {
-    static constexpr const char* name = "QEvent";
-
-    static bool metatable(const lua::index& mt, QEvent* const event)
+    static const userdata_type& info()
     {
-        lua::QEvent_metatable(mt, event);
+        static userdata_type _info("QEvent");
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int mt, QEvent* const value)
+    {
+        lua::QEvent_metatable(state, mt, value);
         return false;
     }
 };

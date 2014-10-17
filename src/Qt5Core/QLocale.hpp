@@ -1,27 +1,11 @@
 #ifndef LUACXX_QLOCALE_INCLUDED
 #define LUACXX_QLOCALE_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 
 #include <QLocale>
 
-namespace lua {
-
-void QLocale_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QLocale>
-{
-    static constexpr const char* name = "QLocale";
-
-    static bool metatable(const lua::index& mt, QLocale* const)
-    {
-        lua::QLocale_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QLocale)
 
 extern "C" int luaopen_Qt5Core_QLocale(lua_State* const);
 

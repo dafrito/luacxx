@@ -3,40 +3,29 @@
 
 #include <QObject>
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 #include "../algorithm.hpp"
 #include "../convert/string.hpp"
 
-namespace lua {
+LUA_METATABLE_BUILT(QObject);
+LUA_METATABLE_BUILT(QMetaMethod);
 
-void QObject_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QObject>
-{
-    static constexpr const char* name = "QObject";
-
-    static bool metatable(const lua::index& mt, const QObject* const)
-    {
-        lua::QObject_metatable(mt);
-        return true;
-    }
+#define LUA_METATABLE_QOBJECT(name) \
+template <> \
+struct lua::Metatable<name> \
+{ \
+    static const lua::userdata_type& info() \
+    { \
+        static lua::userdata_type _info("name"); \
+        return _info; \
+    } \
+\
+    static bool metatable(lua_State* const state, const int pos, const void* const) \
+    { \
+        lua::QObject_metatable(state, pos); \
+        return true; \
+    } \
 };
 
-void QMetaMethod_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QMetaMethod>
-{
-    static constexpr const char* name = "QMetaMethod";
-
-    static bool metatable(const lua::index& mt, const QMetaMethod* const)
-    {
-        lua::QMetaMethod_metatable(mt);
-        return true;
-    }
-};
-
-} // namespace lua
 
 #endif // LUACXX_QOBJECT_INCLUDED

@@ -52,8 +52,10 @@ std::string QRectF_tostring(QRectF* const rect)
     return str.str();
 }
 
-void lua::QRectF_metatable(const lua::index& mt)
+void lua::QRectF_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     mt["adjust"] = &QRectF::adjust;
     mt["adjusted"] = &QRectF::adjusted;
     mt["bottom"] = &QRectF::bottom;

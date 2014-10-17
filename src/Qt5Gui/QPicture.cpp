@@ -8,20 +8,31 @@
 #include "../Qt5Core/QRect.hpp"
 #include "QPainter.hpp"
 
-void lua::QPicture_metatable(const lua::index& mt)
+int QPicture_load(lua_State* const state)
 {
-    lua::QPaintDevice_metatable(mt);
+    return 0;
+}
 
-    mt["boundingRect"] = &QPaintDevice::boundingRect;
-    mt["data"] = &QPaintDevice::data;
-    mt["isNull"] = &QPaintDevice::isNull;
-    mt["load"] = QPaintDevice_load;
-    mt["play"] = &QPaintDevice::play;
-    mt["save"] = QPaintDevice_save;
-    mt["setBoundingRect"] = &QPaintDevice::setBoundingRect;
-    mt["setData"] = &QPaintDevice::setData;
-    mt["size"] = &QPaintDevice::size;
-    mt["swap"] = &QPaintDevice::swap;
+int QPicture_save(lua_State* const state)
+{
+    return 0;
+}
+
+void lua::QPicture_metatable(lua_State* const state, const int pos)
+{
+    lua::QPaintDevice_metatable(state, pos);
+
+    lua::index mt(state, pos);
+    mt["boundingRect"] = &QPicture::boundingRect;
+    mt["data"] = &QPicture::data;
+    mt["isNull"] = &QPicture::isNull;
+    mt["load"] = QPicture_load;
+    mt["play"] = &QPicture::play;
+    mt["save"] = QPicture_save;
+    mt["setBoundingRect"] = &QPicture::setBoundingRect;
+    mt["setData"] = &QPicture::setData;
+    mt["size"] = &QPicture::size;
+    mt["swap"] = &QPicture::swap;
 }
 
 int QPicture_new(lua_State* const state)

@@ -10,10 +10,11 @@ int QEventLoop_processEvents(lua_State* const state)
     return 0;
 }
 
-void lua::QEventLoop_metatable(const lua::index& mt)
+void lua::QEventLoop_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(mt);
+    lua::QObject_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["exec"] = &QEventLoop::exec;
     mt["exit"] = &QEventLoop::exit;
     mt["isRunning"] = &QEventLoop::isRunning;

@@ -5,10 +5,11 @@
 
 #include <QOffscreenSurface>
 
-void lua::QOffscreenSurface_metatable(const lua::index& mt)
+void lua::QOffscreenSurface_metatable(lua_State* const state, const int pos)
 {
-    lua::QSurface_metatable(mt);
+    lua::QSurface_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["create"] = &QOffscreenSurface::create;
     mt["destroy"] = &QOffscreenSurface::destroy;
     mt["isValid"] = &QOffscreenSurface::isValid;

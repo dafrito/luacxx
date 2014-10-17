@@ -7,7 +7,7 @@
 
 namespace lua {
 
-void GObject_metatable(const lua::index& mt);
+void GObject_metatable(lua_State* const state, const int mt);
 int GObject_index(lua_State* const state);
 int GObject_tostring(lua_State* const state);
 int GObject_destroy(lua_State* const state);
@@ -15,11 +15,11 @@ int GObject_destroy(lua_State* const state);
 template <>
 struct Metatable<GObject>
 {
-    static constexpr const char* name = "GObject";
+    static userdata_type info;
 
-    static bool metatable(const lua::index& mt, GObject* const)
+    static bool metatable(lua_State* const state, const int mt, GObject* const)
     {
-        lua::GObject_metatable(mt);
+        lua::GObject_metatable(state, mt);
         return false;
     }
 };

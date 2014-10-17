@@ -12,8 +12,9 @@ int QKeySequence_toString(lua_State* const state)
     return 0;
 }
 
-void lua::QKeySequence_metatable(const lua::index& mt)
+void lua::QKeySequence_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["count"] = &QKeySequence::count;
     mt["isEmpty"] = &QKeySequence::isEmpty;
     mt["matches"] = &QKeySequence::matches;

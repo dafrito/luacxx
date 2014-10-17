@@ -4,23 +4,7 @@
 #include "Qt5Gui.hpp"
 #include <QRegion>
 
-namespace lua {
-
-void QRegion_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QRegion>
-{
-    static constexpr const char* name = "QRegion";
-
-    static bool metatable(const lua::index& mt, QRegion* const)
-    {
-        lua::QRegion_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QRegion);
 
 extern "C" int luaopen_Qt5Gui_QRegion(lua_State* const);
 

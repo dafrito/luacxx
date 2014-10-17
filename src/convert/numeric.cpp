@@ -14,7 +14,7 @@ void lua::store_lua_Integer(long& destination, lua_State* const state, const int
         return;
     }
     if (source.type().userdata()) {
-        switch (lua::userdata_size(source)) {
+        switch (lua::object_size(state, source_pos)) {
             case sizeof(int):
                 destination = *static_cast<char*>(lua::get<void*>(source));
                 return;
@@ -45,7 +45,7 @@ void lua::store_lua_Unsigned(lua_Unsigned& destination, lua_State* const state, 
         return;
     }
     if (source.type().userdata()) {
-        switch (lua::userdata_size(source)) {
+        switch (lua::object_size(state, source_pos)) {
             case sizeof(unsigned int):
                 destination = *static_cast<unsigned char*>(lua::get<void*>(source));
                 return;

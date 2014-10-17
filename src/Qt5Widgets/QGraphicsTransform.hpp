@@ -1,27 +1,11 @@
 #ifndef luacxx_QGraphicsTransform_INCLUDED
 #define luacxx_QGraphicsTransform_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Widgets.hpp"
 
 class QGraphicsTransform;
 
-namespace lua {
-
-void QGraphicsTransform_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QGraphicsTransform>
-{
-    static constexpr const char* name = "QGraphicsTransform";
-
-    static bool metatable(const lua::index& mt, QGraphicsTransform* const)
-    {
-        lua::QGraphicsTransform_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QGraphicsTransform);
 
 extern "C" int luaopen_Qt5Widgets_QGraphicsTransform(lua_State* const);
 

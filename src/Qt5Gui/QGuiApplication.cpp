@@ -19,10 +19,11 @@
 
 #include <QStyleHints>
 
-void lua::QGuiApplication_metatable(const lua::index& mt)
+void lua::QGuiApplication_metatable(lua_State* const state, const int pos)
 {
-    lua::QCoreApplication_metatable(mt);
+    lua::QCoreApplication_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["devicePixelRatio"] = &QGuiApplication::devicePixelRatio;
     mt["isSavingSession"] = &QGuiApplication::isSavingSession;
     mt["isSessionRestored"] = &QGuiApplication::isSessionRestored;

@@ -5,23 +5,7 @@
 
 class QFontInfo;
 
-namespace lua {
-
-void QFontInfo_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QFontInfo>
-{
-    static constexpr const char* name = "QFontInfo";
-
-    static bool metatable(const lua::index& mt, QFontInfo* const)
-    {
-        lua::QFontInfo_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QFontInfo);
 
 extern "C" int luaopen_luacxx_QFontInfo(lua_State* const);
 

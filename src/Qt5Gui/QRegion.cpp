@@ -44,8 +44,9 @@ int QRegion_united(lua_State* const state)
     return 0;
 }
 
-void lua::QRegion_metatable(const lua::index& mt)
+void lua::QRegion_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["boundingRect"] = &QRegion::boundingRect;
     mt["contains"] = QRegion_contains;
     mt["intersected"] = QRegion_intersected;
@@ -67,8 +68,7 @@ int QRegion_new(lua_State* const state)
 {
     lua::make<QRegion>(state);
 
-    auto name = lua::class_name(lua::index(state, 2));
-    if (name == lua::Metatable<QRect>::name) {
+    if (lua::is_type<QRect>(state, 2)) {
         if (lua_gettop(state) > 2) {
             lua::make<QRegion>(state,
                 lua::get<QRect>(state, 2)

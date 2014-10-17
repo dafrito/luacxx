@@ -36,8 +36,9 @@ int QLineEdit_setTextMargins(lua_State* const state)
     return 0;
 }
 
-void lua::QLineEdit_metatable(const lua::index& mt)
+void lua::QLineEdit_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["addAction"] = QLineEdit_addAction;
     mt["alignment"] = &QLineEdit::alignment;
     mt["backspace"] = &QLineEdit::backspace;

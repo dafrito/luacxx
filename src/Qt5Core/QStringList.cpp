@@ -4,7 +4,7 @@
 
 #include <QStringList>
 
-void lua::QStringList_metatable(const lua::index& mt)
+void lua::QStringList_metatable(lua_State* const state, const int mt)
 {
     // TODO Set up metatable methods for this class
 }

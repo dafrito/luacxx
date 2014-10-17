@@ -19,8 +19,6 @@
 #include "QGraphicsTransform.hpp"
 #include "QGraphicsItemGroup.hpp"
 
-#include <QGraphicsItem>
-
 int QGraphicsItem_collidesWithItem(lua_State* const state)
 {
     return 0;
@@ -138,8 +136,9 @@ int QGraphicsItem_update(lua_State* const state)
     return 0;
 }
 
-void lua::QGraphicsItem_metatable(const lua::index& mt)
+void lua::QGraphicsItem_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["acceptDrops"] = &QGraphicsItem::acceptDrops;
     mt["acceptHoverEvents"] = &QGraphicsItem::acceptHoverEvents;
     mt["acceptTouchEvents"] = &QGraphicsItem::acceptTouchEvents;

@@ -43,10 +43,11 @@ int QMainWindow_saveState(lua_State* const state)
     return 0;
 }
 
-void lua::QMainWindow_metatable(const lua::index& mt)
+void lua::QMainWindow_metatable(lua_State* const state, const int pos)
 {
-    lua::QWidget_metatable(mt);
+    lua::QWidget_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["addDockWidget"] = QMainWindow_addDockWidget;
     mt["addToolBar"] = QMainWindow_addToolBar;
     mt["addToolBarBreak"] = QMainWindow_addToolBarBreak;

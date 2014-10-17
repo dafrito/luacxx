@@ -4,8 +4,9 @@
 
 #include <QSizePolicy>
 
-void lua::QSizePolicy_metatable(const lua::index& mt)
+void lua::QSizePolicy_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["controlType"] = &QSizePolicy::controlType;
     mt["expandingDirections"] = &QSizePolicy::expandingDirections;
     mt["hasHeightForWidth"] = &QSizePolicy::hasHeightForWidth;

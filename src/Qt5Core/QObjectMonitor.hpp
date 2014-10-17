@@ -1,7 +1,7 @@
 #ifndef LUACXX_QOBJECTMONITOR_INCLUDED
 #define LUACXX_QOBJECTMONITOR_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 
 #include <QObject>
 

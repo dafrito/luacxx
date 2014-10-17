@@ -10,10 +10,11 @@ int QFile_open(lua_State* const state)
     return 0;
 }
 
-void lua::QFile_metatable(const lua::index& mt)
+void lua::QFile_metatable(lua_State* const state, const int pos)
 {
-    lua::QFileDevice_metatable(mt);
+    lua::QFileDevice_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["copy"] = static_cast<bool(QFile::*)(const QString&)>(&QFile::copy);
     mt["exists"] = static_cast<bool(QFile::*)() const>(&QFile::exists);
     mt["link"] = static_cast<bool(QFile::*)(const QString&)>(&QFile::link);

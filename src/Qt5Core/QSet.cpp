@@ -5,8 +5,10 @@
 #include <QSet>
 /*
 
-void lua::QSet_metatable(const lua::index& mt)
+void lua::QSet_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
+
     // TODO Set up metatable methods for this class
 }
 

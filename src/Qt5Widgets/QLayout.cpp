@@ -25,8 +25,9 @@ int QLayout_setContentsMargins(lua_State* const state)
     return 0;
 }
 
-void lua::QLayout_metatable(const lua::index& mt)
+void lua::QLayout_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["activate"] = &QLayout::activate;
     mt["addWidget"] = &QLayout::addWidget;
     mt["contentsMargins"] = &QLayout::contentsMargins;

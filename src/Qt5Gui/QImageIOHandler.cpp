@@ -1,5 +1,4 @@
 #include "QImageIOHandler.hpp"
-#include "../type/function.hpp"
 #include "../thread.hpp"
 
 #include <QImageIOHandler>
@@ -15,9 +14,10 @@ int QImageIOHandler_setFormat(lua_State* const state)
     return 0;
 }
 
-void lua::QImageIOHandler_metatable(const lua::index& mt)
+void lua::QImageIOHandler_metatable(lua_State* const state, const int pos)
 {
-    mt["currentImageNumber"] = &QImageIOHandler::currentImageNumber:
+    lua::index mt(state, pos);
+    mt["currentImageNumber"] = &QImageIOHandler::currentImageNumber;
     mt["currentImageRect"] = &QImageIOHandler::currentImageRect;
     mt["device"] = &QImageIOHandler::device;
     mt["format"] = &QImageIOHandler::format;
@@ -35,13 +35,12 @@ void lua::QImageIOHandler_metatable(const lua::index& mt)
     mt["write"] = &QImageIOHandler::write;
 }
 
-int QImageIOHandler_new(lua::state* const state)
+int QImageIOHandler_new(lua_State* const state)
 {
-    lua::make<QImageIOHandler>(state);
-    return 1;
+    return 0;
 }
 
-int luaopen_luacxx_QImageIOHandler(lua::state* const state)
+int luaopen_luacxx_QImageIOHandler(lua_State* const state)
 {
     lua::thread env(state);
 

@@ -4,7 +4,7 @@
 
 #include <QVector2D>
 
-void lua::QVector2D_metatable(const lua::index& mt)
+void lua::QVector2D_metatable(lua_State* const state, const int pos)
 {
     // TODO Set up metatable methods for this class
 }

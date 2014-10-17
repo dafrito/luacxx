@@ -10,8 +10,9 @@
 #include "QLayout.hpp"
 #include "../Qt5Core/QSize.hpp"
 
-void lua::QLayoutItem_metatable(const lua::index& mt)
+void lua::QLayoutItem_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["alignment"] = &QLayoutItem::alignment;
     mt["controlTypes"] = &QLayoutItem::controlTypes;
     mt["hasHeightForWidth"] = &QLayoutItem::hasHeightForWidth;

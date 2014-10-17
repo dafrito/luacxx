@@ -30,10 +30,11 @@ int QTabWidget_setCornerWidget(lua_State* const state)
     return 0;
 }
 
-void lua::QTabWidget_metatable(const lua::index& mt)
+void lua::QTabWidget_metatable(lua_State* const state, const int pos)
 {
-    lua::QWidget_metatable(mt);
+    lua::QWidget_metatable(state, pos);
 
+    lua::index mt(state, pos);
     mt["addTab"] = QTabWidget_addTab;
     mt["clear"] = &QTabWidget::clear;
     mt["cornerWidget"] = QTabWidget_cornerWidget;

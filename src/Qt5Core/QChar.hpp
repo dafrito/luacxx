@@ -1,9 +1,10 @@
 #ifndef luacxx_QChar_INCLUDED
 #define luacxx_QChar_INCLUDED
 
+#include "Qt5Core.hpp"
+
 #include <QChar>
 
-#include "../convert/string.hpp"
 #include "QString.hpp"
 
 namespace lua {
@@ -20,9 +21,9 @@ struct Push<QChar>
 template<>
 struct Store<QChar>
 {
-    static void store(QChar& destination, const lua::index& source)
+    static void store(QChar& destination, lua_State* const state, const int source)
     {
-        destination = lua::get<QString>(source).at(0);
+        destination = lua::get<QString>(state, source).at(0);
     }
 };
 

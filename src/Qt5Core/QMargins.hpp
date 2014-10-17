@@ -1,27 +1,11 @@
 #ifndef LUA_CXX_QMARGINS_INCLUDED
 #define LUA_CXX_QMARGINS_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Core.hpp"
 
 class QMargins;
 
-namespace lua {
-
-void QMargins_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QMargins>
-{
-    static constexpr const char* name = "QMargins";
-
-    static bool metatable(const lua::index& mt, QMargins* const)
-    {
-        lua::QMargins_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QMargins)
 
 extern "C" int luaopen_luacxx_QMargins(lua_State* const);
 

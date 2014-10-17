@@ -5,23 +5,7 @@
 
 class QMovie;
 
-namespace lua {
-
-void QMovie_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QMovie>
-{
-    static constexpr const char* name = "QMovie";
-
-    static bool metatable(const lua::index& mt, QMovie* const)
-    {
-        lua::QMovie_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QMovie);
 
 extern "C" int luaopen_Qt5Gui_QMovie(lua_State* const);
 

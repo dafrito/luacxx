@@ -13,8 +13,9 @@ int QRawFont_supportsCharacter(lua_State* const state)
     return 0;
 }
 
-void lua::QRawFont_metatable(const lua::index& mt)
+void lua::QRawFont_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["advancesForGlyphIndexes"] = QRawFont_advancesForGlyphIndexes;
     mt["alphaMapForGlyph"] = &QRawFont::alphaMapForGlyph;
     mt["ascent"] = &QRawFont::ascent;

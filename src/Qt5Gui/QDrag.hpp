@@ -5,23 +5,7 @@
 
 class QDrag;
 
-namespace lua {
-
-void QDrag_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<QDrag>
-{
-    static constexpr const char* name = "QDrag";
-
-    static bool metatable(const lua::index& mt, QDrag* const)
-    {
-        lua::QDrag_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(QDrag);
 
 extern "C" int luaopen_Qt5Gui_QDrag(lua_State* const);
 

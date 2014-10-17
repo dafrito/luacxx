@@ -1,11 +1,13 @@
 #include "QTextOption.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+#include "../Qt5Core/QList.hpp"
 
 #include <QTextOption>
 
-void lua::QTextOption_metatable(const lua::index& mt)
+void lua::QTextOption_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["alignment"] = &QTextOption::alignment;
     mt["flags"] = &QTextOption::flags;
     mt["setAlignment"] = &QTextOption::setAlignment;
