@@ -69,6 +69,17 @@ int QWidget_repaint(lua_State* const state)
 }
 int QWidget_resize(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+    if (lua::size(state) > 2) {
+        self->resize(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    } else {
+        self->resize(
+            lua::get<const QSize&>(state, 2)
+        );
+    }
     return 0;
 }
 int QWidget_scroll(lua_State* const state)
