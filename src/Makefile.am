@@ -276,11 +276,36 @@ libluacxx_Qt5Network_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QAbstractSocket.cpp \
-	Qt5Network/QLocalSocket.cpp
+	Qt5Network/QLocalSocket.cpp \
+	Qt5Network/QTcpSocket.cpp \
+	Qt5Network/QUdpSocket.cpp \
+	Qt5Network/QHostAddress.cpp \
+	Qt5Network/QNetworkAddressEntry.cpp \
+	Qt5Network/QNetworkInterface.cpp \
+	Qt5Network/QSslSocket.cpp \
+	Qt5Network/QSslCertificate.cpp \
+	Qt5Network/QSslError.cpp \
+	Qt5Network/QSslKey.cpp \
+	Qt5Network/QSslCipher.cpp \
+	Qt5Network/QSslConfiguration.cpp \
+	Qt5Network/QSslCertificateExtension.cpp
 
 nobase_pkginclude_HEADERS += \
+	Qt5Network/Qt5Network.hpp \
 	Qt5Network/QAbstractSocket.hpp \
-	Qt5Network/QLocalSocket.hpp
+	Qt5Network/QLocalSocket.hpp \
+	Qt5Network/QTcpSocket.hpp \
+	Qt5Network/QUdpSocket.hpp \
+	Qt5Network/QHostAddress.hpp \
+	Qt5Network/QNetworkAddressEntry.hpp \
+	Qt5Network/QNetworkInterface.hpp \
+	Qt5Network/QSslSocket.hpp \
+	Qt5Network/QSslCertificate.hpp \
+	Qt5Network/QSslError.hpp \
+	Qt5Network/QSslKey.hpp \
+	Qt5Network/QSslCipher.hpp \
+	Qt5Network/QSslConfiguration.hpp \
+	Qt5Network/QSslCertificateExtension.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-Qt5Network.pc
 

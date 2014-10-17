@@ -1,21 +1,47 @@
 #include "QLocalSocket.hpp"
-#include "../type/function.hpp"
 #include "../thread.hpp"
 
 #include <QLocalSocket>
 
 #include "../Qt5Core/QString.hpp"
+#include "../Qt5Core/QIODevice.hpp"
 
 // https://qt-project.org/doc/qt-5/qlocalsocket.html
 
-void lua::QLocalSocket_metatable(const lua::index& mt)
+int QLocalSocket_connectToServer(lua_State* const state)
 {
-    lua::QIODevice_metatable(mt);
+    return 0;
+}
+int QLocalSocket_error(lua_State* const state)
+{
+    return 0;
+}
+int QLocalSocket_open(lua_State* const state)
+{
+    return 0;
+}
+int QLocalSocket_setSocketDescriptor(lua_State* const state)
+{
+    return 0;
+}
+int QLocalSocket_waitForConnected(lua_State* const state)
+{
+    return 0;
+}
+int QLocalSocket_waitForDisconnected(lua_State* const state)
+{
+    return 0;
+}
 
+void lua::QLocalSocket_metatable(lua_State* const state, const int pos)
+{
+    lua::QIODevice_metatable(state, pos);
+
+    lua::index mt(state, pos);
     mt["abort"] = &QLocalSocket::abort;
     mt["connectToServer"] = QLocalSocket_connectToServer;
     mt["disconnectFromServer"] = &QLocalSocket::disconnectFromServer;
-    mt["error"] = &QLocalSocket::error;
+    mt["error"] = QLocalSocket_error;
     mt["flush"] = &QLocalSocket::flush;
     mt["fullServerName"] = &QLocalSocket::fullServerName;
     mt["isValid"] = &QLocalSocket::isValid;
@@ -31,7 +57,7 @@ void lua::QLocalSocket_metatable(const lua::index& mt)
     mt["waitForDisconnected"] = QLocalSocket_waitForDisconnected;
 }
 
-int QLocalSocket_new(lua::state* const state)
+int QLocalSocket_new(lua_State* const state)
 {
     // QLocalSocket(QObject * parent = 0)
     lua::make<QLocalSocket>(state);
@@ -40,7 +66,7 @@ int QLocalSocket_new(lua::state* const state)
     return 1;
 }
 
-int luaopen_luacxx_QLocalSocket(lua::state* const state)
+int luaopen_luacxx_QLocalSocket(lua_State* const state)
 {
     lua::thread env(state);
 

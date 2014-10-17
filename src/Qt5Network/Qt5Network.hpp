@@ -1,0 +1,6 @@
+#ifndef LUACXX_QT5NETWORK_INCLUDED
+#define LUACXX_QT5NETWORK_INCLUDED
+
+#include "../Qt5Core/Qt5Core.hpp"
+
+#endif // LUACXX_QT5NETWORK_INCLUDED
