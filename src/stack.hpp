@@ -1214,7 +1214,7 @@ template <lua::userdata_storage storage, class T,
 static void store_full_userdata(T& destination, lua::userdata_block* userdata, void* data)
 {
     if (!userdata) {
-        throw lua::error("The source userdata is nil, so it cannot be stored.");
+        throw lua::error("The source userdata is nil, so a value cannot be stored.");
     }
     // Carefully retrieve the value from the userdata.
     switch (userdata->storage()) {
@@ -1318,8 +1318,10 @@ static void store_userdata(T& destination, lua_State* const state, const int sou
         if (!block) {
             std::stringstream str;
             str << "lua::store_userdata: Source at stack position " << source
-                << " was a " << lua_typename(state, lua_type(state, source)) << ", not a userdata as required.";
-            throw lua::error(str.str());
+                << " was a " << lua_typename(state, lua_type(state, source)) << ", not a userdata as required."
+                << std::endl << "    " << lua::dump(state);
+
+            throw lua::error(state, str.str());
         }
 
         store_full_userdata<storage>(
@@ -1336,7 +1338,7 @@ struct Store
     static void store(T& destination, lua_State* const state, const int source)
     {
         if (lua_type(state, source) == LUA_TNIL) {
-            throw lua::error("lua::Store<T>::store: source stack value must not be nil");
+            throw lua::error(state, "lua::Store<T>::store: source stack value must not be nil");
         }
         // Retrieve the userdata as a value
         store_userdata<lua::userdata_storage::value>(destination, state, source);

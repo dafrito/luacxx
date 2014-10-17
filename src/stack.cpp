@@ -45,6 +45,14 @@ lua::index lua::push(lua_State* const state)
 
 char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_storage& storage)
 {
+    if (is_debugging(state)) {
+        if (size == 1) {
+            std::cerr << "lua::malloc: Allocating " << size << " byte." << std::endl;
+        } else {
+            std::cerr << "lua::malloc: Allocating " << size << " bytes." << std::endl;
+        }
+    }
+
     // Get and push a chunk of memory from Lua to hold our metadata, as well as
     // the underlying value.
     char* block = static_cast<char*>(lua_newuserdata(state,
