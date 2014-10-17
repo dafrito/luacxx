@@ -241,6 +241,9 @@ auto lua::reference::get() -> decltype(lua::Get<Type>::get(state(), -1))
 template <class Source>
 reference& lua::reference::operator=(Source source)
 {
+    if (!state()) {
+        throw lua::error("lua::reference: This reference does not have a Lua state");
+    }
     lua::Push<Source>::push(state(), source);
     lua::Store<lua::reference>::store(*this, state(), -1);
     lua_pop(state(), 1);
