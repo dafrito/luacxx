@@ -4,7 +4,9 @@ SUBDIRS = src
 luacxx_libraries = \
 	ncurses \
 	Qt5Core \
+	Qt5Network \
 	Qt5Gui \
+	Qt5Widgets \
 	nanomsg \
 	libinput \
 	libevdev \
