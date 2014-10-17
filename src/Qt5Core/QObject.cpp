@@ -182,8 +182,15 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
         argdata[0] = const_cast<void*>(variants.at(0).data());
 
         QList<QByteArray> params = method.parameterTypes();
+        bool method_is_lua_CFunction = false;
         if (params.size() == 1 && QString(params.at(0)).startsWith("lua_State*")) {
-            argdata[1] = state;
+            // Remove the leading QMetaMethod and QObject, as these are not expected when
+            // passed into a C++ method.
+            lua_remove(state, 1);
+            lua_remove(state, 2);
+
+            argdata[1] = (void*)&state;
+            method_is_lua_CFunction = true;
         } else {
             for (int i = 0; i < params.count(); ++i) {
                 int type = QMetaType::type(params.at(i));
@@ -198,7 +205,7 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
                 }
 
                 QVariant arg(type, nullptr);
-                lua::store(arg, state, i + 1);
+                lua::store(arg, state, i + 3);
                 arg.convert(static_cast<QVariant::Type>(type));
                 variants << arg;
             }
@@ -215,11 +222,14 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
         );
 
         if (variants.at(0).isValid()) {
+            if (method_is_lua_CFunction) {
+                return variants.at(0).toInt();
+            }
             lua::push(state, variants.at(0));
             return 1;
-        } else {
-            return 0;
         }
+
+        return 0;
     });
 }
 
