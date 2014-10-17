@@ -40,7 +40,7 @@ void QList_metatable(lua_State* const state, const int pos)
             lua::push(state, self->count());
         } else {
             lua::push(state,
-                self->count(lua::get<const T&>(state, 2))
+                self->count(lua::Get<const T&>::get(state, 2))
             );
         }
         return 0;
