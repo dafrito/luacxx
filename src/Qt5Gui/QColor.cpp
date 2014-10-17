@@ -81,8 +81,39 @@ void lua::QColor_metatable(lua_State* const state, const int pos)
 
 int QColor_new(lua_State* const state)
 {
-    lua::make<QColor>(state);
-    // TODO Set up object-specific methods
+    if (lua_gettop(state) == 0) {
+        // QColor()
+        lua::make<QColor>(state);
+    } else if (lua::is_type<QString>(state, 1) || lua_isstring(state, 1)) {
+        // QColor(const QString & name)
+        // QColor(const char * name)
+        lua::make<QColor>(state, lua::get<QString>(state, 1));
+    } else if (lua::is_type<QRgb>(state, 1)) {
+        // QColor(QRgb color)
+        lua::make<QColor>(state, lua::get<QRgb>(state, 1));
+    } else if (lua::is_type<QColor>(state, 1)) {
+        // QColor(const QColor & color)
+        lua::make<QColor>(state, lua::get<const QColor&>(state, 1));
+    } else if (lua::is_type<Qt::GlobalColor>(state, 1)) {
+        // QColor(Qt::GlobalColor color)
+        lua::make<QColor>(state, lua::get<Qt::GlobalColor>(state, 1));
+    } else {
+        // QColor(int r, int g, int b, int a = 255)
+        if (lua_gettop(state) == 3) {
+            lua::make<QColor>(state,
+                lua::get<int>(state, 1),
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3)
+            );
+        } else {
+            lua::make<QColor>(state,
+                lua::get<int>(state, 1),
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
+            );
+        }
+    }
 
     return 1;
 }
