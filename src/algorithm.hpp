@@ -1,5 +1,5 @@
-#ifndef LUACXX_ALGORITHM_INCLUDED
-#define LUACXX_ALGORITHM_INCLUDED
+#ifndef luacxx_algorithm_INCLUDED
+#define luacxx_algorithm_INCLUDED
 
 #include "stack.hpp"
 #include "index.hpp"
@@ -595,4 +595,4 @@ void setglobal(lua_State* const state, const char* name, Value value)
 
 } // namespace lua
 
-#endif // LUACXX_ALGORITHM_INCLUDED
+#endif // luacxx_algorithm_INCLUDED
