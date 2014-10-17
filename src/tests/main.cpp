@@ -265,20 +265,6 @@ BOOST_AUTO_TEST_CASE(lambda_with_wrap)
 
     auto result = lua::run_string<int>(env, "return multiply(2, 3)");
     BOOST_CHECK_EQUAL(6, result);
-
-    // Lambdas aren't recognized as functions, so You can't push them directly.
-    // If you know how to do this, please let me know!
-
-    env["multiply"] = [](int a, int b) {
-        return a * b;
-    };
-
-    // The problem is that each lambda instance has a unique type, so there is
-    // no way to refer to all lambdas generally in a template. They just appear
-    // as random C++ objects, as get pushed as userdata.
-
-    BOOST_CHECK(!env["multiply"].type().function());
-    BOOST_CHECK(env["multiply"].type().userdata());
 }
 
 static int receiveConstPtr(const Counter* counter)
@@ -595,9 +581,9 @@ BOOST_AUTO_TEST_CASE(error_support)
     BOOST_CHECK(errored);
 
     // Does pcall handle lua::error gracefully?
-    env["thrower"] = [](lua_State* const state) {
+    env["thrower"] = lua::callable([](lua_State* const state) -> int {
         throw lua::error("Intentional");
-    };
+    });
     lua::run_string(env, "return not pcall(thrower);");
     BOOST_CHECK_EQUAL(lua::get<bool>(env, -1), true);
 
