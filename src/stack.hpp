@@ -255,6 +255,16 @@ useful for debugging:
     // Print the stack to stderr
     std::cerr << lua::dump(state) << std::endl;
 
+*/
+
+namespace lua {
+
+std::string dump(lua_State* const state);
+
+} // namespace lua
+
+/*
+
 =head4 int lua_absindex(state, int index)
 
 Returns the positive integer that represents the given index. Non-absolute
