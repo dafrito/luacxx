@@ -198,7 +198,7 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
                 }
 
                 QVariant arg(type, nullptr);
-                lua::store(arg, lua::index(state, i + 3));
+                lua::store(arg, state, i + 1);
                 arg.convert(static_cast<QVariant::Type>(type));
                 variants << arg;
             }
@@ -216,8 +216,6 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
 
         if (variants.at(0).isValid()) {
             lua::push(state, variants.at(0));
-            lua_replace(state, 1);
-            lua_settop(state, 1);
             return 1;
         } else {
             return 0;
