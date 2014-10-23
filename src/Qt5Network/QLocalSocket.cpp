@@ -1,8 +1,6 @@
 #include "QLocalSocket.hpp"
 #include "../thread.hpp"
 
-#include <QLocalSocket>
-
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QIODevice.hpp"
 

@@ -1,9 +1,9 @@
 #include "QLinearGradient.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
-#include "QGradient.hpp"
 
-#include <QLinearGradient>
+#include "QGradient.hpp"
+#include "../Qt5Core/QPointF.hpp"
 
 int QLinearGradient_setStart(lua_State* const state)
 {

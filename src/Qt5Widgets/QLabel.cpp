@@ -6,6 +6,7 @@
 
 #include "QFrame.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Gui/QMovie.hpp"
 #include "../Qt5Gui/QPicture.hpp"

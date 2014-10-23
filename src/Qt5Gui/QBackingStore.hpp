@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QBackingStore;
+#include <QBackingStore>
 
 LUA_METATABLE_BUILT(QBackingStore);
 

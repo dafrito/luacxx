@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QOpenGLContext;
+#include <QOpenGLContext>
 
 LUA_METATABLE_BUILT(QOpenGLContext);
 

@@ -2,13 +2,17 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 #include "QString.hpp"
+#include "QFlags.hpp"
 
 #include <Qt>
 
-void lua::qt_constants_3(lua::global& t)
+void lua::qt_constants_3(lua_State* const state)
 {
+    lua::thread env(state);
+    auto t = env["Qt"];
+
     // enum Qt::KeyboardModifier
-    // flags Qt::KeyboardModifiers
+    t["KeyboardModifiers"] = QFlags_new<Qt::KeyboardModifier>;
     t["NoModifier"] = Qt::NoModifier;
     t["ShiftModifier"] = Qt::ShiftModifier;
     t["ControlModifier"] = Qt::ControlModifier;
@@ -27,7 +31,7 @@ void lua::qt_constants_3(lua::global& t)
     t["MaskOutColor"] = Qt::MaskOutColor;
 
     // enum Qt::MatchFlag
-    // flags Qt::MatchFlags
+    t["MatchFlags"] = QFlags_new<Qt::MatchFlag>;
     t["MatchExactly"] = Qt::MatchExactly;
     t["MatchFixedString"] = Qt::MatchFixedString;
     t["MatchContains"] = Qt::MatchContains;
@@ -47,7 +51,7 @@ void lua::qt_constants_3(lua::global& t)
     t["UNICODE_ACCEL"] = Qt::UNICODE_ACCEL;
 
     // enum Qt::MouseButton
-    // flags Qt::MouseButtons
+    t["MouseButtons"] = QFlags_new<Qt::MouseButton>;
     t["NoButton"] = Qt::NoButton;
     t["LeftButton"] = Qt::LeftButton;
     t["RightButton"] = Qt::RightButton;
@@ -57,7 +61,7 @@ void lua::qt_constants_3(lua::global& t)
     t["XButton2"] = Qt::XButton2;
 
     // enum Qt::MouseEventFlag
-    // flags Qt::MouseEventFlags
+    t["MouseEventFlags"] = QFlags_new<Qt::MouseEventFlag>;
     #if QT_VERSION >= QT_VERSION_CHECK(5, 3, 0)
     t["MouseEventCreatedDoubleClick"] = Qt::MouseEventCreatedDoubleClick;
     #endif
@@ -77,7 +81,7 @@ void lua::qt_constants_3(lua::global& t)
     t["NavigationModeCursorForceVisible"] = Qt::NavigationModeCursorForceVisible;
 
     // enum Qt::Orientation
-    // flags Qt::Orientations
+    t["Orientations"] = QFlags_new<Qt::Orientation>;
     t["Horizontal"] = Qt::Horizontal;
     t["Vertical"] = Qt::Vertical;
 
@@ -102,7 +106,7 @@ void lua::qt_constants_3(lua::global& t)
     t["CustomDashLine"] = Qt::CustomDashLine;
 
     // enum Qt::ScreenOrientation
-    // flags Qt::ScreenOrientations
+    t["ScreenOrientations"] = QFlags_new<Qt::ScreenOrientation>;
     t["PrimaryOrientation"] = Qt::PrimaryOrientation;
     t["LandscapeOrientation"] = Qt::LandscapeOrientation;
     t["PortraitOrientation"] = Qt::PortraitOrientation;
@@ -163,7 +167,7 @@ void lua::qt_constants_3(lua::global& t)
     t["AutoText"] = Qt::AutoText;
 
     // enum Qt::TextInteractionFlag
-    // flags Qt::TextInteractionFlags
+    t["TextInteractionFlags"] = QFlags_new<Qt::TextInteractionFlag>;
     t["NoTextInteraction"] = Qt::NoTextInteraction;
     t["TextSelectableByMouse"] = Qt::TextSelectableByMouse;
     t["TextSelectableByKeyboard"] = Qt::TextSelectableByKeyboard;
@@ -190,7 +194,7 @@ void lua::qt_constants_3(lua::global& t)
     t["VeryCoarseTimer"] = Qt::VeryCoarseTimer;
 
     // enum Qt::ToolBarArea
-    // flags Qt::ToolBarAreas
+    t["ToolBarAreas"] = QFlags_new<Qt::ToolBarArea>;
     t["LeftToolBarArea"] = Qt::LeftToolBarArea;
     t["RightToolBarArea"] = Qt::RightToolBarArea;
     t["TopToolBarArea"] = Qt::TopToolBarArea;
@@ -206,7 +210,7 @@ void lua::qt_constants_3(lua::global& t)
     t["ToolButtonFollowStyle"] = Qt::ToolButtonFollowStyle;
 
     // enum Qt::TouchPointState
-    // flags Qt::TouchPointStates
+    t["TouchPointStates"] = QFlags_new<Qt::TouchPointState>;
     t["TouchPointPressed"] = Qt::TouchPointPressed;
     t["TouchPointMoved"] = Qt::TouchPointMoved;
     t["TouchPointStationary"] = Qt::TouchPointStationary;

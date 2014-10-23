@@ -3,7 +3,9 @@
 #include "../convert/numeric.hpp"
 #include "../thread.hpp"
 
-#include <QVector2D>
+#include "QVector2D.hpp"
+#include "../Qt5Core/QPointF.hpp"
+#include "../Qt5Core/QPoint.hpp"
 #include <QVector3D>
 
 void lua::QVector3D_metatable(lua_State* const state, const int pos)

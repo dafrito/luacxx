@@ -2,12 +2,11 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QLineEdit>
-
 #include "QAction.hpp"
 #include "QMenu.hpp"
 #include "QCompleter.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QPoint.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QMargins.hpp"
@@ -109,6 +108,17 @@ int luaopen_Qt5Widgets_QLineEdit(lua_State* const state)
 
     env["QLineEdit"] = lua::value::table;
     env["QLineEdit"]["new"] = QLineEdit_new;
+    auto t = env["QLineEdit"];
+
+    // enum QLineEdit::ActionPosition
+    t["LeadingPosition"] = QLineEdit::LeadingPosition;
+    t["TrailingPosition"] = QLineEdit::TrailingPosition;
+
+    // enum QLineEdit::EchoMode
+    t["Normal"] = QLineEdit::Normal;
+    t["NoEcho"] = QLineEdit::NoEcho;
+    t["Password"] = QLineEdit::Password;
+    t["PasswordEchoOnEdit"] = QLineEdit::PasswordEchoOnEdit;
 
     return 0;
 }

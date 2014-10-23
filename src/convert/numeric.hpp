@@ -128,6 +128,28 @@ struct Store<bool>
 LUA_METATABLE_NAMED(bool)
 
 template <>
+struct Push<unsigned char>
+{
+    static void push(lua_State* const state, const unsigned char& value)
+    {
+        lua::push<lua_Unsigned>(state, value);
+    }
+};
+
+template <>
+struct Store<unsigned char>
+{
+    static void store(unsigned char& destination, lua_State* const state, const int source)
+    {
+        lua_Unsigned sink;
+        lua::Store<lua_Unsigned>::store(sink, state, source);
+        destination = sink;
+    }
+};
+
+LUA_METATABLE_NAMED(unsigned char)
+
+template <>
 struct Push<int>
 {
     static void push(lua_State* const state, const int& value)
@@ -234,6 +256,28 @@ struct Store<long long>
 };
 
 LUA_METATABLE_NAMED(long long)
+
+template <>
+struct Push<unsigned long long>
+{
+    static void push(lua_State* const state, const unsigned long long& value)
+    {
+        lua::push(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<unsigned long long>
+{
+    static void store(unsigned long long& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::Store<lua_Integer>::store(sink, state, source);
+        destination = sink;
+    }
+};
+
+LUA_METATABLE_NAMED(unsigned long long)
 
 template <>
 struct Push<float>

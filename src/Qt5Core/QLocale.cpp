@@ -5,6 +5,8 @@
 #include "QStringList.hpp"
 #include "QList.hpp"
 #include "QChar.hpp"
+#include "Qt.hpp"
+#include "QFlags.hpp"
 
 #include <QLocale>
 

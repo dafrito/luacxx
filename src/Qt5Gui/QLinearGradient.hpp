@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QLinearGradient;
+#include <QLinearGradient>
 
 LUA_METATABLE_BUILT(QLinearGradient);
 

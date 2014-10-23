@@ -1,8 +1,7 @@
 #include "QWidget.hpp"
 
 #include "QAction.hpp"
-#include "../algorithm.hpp"
-#include "../reference.hpp"
+#include "../Qt5Core/QList.hpp"
 #include "../convert/callable.hpp"
 #include "../Qt5Core/QMargins.hpp"
 #include "../Qt5Core/QObject.hpp"
@@ -21,6 +20,7 @@
 #include "../Qt5Gui/QIcon.hpp"
 #include "../Qt5Gui/QIcon.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QLocale.hpp"
 #include "../Qt5Core/QByteArray.hpp"
 #include "QLayout.hpp"
@@ -29,6 +29,10 @@
 #include "../Qt5Core/QVariant.hpp"
 #include "QSizePolicy.hpp"
 #include "QGraphicsProxyWidget.hpp"
+#include "../Qt5Gui/QBackingStore.hpp"
+
+#include "../algorithm.hpp"
+#include "../reference.hpp"
 
 #include <cassert>
 #include <functional>

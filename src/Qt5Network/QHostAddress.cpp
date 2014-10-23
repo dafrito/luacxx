@@ -14,6 +14,11 @@ int QHostAddress_setAddress(lua_State* const state)
     return 0;
 }
 
+void lua::Q_IPV6ADDR_metatable(lua_State* const state, const int pos)
+{
+
+}
+
 void lua::QHostAddress_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);

@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QMimeData>
-
 void lua::QMimeData_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);

@@ -106,6 +106,7 @@ int QCoreApplication_new(lua_State* const state)
 }; // namespace lua
 
 LUA_METATABLE_BUILT(QCoreApplication)
+LUA_METATABLE_NAMED(lua::QCoreApplicationArgs)
 
 extern "C" int luaopen_Qt5Core_QCoreApplication(lua_State* const);
 

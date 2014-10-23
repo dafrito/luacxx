@@ -5,10 +5,13 @@
 #include <QLayoutItem>
 
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "QSizePolicy.hpp"
 #include "../Qt5Core/QRect.hpp"
 #include "QLayout.hpp"
 #include "../Qt5Core/QSize.hpp"
+#include "QSpacerItem.hpp"
+#include "QWidget.hpp"
 
 void lua::QLayoutItem_metatable(lua_State* const state, const int pos)
 {

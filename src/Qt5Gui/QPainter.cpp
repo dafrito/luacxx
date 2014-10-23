@@ -9,8 +9,37 @@
 #include "../Qt5Core/QRectF.hpp"
 #include "QTextOption.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QPoint.hpp"
+#include "../Qt5Core/QPointF.hpp"
+#include "QPolygonF.hpp"
+#include "QPolygon.hpp"
+#include "QImage.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/QLineF.hpp"
+#include "../Qt5Core/QLine.hpp"
+#include "QPicture.hpp"
+#include "QPixmap.hpp"
+#include "QStaticText.hpp"
+#include "QColor.hpp"
+#include "QBrush.hpp"
+#include "QPainterPath.hpp"
+#include "QRegion.hpp"
+#include "QPen.hpp"
+#include "QPaintDevice.hpp"
+#include "QTransform.hpp"
+#include "QGlyphRun.hpp"
+#include "QFont.hpp"
+#include "QFontInfo.hpp"
+#include "QFontMetrics.hpp"
+#include "QPaintEngine.hpp"
 
-#include <QPaintEngine>
+#include <iostream>
+
+void lua::QPainter_PixmapFragment_metatable(lua_State* const state, const int mt)
+{
+    // TODO Implement QPainter::PixmapFragment binding
+}
 
 /*
 

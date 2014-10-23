@@ -2,9 +2,9 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QFileDevice>
-
+#include "QFlags.hpp"
 #include "QString.hpp"
+#include "QByteArray.hpp"
 
 void lua::QFileDevice_metatable(lua_State* const state, const int pos)
 {

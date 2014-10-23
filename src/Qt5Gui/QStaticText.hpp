@@ -3,9 +3,9 @@
 
 #include "../stack.hpp"
 
-class QStaticText;
+#include <QStaticText>
 
-LUA_METATABLE_BUILT("QStaticText");
+LUA_METATABLE_BUILT(QStaticText);
 
 extern "C" int luaopen_luacxx_QStaticText(lua_State* const);
 

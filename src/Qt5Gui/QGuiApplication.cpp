@@ -14,10 +14,16 @@
 #include "QFont.hpp"
 #include "QInputMethod.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QPoint.hpp"
 #include "QIcon.hpp"
 #include "QWindow.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
-#include <QStyleHints>
+void lua::QStyleHints_metatable(lua_State* const state, const int pos)
+{
+
+}
 
 void lua::QGuiApplication_metatable(lua_State* const state, const int pos)
 {

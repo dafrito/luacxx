@@ -8,10 +8,10 @@
 
 namespace lua {
 
-void qt_constants_1(lua::global& t);
-void qt_constants_2(lua::global& t);
-void qt_constants_3(lua::global& t);
-void qt_constants_4(lua::global& t);
+void qt_constants_1(lua_State* const state);
+void qt_constants_2(lua_State* const state);
+void qt_constants_3(lua_State* const state);
+void qt_constants_4(lua_State* const state);
 
 }; // namespace lua
 

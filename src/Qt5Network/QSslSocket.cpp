@@ -8,6 +8,7 @@
 #include "QSslKey.hpp"
 #include "QSslCipher.hpp"
 #include "QSslConfiguration.hpp"
+#include "QSsl.hpp"
 
 int QSslSocket_addCaCertificates(lua_State* const state)
 {

@@ -1,7 +1,9 @@
 #include "QSurfaceFormat.hpp"
-
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
+#include "../Qt5Core/QPair.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 int QSurfaceFormat_setOption(lua_State* const state)
 {

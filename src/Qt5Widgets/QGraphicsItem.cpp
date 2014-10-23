@@ -3,6 +3,7 @@
 #include "../thread.hpp"
 
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QPointF.hpp"
 #include "../Qt5Core/QRectF.hpp"
@@ -18,6 +19,7 @@
 #include "QGraphicsScene.hpp"
 #include "QGraphicsTransform.hpp"
 #include "QGraphicsItemGroup.hpp"
+#include "../Qt5Core/QVariant.hpp"
 
 int QGraphicsItem_collidesWithItem(lua_State* const state)
 {

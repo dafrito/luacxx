@@ -2,7 +2,7 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QFont>
+#include "QPaintDevice.hpp"
 
 int QFont_resolve(lua_State* const state)
 {

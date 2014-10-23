@@ -2,7 +2,9 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QGradient>
+#include "QColor.hpp"
+#include "../Qt5Core/QPair.hpp"
+#include "../Qt5Core/QVector.hpp"
 
 void lua::QGradient_metatable(lua_State* const state, const int pos)
 {

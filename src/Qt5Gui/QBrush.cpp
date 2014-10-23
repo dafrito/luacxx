@@ -1,13 +1,14 @@
 #include "QBrush.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
 #include "QGradient.hpp"
 #include "QMatrix.hpp"
 #include "QPixmap.hpp"
 #include "QImage.hpp"
+#include "QColor.hpp"
 #include "QTransform.hpp"
-
-#include <QBrush>
+#include "../Qt5Core/Qt.hpp"
 
 //  void  setColor(const QColor & color)
 //  void  setColor(Qt::GlobalColor color)

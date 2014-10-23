@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QOpenGLContextGroup;
+#include <QOpenGLContextGroup>
 
 LUA_METATABLE_BUILT(QOpenGLContextGroup);
 

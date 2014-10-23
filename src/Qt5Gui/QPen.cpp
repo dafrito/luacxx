@@ -1,9 +1,11 @@
 #include "QPen.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
 #include "../Qt5Core/QVector.hpp"
 #include "QBrush.hpp"
-#include <QPen>
+#include "../Qt5Core/Qt.hpp"
+#include "QColor.hpp"
 
 void lua::QPen_metatable(lua_State* const state, const int pos)
 {

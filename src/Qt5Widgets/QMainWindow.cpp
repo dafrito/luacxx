@@ -2,13 +2,12 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QMainWindow>
-
 #include "../Qt5Core/QSize.hpp"
 #include "QMenuBar.hpp"
 #include "QWidget.hpp"
 #include "QToolBar.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "QDockWidget.hpp"
 #include "QStatusBar.hpp"
 #include "QMenu.hpp"

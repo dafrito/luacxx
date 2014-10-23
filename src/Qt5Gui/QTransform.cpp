@@ -2,7 +2,18 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QTransform>
+#include "../Qt5Core/QPointF.hpp"
+#include "../Qt5Core/QPoint.hpp"
+#include "../Qt5Core/QLineF.hpp"
+#include "../Qt5Core/QLine.hpp"
+#include "QPolygonF.hpp"
+#include "QPolygon.hpp"
+#include "QRegion.hpp"
+#include "QPainterPath.hpp"
+#include "../Qt5Core/QRectF.hpp"
+#include "../Qt5Core/QRect.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "QMatrix.hpp"
 
 int QTransform_map(lua_State* const state)
 {
@@ -178,6 +189,15 @@ int luaopen_Qt5Gui_QTransform(lua_State* const state)
 
     env["QTransform"] = lua::value::table;
     env["QTransform"]["new"] = QTransform_new;
+    auto t = env["QTransform"];
+
+    // enum QTransform::TransformationType
+    t["TxNone"] = QTransform::TxNone;
+    t["TxTranslate"] = QTransform::TxTranslate;
+    t["TxScale"] = QTransform::TxScale;
+    t["TxRotate"] = QTransform::TxRotate;
+    t["TxShear"] = QTransform::TxShear;
+    t["TxProject"] = QTransform::TxProject;
 
     return 0;
 }

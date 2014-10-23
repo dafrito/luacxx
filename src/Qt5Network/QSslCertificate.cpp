@@ -11,6 +11,8 @@
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QStringList.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/QMultiMap.hpp"
+#include "../Qt5Core/QString.hpp"
 #include "QSslKey.hpp"
 #include "QSsl.hpp"
 

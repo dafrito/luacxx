@@ -2,7 +2,8 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QSizePolicy>
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 void lua::QSizePolicy_metatable(lua_State* const state, const int pos)
 {

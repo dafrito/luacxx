@@ -56,6 +56,8 @@ public:
     }
 };
 
+LUA_METATABLE_NAMED(Counter);
+
 template <class T>
 class Point {
     T _x;
@@ -94,6 +96,27 @@ public:
         return _y;
     }
 
+};
+
+template <class T>
+struct lua::Metatable<Point<T>> {
+
+    static const userdata_type& info()
+    {
+        static userdata_type _info("");
+        if (!_info.has_name()) {
+            std::string name = "Point<";
+            name += lua::Metatable<T>::info().name();
+            name += ">";
+            _info.set_name(name);
+        }
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int mt, const void* const)
+    {
+        return true;
+    }
 };
 
 #endif // LUACXX_TESTS_INCLUDED

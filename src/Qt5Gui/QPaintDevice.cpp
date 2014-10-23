@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QPaintDevice>
-
 void lua::QPaintDevice_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);

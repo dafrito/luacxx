@@ -3,7 +3,7 @@
 
 #include "Qt5Core.hpp"
 
-class QMimeData;
+#include <QMimeData>
 
 LUA_METATABLE_BUILT(QMimeData)
 

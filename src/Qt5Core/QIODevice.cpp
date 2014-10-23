@@ -1,6 +1,9 @@
 #include "QIODevice.hpp"
+#include "../convert/callable.hpp"
 #include "../thread.hpp"
 
+#include "QFlags.hpp"
+#include "QByteArray.hpp"
 #include "QObject.hpp"
 
 // https://qt-project.org/doc/qt-5/qiodevice.html

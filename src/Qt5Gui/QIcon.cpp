@@ -9,6 +9,7 @@
 #include "QPainter.hpp"
 #include "QIcon.hpp"
 #include "../Qt5Core/QStringList.hpp"
+#include "QIconEngine.hpp"
 
 // http://qt-project.org/doc/qt-5/qicon.html
 

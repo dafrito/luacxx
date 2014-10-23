@@ -6,6 +6,7 @@
 
 #include "QVariant.hpp"
 #include "Qt.hpp"
+#include "QFlags.hpp"
 #include "QAbstractItemModel.hpp"
 
 int QModelIndex_data(lua_State* const state)

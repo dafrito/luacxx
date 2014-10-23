@@ -5,8 +5,11 @@
 
 #include <Qt>
 
-void lua::qt_constants_2(lua::global& t)
+void lua::qt_constants_2(lua_State* const state)
 {
+    lua::thread env(state);
+    auto t = env["Qt"];
+
     // enum Qt::Key
     t["Key_Escape"] = Qt::Key_Escape;
     t["Key_Tab"] = Qt::Key_Tab;
@@ -436,5 +439,4 @@ void lua::qt_constants_2(lua::global& t)
     t["Key_Sleep"] = Qt::Key_Sleep;
     t["Key_Zoom"] = Qt::Key_Zoom;
     t["Key_Cancel"] = Qt::Key_Cancel;
-
 }

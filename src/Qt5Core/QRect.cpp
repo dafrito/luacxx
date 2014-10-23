@@ -4,8 +4,9 @@
 #include "../thread.hpp"
 #include "../algorithm.hpp"
 #include "QVariant.hpp"
+#include "QPoint.hpp"
+#include "QSize.hpp"
 
-#include <QRect>
 #include <cstring>
 
 //bool    contains ( const QPoint & point, bool proper = false ) const

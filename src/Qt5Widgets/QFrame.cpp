@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QFrame>
-
 #include "QWidget.hpp"
 #include "../Qt5Core/QRect.hpp"
 
@@ -42,6 +40,25 @@ int luaopen_Qt5Widgets_QFrame(lua_State* const state)
 
     env["QFrame"] = lua::value::table;
     env["QFrame"]["new"] = QFrame_new;
+    auto t = env["QFrame"];
+
+    // enum QFrame::Shadow
+    t["Plain"] = QFrame::Plain;
+    t["Raised"] = QFrame::Raised;
+    t["Sunken"] = QFrame::Sunken;
+
+    // enum QFrame::Shape
+    t["NoFrame"] = QFrame::NoFrame;
+    t["Box"] = QFrame::Box;
+    t["Panel"] = QFrame::Panel;
+    t["StyledPanel"] = QFrame::StyledPanel;
+    t["HLine"] = QFrame::HLine;
+    t["VLine"] = QFrame::VLine;
+    t["WinPanel"] = QFrame::WinPanel;
+
+    // enum QFrame::StyleMask
+    t["Shadow_Mask"] = QFrame::Shadow_Mask;
+    t["Shape_Mask"] = QFrame::Shape_Mask;
 
     return 0;
 }

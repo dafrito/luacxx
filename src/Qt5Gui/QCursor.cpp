@@ -1,11 +1,11 @@
 #include "QCursor.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
 #include "../Qt5Core/QPoint.hpp"
 #include "QPixmap.hpp"
 #include "QBitmap.hpp"
-
-#include <QCursor>
+#include "../Qt5Core/Qt.hpp"
 
 // http://qt-project.org/doc/qt-4.8/qcursor.html
 

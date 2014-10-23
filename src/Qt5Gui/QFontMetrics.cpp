@@ -4,8 +4,10 @@
 #include "../Qt5Core/QRect.hpp"
 #include "../Qt5Core/QSize.hpp"
 #include "../Qt5Core/QString.hpp"
-
-#include <QFontMetrics>
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QChar.hpp"
+#include "QFont.hpp"
+#include "QPaintDevice.hpp"
 
 // http://qt-project.org/doc/qt-5/qfontmetrics.html
 

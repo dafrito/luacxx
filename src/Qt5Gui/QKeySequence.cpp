@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QKeySequence>
-
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QList.hpp"
 

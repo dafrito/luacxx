@@ -4,6 +4,7 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 #include "QObject.hpp"
+#include "QFlags.hpp"
 
 int QEventLoop_processEvents(lua_State* const state)
 {
@@ -34,13 +35,14 @@ int luaopen_Qt5Core_QEventLoop(lua_State* const state)
 
     env["QEventLoop"] = lua::value::table;
     env["QEventLoop"]["new"] = QEventLoop_new;
+    auto t = env["QEventLoop"];
 
     // enum QEventLoop::ProcessEventsFlag
-    // flags QEventLoop::ProcessEventsFlags
-    env["QEventLoop"]["AllEvents"] = QEventLoop::AllEvents;
-    env["QEventLoop"]["ExcludeUserInputEvents"] = QEventLoop::ExcludeUserInputEvents;
-    env["QEventLoop"]["ExcludeSocketNotifiers"] = QEventLoop::ExcludeSocketNotifiers;
-    env["QEventLoop"]["WaitForMoreEvents"] = QEventLoop::WaitForMoreEvents;
+    t["ProcessEventsFlags"] = lua::QFlags_new<QEventLoop::ProcessEventsFlag>;
+    t["AllEvents"] = QEventLoop::AllEvents;
+    t["ExcludeUserInputEvents"] = QEventLoop::ExcludeUserInputEvents;
+    t["ExcludeSocketNotifiers"] = QEventLoop::ExcludeSocketNotifiers;
+    t["WaitForMoreEvents"] = QEventLoop::WaitForMoreEvents;
 
     return 0;
 }

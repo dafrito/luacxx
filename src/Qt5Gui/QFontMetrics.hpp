@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QFontMetrics;
+#include <QFontMetrics>
 
 LUA_METATABLE_BUILT(QFontMetrics);
 

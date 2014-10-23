@@ -2,11 +2,15 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 #include "QString.hpp"
+#include "QFlags.hpp"
 
 #include <Qt>
 
-void lua::qt_constants_4(lua::global& t)
+void lua::qt_constants_4(lua_State* const state)
 {
+    lua::thread env(state);
+    auto t = env["Qt"];
+
     // enum Qt::WidgetAttribute
     t["WA_AcceptDrops"] = Qt::WA_AcceptDrops;
     t["WA_AlwaysShowToolTips"] = Qt::WA_AlwaysShowToolTips;
@@ -111,7 +115,7 @@ void lua::qt_constants_4(lua::global& t)
     t["ApplicationModal"] = Qt::ApplicationModal;
 
     // enum Qt::WindowState
-    // flags Qt::WindowStates
+    t["WindowStates"] = QFlags_new<Qt::WindowState>;
     t["WindowNoState"] = Qt::WindowNoState;
     t["WindowMinimized"] = Qt::WindowMinimized;
     t["WindowMaximized"] = Qt::WindowMaximized;
@@ -119,8 +123,7 @@ void lua::qt_constants_4(lua::global& t)
     t["WindowActive"] = Qt::WindowActive;
 
     // enum Qt::WindowType
-    // flags Qt::WindowFlags
-
+    t["WindowFlags"] = QFlags_new<Qt::WindowType>;
     t["Widget"] = Qt::Widget;
     t["Window"] = Qt::Window;
     t["Dialog"] = Qt::Dialog;
@@ -134,14 +137,12 @@ void lua::qt_constants_4(lua::global& t)
     t["SubWindow"] = Qt::SubWindow;
     t["ForeignWindow"] = Qt::ForeignWindow;
     t["CoverWindow"] = Qt::CoverWindow;
-
     t["MSWindowsFixedSizeDialogHint"] = Qt::MSWindowsFixedSizeDialogHint;
     t["MSWindowsOwnDC"] = Qt::MSWindowsOwnDC;
     t["BypassWindowManagerHint"] = Qt::BypassWindowManagerHint;
     t["X11BypassWindowManagerHint"] = Qt::X11BypassWindowManagerHint;
     t["FramelessWindowHint"] = Qt::FramelessWindowHint;
     t["NoDropShadowWindowHint"] = Qt::NoDropShadowWindowHint;
-
     t["CustomizeWindowHint"] = Qt::CustomizeWindowHint;
     t["WindowTitleHint"] = Qt::WindowTitleHint;
     t["WindowSystemMenuHint"] = Qt::WindowSystemMenuHint;
@@ -162,5 +163,4 @@ void lua::qt_constants_4(lua::global& t)
     t["WindowOverridesSystemGestures"] = Qt::WindowOverridesSystemGestures;
     t["WindowDoesNotAcceptFocus"] = Qt::WindowDoesNotAcceptFocus;
     t["WindowType_Mask"] = Qt::WindowType_Mask;
-
 }

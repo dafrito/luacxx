@@ -7,6 +7,9 @@
 #include "QPaintDevice.hpp"
 #include "QColor.hpp"
 #include "QBitmap.hpp"
+#include "QImage.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 int QPixmap_fill(lua_State* const state)
 {

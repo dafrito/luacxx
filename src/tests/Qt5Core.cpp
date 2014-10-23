@@ -19,6 +19,8 @@
 #include "Qt5Core/QVariant.hpp"
 #include "Qt5Core/QObject.hpp"
 #include "Qt5Core/QList.hpp"
+#include "Qt5Core/Qt.hpp"
+#include "Qt5Core/QFlags.hpp"
 
 #include "load/DirectoryModuleLoader.hpp"
 #include <QDir>

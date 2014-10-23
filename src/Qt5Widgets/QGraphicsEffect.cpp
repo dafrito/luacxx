@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QGraphicsEffect>
-
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QRectF.hpp"
 

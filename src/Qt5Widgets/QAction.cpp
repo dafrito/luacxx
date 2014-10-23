@@ -16,6 +16,8 @@
 #include "QMenu.hpp"
 #include "QActionGroup.hpp"
 #include "../Qt5Core/QObject.hpp"
+#include "QGraphicsWidget.hpp"
+#include "../Qt5Core/QVariant.hpp"
 
 // https://qt-project.org/doc/qt-5/qaction.html
 

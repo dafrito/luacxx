@@ -5,6 +5,8 @@
 #include "../Qt5Core/QMimeData.hpp"
 #include "QPixmap.hpp"
 #include "../Qt5Core/QString.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 int QClipboard_image(lua_State* const state)
 {
@@ -71,6 +73,12 @@ int luaopen_Qt5Gui_QClipboard(lua_State* const state)
     lua::thread env(state);
 
     env["QClipboard"] = lua::value::table;
+    auto t = env["QClipboard"];
+
+    // enum QClipboard::Mode
+    t["Clipboard"] = QClipboard::Clipboard;
+    t["Selection"] = QClipboard::Selection;
+    t["FindBuffer"] = QClipboard::FindBuffer;
 
     return 0;
 }

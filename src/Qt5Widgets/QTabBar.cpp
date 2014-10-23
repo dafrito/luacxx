@@ -2,9 +2,8 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QTabBar>
-
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QSize.hpp"
 #include "QWidget.hpp"
 #include "../Qt5Gui/QIcon.hpp"

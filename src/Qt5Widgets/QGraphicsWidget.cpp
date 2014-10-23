@@ -3,6 +3,7 @@
 #include "../thread.hpp"
 
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Gui/QFont.hpp"
 #include "QAction.hpp"
 #include "../Qt5Gui/QPalette.hpp"
@@ -18,6 +19,7 @@
 // #include "QGraphicsLayout.hpp"
 #include "QGraphicsObject.hpp"
 #include "QGraphicsLayoutItem.hpp"
+#include "QGraphicsLayout.hpp"
 
 #include <QGraphicsWidget>
 

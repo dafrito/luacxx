@@ -5,12 +5,14 @@
 #include "QStringList.hpp"
 #include "QEvent.hpp"
 #include "QTranslator.hpp"
+#include "QAbstractEventDispatcher.hpp"
+#include "Qt.hpp"
+#include "QFlags.hpp"
 
 #include "../convert/callable.hpp"
 #include "../convert/numeric.hpp"
 #include "../thread.hpp"
 
-#include <QAbstractEventDispatcher>
 #include <QCoreApplication>
 
 lua::QCoreApplicationArgs* lua::save_arguments(lua::index arg)

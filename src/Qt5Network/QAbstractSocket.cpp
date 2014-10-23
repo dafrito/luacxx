@@ -1,9 +1,10 @@
 #include "QAbstractSocket.hpp"
-#include "../convert/callable.hpp"
 #include "../thread.hpp"
-#include "../Qt5Core/QIODevice.hpp"
 
-#include <QAbstractSocket>
+#include "../Qt5Core/QIODevice.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "QNetworkProxy.hpp"
+#include "../Qt5Core/QVariant.hpp"
 
 // https://qt-project.org/doc/qt-5/qabstractsocket.html
 
@@ -74,7 +75,7 @@ void lua::QAbstractSocket_metatable(lua_State* const state, const int pos)
     mt["setProxy"] = &QAbstractSocket::setProxy;
     mt["setReadBufferSize"] = &QAbstractSocket::setReadBufferSize;
     mt["setSocketDescriptor"] = QAbstractSocket_setSocketDescriptor;
-    mt["setSocketOption"] = &QAbstractSocket::setSocketOption;
+    //mt["setSocketOption"] = &QAbstractSocket::setSocketOption;
     mt["socketDescriptor"] = &QAbstractSocket::socketDescriptor;
     mt["socketOption"] = &QAbstractSocket::socketOption;
     mt["socketType"] = &QAbstractSocket::socketType;

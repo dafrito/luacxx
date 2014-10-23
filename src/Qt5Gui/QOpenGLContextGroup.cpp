@@ -2,7 +2,8 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QOpenGLContextGroup>
+#include "../Qt5Core/QList.hpp"
+#include "QOpenGLContext.hpp"
 
 void lua::QOpenGLContextGroup_metatable(lua_State* const state, const int pos)
 {

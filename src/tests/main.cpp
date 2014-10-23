@@ -497,6 +497,8 @@ struct MethodSum {
     }
 };
 
+LUA_METATABLE_NAMED(MethodSum);
+
 BOOST_AUTO_TEST_CASE(call_cpp_methods)
 {
     auto env = lua::create();

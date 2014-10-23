@@ -3,7 +3,7 @@
 
 #include "Qt5Widgets.hpp"
 
-class QGraphicsLayoutItem;
+#include <QGraphicsLayoutItem>
 
 LUA_METATABLE_BUILT(QGraphicsLayoutItem);
 

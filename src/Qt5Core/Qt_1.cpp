@@ -1,7 +1,9 @@
 #include "Qt.hpp"
+
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 #include "QString.hpp"
+#include "QFlags.hpp"
 
 #include <Qt>
 
@@ -10,22 +12,25 @@
 int luaopen_Qt5Core_Qt(lua_State* const state)
 {
     lua::thread env(state);
-
     env["Qt"] = lua::value::table;
-    auto t = env["Qt"];
 
-    lua::qt_constants_1(t);
-    lua::qt_constants_2(t);
-    lua::qt_constants_3(t);
-    lua::qt_constants_4(t);
+    lua::qt_constants_1(state);
+    lua::qt_constants_2(state);
+    lua::qt_constants_3(state);
+    lua::qt_constants_4(state);
 
     return 0;
 }
 
-void lua::qt_constants_1(lua::global& t)
+void lua::qt_constants_1(lua_State* const state)
 {
+    lua::thread env(state);
+    env["Qt"] = lua::value::table;
+    auto t = env["Qt"];
+
     // Qt::AlignmentFlag
     // Qt::Alignment
+    t["Alignment"] = QFlags_new<Qt::AlignmentFlag>;
     t["AlignLeft"] = Qt::AlignLeft;
     t["AlignRight"] = Qt::AlignRight;
     t["AlignHCenter"] = Qt::AlignHCenter;
@@ -75,7 +80,7 @@ void lua::qt_constants_1(lua::global& t)
     t["AA_MSWindowsUseDirect3DByDefault"] = Qt::AA_MSWindowsUseDirect3DByDefault;
 
     // enum Qt::ApplicationState
-    // flags Qt::ApplicationStates
+    t["ApplicationStates"] = QFlags_new<Qt::ApplicationState>;
     t["ApplicationSuspended"] = Qt::ApplicationSuspended;
     t["ApplicationHidden"] = Qt::ApplicationHidden;
     t["ApplicationInactive"] = Qt::ApplicationInactive;
@@ -212,7 +217,7 @@ void lua::qt_constants_1(lua::global& t)
     t["Sunday"] = Qt::Sunday;
 
     // enum Qt::DockWidgetArea
-    // flags Qt::DockWidgetAreas
+    t["DockWidgetAreas"] = QFlags_new<Qt::DockWidgetArea>;
     t["LeftDockWidgetArea"] = Qt::LeftDockWidgetArea;
     t["RightDockWidgetArea"] = Qt::RightDockWidgetArea;
     t["TopDockWidgetArea"] = Qt::TopDockWidgetArea;
@@ -221,7 +226,7 @@ void lua::qt_constants_1(lua::global& t)
     t["NoDockWidgetArea"] = Qt::NoDockWidgetArea;
 
     // enum Qt::DropAction
-    // flags Qt::DropActions
+    t["DropActions"] = QFlags_new<Qt::DropAction>;
     t["CopyAction"] = Qt::CopyAction;
     t["MoveAction"] = Qt::MoveAction;
     t["LinkAction"] = Qt::LinkAction;
@@ -230,7 +235,7 @@ void lua::qt_constants_1(lua::global& t)
     t["TargetMoveAction"] = Qt::TargetMoveAction;
 
     // enum Qt::Edge
-    // flags Qt::Edges
+    t["Edges"] = QFlags_new<Qt::Edge>;
     t["TopEdge"] = Qt::TopEdge;
     t["LeftEdge"] = Qt::LeftEdge;
     t["RightEdge"] = Qt::RightEdge;
@@ -246,7 +251,7 @@ void lua::qt_constants_1(lua::global& t)
     t["WindingFill"] = Qt::WindingFill;
 
     // enum Qt::FindChildOption
-    // flags Qt::FindChildOptions
+    t["FindChildOptions"] = QFlags_new<Qt::FindChildOption>;
     t["FindDirectChildrenOnly"] = Qt::FindDirectChildrenOnly;
     t["FindChildrenRecursively"] = Qt::FindChildrenRecursively;
 
@@ -268,7 +273,7 @@ void lua::qt_constants_1(lua::global& t)
     t["OtherFocusReason"] = Qt::OtherFocusReason;
 
     // enum Qt::GestureFlag
-    // flags Qt::GestureFlags
+    t["GestureFlags"] = QFlags_new<Qt::GestureFlag>;
     t["DontStartGestureOnChildren"] = Qt::DontStartGestureOnChildren;
     t["ReceivePartialGestures"] = Qt::ReceivePartialGestures;
     t["IgnoredGesturesPropagateToParent"] = Qt::IgnoredGesturesPropagateToParent;
@@ -314,7 +319,7 @@ void lua::qt_constants_1(lua::global& t)
     t["FuzzyHit"] = Qt::FuzzyHit;
 
     // enum Qt::ImageConversionFlag
-    // flags Qt::ImageConversionFlags
+    t["ImageConversionFlags"] = QFlags_new<Qt::ImageConversionFlag>;
     t["AutoColor"] = Qt::AutoColor;
     t["ColorOnly"] = Qt::ColorOnly;
     t["MonoOnly"] = Qt::MonoOnly;
@@ -332,17 +337,14 @@ void lua::qt_constants_1(lua::global& t)
     t["NoOpaqueDetection"] = Qt::NoOpaqueDetection;
 
     // enum Qt::InputMethodHint
-    // flags Qt::InputMethodHints
-
+    t["InputMethodHints"] = QFlags_new<Qt::InputMethodHint>;
     t["ImhNone"] = Qt::ImhNone;
-
     t["ImhHiddenText"] = Qt::ImhHiddenText;
     t["ImhNoAutoUppercase"] = Qt::ImhNoAutoUppercase;
     t["ImhPreferNumbers"] = Qt::ImhPreferNumbers;
     t["ImhPreferUppercase"] = Qt::ImhPreferUppercase;
     t["ImhPreferLowercase"] = Qt::ImhPreferLowercase;
     t["ImhNoPredictiveText"] = Qt::ImhNoPredictiveText;
-
     t["ImhDigitsOnly"] = Qt::ImhDigitsOnly;
     t["ImhFormattedNumbersOnly"] = Qt::ImhFormattedNumbersOnly;
     t["ImhUppercaseOnly"] = Qt::ImhUppercaseOnly;
@@ -350,11 +352,10 @@ void lua::qt_constants_1(lua::global& t)
     t["ImhDialableCharactersOnly"] = Qt::ImhDialableCharactersOnly;
     t["ImhEmailCharactersOnly"] = Qt::ImhEmailCharactersOnly;
     t["ImhUrlCharactersOnly"] = Qt::ImhUrlCharactersOnly;
-
     t["ImhExclusiveInputMask"] = Qt::ImhExclusiveInputMask;
 
     // enum Qt::InputMethodQuery
-    // flags Qt::InputMethodQueries
+    t["InputMethodQueries"] = QFlags_new<Qt::InputMethodQuery>;
     t["ImEnabled"] = Qt::ImEnabled;
     t["ImMicroFocus"] = Qt::ImMicroFocus;
     t["ImCursorRectangle"] = Qt::ImCursorRectangle;
@@ -400,7 +401,7 @@ void lua::qt_constants_1(lua::global& t)
     t["UserRole"] = Qt::UserRole;
 
     // enum Qt::ItemFlag
-    // flags Qt::ItemFlags
+    t["ItemFlags"] = QFlags_new<Qt::ItemFlag>;
     t["NoItemFlags"] = Qt::NoItemFlags;
     t["ItemIsSelectable"] = Qt::ItemIsSelectable;
     t["ItemIsEditable"] = Qt::ItemIsEditable;

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "convert/const_char_p.hpp"
+
 lua::userdata_type::~userdata_type()
 {
     // std::cerr << "Destroying type " << this << " named " << _name << std::endl;

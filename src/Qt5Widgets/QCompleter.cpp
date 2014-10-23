@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QCompleter>
-
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QObject.hpp"
@@ -12,6 +10,7 @@
 #include "../Qt5Core/QAbstractItemModel.hpp"
 #include "QAbstractItemView.hpp"
 #include "../Qt5Core/QStringList.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 void lua::QCompleter_metatable(lua_State* const state, const int pos)
 {

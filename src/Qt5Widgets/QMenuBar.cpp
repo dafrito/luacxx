@@ -7,6 +7,8 @@
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QPoint.hpp"
 #include "QWidget.hpp"
+#include "../Qt5Core/QRect.hpp"
+#include "QMenu.hpp"
 
 int QMenuBar_addAction(lua_State* const state)
 {

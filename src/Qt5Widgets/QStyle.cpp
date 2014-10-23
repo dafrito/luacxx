@@ -4,16 +4,19 @@
 #include "QSizePolicy.hpp"
 #include "../Qt5Core/Qt.hpp"
 
-#include <QStyle>
-
 #include "../Qt5Gui/QPainter.hpp"
 #include "../Qt5Core/QRect.hpp"
 #include "../Qt5Gui/QPixmap.hpp"
 #include "../Qt5Gui/QPalette.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Gui/QFontMetrics.hpp"
+#include "../Qt5Core/QPoint.hpp"
 #include "../Qt5Core/QSize.hpp"
 #include "../Qt5Core/QRect.hpp"
+#include "QSizePolicy.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "QStyleOption.hpp"
+#include "QWidget.hpp"
 
 int QStyle_drawItemText(lua_State* const state)
 {

@@ -1,7 +1,9 @@
 #include "QColor.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
 #include "../Qt5Core/QString.hpp"
+#include "../Qt5Core/Qt.hpp"
 
 void lua::QColor_metatable(lua_State* const state, const int pos)
 {
@@ -124,6 +126,18 @@ int luaopen_Qt5Gui_QColor(lua_State* const state)
 
     env["QColor"] = lua::value::table;
     env["QColor"]["new"] = QColor_new;
+    auto t = env["QColor"];
+
+    // enum QColor::NameFormat
+    t["HexRgb"] = QColor::HexRgb;
+    t["HexArgb"] = QColor::HexArgb;
+
+    // enum QColor::Spec
+    t["Rgb"] = QColor::Rgb;
+    t["Hsv"] = QColor::Hsv;
+    t["Cmyk"] = QColor::Cmyk;
+    t["Hsl"] = QColor::Hsl;
+    t["Invalid"] = QColor::Invalid;
 
     return 0;
 }

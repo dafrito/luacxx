@@ -1,9 +1,11 @@
 #include "QFile.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
-#include "QFileDevice.hpp"
 
 #include <QFile>
+#include "QFileDevice.hpp"
+#include "QByteArray.hpp"
+#include "QFlags.hpp"
 
 int QFile_open(lua_State* const state)
 {

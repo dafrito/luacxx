@@ -1,8 +1,10 @@
 #include "QSurface.hpp"
-
-#include "../Qt5Core/QObject.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
+#include "../Qt5Core/QObject.hpp"
+#include "QSurfaceFormat.hpp"
+#include "../Qt5Core/QSize.hpp"
 
 void lua::QSurface_metatable(lua_State* const state, const int pos)
 {

@@ -1,8 +1,6 @@
 #include "QImageReader.hpp"
 #include "../thread.hpp"
 
-#include <QImageReader>
-
 #include "QColor.hpp"
 #include "../Qt5Core/QRect.hpp"
 #include "../Qt5Core/QIODevice.hpp"
@@ -12,6 +10,7 @@
 #include "../Qt5Core/QByteArray.hpp"
 #include "QImageIOHandler.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/QStringList.hpp"
 
 // https://qt-project.org/doc/qt-5/qimagereader.html
 

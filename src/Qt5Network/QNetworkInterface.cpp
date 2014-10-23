@@ -3,6 +3,9 @@
 
 #include "../Qt5Core/QList.hpp"
 #include "QNetworkAddressEntry.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/QList.hpp"
+#include "QHostAddress.hpp"
 
 bool operator==(const QNetworkInterface& first, const QNetworkInterface& second)
 {

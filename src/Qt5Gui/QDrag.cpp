@@ -6,6 +6,7 @@
 #include "../Qt5Core/QPoint.hpp"
 #include "../Qt5Core/QMimeData.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 #include <QDrag>
 

@@ -16,6 +16,9 @@
 #include "../Qt5Core/QEvent.hpp"
 #include "../Qt5Gui/QPainterPath.hpp"
 #include "QGraphicsView.hpp"
+#include "../Qt5Gui/QPixmap.hpp"
+#include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/Qt.hpp"
 
 // https://qt-project.org/doc/qt-5/qgraphicsscene.html
 

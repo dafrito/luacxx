@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QStaticText>
-
 void lua::QStaticText_metatable(lua_State* const state, const int mt)
 {
     // TODO Set up metatable methods for this class

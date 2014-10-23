@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QBrush;
+#include <QBrush>
 
 LUA_METATABLE_BUILT(QBrush);
 

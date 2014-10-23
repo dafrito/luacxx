@@ -3,6 +3,8 @@
 #include "../thread.hpp"
 #include "../algorithm.hpp"
 #include "QVariant.hpp"
+#include "QPointF.hpp"
+#include "QSizeF.hpp"
 
 #include <QRectF>
 

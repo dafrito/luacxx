@@ -1,6 +1,7 @@
 #include "QQuaternion.hpp"
 
 #include "QVector3D.hpp"
+#include "QVector4D.hpp"
 #include "../convert/numeric.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"

@@ -6,8 +6,7 @@
 #include "../Qt5Core/QRect.hpp"
 #include "QPaintDevice.hpp"
 #include "QWindow.hpp"
-
-#include <QBackingStore>
+#include "../Qt5Core/QPoint.hpp"
 
 void* QBackingStore_handle(QBackingStore* const store)
 {

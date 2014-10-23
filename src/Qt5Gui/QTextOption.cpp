@@ -2,8 +2,14 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
-#include <QTextOption>
+void lua::QTextOption_Tab_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
+    // TODO Implement QTextOption::Tab
+}
 
 void lua::QTextOption_metatable(lua_State* const state, const int pos)
 {
@@ -44,6 +50,27 @@ int luaopen_Qt5Gui_QTextOption(lua_State* const state)
 
     env["QTextOption"] = lua::value::table;
     env["QTextOption"]["new"] = QTextOption_new;
+    auto t = env["QTextOption"];
+
+    // enum QTextOption::Flag
+    t["IncludeTrailingSpaces"] = QTextOption::IncludeTrailingSpaces;
+    t["ShowTabsAndSpaces"] = QTextOption::ShowTabsAndSpaces;
+    t["ShowLineAndParagraphSeparators"] = QTextOption::ShowLineAndParagraphSeparators;
+    t["AddSpaceForLineAndParagraphSeparators"] = QTextOption::AddSpaceForLineAndParagraphSeparators;
+    t["SuppressColors"] = QTextOption::SuppressColors;
+
+    // enum QTextOption::TabType
+    t["LeftTab"] = QTextOption::LeftTab;
+    t["RightTab"] = QTextOption::RightTab;
+    t["CenterTab"] = QTextOption::CenterTab;
+    t["DelimiterTab"] = QTextOption::DelimiterTab;
+
+    // enum QTextOption::WrapMode
+    t["NoWrap"] = QTextOption::NoWrap;
+    t["WordWrap"] = QTextOption::WordWrap;
+    t["ManualWrap"] = QTextOption::ManualWrap;
+    t["WrapAnywhere"] = QTextOption::WrapAnywhere;
+    t["WrapAtWordBoundaryOrAnywhere"] = QTextOption::WrapAtWordBoundaryOrAnywhere;
 
     return 0;
 }

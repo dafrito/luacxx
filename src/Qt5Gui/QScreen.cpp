@@ -9,6 +9,10 @@
 #include "QTransform.hpp"
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QVector.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/QSizeF.hpp"
 
 void lua::QScreen_metatable(lua_State* const state, const int pos)
 {

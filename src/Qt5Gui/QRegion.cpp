@@ -3,6 +3,9 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 #include "../Qt5Core/QRect.hpp"
+#include "QBitmap.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "QPolygon.hpp"
 
 int QRegion_contains(lua_State* const state)
 {
@@ -88,6 +91,11 @@ int luaopen_Qt5Gui_QRegion(lua_State* const state)
 
     env["QRegion"] = lua::value::table;
     env["QRegion"]["new"] = QRegion_new;
+    auto t = env["QRegion"];
+
+    // enum QRegion::RegionType
+    t["Rectangle"] = QRegion::Rectangle;
+    t["Ellipse"] = QRegion::Ellipse;
 
     return 0;
 }

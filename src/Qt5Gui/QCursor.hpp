@@ -3,7 +3,7 @@
 
 #include "Qt5Gui.hpp"
 
-class QCursor;
+#include <QCursor>
 
 LUA_METATABLE_BUILT(QCursor);
 

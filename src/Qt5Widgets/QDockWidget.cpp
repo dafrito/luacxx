@@ -2,11 +2,10 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QDockWidget>
-
 #include "QWidget.hpp"
 #include "QAction.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 void lua::QDockWidget_metatable(lua_State* const state, const int pos)
 {

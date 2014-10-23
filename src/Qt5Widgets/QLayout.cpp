@@ -2,7 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QLayout>
 #include "QLayoutItem.hpp"
 #include "QWidget.hpp"
 #include "../Qt5Core/QMargins.hpp"

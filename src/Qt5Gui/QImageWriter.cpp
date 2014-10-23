@@ -1,13 +1,12 @@
 #include "QImageWriter.hpp"
 #include "../thread.hpp"
 
-#include <QImageWriter>
-
 #include "../Qt5Core/QIODevice.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "QImageIOHandler.hpp"
 #include "../Qt5Core/QByteArray.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "QImage.hpp"
 
 void lua::QImageWriter_metatable(lua_State* const state, const int pos)
 {

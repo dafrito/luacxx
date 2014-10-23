@@ -2,7 +2,12 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QImage>
+#include "../Qt5Core/QVector.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/QPoint.hpp"
+#include "../Qt5Core/QRect.hpp"
+#include "../Qt5Core/QSize.hpp"
 
 int QImage_bits(lua_State* const state)
 {

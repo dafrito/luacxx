@@ -2,7 +2,8 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QOpenGLFunctions>
+#include "../Qt5Core/QFlags.hpp"
+#include "QOpenGLContext.hpp"
 
 void lua::QOpenGLFunctions_metatable(lua_State* const state, const int pos)
 {
@@ -169,6 +170,24 @@ int luaopen_Qt5Gui_QOpenGLFunctions(lua_State* const state)
 
     env["QOpenGLFunctions"] = lua::value::table;
     env["QOpenGLFunctions"]["new"] = QOpenGLFunctions_new;
+    auto t = env["QOpenGLFunctions"];
+
+    // enum QOpenGLFunctions::OpenGLFeature
+    t["Multitexture"] = QOpenGLFunctions::Multitexture;
+    t["Shaders"] = QOpenGLFunctions::Shaders;
+    t["Buffers"] = QOpenGLFunctions::Buffers;
+    t["Framebuffers"] = QOpenGLFunctions::Framebuffers;
+    t["BlendColor"] = QOpenGLFunctions::BlendColor;
+    t["BlendEquation"] = QOpenGLFunctions::BlendEquation;
+    t["BlendEquationSeparate"] = QOpenGLFunctions::BlendEquationSeparate;
+    t["BlendFuncSeparate"] = QOpenGLFunctions::BlendFuncSeparate;
+    t["BlendSubtract"] = QOpenGLFunctions::BlendSubtract;
+    t["CompressedTextures"] = QOpenGLFunctions::CompressedTextures;
+    t["Multisample"] = QOpenGLFunctions::Multisample;
+    t["StencilSeparate"] = QOpenGLFunctions::StencilSeparate;
+    t["NPOTTextures"] = QOpenGLFunctions::NPOTTextures;
+    t["NPOTTextureRepeat"] = QOpenGLFunctions::NPOTTextureRepeat;
+    t["FixedFunctionPipeline"] = QOpenGLFunctions::FixedFunctionPipeline;
 
     return 0;
 }

@@ -2,9 +2,9 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QGraphicsView>
-
 #include "../Qt5Gui/QBrush.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Gui/QPainterPath.hpp"
 #include "../Qt5Core/QRect.hpp"
 #include "../Qt5Core/QPoint.hpp"
@@ -15,6 +15,7 @@
 #include "../Qt5Gui/QTransform.hpp"
 #include "QGraphicsScene.hpp"
 #include "QAbstractScrollArea.hpp"
+#include "../Qt5Core/QRectF.hpp"
 
 int QGraphicsView_centerOn(lua_State* const state)
 {

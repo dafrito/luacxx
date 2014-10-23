@@ -8,6 +8,11 @@
 #include "QIcon.hpp"
 #include "QSurfaceFormat.hpp"
 #include "../Qt5Core/QPoint.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "QCursor.hpp"
+#include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/QMargins.hpp"
+#include "QRegion.hpp"
 
 #include "../convert/callable.hpp"
 #include "../convert/numeric.hpp"

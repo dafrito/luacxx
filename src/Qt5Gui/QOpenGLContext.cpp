@@ -8,8 +8,8 @@
 #include "../Qt5Core/QSet.hpp"
 #include "../Qt5Core/QObject.hpp"
 #include "QSurface.hpp"
-
-#include <QOpenGLContext>
+#include "QSurfaceFormat.hpp"
+#include "../Qt5Core/QByteArray.hpp"
 
 int QOpenGLContext_versionFunctions(lua_State* const state)
 {

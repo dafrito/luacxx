@@ -7,10 +7,26 @@
 #ifdef HAVE_Qt5Gui
 #include <QResizeEvent>
 #include <QExposeEvent>
+#include "../Qt5Gui/QRegion.hpp"
 #endif
 
 std::string QEvent_type(QEvent* event);
 std::string QEvent_tostring(QEvent* event);
+
+#ifdef HAVE_Qt5Gui
+void lua::QResizeEvent_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
+    mt["oldSize"] = &QResizeEvent::oldSize;
+    mt["size"] = &QResizeEvent::size;
+}
+
+void lua::QExposeEvent_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
+    mt["region"] = &QExposeEvent::region;
+}
+#endif
 
 void lua::QEvent_metatable(lua_State* const state, const int pos, QEvent* const value)
 {
@@ -29,11 +45,10 @@ void lua::QEvent_metatable(lua_State* const state, const int pos, QEvent* const 
     if (value) {
         switch (value->type()) {
         case QEvent::Resize:
-            mt["oldSize"] = &QResizeEvent::oldSize;
-            mt["size"] = &QResizeEvent::size;
+            lua::QResizeEvent_metatable(state, pos);
             break;
         case QEvent::Expose:
-            mt["region"] = &QExposeEvent::region;
+            lua::QExposeEvent_metatable(state, pos);
             break;
         default:
             break;

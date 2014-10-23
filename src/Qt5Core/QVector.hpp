@@ -2,7 +2,9 @@
 #define LUACXX_QVECTOR_INCLUDED
 
 #include "Qt5Core.hpp"
+#include "QList.hpp"
 #include "../convert/callable.hpp"
+#include "../convert/vector.hpp"
 
 #include <QVector>
 

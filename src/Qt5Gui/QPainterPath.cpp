@@ -1,11 +1,16 @@
 #include "QPainterPath.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
+
 #include "QTransform.hpp"
 #include "../Qt5Core/QPointF.hpp"
 #include "QMatrix.hpp"
 #include "../Qt5Core/QRectF.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/Qt.hpp"
+#include "QFont.hpp"
+#include "QPolygonF.hpp"
+#include "QRegion.hpp"
 
 // https://qt-project.org/doc/qt-5/qpainterpath.html
 

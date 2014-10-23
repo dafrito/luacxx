@@ -38,4 +38,6 @@ struct Get<const QString&>
 
 } // namespace lua
 
+LUA_METATABLE_BUILT(QString);
+
 #endif // luacxx_Qt5Core_QString_INCLUDED

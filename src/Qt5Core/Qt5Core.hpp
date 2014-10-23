@@ -6,6 +6,8 @@
 #include "../convert/numeric.hpp"
 #include "../convert/const_char_p.hpp"
 #include "../convert/string.hpp"
+#include "../convert/char.hpp"
+#include "../convert/callable.hpp"
 
 #include "QString.hpp"
 

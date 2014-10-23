@@ -1,6 +1,8 @@
 #include "numeric.hpp"
 #include "../algorithm.hpp"
 
+#include "const_char_p.hpp"
+
 void lua::store_lua_Integer(long& destination, lua_State* const state, const int source_pos)
 {
     lua::index source(state, source_pos);

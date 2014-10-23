@@ -5,9 +5,7 @@
 #include "../Qt5Core/QSizeF.hpp"
 #include "../Qt5Core/QRectF.hpp"
 #include "QSizePolicy.hpp"
-
-#include <QGraphicsLayoutItem>
-#include <QGraphicsItem>
+#include "QGraphicsItem.hpp"
 
 int QGraphicsLayoutItem_effectiveSizeHint(lua_State* const state)
 {

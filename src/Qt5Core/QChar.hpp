@@ -29,4 +29,6 @@ struct Store<QChar>
 
 } // namespace lua
 
+LUA_METATABLE_NAMED(QChar);
+
 #endif // luacxx_QChar_INCLUDED
