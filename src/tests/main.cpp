@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE luacxx
 #include "main.hpp"
+#include "enum.hpp"
 
 #include <boost/test/unit_test.hpp>
 
@@ -709,6 +710,26 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance)
 
     BOOST_CHECK_EQUAL(child_as_value, lua::get<Value*>(env, -1));
     BOOST_CHECK_EQUAL(child_as_named, lua::get<Named*>(env, -1));
+}
+
+enum class Color {
+    Red = 1,
+    Blue,
+    Green
+};
+
+LUA_METATABLE_ENUM(Color);
+
+BOOST_AUTO_TEST_CASE(enums)
+{
+    auto env = lua::create();
+    env["Red"] = Color::Red;
+    env["Green"] = Color::Green;
+    env["Blue"] = Color::Blue;
+    env["Test"] = Color::Red;
+
+    lua::run_string(env, "print('Test', Test:value(), 'Red', Red:value())");
+    BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return Test == Red"));
 }
 
 #ifdef HAVE_gobject_introspection

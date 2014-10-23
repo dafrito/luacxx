@@ -2,10 +2,12 @@
 #define luacxx_QDate_INCLUDED
 
 #include "Qt5Core.hpp"
+#include "../enum.hpp"
 
 #include <QDate>
 
 LUA_METATABLE_BUILT(QDate)
+LUA_METATABLE_ENUM(QDate::MonthNameType);
 
 extern "C" int luaopen_luacxx_QDate(lua_State* const);
 

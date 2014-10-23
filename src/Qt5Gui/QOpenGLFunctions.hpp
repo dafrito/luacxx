@@ -2,10 +2,12 @@
 #define LUACXX_QOPENGLFUNCTIONS_INCLUDED
 
 #include "Qt5Gui.hpp"
+#include "../enum.hpp"
 
-class QOpenGLFunctions;
+#include <QOpenGLFunctions>
 
 LUA_METATABLE_BUILT(QOpenGLFunctions);
+LUA_METATABLE_ENUM(QOpenGLFunctions::OpenGLFeature);
 
 extern "C" int luaopen_Qt5Gui_QOpenGLFunctions(lua_State* const);
 

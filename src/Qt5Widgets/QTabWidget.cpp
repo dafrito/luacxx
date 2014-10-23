@@ -2,8 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QTabWidget>
-
 #include "QWidget.hpp"
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QSize.hpp"

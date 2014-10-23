@@ -2,10 +2,12 @@
 #define luacxx_QSslError_INCLUDED
 
 #include "Qt5Network.hpp"
+#include "../enum.hpp"
 
 #include <QSslError>
 
 LUA_METATABLE_BUILT(QSslError);
+LUA_METATABLE_ENUM(QSslError::SslError);
 
 extern "C" int luaopen_luacxx_QSslError(lua_State* const);
 

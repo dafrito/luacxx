@@ -2,10 +2,12 @@
 #define LUA_CXX_QIMAGEIOHANDLER_INCLUDED
 
 #include "Qt5Gui.hpp"
+#include "../enum.hpp"
 
-class QImageIOHandler;
+#include <QImageIOHandler>
 
 LUA_METATABLE_BUILT(QImageIOHandler);
+LUA_METATABLE_ENUM(QImageIOHandler::ImageOption);
 
 extern "C" int luaopen_luacxx_QImageIOHandler(lua_State* const);
 

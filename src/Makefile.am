@@ -19,6 +19,7 @@ nobase_pkginclude_HEADERS = \
 	config.hpp \
 	algorithm.hpp \
 	stack.hpp \
+	enum.hpp \
 	link.hpp \
 	index.hpp \
 	error.hpp \

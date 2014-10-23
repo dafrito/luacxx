@@ -1,11 +1,13 @@
 #ifndef luacxx_QSslCertificate_INCLUDED
 #define luacxx_QSslCertificate_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Network.hpp"
+#include "../enum.hpp"
 
-class QSslCertificate;
+#include <QSslCertificate>
 
 LUA_METATABLE_BUILT(QSslCertificate);
+LUA_METATABLE_ENUM(QSslCertificate::SubjectInfo);
 
 extern "C" int luaopen_luacxx_QSslCertificate(lua_State* const);
 
