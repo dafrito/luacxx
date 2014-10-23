@@ -1,5 +1,5 @@
-#ifndef LUACXX_QEVENTLOOP_INCLUDED
-#define LUACXX_QEVENTLOOP_INCLUDED
+#ifndef LUACXX_QEventLoop_INCLUDED
+#define LUACXX_QEventLoop_INCLUDED
 
 #include "Qt5Core.hpp"
 #include "../enum.hpp"
@@ -11,4 +11,4 @@ LUA_METATABLE_ENUM(QEventLoop::ProcessEventsFlag)
 
 extern "C" int luaopen_Qt5Core_QEventLoop(lua_State* const);
 
-#endif // LUACXX_QEVENTLOOP_INCLUDED
+#endif // LUACXX_QEventLoop_INCLUDED
