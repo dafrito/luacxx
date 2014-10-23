@@ -49,11 +49,13 @@ VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes
 checkvalgrind:
 	$(VALGRIND) ./src/.libs/lt-test_$(TESTPROG)
 
+RUNPROG=qt_window
+
 valgrind:
-	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
+	cd lua && $(VALGRIND) ./luacxx demo.lua $(RUNPROG)
 
 run: lua
-	cd lua && ./luacxx demo.lua qt_window
+	cd lua && ./luacxx demo.lua $(RUNPROG)
 
 debug: lua
 	cd lua && gdb ../src/.libs/lt-luacxx
