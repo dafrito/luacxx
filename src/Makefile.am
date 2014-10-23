@@ -60,30 +60,8 @@ pkg-config/luacxx.pc: pkg-config/luacxx.pc.head
 	echo "Libs: -L$(libdir) -lluacxx $(libluacxx_la_LIBADD)" >>$@
 	echo "Cflags: -I$(includedir) $(libluacxx_la_CPPFLAGS)" >>$@
 
-bin_PROGRAMS = luacxx
-luacxx_CPPFLAGS = $(libluacxx_la_CPPFLAGS)
-luacxx_LDADD = libluacxx.la
-
-luacxx_SOURCES = \
-	luacxx.cpp
-
 check_PROGRAMS = \
-	test_luacxx \
 	test_luacxx_without_conversions
-
-test_luacxx_CXXFLAGS = \
-	$(libluacxx_la_CPPFLAGS) \
-	@BOOST_CPPFLAGS@ \
-	-DBOOST_TEST_DYN_LINK \
-	-DTEST_DIR=\"$(top_srcdir)/src/tests/\"
-
-test_luacxx_LDADD = \
-	libluacxx.la \
-	@BOOST_LDFLAGS@ \
-	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
-
-test_luacxx_SOURCES = \
-	tests/main.cpp
 
 test_luacxx_without_conversions_CXXFLAGS = \
 	$(libluacxx_la_CPPFLAGS) \
@@ -148,8 +126,8 @@ libluacxx_Qt5Core_la_LIBADD = \
 # It's necessary to include these since Qt likes to have global static objects
 # that are destroyed on exit. If Qt's libraries are loaded from Lua, then Lua
 # will unload Qt's source code without removing the registered exit handler.
-luacxx_CPPFLAGS += @Qt5Core_CFLAGS@ @Qt5Gui_CFLAGS@
-luacxx_LDADD += $(libluacxx_Qt5Core_la_LIBADD)
+luacxx_CPPFLAGS = @Qt5Core_CFLAGS@ @Qt5Gui_CFLAGS@
+luacxx_LDADD = $(libluacxx_Qt5Core_la_LIBADD)
 
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
@@ -255,7 +233,9 @@ pkg-config/luacxx-Qt5Core.pc: pkg-config/Qt5Core.pc.head
 	echo "Requires: luacxx Qt5Core" >>$@
 	echo "Libs: -L$(libdir) -lluacxx-Qt5Core" >>$@
 	echo "Cflags: -I$(includedir) $(libluacxx_Qt5Core_la_CPPFLAGS)" >>$@
-
+else
+luacxx_CPPFLAGS =
+luacxx_LDADD =
 endif
 
 if BUILD_Qt5Network
@@ -885,5 +865,29 @@ pkg-config/luacxx-linux.pc: pkg-config/linux.pc.head
 	echo "Cflags: -I$(includedir) $(libluacxx_linux_la_CPPFLAGS)" >>$@
 
 endif
+
+bin_PROGRAMS = luacxx
+luacxx_CPPFLAGS += $(libluacxx_la_CPPFLAGS)
+luacxx_LDADD += libluacxx.la libluacxx-Qt5Core.la libluacxx-Qt5Gui.la
+
+luacxx_SOURCES = \
+	luacxx.cpp
+
+check_PROGRAMS += \
+	test_luacxx
+
+test_luacxx_CXXFLAGS = \
+	$(libluacxx_la_CPPFLAGS) \
+	@BOOST_CPPFLAGS@ \
+	-DBOOST_TEST_DYN_LINK \
+	-DTEST_DIR=\"$(top_srcdir)/src/tests/\"
+
+test_luacxx_LDADD = \
+	libluacxx.la \
+	@BOOST_LDFLAGS@ \
+	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
+
+test_luacxx_SOURCES = \
+	tests/main.cpp
 
 TESTS = $(check_PROGRAMS)
