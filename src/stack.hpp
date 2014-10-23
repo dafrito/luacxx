@@ -583,7 +583,7 @@ public:
         _info = &info;
     }
 
-    const userdata_type* type() const
+    const userdata_type* info() const
     {
         return _info;
     }

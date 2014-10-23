@@ -103,7 +103,7 @@ const lua::userdata_type* lua::get_type_info(lua_State* const state, int pos)
     if (!userdata_block) {
         return nullptr;
     }
-    return userdata_block->type();
+    return userdata_block->info();
 }
 
 std::string lua::class_name(const lua::index& index)
