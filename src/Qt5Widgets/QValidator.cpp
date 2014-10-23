@@ -2,13 +2,12 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QValidator>
-
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QLocale.hpp"
 
-void lua::QValidator_metatable(const lua::index& mt)
+void lua::QValidator_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["fixup"] = &QValidator::fixup;
     mt["locale"] = &QValidator::locale;
     mt["setLocale"] = &QValidator::setLocale;
