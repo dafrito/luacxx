@@ -2,6 +2,7 @@
 #define LUACXX_QPAINTDEVICE_INCLUDED
 
 #include "Qt5Gui.hpp"
+
 #include <QPaintDevice>
 
 LUA_METATABLE_BUILT(QPaintDevice);
