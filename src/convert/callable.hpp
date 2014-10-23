@@ -299,7 +299,7 @@ int invoke_callable(lua_State* const state)
         } else {
             msg << " but none were given";
         }
-        throw lua::error(msg.str());
+        throw lua::error(state, msg.str());
     }
 
     lua::index index(state, 1);
