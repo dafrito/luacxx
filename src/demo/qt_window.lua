@@ -14,10 +14,10 @@ function demo.qt_window(...)
     require "Qt5Gui.QVector3D";
     require "Qt5Gui.QRegion";
 
-    local qApp = QGuiApplication:new("demo", ...);
+    local qApp = QGuiApplication.new("demo", ...);
 
-    window = QWindow:new();
-    store = QBackingStore:new(window);
+    window = QWindow.new();
+    store = QBackingStore.new(window);
 
     local function render()
         if not window:isExposed() then
@@ -27,11 +27,11 @@ function demo.qt_window(...)
             return;
         end;
 
-        local rect = QRect:new(0, 0, window:width(), window:height());
+        local rect = QRect.new(0, 0, window:width(), window:height());
 
-        store:beginPaint(QRegion:new(rect));
+        store:beginPaint(QRegion.new(rect));
 
-        local painter = QPainter:new();
+        local painter = QPainter.new();
 
         painter:begin(store:paintDevice());
         painter:fillRect(0, 0, window:width(), window:height(), Qt.white);
@@ -39,7 +39,7 @@ function demo.qt_window(...)
         painter:endPainting();
 
         store:endPaint();
-        store:flush(QRegion:new(rect));
+        store:flush(QRegion.new(rect));
     end;
 
     window:event(function(event)
