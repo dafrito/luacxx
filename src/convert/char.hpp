@@ -19,7 +19,7 @@ struct Store<char>
 {
     static void store(char& destination, lua_State* const state, const int source)
     {
-        if (lua_isstring(state, source)) {
+        if (lua_type(state, source) == LUA_TSTRING) {
             size_t len = 1;
             destination = *lua_tolstring(state, source, &len);
         } else {

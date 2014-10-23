@@ -86,7 +86,7 @@ int QColor_new(lua_State* const state)
     if (lua_gettop(state) == 0) {
         // QColor()
         lua::make<QColor>(state);
-    } else if (lua::is_type<QString>(state, 1) || lua_isstring(state, 1)) {
+    } else if (lua::is_type<QString>(state, 1) || lua_type(state, 1) == LUA_TSTRING) {
         // QColor(const QString & name)
         // QColor(const char * name)
         lua::make<QColor>(state, lua::get<QString>(state, 1));
