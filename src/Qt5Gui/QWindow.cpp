@@ -154,27 +154,24 @@ int QWindow_new(lua_State* const state)
     typedef lua::QObservable<QWindow> Window;
 
     // Did we get an extra argument?
-    if (lua_gettop(state) > 1 && lua_type(state, 2) != LUA_TNIL) {
+    if (lua_gettop(state) > 1 && lua_type(state, 1) != LUA_TNIL) {
         // We did, so find out what it is
-        auto parent = lua::get<QObject*>(state, 2);
+        auto parent = lua::get<QObject*>(state, 1);
         if (!parent) {
             // Not recognized, so bail.
-            throw lua::error("A QWindow or QScreen must be provided for QWindow:new(parent)");
+            throw lua::error("A QWindow or QScreen must be provided for QWindow.new(parent)");
         }
 
         if (parent->inherits("QWindow")) {
-            lua::make<Window>(state, state, lua::get<QWindow*>(state, 2));
+            lua::make<Window>(state, state, lua::get<QWindow*>(state, 1));
         } else {
-            lua::make<Window>(state, state, lua::get<QScreen*>(state, 2));
+            lua::make<Window>(state, state, lua::get<QScreen*>(state, 1));
         }
-        lua_replace(state, 1);
-        lua_settop(state, 1);
         return 1;
 
     }
 
     // Create a QWindow within Lua
-    lua_settop(state, 0);
     lua::make<Window>(state, state);
     return 1;
 }
