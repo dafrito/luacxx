@@ -859,6 +859,16 @@ and used for all subsequent objects with that metatable's name.
 
 namespace lua {
 
+#ifndef LUACXX_AUTO_METATABLE
+template <class T>
+struct Metatable
+{
+    static_assert(sizeof(T) != sizeof(T), "Default metatables are not provided automatically."
+        " Use -DLUACXX_AUTO_METATABLE to override."
+    );
+};
+#else
+
 template <class T>
 struct Metatable
 {
@@ -878,6 +888,7 @@ struct Metatable
         return true;
     }
 };
+#endif
 
 template <>
 struct Metatable<void>

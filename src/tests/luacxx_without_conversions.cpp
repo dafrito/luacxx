@@ -1,10 +1,12 @@
 #define BOOST_TEST_MODULE luacxx_without_conversions
 #include <boost/test/unit_test.hpp>
 
+#define LUACXX_AUTO_METATABLE
 #include "stack.hpp"
 #include "thread.hpp"
 #include "algorithm.hpp"
 #include "load.hpp"
+
 
 BOOST_AUTO_TEST_CASE(luacxx_without_conversions)
 {
