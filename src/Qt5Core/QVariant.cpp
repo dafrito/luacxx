@@ -9,9 +9,16 @@
 #include <unordered_map>
 #include <QStringList>
 
-namespace {
-std::unordered_map<int, std::function<void(lua_State* const, const QVariant&)>> qvariant_push_handler;
-std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>> qvariant_store_handler;
+std::unordered_map<int, std::function<void(lua_State* const, const QVariant&)>>& qvariant_push_handler()
+{
+    static std::unordered_map<int, std::function<void(lua_State* const, const QVariant&)>> _rv;
+    return _rv;
+}
+
+std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>>& qvariant_store_handler()
+{
+    static std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>> _rv;
+    return _rv;
 }
 
 namespace std {
@@ -28,12 +35,12 @@ namespace std {
 
 void lua::set_qvariant_push_handler(const int type, const std::function<void(lua_State* const, const QVariant&)>& handler)
 {
-    qvariant_push_handler[type] = handler;
+    qvariant_push_handler()[type] = handler;
 }
 
 void lua::set_qvariant_store_handler(const int type, const std::function<void(QVariant&, const lua::index&)>& handler)
 {
-    qvariant_store_handler[type] = handler;
+    qvariant_store_handler()[type] = handler;
 }
 
 void lua::push_qvariant(lua_State* const state, const QVariant& value)
@@ -84,8 +91,8 @@ void lua::push_qvariant(lua_State* const state, const QVariant& value)
         }
         default:
         {
-            auto converter = qvariant_push_handler.find(value.userType());
-            if (converter != qvariant_push_handler.end()) {
+            auto converter = qvariant_push_handler().find(value.userType());
+            if (converter != qvariant_push_handler().end()) {
                 converter->second(state, value);
             } else {
                 throw std::logic_error(std::string("No handler exists to push QVariant type: ") + value.typeName());
@@ -155,8 +162,8 @@ void lua::store_qvariant(QVariant& destination, lua_State* const state, const in
         }
         default:
         {
-            auto converter = qvariant_store_handler.find(destination.userType());
-            if (converter != qvariant_store_handler.end()) {
+            auto converter = qvariant_store_handler().find(destination.userType());
+            if (converter != qvariant_store_handler().end()) {
                 converter->second(destination, source);
             } else {
                 throw std::logic_error(std::string("No QVariant handler exists to store type: ") + destination.typeName());
