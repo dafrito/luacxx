@@ -23,8 +23,8 @@ int QPoint_new(lua_State* const state)
 {
     if (lua_gettop(state) > 1) {
         lua::make<QPoint>(state,
-            lua::get<int>(state, 2),
-            lua::get<int>(state, 3)
+            lua::get<int>(state, 1),
+            lua::get<int>(state, 2)
         );
     } else {
         lua::make<QPoint>(state);

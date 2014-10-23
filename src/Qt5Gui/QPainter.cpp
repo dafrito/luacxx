@@ -240,7 +240,7 @@ int QPainter_drawEllipse(lua_State* const state)
         return 0;
     }
 
-    if (lua_gettop(state) >= 4) {
+    if (lua_gettop(state) >= 5) {
         // void    drawEllipse ( int x, int y, int width, int height )
         self->drawEllipse(
             lua::get<int>(state, 2),
@@ -938,10 +938,10 @@ int QPainter_drawRect(lua_State* const state)
     if (lua_gettop(state) > 2) {
         // void drawRect(int x, int y, int width, int height)
         self->drawRect(
+            lua::get<int>(state, 2),
             lua::get<int>(state, 3),
             lua::get<int>(state, 4),
-            lua::get<int>(state, 5),
-            lua::get<int>(state, 6)
+            lua::get<int>(state, 5)
         );
         return 0;
     }

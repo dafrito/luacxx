@@ -69,18 +69,61 @@ void lua::QRegion_metatable(lua_State* const state, const int pos)
 
 int QRegion_new(lua_State* const state)
 {
-    lua::make<QRegion>(state);
-
-    if (lua::is_type<QRect>(state, 2)) {
-        if (lua_gettop(state) > 2) {
+    if (lua::empty(state)) {
+        // QRegion()
+        lua::make<QRegion>(state);
+    } else if (lua_gettop(state) > 2) {
+        // QRegion(int x, int y, int w, int h, RegionType t = Rectangle)
+        if (lua_gettop(state) == 4) {
             lua::make<QRegion>(state,
-                lua::get<QRect>(state, 2)
+                lua::get<int>(state, 1),
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
             );
         } else {
-            lua::make<QRegion>(state, lua::get<QRect>(state, 2));
+            lua::make<QRegion>(state,
+                lua::get<int>(state, 1),
+                lua::get<int>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4),
+                lua::get<QRegion::RegionType>(state, 5)
+            );
         }
-    } else {
-        lua::make<QRegion>(state);
+    } else if (lua::is_type<QPolygon>(state, 1)) {
+        // QRegion(const QPolygon & a, Qt::FillRule fillRule = Qt::OddEvenFill)
+        if (lua_gettop(state) == 1) {
+            lua::make<QRegion>(state,
+                lua::get<const QPolygon&>(state, 1)
+            );
+        } else {
+            lua::make<QRegion>(state,
+                lua::get<const QPolygon&>(state, 1),
+                lua::get<Qt::FillRule>(state, 2)
+            );
+        }
+    } else if (lua::is_type<QRect>(state, 1)) {
+        // QRegion(const QRect & r, RegionType t = Rectangle)
+        if (lua_gettop(state) > 1) {
+            lua::make<QRegion>(state,
+                lua::get<QRect>(state, 1),
+                lua::get<QRegion::RegionType>(state, 2)
+            );
+        } else {
+            lua::make<QRegion>(state,
+                lua::get<QRect>(state, 1)
+            );
+        }
+    } else if (lua::is_type<QBitmap>(state, 1)) {
+        // QRegion(const QBitmap & bm)
+        lua::make<QRegion>(state,
+            lua::get<const QBitmap&>(state, 1)
+        );
+    } else if (lua::is_type<QRegion>(state, 1)) {
+        // QRegion(const QRegion & r)
+        lua::make<QRegion>(state,
+            lua::get<const QRegion&>(state, 1)
+        );
     }
     return 1;
 }

@@ -120,12 +120,12 @@ void lua::QRect_metatable(lua_State* const state, const int pos)
 
 int QRect_new(lua_State* const state)
 {
-    if (lua_gettop(state) >= 5) {
+    if (lua_gettop(state) >= 4) {
         lua::make<QRect>(state,
+            lua::get<int>(state, 1),
             lua::get<int>(state, 2),
             lua::get<int>(state, 3),
-            lua::get<int>(state, 4),
-            lua::get<int>(state, 5)
+            lua::get<int>(state, 4)
         );
     } else {
         lua::make<QRect>(state);

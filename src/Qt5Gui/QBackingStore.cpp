@@ -51,7 +51,7 @@ void lua::QBackingStore_metatable(lua_State* const state, const int pos)
 
 int QBackingStore_new(lua_State* const state)
 {
-    lua::make<QBackingStore>(state, lua::get<QWindow*>(state, 2));
+    lua::make<QBackingStore>(state, lua::get<QWindow*>(state, 1));
     return 1;
 }
 

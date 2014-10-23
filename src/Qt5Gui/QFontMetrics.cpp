@@ -52,21 +52,21 @@ void lua::QFontMetrics_metatable(lua_State* const state, const int pos)
 
 int QFontMetrics_new(lua_State* const state)
 {
-    if (lua::is_type<QFontMetrics>(state, 2)) {
-        lua::make<QFontMetrics>(state, lua::get<const QFontMetrics&>(state, 2));
+    if (lua::is_type<QFontMetrics>(state, 1)) {
+        lua::make<QFontMetrics>(state, lua::get<const QFontMetrics&>(state, 1));
         return 1;
     }
 
-    if (lua_gettop(state) > 2) {
+    if (lua_gettop(state) > 1) {
         lua::make<QFontMetrics>(state,
-            lua::get<const QFont&>(state, 2),
-            lua::get<QPaintDevice*>(state, 3)
+            lua::get<const QFont&>(state, 1),
+            lua::get<QPaintDevice*>(state, 2)
         );
         return 1;
     }
 
     lua::make<QFontMetrics>(state,
-        lua::get<const QFont&>(state, 2)
+        lua::get<const QFont&>(state, 1)
     );
     return 1;
 }

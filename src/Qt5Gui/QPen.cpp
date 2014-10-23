@@ -42,52 +42,54 @@ void lua::QPen_metatable(lua_State* const state, const int pos)
 int QPen_new(lua_State* const state)
 {
     switch (lua_gettop(state)) {
-    case 1:
     case 0:
         // QPen()
         lua::make<QPen>(state);
         break;
-    case 2:
+    case 1:
         // QPen(Qt::PenStyle style)
         // QPen(const QColor & color)
         // QPen(const QPen & pen)
-        lua::make<QPen>(state, lua::get<const QColor&>(state, 2));
+        if (lua::is_type<QColor>(state, 1)) {
+            lua::make<QPen>(state, lua::get<const QColor&>(state, 1));
+        } else if (lua::is_type<QPen>(state, 1)) {
+            lua::make<QPen>(state, lua::get<const QPen&>(state, 1));
+        } else {
+            lua::make<QPen>(state, lua::get<Qt::PenStyle>(state, 1));
+        }
         break;
-    case 3:
+    case 2:
         // QPen(const QBrush & brush, qreal width)
         lua::make<QPen>(state,
-            lua::get<const QBrush&>(state, 2),
-            lua::get<qreal>(state, 3),
-            lua::get<Qt::PenStyle>(state, 4),
-            lua::get<Qt::PenCapStyle>(state, 5),
-            lua::get<Qt::PenJoinStyle>(state, 6)
+            lua::get<const QBrush&>(state, 1),
+            lua::get<qreal>(state, 2)
         );
-    case 4:
+    case 3:
         // QPen(const QBrush& brush, qreal width, Qt::PenStyle style)
         lua::make<QPen>(state,
-            lua::get<const QBrush&>(state, 2),
-            lua::get<qreal>(state, 3),
-            lua::get<Qt::PenStyle>(state, 4)
+            lua::get<const QBrush&>(state, 1),
+            lua::get<qreal>(state, 2),
+            lua::get<Qt::PenStyle>(state, 3)
+        );
+        break;
+    case 4:
+        // QPen(const QBrush& brush, qreal width, Qt::PenStyle style, Qt::PenCapStyle cap)
+        lua::make<QPen>(state,
+            lua::get<const QBrush&>(state, 1),
+            lua::get<qreal>(state, 2),
+            lua::get<Qt::PenStyle>(state, 3),
+            lua::get<Qt::PenCapStyle>(state, 4)
         );
         break;
     case 5:
-        // QPen(const QBrush& brush, qreal width, Qt::PenStyle style, Qt::PenCapStyle cap)
-        lua::make<QPen>(state,
-            lua::get<const QBrush&>(state, 2),
-            lua::get<qreal>(state, 3),
-            lua::get<Qt::PenStyle>(state, 4),
-            lua::get<Qt::PenCapStyle>(state, 5)
-        );
-        break;
-    case 6:
     default:
         // QPen(const QBrush&, qreal width, Qt::PenStyle, Qt::PenCapStyle, Qt::PenJoinStyle)
         lua::make<QPen>(state,
-            lua::get<const QBrush&>(state, 2),
-            lua::get<qreal>(state, 3),
-            lua::get<Qt::PenStyle>(state, 4),
-            lua::get<Qt::PenCapStyle>(state, 5),
-            lua::get<Qt::PenJoinStyle>(state, 6)
+            lua::get<const QBrush&>(state, 1),
+            lua::get<qreal>(state, 2),
+            lua::get<Qt::PenStyle>(state, 3),
+            lua::get<Qt::PenCapStyle>(state, 4),
+            lua::get<Qt::PenJoinStyle>(state, 5)
         );
         break;
     }
