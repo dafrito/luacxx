@@ -281,3 +281,14 @@ BOOST_AUTO_TEST_CASE(test_QString)
     auto foo = env["foo"].get<QString>();
     BOOST_CHECK(QString("notime") == foo);
 }
+
+BOOST_AUTO_TEST_CASE(test_QFlags)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, "require 'Qt5Core.Qt'");
+    lua::run_string(env, "foo = Qt.Alignment()");
+    lua::run_string(env, "foo:bor(Qt.AlignBottom)");
+    auto foo = env["foo"].get<Qt::Alignment>();
+    BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return foo:testFlag(Qt.AlignBottom)"));
+}
