@@ -187,7 +187,7 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
             // Remove the leading QMetaMethod and QObject, as these are not expected when
             // passed into a C++ method.
             lua_remove(state, 1);
-            lua_remove(state, 2);
+            lua_remove(state, 1);
 
             argdata[1] = (void*)&state;
             method_is_lua_CFunction = true;
