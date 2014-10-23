@@ -2,6 +2,7 @@
 #define LUACXX_QPEN_INCLUDED
 
 #include "Qt5Gui.hpp"
+
 #include <QPen>
 
 LUA_METATABLE_BUILT(QPen);

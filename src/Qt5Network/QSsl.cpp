@@ -20,7 +20,6 @@ int luaopen_luacxx_QSsl(lua_State* const state)
     t["Pem"] = QSsl::Pem;
     t["Der"] = QSsl::Der;
 
-
     // enum QSsl::KeyAlgorithm
     t["Rsa"] = QSsl::Rsa;
     t["Dsa"] = QSsl::Dsa;
