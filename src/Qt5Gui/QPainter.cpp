@@ -1402,7 +1402,7 @@ int QPainter_fillRect(lua_State* const state)
         return 0;
     }
 
-    if (lua::is_type<Qt::GlobalColor>(state, 6)) {
+    if (lua::is_type<Qt::BrushStyle>(state, 6)) {
         // void    fillRect ( int x, int y, int width, int height, Qt::BrushStyle style )
         self->fillRect(
             lua::get<int>(state, 2),
