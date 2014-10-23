@@ -267,7 +267,6 @@ BOOST_AUTO_TEST_CASE(test_QList)
     env["nums"] = nums;
 
     auto num = lua::run_string<int>(env, "return nums:at(1)");
-    lua::push(env, nums.begin());
     BOOST_CHECK_EQUAL(2, num);
     auto class_name = lua::run_string<std::string>(env, "return nums.__class");
     BOOST_CHECK_EQUAL(std::string("QList<int>"), class_name);
