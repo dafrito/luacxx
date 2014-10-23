@@ -1103,6 +1103,7 @@ void push_metatable(lua_State* const state, T* const value)
     };
     set_metatable_as_default_table_for("__index");
     set_metatable_as_default_table_for("__newindex");
+    set_metatable_as_default_table_for("__eq");
 
     // Let the programmer set up their type-specific metatable.
     auto cacheable = Metatable<T>::metatable(state, mt, value);
