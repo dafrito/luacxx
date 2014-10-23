@@ -119,9 +119,16 @@ void lua::QRectF_metatable(lua_State* const state, const int pos)
 
 int QRectF_new(lua_State* const state)
 {
-    lua::make<QRectF>(state);
-    // TODO Set up object-specific methods
-
+    if (lua_gettop(state) >= 4) {
+        lua::make<QRectF>(state,
+            lua::get<qreal>(state, 1),
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4)
+        );
+    } else {
+        lua::make<QRectF>(state);
+    }
     return 1;
 }
 

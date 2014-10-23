@@ -13,7 +13,46 @@
 
 int QFontMetrics_boundingRect(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QFontMetrics*>(state, 1);
+    if (lua::is_type<QChar>(state, 2)) {
+        // QRect boundingRect(QChar ch) const
+        lua::push(state, self->boundingRect(
+            lua::get<QChar>(state, 2)
+        ));
+        return 1;
+    }
+    if (lua::is_type<QString>(state, 2)) {
+        // QRect boundingRect(const QString & text) const
+        lua::push(state, self->boundingRect(
+            lua::get<QString>(state, 2)
+        ));
+        return 1;
+    }
+    if (lua::index(state, 2).type().string()) {
+        lua::push(state, self->boundingRect(
+            QString(lua::get<const char*>(state, 2))
+        ));
+        return 1;
+    }
+    if (lua::is_type<QRect>(state, 2)) {
+        // QRect boundingRect(const QRect & rect, int flags, const QString & text, int tabStops = 0, int * tabArray = 0) const
+        lua::push(state, self->boundingRect(
+            lua::get<const QRect&>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<QString>(state, 4)
+        ));
+        return 1;
+    }
+    // QRect boundingRect(int x, int y, int width, int height, int flags, const QString & text, int tabStops = 0, int * tabArray = 0) const
+    lua::push(state, self->boundingRect(
+        lua::get<int>(state, 2),
+        lua::get<int>(state, 3),
+        lua::get<int>(state, 4),
+        lua::get<int>(state, 5),
+        lua::get<int>(state, 6),
+        lua::get<QString>(state, 7)
+    ));
+    return 1;
 }
 
 int QFontMetrics_width(lua_State* const state)
