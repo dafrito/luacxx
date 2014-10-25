@@ -366,6 +366,8 @@ are usually not recoverable.
 
 void invoke(const lua::index& callable);
 
+void invoke(lua_State* const state, const int pos);
+
 /*
 
 =head4 RV return_value = lua::call<RV>(source, args...)

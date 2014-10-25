@@ -44,21 +44,23 @@ void lua::assert_type<lua::error>(const char* category, const lua::type& expecte
 
 void lua::invoke(const lua::index& callable)
 {
-    auto state = callable.state();
-    int nargs = lua::top(callable.state()).pos() - callable.pos();
+    lua::invoke(callable.state(), callable.pos());
+}
 
-    lua::assert_type("invoke", lua::type::function, callable);
+void lua::invoke(lua_State* const state, const int pos)
+{
+    int nargs = lua_gettop(state) - pos;
 
     // Call Lua function. LUA_MULTRET ensures all arguments are returned
     // Subtract one from the size to ignore the function itself and pass
     // the correct number of arguments
     lua::push(state, on_error);
-    lua_insert(state, callable.pos());
+    lua_insert(state, pos);
 
-    int result = lua_pcall(state, nargs, LUA_MULTRET, callable.pos());
+    int result = lua_pcall(state, nargs, LUA_MULTRET, pos);
 
     // Be sure to remove the error handler
-    lua_remove(state, callable.pos());
+    lua_remove(state, pos);
 
     switch (result) {
         case LUA_OK:
