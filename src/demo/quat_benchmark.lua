@@ -17,13 +17,13 @@ function demo.quat_benchmark()
     print("");
 
     for i=1, 5 do
-        timer = QElapsedTimer:new();
+        timer = QElapsedTimer.new();
         timer:start();
         quat = QQuaternion.benchmark(MAX);
         local ctime = timer:nsecsElapsed() / 1e6;
         printf("C++: %.02fms", ctime);
 
-        timer = QElapsedTimer:new();
+        timer = QElapsedTimer.new();
         timer:start();
         quat = Quaternion(2, 3, 7, 5);
         for i=1, MAX do
@@ -33,11 +33,11 @@ function demo.quat_benchmark()
         local luatime = timer:nsecsElapsed() / 1e6;
         printf("Lua: %.02fms (%.01f times slower than C++)", luatime, luatime/ctime);
 
-        timer = QElapsedTimer:new();
+        timer = QElapsedTimer.new();
         timer:start();
-        quat = QQuaternion:new(2, 3, 7, 5);
+        quat = QQuaternion.new(2, 3, 7, 5);
         for i=1, MAX do
-            quat = quat * QQuaternion:new(2, 2, 2, 2);
+            quat = quat * QQuaternion.new(2, 2, 2, 2);
             quat:normalize();
         end
         local luacxxtime = timer:nsecsElapsed() / 1e6;

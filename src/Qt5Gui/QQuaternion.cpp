@@ -76,16 +76,16 @@ int QQuaternion_new(lua_State* const state)
         break;
     case 3:
         lua::make<QQuaternion>(state,
-            lua::get<float>(state, 2), // scalar
-            lua::get<const QVector3D&>(state, 3)
+            lua::get<float>(state, 1), // scalar
+            lua::get<const QVector3D&>(state, 2)
         );
         break;
     default:
         lua::make<QQuaternion>(state,
-            lua::get<float>(state, 2), // scalar
-            lua::get<float>(state, 3), // xpos
-            lua::get<float>(state, 4), // ypos
-            lua::get<float>(state, 5)  // zpos
+            lua::get<float>(state, 1), // scalar
+            lua::get<float>(state, 2), // xpos
+            lua::get<float>(state, 3), // ypos
+            lua::get<float>(state, 4)  // zpos
         );
         break;
     }
