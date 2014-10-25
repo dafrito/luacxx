@@ -5,6 +5,7 @@
 #include "../algorithm.hpp"
 #include "../convert/string.hpp"
 #include "../convert/numeric.hpp"
+#include "../thread.hpp"
 
 #include <unordered_map>
 #include <QStringList>
@@ -170,4 +171,23 @@ void lua::store_qvariant(QVariant& destination, lua_State* const state, const in
             }
         }
     }
+}
+
+namespace lua {
+
+void QVariant_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
+}
+
+} // namespace lua
+
+int luaopen_Qt5Core_QVariant(lua_State* const state)
+{
+    lua::thread env(state);
+
+    env["QVariant"] = lua::value::table;
+    auto t = env["QVariant"];
+
+    return 0;
 }
