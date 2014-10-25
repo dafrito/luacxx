@@ -18,6 +18,20 @@ bool lua::is_debugging(lua_State* const state)
     return debugging;
 }
 
+std::string lua::traceback(lua_State* const state, const int toplevel)
+{
+    #if LUA_VERSION_NUM >= 502
+        std::string rv;
+        luaL_traceback(state, state, NULL, toplevel);
+        rv = lua::get<std::string>(state, -1);
+        lua_pop(state, 1);
+        return rv;
+    #else
+        auto getter = lua::global(state, "debug")["traceback"];
+        return getter("", topLevel).get<std::string>().substr(1);
+    #endif
+}
+
 std::string lua::dump(lua_State* const state)
 {
     std::stringstream str;

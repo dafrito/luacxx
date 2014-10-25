@@ -78,20 +78,6 @@ void lua::invoke(const lua::index& callable)
     throw std::logic_error(str.str());
 }
 
-std::string lua::traceback(lua_State* const state, const int toplevel)
-{
-    #if LUA_VERSION_NUM >= 502
-        std::string rv;
-        luaL_traceback(state, state, NULL, toplevel);
-        rv = lua::get<std::string>(state, -1);
-        lua_pop(state, 1);
-        return rv;
-    #else
-        auto getter = lua::global(state, "debug")["traceback"];
-        return getter("", topLevel).get<std::string>().substr(1);
-    #endif
-}
-
 const lua::userdata_type* lua::get_type_info(const lua::index& index)
 {
     return lua::get_type_info(index.state(), index.pos());

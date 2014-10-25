@@ -23,24 +23,6 @@ algorithm.hpp - common algorithms and functions for Lua
 
 =head1 DESCRIPTION
 
-*/
-
-namespace lua {
-
-/*
-
-=head4 std::string str = lua::traceback(state, int toplevel);
-
-Returns a Lua traceback for the given state. The toplevel will cause
-the highest stack entries to be omitted, which is useful to ignore
-debugging function calls.
-
-*/
-
-std::string traceback(lua_State* const state, const int toplevel);
-
-/*
-
 =head4 std::string str = lua::dump(state);
 
 Returns a diagnostic representation of the Lua stack
@@ -51,6 +33,8 @@ Returns a diagnostic representation of the Lua stack
     std::cerr << lua::dump(state) << std::endl;
 
 */
+
+namespace lua {
 
 std::string dump(lua_State* const state);
 

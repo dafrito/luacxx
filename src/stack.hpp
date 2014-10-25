@@ -119,6 +119,7 @@ more powerful, but more complex, extensions.
 namespace lua {
 
 bool is_debugging(lua_State* const state);
+std::string traceback(lua_State* const state, const int toplevel);
 
 } // namespace lua
 
