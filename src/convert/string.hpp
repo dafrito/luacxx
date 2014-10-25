@@ -36,4 +36,6 @@ struct Get<const std::string&>
 
 } // namespace lua
 
+LUA_METATABLE_NAMED(std::string);
+
 #endif // luacxx_convert_string_INCLUDED

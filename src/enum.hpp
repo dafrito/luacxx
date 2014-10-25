@@ -53,4 +53,7 @@ struct Metatable<name> \
 \
 };
 
+// Create metatable for logging enums
+LUA_METATABLE_ENUM(lua::LogMessageType);
+
 #endif // luacxx_enum_INCLUDED

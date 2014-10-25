@@ -45,4 +45,6 @@ struct Get<QVariant>
 
 } // namespace lua
 
+LUA_METATABLE_NAMED(QVariant);
+
 #endif // luacxx_Qt5Core_QVariant_INCLUDED
