@@ -468,6 +468,8 @@ Returns the size of the table at the given index.
 
 int length(const lua::index& index);
 
+int length(lua_State* const state, const int pos);
+
 /*
 
 =head4 lua::table::insert(destination, value)

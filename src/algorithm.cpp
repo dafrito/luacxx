@@ -142,9 +142,14 @@ int lua::size(const lua::index& index)
     return luaL_len(index.state(), index.pos());
 }
 
+int lua::table::length(lua_State* const state, const int pos)
+{
+    return lua_rawlen(state, pos);
+}
+
 int lua::table::length(const lua::index& index)
 {
-    return lua_rawlen(index.state(), index.pos());
+    return lua::table::length(index.state(), index.pos());
 }
 
 void lua::swap(const lua::index& a, const lua::index& b)
