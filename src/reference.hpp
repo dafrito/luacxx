@@ -260,4 +260,6 @@ reference& lua::reference::operator=(Source source)
 
 } // namespace lua
 
+LUA_METATABLE_NAMED(lua::reference);
+
 #endif // LUACXX_REFERENCE_INCLUDED
