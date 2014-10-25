@@ -17,7 +17,7 @@ void appendStrings(std::stringstream& str)
 {
 }
 
-void addLogger(lua_State* const state, const lua::logger& logFunction)
+int addLogger(lua_State* const state, const lua::logger& logFunction)
 {
     lua_getfield(state, LUA_REGISTRYINDEX, "luacxx.loggers");
     if (lua_type(state, -1) == LUA_TNIL) {
@@ -30,11 +30,31 @@ void addLogger(lua_State* const state, const lua::logger& logFunction)
     // Check if the list of loggers has been destroyed. This should only
     // happen during its __gc, but it's still a dangerous moment.
     if (lua::get_userdata_block(state, -1)->destroyed()) {
-        return;
+        return -1;
     }
 
     // Add the new logging receiver
-    lua::get<std::vector<lua::logger>*>(state, -1)->push_back(logFunction);
+    auto loggers = lua::get<std::vector<lua::logger>*>(state, -1);
+    loggers->push_back(logFunction);
+    lua_pop(state, 1);
+    return loggers->size() - 1;
+}
+
+void removeLogger(lua_State* const state, const int loggingPos)
+{
+    lua_getfield(state, LUA_REGISTRYINDEX, "luacxx.loggers");
+    if (lua_type(state, -1) == LUA_TNIL) {
+        lua_pop(state, 1);
+        return;
+    }
+    // Check if the list of loggers has been destroyed. This should only
+    // happen during its __gc, but it's still a dangerous moment.
+    if (lua::get_userdata_block(state, -1)->destroyed()) {
+        return;
+    }
+
+    auto loggers = lua::get<std::vector<lua::logger>*>(state, -1);
+    loggers->at(loggingPos) = lua::logger();
     lua_pop(state, 1);
 }
 
@@ -50,7 +70,9 @@ void dispatchLog(lua_State* const state, const LogMessageType messageType, const
         goto end;
     }
     for (auto& logFunction : lua::get<std::vector<lua::logger>&>(state, -1)) {
-        logFunction(state, messageType, message);
+        if (logFunction) {
+            logFunction(state, messageType, message);
+        }
     }
 end:
     lua_pop(state, 1);

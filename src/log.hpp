@@ -65,7 +65,8 @@ std::string appendStrings(Rest... args)
 void LogMessage_metatable(lua_State* const state, const int pos);
 
 typedef std::function<void(lua_State* const, LogMessageType, const LogMessage&)> logger;
-void addLogger(lua_State* const state, const logger&);
+int addLogger(lua_State* const state, const logger&);
+void removeLogger(lua_State* const state, const int loggingPos);
 
 void dispatchLog(lua_State* const state, const LogMessageType messageType, const LogMessage& message);
 
