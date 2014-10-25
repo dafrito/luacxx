@@ -734,6 +734,29 @@ BOOST_AUTO_TEST_CASE(enums)
     BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return Test == Red"));
 }
 
+BOOST_AUTO_TEST_CASE(enums_and_each)
+{
+    auto env = lua::create();
+    env["Red"] = Color::Red;
+    env["Green"] = Color::Green;
+    env["Blue"] = Color::Blue;
+    env["Test"] = Color::Red;
+
+    lua::run_string(env, "Colors = {Red, Green, Red, Blue}");
+
+    std::vector<Color> colors;
+    lua::table::each<Color>(env["Colors"], [&colors](const Color& c) {
+        colors.push_back(c);
+    });
+
+    BOOST_CHECK(colors[0] == Color::Red);
+    BOOST_CHECK(colors[1] == Color::Green);
+    BOOST_CHECK(colors[2] == Color::Red);
+    BOOST_CHECK(colors[3] == Color::Blue);
+
+    BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return Test == Red"));
+}
+
 BOOST_AUTO_TEST_CASE(logging)
 {
     auto env = lua::create();

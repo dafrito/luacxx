@@ -545,6 +545,50 @@ void set(Table source, Key key, Value value)
     lua_pop(table.state(), 1);
 }
 
+template <class Value, class Callable>
+void each(lua_State* const state, const int pos, const Callable& callable)
+{
+    auto len = lua_rawlen(state, pos);
+    for (int i = 1; i <= len; ++i) {
+        lua_rawgeti(state, pos, i);
+        callable(lua::get<Value>(state, -1));
+        lua_pop(state, 1);
+    }
+}
+
+template <class Callable>
+void each(lua_State* const state, const int pos, const Callable& callable)
+{
+    auto len = lua_rawlen(state, pos);
+    for (int i = 1; i <= len; ++i) {
+        lua_rawgeti(state, pos, i);
+        callable(state, -1);
+        lua_pop(state, 1);
+    }
+}
+
+template <class Table, class Callable>
+void each(Table table, const Callable& callable)
+{
+    auto t = lua::push(table);
+    lua::table::each(t.state(), t.pos(), callable);
+}
+
+template <class Value, class Table, class Callable>
+void each(Table table, const Callable& callable)
+{
+    auto t = lua::push(table);
+    lua::table::each<Value>(t.state(), t.pos(), callable);
+}
+
+template <class... Args>
+void call_each(lua_State* const state, const int pos, Args... args)
+{
+    lua::table::each(state, pos, [args...](lua_State* const state, const int pos) {
+        lua::call(lua::index(state, pos), args...);
+    });
+}
+
 /*
 
 =head4 lua::type_info rv = lua::table::get_type(source, key)
