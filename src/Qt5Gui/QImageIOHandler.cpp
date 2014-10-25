@@ -8,6 +8,7 @@
 #include "../Qt5Core/QVariant.hpp"
 #include "../Qt5Core/QByteArray.hpp"
 #include "QImage.hpp"
+#include "../Qt5Core/QVariant.hpp"
 
 int QImageIOHandler_setFormat(lua_State* const state)
 {
