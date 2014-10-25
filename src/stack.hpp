@@ -18,9 +18,6 @@
 #include <forward_list>
 #include <utility>
 
-// Used for logging purposes, but can be removed once logging is made pluggable
-#include <iostream>
-
 /*
 
 =head1 NAME
