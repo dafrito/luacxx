@@ -168,8 +168,7 @@ char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_stora
         } else {
             str << size << " bytes.";
         }
-        str << std::endl;
-        lua::logEnter(state, "Lua memory allocations", str.str());
+        lua::logEntercm(state, "Lua memory allocations", str.str());
     }
 
     // Get and push a chunk of memory from Lua to hold our metadata, as well as
@@ -227,8 +226,8 @@ int lua::__gc(lua_State* const state)
                 str << "anonymous userdata";
             }
 
-            str << " of size " << lua::object_size(state, 1) << std::endl;
-            lua::logEnter(state, "Lua memory allocations", str.str());
+            str << " of size " << lua::object_size(state, 1);
+            lua::logEntercm(state, "Lua memory allocations", str.str());
         }
 
         auto destroy = lua::table::get(mt, "destroy");

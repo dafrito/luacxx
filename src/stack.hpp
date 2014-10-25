@@ -1102,7 +1102,7 @@ void push_metatable(lua_State* const state, T* const value)
     if (lua_type(state, -1) != LUA_TNIL) {
         // Use the cached value
         if (is_debugging(state)) {
-            lua::logscm(state, "lua::push_metatable", "Userdata metatable creations",
+            lua::logcm(state, "Userdata metatable creations",
                 "Using cached metatable for ", info.name(), "."
             );
         }
@@ -1110,7 +1110,7 @@ void push_metatable(lua_State* const state, T* const value)
     }
 
     if (is_debugging(state)) {
-        lua::logEnter(state, "lua:push_metatable", "Userdata metatable creations",
+        lua::logEntercm(state, "Userdata metatable creations",
             "Creating new metatable for ", info.name()
         );
     }
@@ -1162,7 +1162,7 @@ void push_metatable(lua_State* const state, T* const value)
     if (cacheable) {
         // Cache it for the future
         if (is_debugging(state)) {
-            lua::logsm(state, "lua::push_metatable", "Caching metatable for ", info.name(), ".");
+            lua::logm(state, "Caching metatable for ", info.name(), ".");
         }
         lua_pushstring(state, info.name().c_str());
         lua_pushvalue(state, mt);
