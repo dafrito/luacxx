@@ -382,7 +382,7 @@ state.
     lua::call(env["print"], "Hello, world");
 
     std::cout << lua::call<std::string>(env["string"]["upper"], "Hello, world\n");
-    // HELLO, WORLD
+    // Hello, world
 */
 
 template <typename RV, typename Callable, typename... Args>
