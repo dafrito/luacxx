@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "log.hpp"
+
 namespace lua {
 
 /*
@@ -70,6 +72,12 @@ public:
 */
 
 error(lua_State* const state, const std::string& what);
+
+template <class... Rest>
+error(lua_State* const state, Rest... args) :
+    error(state, lua::appendStrings(args...))
+{
+}
 
 error(const std::string& what) :
     std::runtime_error("lua::error"),
