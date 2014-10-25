@@ -11,7 +11,6 @@ namespace lua {
 template <class T>
 int QFlags_bor(lua_State* const state)
 {
-    std::cerr << lua::dump(state) << std::endl;
     auto& self = lua::get<QFlags<T>&>(state, 1);
     self |= lua::get<T>(state, 2);
     return 0;
