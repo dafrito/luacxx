@@ -10,7 +10,6 @@ int lua::invoke_callable(lua_State* const state)
     try {
         return (*callable)(state);
     } catch (lua::error& ex) {
-        std::cerr << lua::dump(state) << std::endl;
         lua::push(state, ex);
         lua_error(state);
         throw std::logic_error("lua_error must never return");
