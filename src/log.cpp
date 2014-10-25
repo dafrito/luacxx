@@ -40,7 +40,6 @@ void addLogger(lua_State* const state, const lua::logger& logFunction)
 
 void dispatchLog(lua_State* const state, const LogMessageType messageType, const LogMessage& message)
 {
-    std::cerr << "L:" << message.message() << std::endl;
     lua_getfield(state, LUA_REGISTRYINDEX, "luacxx.loggers");
     if (lua_type(state, -1) == LUA_TNIL) {
         goto end;
