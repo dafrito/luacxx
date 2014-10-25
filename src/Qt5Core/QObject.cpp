@@ -84,20 +84,14 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
             // We do. Return it directly.
             return 1;
         } else {
-            // Nope, so clean up and move on.
-            lua_pop(state, 2);
+            // Nope, so clean up and move on. Keep the metatable around.
+            lua_pop(state, 1);
         }
 
         // Properties
         QVariant propValue = obj->property(name);
         if (propValue.isValid()) {
             lua::push(state, propValue);
-            return 1;
-        }
-
-        // Slot connections
-        if (QString(name).compare("connect", Qt::CaseInsensitive) == 0) {
-            lua::push(state, QObject_connect);
             return 1;
         }
 
@@ -109,11 +103,27 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
 
             if (sig.startsWith(QString(name) + "(", Qt::CaseInsensitive)) {
                 lua::push(state, method);
-                return 1;
+                goto cache_and_return;
             }
         }
 
+        // Slot connections
+        if (QString(name).compare("connect", Qt::CaseInsensitive) == 0) {
+            lua::push(state, QObject_connect);
+            goto cache_and_return;
+        }
+
+        // Nothing found, so just return nothing.
         return 0;
+    cache_and_return:
+        // Cache the value for future use.
+
+        // [..., metatable, method]
+        lua::push(state, name);
+        lua_pushvalue(state, -2);
+        // [..., metatable, method, name, method]
+        lua_rawset(state, -4);
+        return 1;
     });
 
     mt["__newindex"] = lua_CFunction([](lua_State* const state) {
