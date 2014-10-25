@@ -400,13 +400,16 @@ state.
 */
 
 template <typename RV, typename Callable, typename... Args>
-RV call(Callable source, Args... args)
+auto call(Callable source, Args... args) -> decltype(lua::get<RV>(source.state(), 0))
 {
     lua::index callable(lua::push(source.state(), source));
-    lua::assert_type("lua::call", lua::type::function, callable);
+    if (lua::is_type<std::function<RV(Args...)>>(callable)) {
+        auto saved_function = callable.get<std::function<RV(Args...)>*>();
+        lua_pop(source.state(), 1);
+        return (*saved_function)(args...);
+    }
     lua::push(callable.state(), args...);
     lua::invoke(callable);
-
     lua_settop(callable.state(), callable.pos());
     return lua::get<RV>(callable.state(), callable.pos());
 }

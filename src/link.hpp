@@ -76,8 +76,8 @@ public:
     template <class T>
     void operator>>(T& destination);
 
-    template <class T>
-    T get() const;
+    template <class Destination>
+    auto get() -> decltype(lua::Get<Destination>::get(state(), -1));
 
     template <class T>
     operator T() const
@@ -174,10 +174,10 @@ void lua::link<Source, Name>::operator>>(Destination& destination)
 
 template <class Source, class Name>
 template <class Destination>
-Destination lua::link<Source, Name>::get() const
+auto lua::link<Source, Name>::get() -> decltype(lua::Get<Destination>::get(state(), -1))
 {
     lua::Push<const lua::link<Source, Name>>::push(state(), *this);
-    auto dest = lua::Get<Destination>::get(state(), -1);
+    auto&& dest = lua::Get<Destination>::get(state(), -1);
     lua_pop(state(), 1);
     return dest;
 };
