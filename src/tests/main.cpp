@@ -730,7 +730,6 @@ BOOST_AUTO_TEST_CASE(enums)
     env["Blue"] = Color::Blue;
     env["Test"] = Color::Red;
 
-    lua::run_string(env, "print('Test', Test:value(), 'Red', Red:value())");
     BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return Test == Red"));
 }
 
