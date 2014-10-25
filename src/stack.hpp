@@ -948,6 +948,34 @@ struct Metatable<T*>
     }
 };
 
+template <class T>
+struct Metatable<const T&>
+{
+    static const userdata_type& info()
+    {
+        return Metatable<T>::info();
+    }
+
+    static bool metatable(lua_State* const state, const int source, const T** const value)
+    {
+        return Metatable<T>::metatable(state, source, *value);
+    }
+};
+
+template <class T>
+struct Metatable<T&>
+{
+    static const userdata_type& info()
+    {
+        return Metatable<T>::info();
+    }
+
+    static bool metatable(lua_State* const state, const int source, const T** const value)
+    {
+        return Metatable<T>::metatable(state, source, *value);
+    }
+};
+
 template <class Base, class Actual>
 void userdata_type::add_cast()
 {
