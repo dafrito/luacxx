@@ -103,7 +103,7 @@ struct lua::Metatable<Point<T>> {
 
     static const userdata_type& info()
     {
-        static userdata_type _info("");
+        static userdata_type _info;
         if (!_info.has_name()) {
             std::string name = "Point<";
             name += lua::Metatable<T>::info().name();
