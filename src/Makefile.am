@@ -40,7 +40,8 @@ nobase_pkginclude_HEADERS = \
 	convert/string.hpp \
 	convert/vector.hpp \
 	convert/void.hpp \
-	load/ModuleLoader.hpp
+	load/ModuleLoader.hpp \
+	std/vector.hpp
 
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
