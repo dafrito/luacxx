@@ -5,6 +5,7 @@
 #include "QList.hpp"
 #include "../convert/callable.hpp"
 #include "../convert/vector.hpp"
+#include "../std/vector.hpp"
 
 #include <QVector>
 
@@ -176,10 +177,12 @@ struct Metatable<QVector<T>>
     static const userdata_type& info()
     {
         static userdata_type _info;
-        std::string str("QVector<");
-        str += Metatable<T>::info().name();
-        str += ">";
-        _info.set_name(str);
+        if (!_info.has_name()) {
+            std::string str("QVector<");
+            str += Metatable<T>::info().name();
+            str += ">";
+            _info.set_name(str);
+        }
         return _info;
     }
 

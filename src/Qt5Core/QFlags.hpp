@@ -71,10 +71,12 @@ struct Metatable<QFlags<T>>
     static const userdata_type& info()
     {
         static userdata_type _info;
-        std::string str("QFlags<");
-        str += Metatable<T>::info().name();
-        str += ">";
-        _info.set_name(str);
+        if (!_info.has_name()) {
+            std::string str("QFlags<");
+            str += Metatable<T>::info().name();
+            str += ">";
+            _info.set_name(str);
+        }
         return _info;
     }
 

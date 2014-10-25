@@ -53,9 +53,12 @@ struct Metatable<QObservable<T>>
     static const userdata_type& info()
     {
         static userdata_type _info;
-        std::string str("QObservable<");
-        str += Metatable<T>::info().name();
-        str += ">";
+        if (!_info.has_name()) {
+            std::string str("QObservable<");
+            str += Metatable<T>::info().name();
+            str += ">";
+            _info.set_name(str);
+        }
         return _info;
     }
 

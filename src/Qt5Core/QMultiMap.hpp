@@ -18,13 +18,15 @@ struct Metatable<QMultiMap<K, V>>
 {
     static const userdata_type& info()
     {
-        static userdata_type _info;
-        std::string str("QMultiMap<");
-        str += Metatable<K>::info().name();
-        str += ", ";
-        str += Metatable<V>::info().name();
-        str += ">";
-        _info.set_name(str);
+        static userdata_type _info("QMultiMap<?. ?>");
+        if (!_info.has_name()) {
+            std::string str("QMultiMap<");
+            str += Metatable<K>::info().name();
+            str += ", ";
+            str += Metatable<V>::info().name();
+            str += ">";
+            _info.set_name(str);
+        }
         return _info;
     }
 
