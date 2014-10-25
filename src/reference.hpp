@@ -3,6 +3,7 @@
 
 #include "stack.hpp"
 #include "link.hpp"
+#include "index.hpp"
 #include "algorithm.hpp"
 
 /*
@@ -111,6 +112,13 @@ reference(lua_State* const state, Value value) :
     _id(LUA_NOREF)
 {
     *this = value;
+}
+
+reference(lua_State* const state, const int pos) :
+    _state(state),
+    _id(LUA_NOREF)
+{
+    *this = lua::index(state, pos);
 }
 
 lua_State* const state() const
