@@ -1569,4 +1569,9 @@ struct Metatable<name> \
 \
 };
 
+LUA_METATABLE_NAMED(lua_State*);
+
+// Create metatables for logging functions
+LUA_METATABLE_BUILT_WITH(lua::LogMessage, lua::LogMessage_metatable);
+
 #endif // luacxx_stack_INCLUDED

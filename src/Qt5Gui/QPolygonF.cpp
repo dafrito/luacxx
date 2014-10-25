@@ -9,6 +9,7 @@
 #include "../Qt5Core/Qt.hpp"
 #include "QPolygon.hpp"
 #include "../Qt5Core/QVector.hpp"
+#include "../std/vector.hpp"
 
 int QPolygonF_translate(lua_State* const state)
 {
