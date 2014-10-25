@@ -475,16 +475,20 @@ Inserts a new value into the table at the given destination index.
 
 */
 
+template <typename Value>
+void insert(lua_State* const state, const int pos, Value value)
+{
+    lua::push(state, lua::table::length(state, pos) + 1);
+    lua::push(state, value);
+    lua_settable(state, pos);
+}
+
 template <typename Table, typename Value>
 void insert(Table destination, Value value)
 {
     auto table = lua::push(destination);
     lua::assert_type("lua::table::insert", lua::type::table, table);
-    lua::push(table.state(), lua::table::length(table) + 1);
-    lua::push(table.state(), value);
-
-    lua_settable(table.state(), table.pos());
-
+    lua::table::insert(table.state(), table.pos(), value);
     lua_pop(table.state(), 1);
 }
 
