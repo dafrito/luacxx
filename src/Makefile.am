@@ -18,6 +18,7 @@ libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 nobase_pkginclude_HEADERS = \
 	config.hpp \
 	algorithm.hpp \
+	log.hpp \
 	stack.hpp \
 	enum.hpp \
 	link.hpp \
@@ -43,6 +44,7 @@ nobase_pkginclude_HEADERS = \
 
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
+	log.cpp \
 	error.cpp \
 	reference.cpp \
 	load.cpp \

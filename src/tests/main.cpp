@@ -1,5 +1,6 @@
 #define BOOST_TEST_MODULE luacxx
 #include "main.hpp"
+#include "log.hpp"
 #include "enum.hpp"
 
 #include <boost/test/unit_test.hpp>
@@ -731,6 +732,17 @@ BOOST_AUTO_TEST_CASE(enums)
     env["Test"] = Color::Red;
 
     BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return Test == Red"));
+}
+
+BOOST_AUTO_TEST_CASE(logging)
+{
+    auto env = lua::create();
+
+    lua::addLogger(env, lua::logger([](lua_State* const state, const lua::LogMessageType mtype, const lua::LogMessage& message) {
+    }));
+
+    lua::logEnterm(env, "No time");
+    lua::logLeave(env);
 }
 
 #ifdef HAVE_gobject_introspection
