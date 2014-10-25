@@ -551,6 +551,15 @@ struct AppendTypenames
     }
 };
 
+template <typename Arg>
+struct AppendTypenames<Arg, ArgStop>
+{
+    static void appendTypenames(std::stringstream& str)
+    {
+        str << lua::Metatable<Arg>::info().name();
+    }
+};
+
 template <>
 struct AppendTypenames<ArgStop>
 {
@@ -566,11 +575,12 @@ struct Metatable<std::function<RV(Args...)>>
     {
         static lua::userdata_type _info;
         if (!_info.has_name()) {
-            std::stringstream str("std::function<");
+            std::stringstream str;
+            str << "std::function<";
             str << lua::Metatable<RV>::info().name();
             str << "(";
             AppendTypenames<Args..., ArgStop>::appendTypenames(str);
-            str << ")";
+            str << ")>";
             _info.set_name(str.str());
         }
         return _info;

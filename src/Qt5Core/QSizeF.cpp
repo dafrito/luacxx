@@ -18,7 +18,7 @@ int QSizeF_scaled(lua_State* const state)
 
 std::string QSizeF_tostring(QSizeF* const size)
 {
-    std::stringstream str("QSizeF");
+    std::stringstream str;
     str << "QSizeF(" << size->width() << ", " << size->height() << ")";
     return str.str();
 }
