@@ -136,24 +136,32 @@ libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Core_la_SOURCES = \
 	load/DirectoryModuleLoader.cpp \
-	Qt5Core/QObject.cpp \
-	Qt5Core/QVariant.cpp \
-	Qt5Core/QStringList.cpp \
-	Qt5Core/QByteArray.cpp \
-	Qt5Core/QCoreApplication.cpp \
-	Qt5Core/QLocale.cpp \
-	Qt5Core/QMargins.cpp \
-	Qt5Core/QModelIndex.cpp \
 	Qt5Core/QPoint.cpp \
 	Qt5Core/QPointF.cpp \
 	Qt5Core/QSize.cpp \
 	Qt5Core/QSizeF.cpp \
+	Qt5Core/QFlags.cpp \
+	Qt5Core/QString.cpp \
 	Qt5Core/QRect.cpp \
 	Qt5Core/QRectF.cpp \
+	Qt5Core/QLine.cpp \
+	Qt5Core/QLineF.cpp \
+	Qt5Core/QObject.cpp \
+	Qt5Core/QDataStream.cpp \
+	Qt5Core/QVariant.cpp \
+	Qt5Core/QStringList.cpp \
+	Qt5Core/QByteArray.cpp \
+	Qt5Core/QPair.cpp \
+	Qt5Core/QLocale.cpp \
+	Qt5Core/QMargins.cpp \
+	Qt5Core/QModelIndex.cpp \
+	Qt5Core/QThread.cpp \
 	Qt5Core/Qt_1.cpp \
 	Qt5Core/Qt_2.cpp \
 	Qt5Core/Qt_3.cpp \
 	Qt5Core/Qt_4.cpp \
+	Qt5Core/QSocketNotifier.cpp \
+	Qt5Core/QAbstractEventDispatcher.cpp \
 	Qt5Core/QAbstractNativeEventFilter.cpp \
 	Qt5Core/QAbstractItemModel.cpp \
 	Qt5Core/QUrl.cpp \
@@ -170,7 +178,8 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QDateTime.cpp \
 	Qt5Core/QDate.cpp \
 	Qt5Core/QTime.cpp \
-	Qt5Core/QTimeZone.cpp
+	Qt5Core/QTimeZone.cpp \
+	Qt5Core/QCoreApplication.cpp
 
 nobase_pkginclude_HEADERS += \
 	load/DirectoryModuleLoader.hpp \
@@ -184,7 +193,13 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QRectF.hpp \
 	Qt5Core/QPoint.hpp \
 	Qt5Core/QPointF.hpp \
+	Qt5Core/QDataStream.hpp \
+	Qt5Core/QLine.hpp \
+	Qt5Core/QFlags.hpp \
+	Qt5Core/QLineF.hpp \
 	Qt5Core/QLocale.hpp \
+	Qt5Core/QPair.hpp \
+	Qt5Core/QThread.hpp \
 	Qt5Core/QMargins.hpp \
 	Qt5Core/QModelIndex.hpp \
 	Qt5Core/QUrl.hpp \
@@ -192,7 +207,9 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QFileDevice.hpp \
 	Qt5Core/QFile.hpp \
 	Qt5Core/QElapsedTimer.hpp \
+	Qt5Core/QSocketNotifier.hpp \
 	Qt5Core/QAbstractNativeEventFilter.hpp \
+	Qt5Core/QAbstractEventDispatcher.hpp \
 	Qt5Core/QTranslator.hpp \
 	Qt5Core/QVariant.hpp \
 	Qt5Core/QByteArray.hpp \
@@ -219,7 +236,8 @@ test_Qt5Core_CXXFLAGS = \
 
 test_Qt5Core_LDADD = \
 	$(test_luacxx_LDADD) \
-	libluacxx-Qt5Core.la
+	libluacxx-Qt5Core.la \
+	libluacxx-Qt5Gui.la
 
 test_Qt5Core_SOURCES = \
 	tests/Qt5Core.cpp
@@ -266,6 +284,8 @@ libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QHostAddress.cpp \
 	Qt5Network/QNetworkAddressEntry.cpp \
 	Qt5Network/QNetworkInterface.cpp \
+	Qt5Network/QNetworkProxy.cpp \
+	Qt5Network/QNetworkRequest.cpp \
 	Qt5Network/QSslSocket.cpp \
 	Qt5Network/QSslCertificate.cpp \
 	Qt5Network/QSslError.cpp \
@@ -281,6 +301,8 @@ nobase_pkginclude_HEADERS += \
 	Qt5Network/QTcpSocket.hpp \
 	Qt5Network/QUdpSocket.hpp \
 	Qt5Network/QHostAddress.hpp \
+	Qt5Network/QNetworkProxy.hpp \
+	Qt5Network/QNetworkRequest.hpp \
 	Qt5Network/QNetworkAddressEntry.hpp \
 	Qt5Network/QNetworkInterface.hpp \
 	Qt5Network/QSslSocket.hpp \
@@ -333,10 +355,14 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QOpenGLFunctions.cpp \
 	Qt5Gui/QSurfaceFormat.cpp \
 	Qt5Gui/QKeySequence.cpp \
+	Qt5Gui/QPaintEngine.cpp \
+	Qt5Gui/QPaintEngineState.cpp \
+	Qt5Gui/QTextItem.cpp \
 	Qt5Gui/QMatrix.cpp \
 	Qt5Gui/QCursor.cpp \
 	Qt5Gui/QClipboard.cpp \
 	Qt5Gui/QDrag.cpp \
+	Qt5Gui/QIconEngine.cpp \
 	Qt5Gui/QIcon.cpp \
 	Qt5Gui/QInputMethod.cpp \
 	Qt5Gui/QPalette.cpp \
@@ -391,7 +417,11 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QMatrix.hpp \
 	Qt5Gui/QCursor.hpp \
 	Qt5Gui/QClipboard.hpp \
+	Qt5Gui/QPaintEngine.hpp \
+	Qt5Gui/QPaintEngineState.hpp \
+	Qt5Gui/QTextItem.hpp \
 	Qt5Gui/QDrag.hpp \
+	Qt5Gui/QIconEngine.hpp \
 	Qt5Gui/QIcon.hpp \
 	Qt5Gui/QInputMethod.hpp \
 	Qt5Gui/QPalette.hpp \
@@ -456,13 +486,14 @@ libluacxx_Qt5Widgets_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QAbstractScrollArea.cpp \
 	Qt5Widgets/QAction.cpp \
+	Qt5Widgets/QAbstractSlider.cpp \
 	Qt5Widgets/QActionGroup.cpp \
-	Qt5Widgets/QApplication.cpp \
 	Qt5Widgets/QCompleter.cpp \
 	Qt5Widgets/QDockWidget.cpp \
 	Qt5Widgets/QFrame.cpp \
 	Qt5Widgets/QGraphicsEffect.cpp \
 	Qt5Widgets/QGraphicsItem.cpp \
+	Qt5Widgets/QGraphicsLayout.cpp \
 	Qt5Widgets/QGraphicsLayoutItem.cpp \
 	Qt5Widgets/QGraphicsObject.cpp \
 	Qt5Widgets/QGraphicsProxyWidget.cpp \
@@ -471,23 +502,32 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QGraphicsWidget.cpp \
 	Qt5Widgets/QGraphicsItemGroup.cpp \
 	Qt5Widgets/QGraphicsTransform.cpp \
+	Qt5Widgets/QScrollBar.cpp \
 	Qt5Widgets/QAbstractItemView.cpp \
 	Qt5Widgets/QLabel.cpp \
 	Qt5Widgets/QLayout.cpp \
 	Qt5Widgets/QLayoutItem.cpp \
+	Qt5Widgets/QValidator.cpp \
+	Qt5Widgets/QSpacerItem.cpp \
 	Qt5Widgets/QLineEdit.cpp \
 	Qt5Widgets/QMainWindow.cpp \
 	Qt5Widgets/QMenu.cpp \
 	Qt5Widgets/QMenuBar.cpp \
 	Qt5Widgets/QSizePolicy.cpp \
 	Qt5Widgets/QStatusBar.cpp \
+	Qt5Widgets/QStyleOption.cpp \
 	Qt5Widgets/QStyle.cpp \
 	Qt5Widgets/QTabBar.cpp \
 	Qt5Widgets/QTabWidget.cpp \
+	Qt5Widgets/QAbstractButton.cpp \
+	Qt5Widgets/QPushButton.cpp \
+	Qt5Widgets/QTextEdit.cpp \
+	Qt5Widgets/QApplication.cpp \
 	Qt5Widgets/QWidget.cpp
 
 nobase_pkginclude_HEADERS += \
 	Qt5Widgets/Qt5Widgets.hpp \
+	Qt5Widgets/QAbstractSlider.hpp \
 	Qt5Widgets/QAbstractScrollArea.hpp \
 	Qt5Widgets/QAction.hpp \
 	Qt5Widgets/QActionGroup.hpp \
@@ -497,6 +537,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QFrame.hpp \
 	Qt5Widgets/QGraphicsEffect.hpp \
 	Qt5Widgets/QGraphicsItem.hpp \
+	Qt5Widgets/QGraphicsLayout.hpp \
 	Qt5Widgets/QGraphicsLayoutItem.hpp \
 	Qt5Widgets/QGraphicsObject.hpp \
 	Qt5Widgets/QGraphicsProxyWidget.hpp \
@@ -505,19 +546,26 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QGraphicsWidget.hpp \
 	Qt5Widgets/QGraphicsItemGroup.hpp \
 	Qt5Widgets/QGraphicsTransform.hpp \
+	Qt5Widgets/QScrollBar.hpp \
 	Qt5Widgets/QAbstractItemView.hpp \
 	Qt5Widgets/QLabel.hpp \
 	Qt5Widgets/QLayout.hpp \
 	Qt5Widgets/QLayoutItem.hpp \
+	Qt5Widgets/QSpacerItem.hpp \
 	Qt5Widgets/QLineEdit.hpp \
 	Qt5Widgets/QMainWindow.hpp \
 	Qt5Widgets/QMenu.hpp \
 	Qt5Widgets/QMenuBar.hpp \
+	Qt5Widgets/QValidator.hpp \
 	Qt5Widgets/QSizePolicy.hpp \
 	Qt5Widgets/QStatusBar.hpp \
+	Qt5Widgets/QStyleOption.hpp \
 	Qt5Widgets/QStyle.hpp \
 	Qt5Widgets/QTabBar.hpp \
 	Qt5Widgets/QTabWidget.hpp \
+	Qt5Widgets/QTextEdit.hpp \
+	Qt5Widgets/QAbstractButton.hpp \
+	Qt5Widgets/QPushButton.hpp \
 	Qt5Widgets/QWidget.hpp
 
 test_Qt5Widgets_CXXFLAGS = \
