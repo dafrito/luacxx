@@ -82,8 +82,6 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
         lua_rawget(state, -2);
         if (lua_type(state, -1) != LUA_TNIL) {
             // We do. Return it directly.
-            lua_replace(state, 1);
-            lua_settop(state, 1);
             return 1;
         } else {
             // Nope, so clean up and move on.
