@@ -6,6 +6,7 @@
 
 #include "../algorithm.hpp"
 #include "../stack.hpp"
+#include "../reference.hpp"
 
 /*
 
@@ -273,8 +274,8 @@ namespace lua {
 template <typename RV, typename... Args>
 int invoke_callable(lua_State* const state)
 {
-    auto wrapped = lua::get<std::function<RV(Args...)>>(
-        state, lua_upvalueindex(1)
+    auto wrapped = static_cast<std::function<RV(Args...)>*>(
+        lua::get_userdata_value(state, lua_upvalueindex(1))
     );
 
     if (lua::size(state) < sizeof...(Args)) {
@@ -293,7 +294,7 @@ int invoke_callable(lua_State* const state)
     }
 
     lua::index index(state, 1);
-    return Invoke<decltype(wrapped), RV, Args..., ArgStop>::template invoke<>(wrapped, index);
+    return Invoke<decltype(*wrapped), RV, Args..., ArgStop>::template invoke<>(*wrapped, index);
 }
 
 template <typename RV, typename... Args>
@@ -528,13 +529,74 @@ struct Push<std::function<void(Args...)>>
     }
 };
 
-template <typename Func>
-struct Metatable<std::function<Func>>
+template <typename RV, typename... Args>
+struct Get<std::function<RV(Args...)>>
+{
+static std::function<RV(Args...)> get(lua_State* const state, const int pos)
+{
+    lua::reference callable(state, pos);
+    return std::function<RV(Args...)>([callable](Args... args) -> decltype(lua::call<RV>(callable, args...)) {
+        return lua::call<RV>(callable, args...);
+    });
+}
+};
+
+template <typename Arg, typename... Rest>
+struct AppendTypenames
+{
+    static void appendTypenames(std::stringstream& str)
+    {
+        str << lua::Metatable<Arg>::info().name() << ", ";
+        AppendTypenames<Rest...>::appendTypenames(str);
+    }
+};
+
+template <>
+struct AppendTypenames<ArgStop>
+{
+    static void appendTypenames(std::stringstream& str)
+    {
+    }
+};
+
+template <typename RV, typename... Args>
+struct Metatable<std::function<RV(Args...)>>
 {
     static const lua::userdata_type& info()
     {
-        static lua::userdata_type info("std::function");
-        return info;
+        static lua::userdata_type _info;
+        if (!_info.has_name()) {
+            std::stringstream str("std::function<");
+            str << lua::Metatable<RV>::info().name();
+            str << "(";
+            AppendTypenames<Args..., ArgStop>::appendTypenames(str);
+            str << ")";
+            _info.set_name(str.str());
+        }
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int table, void* const value)
+    {
+        return true;
+    }
+};
+
+template <typename RV, typename... Args>
+struct Metatable<RV(Args...)>
+{
+    static const lua::userdata_type& info()
+    {
+        static lua::userdata_type _info;
+        if (!_info.has_name()) {
+            std::stringstream str;
+            str << lua::Metatable<RV>::info().name();
+            str << "(";
+            AppendTypenames<Args..., ArgStop>::appendTypenames(str);
+            str << ")";
+            _info.set_name(str.str());
+        }
+        return _info;
     }
 
     static bool metatable(lua_State* const state, const int table, void* const value)

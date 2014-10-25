@@ -4,18 +4,43 @@
 #include <sstream>
 
 #include "convert/const_char_p.hpp"
+#include "convert/string.hpp"
 
 lua::userdata_type::~userdata_type()
 {
     // std::cerr << "Destroying type " << this << " named " << _name << std::endl;
 }
 
+static bool debugging_allowed = false;
+
+void lua::allow_debugging(bool allowed)
+{
+    debugging_allowed = allowed;
+}
+
+bool lua::is_debugging_allowed()
+{
+    #ifdef LUACXX_FASTEST
+    return false;
+    #else
+    return debugging_allowed;
+    #endif
+}
+
 bool lua::is_debugging(lua_State* const state)
 {
+    #ifdef LUACXX_FASTEST
+    // Making this a compile-time constant improves performance by 10%
+    return false;
+    #else
+    if (!lua::is_debugging_allowed()) {
+        return false;
+    }
     lua_getglobal(state, "debugging");
     bool debugging = lua_toboolean(state, -1);
     lua_pop(state, 1);
     return debugging;
+    #endif
 }
 
 std::string lua::traceback(lua_State* const state, const int toplevel)
@@ -122,6 +147,11 @@ lua::userdata_block* lua::get_userdata_block(lua_State* const state, const int p
     );
 }
 
+void* lua::get_userdata_value(lua_State* const state, const int pos)
+{
+    return static_cast<void*>(lua_touserdata(state, pos));
+}
+
 // Allow noop invocations from variadic templates
 lua::index lua::push(lua_State* const state)
 {
@@ -130,12 +160,16 @@ lua::index lua::push(lua_State* const state)
 
 char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_storage& storage)
 {
-    if (is_debugging(state)) {
+    if (lua::is_debugging(state)) {
+        std::stringstream str;
+        str << "Allocating ";
         if (size == 1) {
-            std::cerr << "lua::malloc: Allocating " << size << " byte." << std::endl;
+            str << size << " byte.";
         } else {
-            std::cerr << "lua::malloc: Allocating " << size << " bytes." << std::endl;
+            str << size << " bytes.";
         }
+        str << std::endl;
+        lua::logEnter(state, "Lua memory allocations", str.str());
     }
 
     // Get and push a chunk of memory from Lua to hold our metadata, as well as
@@ -149,6 +183,9 @@ char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_stora
     new (block + size) lua::userdata_block(storage);
 
     // Return a pointer to the data block
+    if (lua::is_debugging(state)) {
+        lua::logLeave(state);
+    }
     return block;
 }
 
@@ -179,13 +216,19 @@ int lua::__gc(lua_State* const state)
     try {
         lua::assert_type("luaxx::__gc", lua::type::table, mt);
 
-        if (is_debugging(state)) {
+        if (lua::is_debugging(state)) {
+            std::stringstream str;
+            str << "Destroying ";
+
             auto class_name = lua::class_name(state, 1);
             if (!class_name.empty()) {
-                std::cerr << "luacxx: __gc: Destroying " << class_name << " of size " << lua::object_size(state, 1) << std::endl;
+                str << class_name;
             } else {
-                std::cerr << "luacxx: __gc: Destroying anonymous userdata of size " << lua::object_size(state, 1) << std::endl;
+                str << "anonymous userdata";
             }
+
+            str << " of size " << lua::object_size(state, 1) << std::endl;
+            lua::logEnter(state, "Lua memory allocations", str.str());
         }
 
         auto destroy = lua::table::get(mt, "destroy");
@@ -197,9 +240,15 @@ int lua::__gc(lua_State* const state)
         if (free_userdata.type().function()) {
             lua::call(free_userdata, lua::index(state, 1));
         }
+
     } catch (lua::error& ex) {
-        std::cerr << "Error occurred during Lua garbage collection: " << ex.what();
+        lua::log(state, "Lua errors",
+            std::string("Error occurred during Lua garbage collection: ") + ex.what()
+        );
     }
 
+    if (lua::is_debugging(state)) {
+        lua::logLeave(state);
+    }
     return 0;
 }
