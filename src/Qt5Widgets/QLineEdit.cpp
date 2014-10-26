@@ -5,6 +5,7 @@
 #include "QAction.hpp"
 #include "QMenu.hpp"
 #include "QCompleter.hpp"
+#include "QWidget.hpp"
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QPoint.hpp"
@@ -37,6 +38,8 @@ int QLineEdit_setTextMargins(lua_State* const state)
 
 void lua::QLineEdit_metatable(lua_State* const state, const int pos)
 {
+    lua::QWidget_metatable(state, pos);
+
     lua::index mt(state, pos);
     mt["addAction"] = QLineEdit_addAction;
     mt["alignment"] = &QLineEdit::alignment;
@@ -95,10 +98,13 @@ void lua::QLineEdit_metatable(lua_State* const state, const int pos)
 
 int QLineEdit_new(lua_State* const state)
 {
-    // QLineEdit(QWidget * parent = 0)
-    // QLineEdit(const QString & contents, QWidget * parent = 0)
-    lua::make<QLineEdit>(state);
-
+    if (lua_gettop(state) > 0) {
+        // QLineEdit(const QString & contents, QWidget * parent = 0)
+        lua::make<QLineEdit>(state, lua::get<const QString&>(state, 1));
+    } else {
+        // QLineEdit(QWidget * parent = 0)
+        lua::make<QLineEdit>(state);
+    }
     return 1;
 }
 

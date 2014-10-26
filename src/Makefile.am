@@ -164,6 +164,7 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QAbstractEventDispatcher.cpp \
 	Qt5Core/QAbstractNativeEventFilter.cpp \
 	Qt5Core/QAbstractItemModel.cpp \
+	Qt5Core/QFileSystemWatcher.cpp \
 	Qt5Core/QUrl.cpp \
 	Qt5Core/QIODevice.cpp \
 	Qt5Core/QFileDevice.cpp \
@@ -215,6 +216,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QByteArray.hpp \
 	Qt5Core/QCoreApplication.hpp \
 	Qt5Core/QEvent.hpp \
+	Qt5Core/QFileSystemWatcher.hpp \
 	Qt5Core/QEventLoop.hpp \
 	Qt5Core/QStringList.hpp \
 	Qt5Core/QMimeData.hpp \
