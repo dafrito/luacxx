@@ -15,6 +15,7 @@
 #include "QTextFrame.hpp"
 #include "QPagedPaintDevice.hpp"
 #include "../Qt5Core/QObject.hpp"
+#include "../Qt5Core/QFlags.hpp"
 
 #include <QTextDocument>
 
@@ -123,7 +124,7 @@ int luaopen_Qt5Gui_QTextDocument(lua_State* const state)
     auto t = env["QTextDocument"];
 
     // enum QTextDocument::FindFlag
-    // flags QTextDocument::FindFlags
+    t["FindFlags"] = lua::QFlags_new<QTextDocument::FindFlags>;
     t["TextDocument"] = QQApplication>TextDocument;
     t["FindCaseSensitively"] = QTextDocument::FindCaseSensitively;
     t["FindWholeWords"] = QTextDocument::FindWholeWords;
