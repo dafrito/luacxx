@@ -5,6 +5,7 @@
 
 #include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
+#include "convert/callable.hpp"
 
 lua::userdata_type::~userdata_type()
 {
@@ -250,4 +251,12 @@ int lua::__gc(lua_State* const state)
         lua::logLeave(state);
     }
     return 0;
+}
+
+void lua::lua_error_metatable(lua_State* const state, const int pos)
+{
+    lua::index mt(state, pos);
+
+    mt["what"] = &lua::error::what;
+    mt["__tostring"] = &lua::error::what;
 }

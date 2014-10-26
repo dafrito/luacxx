@@ -918,6 +918,8 @@ struct Metatable<void>
     }
 };
 
+void lua_error_metatable(lua_State* const state, const int pos);
+
 template <>
 struct Metatable<lua::error>
 {
@@ -929,6 +931,7 @@ struct Metatable<lua::error>
 
     static bool metatable(lua_State* const state, const int source, const lua::error* const)
     {
+        lua_error_metatable(state, source);
         return true;
     }
 };
