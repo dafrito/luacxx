@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QDateTime)
 
-extern "C" int luaopen_luacxx_QDateTime(lua_State* const);
+extern "C" int luaopen_Qt5Core_QDateTime(lua_State* const);
 
 #endif // luacxx_QDateTime_INCLUDED

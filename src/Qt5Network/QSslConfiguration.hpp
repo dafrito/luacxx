@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QSslConfiguration);
 
-extern "C" int luaopen_luacxx_QSslConfiguration(lua_State* const);
+extern "C" int luaopen_Qt5Network_QSslConfiguration(lua_State* const);
 
 #endif // luacxx_QSslConfiguration_INCLUDED

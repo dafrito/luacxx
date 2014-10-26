@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QImageReader);
 LUA_METATABLE_ENUM(QImageReader::ImageReaderError);
 
-extern "C" int luaopen_luacxx_QImageReader(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QImageReader(lua_State* const);
 
 #endif // LUA_CXX_QIMAGEREADER_INCLUDED

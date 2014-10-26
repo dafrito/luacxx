@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QPageSize)
 
-extern "C" int luaopen_luacxx_QPageSize(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QPageSize(lua_State* const);
 
 #endif // luacxx_QPageSize_INCLUDED

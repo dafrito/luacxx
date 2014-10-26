@@ -90,6 +90,6 @@ struct Metatable<QFlags<T>>
 };
 
 
-extern "C" int luaopen_luacxx_QFlags(lua_State* const);
+extern "C" int luaopen_Qt5Core_QFlags(lua_State* const);
 
 #endif // luacxx_QFlags_INCLUDED

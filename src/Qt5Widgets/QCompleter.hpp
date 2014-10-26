@@ -10,6 +10,6 @@ LUA_METATABLE_BUILT(QCompleter);
 LUA_METATABLE_ENUM(QCompleter::CompletionMode);
 LUA_METATABLE_ENUM(QCompleter::ModelSorting);
 
-extern "C" int luaopen_luacxx_QCompleter(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QCompleter(lua_State* const);
 
 #endif // luacxx_QCompleter_INCLUDED

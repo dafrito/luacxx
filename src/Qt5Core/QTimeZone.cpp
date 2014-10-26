@@ -15,7 +15,7 @@ int QTimeZone_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QTimeZone(lua_State* const state)
+int luaopen_Qt5Core_QTimeZone(lua_State* const state)
 {
     lua::thread env(state);
 

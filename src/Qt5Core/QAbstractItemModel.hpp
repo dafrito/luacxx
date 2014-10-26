@@ -7,6 +7,6 @@ class QAbstractItemModel;
 
 LUA_METATABLE_BUILT(QAbstractItemModel)
 
-extern "C" int luaopen_luacxx_QAbstractItemModel(lua_State* const);
+extern "C" int luaopen_Qt5Core_QAbstractItemModel(lua_State* const);
 
 #endif // luacxx_QAbstractItemModel_INCLUDED

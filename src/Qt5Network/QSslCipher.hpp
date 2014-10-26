@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QSslCipher);
 
-extern "C" int luaopen_luacxx_QSslCipher(lua_State* const);
+extern "C" int luaopen_Qt5Network_QSslCipher(lua_State* const);
 
 #endif // luacxx_QSslCipher_INCLUDED

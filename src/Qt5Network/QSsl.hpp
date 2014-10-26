@@ -13,6 +13,6 @@ LUA_METATABLE_ENUM(QSsl::KeyType);
 LUA_METATABLE_ENUM(QSsl::SslOption);
 LUA_METATABLE_ENUM(QSsl::SslProtocol);
 
-extern "C" int luaopen_luacxx_QSsl(lua_State* const);
+extern "C" int luaopen_Qt5Network_QSsl(lua_State* const);
 
 #endif // luacxx_QSsl_INCLUDED

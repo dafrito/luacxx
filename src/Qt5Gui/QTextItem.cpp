@@ -29,7 +29,7 @@ int QTextItem_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QTextItem(lua_State* const state)
+int luaopen_Qt5Gui_QTextItem(lua_State* const state)
 {
     lua::thread env(state);
 

@@ -7,6 +7,6 @@ class QFile;
 
 LUA_METATABLE_BUILT(QFile)
 
-extern "C" int luaopen_luacxx_QFile(lua_State* const);
+extern "C" int luaopen_Qt5Core_QFile(lua_State* const);
 
 #endif // luacxx_QFile_INCLUDED

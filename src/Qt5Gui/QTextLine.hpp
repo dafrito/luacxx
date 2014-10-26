@@ -8,6 +8,6 @@
 LUA_METATABLE_BUILT(QTextLine)
 LUA_METATABLE_ENUM(QTextLine::CursorPosition)
 
-extern "C" int luaopen_luacxx_QTextLine(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextLine(lua_State* const);
 
 #endif // luacxx_QTextLine_INCLUDED

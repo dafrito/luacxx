@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QAbstractSlider)
 LUA_METATABLE_ENUM(QAbstractSlider::SliderAction);
 
-extern "C" int luaopen_luacxx_QAbstractSlider(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QAbstractSlider(lua_State* const);
 
 #endif // luacxx_QAbstractSlider_INCLUDED

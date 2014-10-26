@@ -60,7 +60,7 @@ int QCompleter_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QCompleter(lua_State* const state)
+int luaopen_Qt5Widgets_QCompleter(lua_State* const state)
 {
     lua::thread env(state);
 

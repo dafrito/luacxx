@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTextList)
 
-extern "C" int luaopen_luacxx_QTextList(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextList(lua_State* const);
 
 #endif // luacxx_QTextList_INCLUDED

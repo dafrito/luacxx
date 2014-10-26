@@ -2,7 +2,7 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-int luaopen_luacxx_QFlags(lua_State* const state)
+int luaopen_Qt5Core_QFlags(lua_State* const state)
 {
     lua::thread env(state);
 

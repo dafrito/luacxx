@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QImageWriter);
 LUA_METATABLE_ENUM(QImageWriter::ImageWriterError);
 
-extern "C" int luaopen_luacxx_QImageWriter(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QImageWriter(lua_State* const);
 
 #endif // LUA_CXX_QIMAGEWRITER_INCLUDED

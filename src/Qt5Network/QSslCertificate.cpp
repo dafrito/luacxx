@@ -79,7 +79,7 @@ int QSslCertificate_verify(lua_State* const state)
     return 0;
 }
 
-int luaopen_luacxx_QSslCertificate(lua_State* const state)
+int luaopen_Qt5Network_QSslCertificate(lua_State* const state)
 {
     lua::thread env(state);
 

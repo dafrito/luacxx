@@ -7,6 +7,6 @@ class QActionGroup;
 
 LUA_METATABLE_BUILT(QActionGroup);
 
-extern "C" int luaopen_luacxx_QActionGroup(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QActionGroup(lua_State* const);
 
 #endif // luacxx_QActionGroup_INCLUDED

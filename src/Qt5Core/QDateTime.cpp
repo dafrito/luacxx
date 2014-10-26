@@ -78,7 +78,7 @@ int QDateTime_fromTime_t(lua_State* const state)
     return 0;
 }
 
-int luaopen_luacxx_QDateTime(lua_State* const state)
+int luaopen_Qt5Core_QDateTime(lua_State* const state)
 {
     lua::thread env(state);
 

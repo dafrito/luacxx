@@ -41,7 +41,7 @@ int QImageIOHandler_new(lua_State* const state)
     return 0;
 }
 
-int luaopen_luacxx_QImageIOHandler(lua_State* const state)
+int luaopen_Qt5Gui_QImageIOHandler(lua_State* const state)
 {
     lua::thread env(state);
 

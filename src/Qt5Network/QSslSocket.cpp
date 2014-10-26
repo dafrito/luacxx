@@ -98,7 +98,7 @@ int QSslSocket_addDefaultCaCertificates(lua_State* const state)
     return 0;
 }
 
-int luaopen_luacxx_QSslSocket(lua_State* const state)
+int luaopen_Qt5Network_QSslSocket(lua_State* const state)
 {
     lua::thread env(state);
 

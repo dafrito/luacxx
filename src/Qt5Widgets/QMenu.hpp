@@ -7,6 +7,6 @@ class QMenu;
 
 LUA_METATABLE_BUILT(QMenu);
 
-extern "C" int luaopen_luacxx_QMenu(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QMenu(lua_State* const);
 
 #endif // luacxx_QMenu_INCLUDED

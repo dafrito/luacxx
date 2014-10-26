@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTcpSocket);
 
-extern "C" int luaopen_luacxx_QTcpSocket(lua_State* const);
+extern "C" int luaopen_Qt5Network_QTcpSocket(lua_State* const);
 
 #endif // luacxx_QTcpSocket_INCLUDED

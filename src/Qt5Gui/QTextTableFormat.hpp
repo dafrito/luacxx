@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTextTableFormat)
 
-extern "C" int luaopen_luacxx_QTextTableFormat(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextTableFormat(lua_State* const);
 
 #endif // luacxx_QTextTableFormat_INCLUDED

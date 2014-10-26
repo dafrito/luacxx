@@ -7,6 +7,6 @@ class QPolygonF;
 
 LUA_METATABLE_BUILT(QPolygonF);
 
-extern "C" int luaopen_luacxx_QPolygonF(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QPolygonF(lua_State* const);
 
 #endif // luacxx_QPolygonF_INCLUDED

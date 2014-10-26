@@ -4,7 +4,7 @@
 
 #include <QSsl>
 
-int luaopen_luacxx_QSsl(lua_State* const state)
+int luaopen_Qt5Network_QSsl(lua_State* const state)
 {
     lua::thread env(state);
 

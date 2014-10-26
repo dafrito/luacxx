@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QPdfWriter)
 
-extern "C" int luaopen_luacxx_QPdfWriter(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QPdfWriter(lua_State* const);
 
 #endif // luacxx_QPdfWriter_INCLUDED

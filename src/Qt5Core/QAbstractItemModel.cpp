@@ -9,7 +9,7 @@ void lua::QAbstractItemModel_metatable(lua_State* const state, const int mt)
     // TODO Set up metatable methods for this class
 }
 
-int luaopen_luacxx_QAbstractItemModel(lua_State* const state)
+int luaopen_Qt5Core_QAbstractItemModel(lua_State* const state)
 {
     lua::thread env(state);
 

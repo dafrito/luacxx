@@ -13,6 +13,6 @@ LUA_METATABLE_ENUM(QNetworkRequest::KnownHeaders)
 LUA_METATABLE_ENUM(QNetworkRequest::LoadControl)
 LUA_METATABLE_ENUM(QNetworkRequest::Priority)
 
-extern "C" int luaopen_luacxx_QNetworkRequest(lua_State* const);
+extern "C" int luaopen_Qt5Network_QNetworkRequest(lua_State* const);
 
 #endif // luacxx_QNetworkRequest_INCLUDED

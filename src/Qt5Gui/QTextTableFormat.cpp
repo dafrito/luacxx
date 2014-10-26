@@ -37,7 +37,7 @@ int QTextTableFormat_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QTextTableFormat(lua_State* const state)
+int luaopen_Qt5Gui_QTextTableFormat(lua_State* const state)
 {
     lua::thread env(state);
 

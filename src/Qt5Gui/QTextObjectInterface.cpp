@@ -19,7 +19,7 @@ void QTextObjectInterface_metatable(lua_State* const state, const int pos)
 
 } // namespace lua
 
-int luaopen_luacxx_QTextObjectInterface(lua_State* const state)
+int luaopen_Qt5Gui_QTextObjectInterface(lua_State* const state)
 {
     lua::thread env(state);
 

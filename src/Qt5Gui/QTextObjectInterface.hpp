@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTextObjectInterface)
 
-extern "C" int luaopen_luacxx_QTextObjectInterface(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextObjectInterface(lua_State* const);
 
 #endif // luacxx_QTextObjectInterface_INCLUDED

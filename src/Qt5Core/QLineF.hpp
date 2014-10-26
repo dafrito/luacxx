@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QLineF);
 LUA_METATABLE_ENUM(QLineF::IntersectType);
 
-extern "C" int luaopen_luacxx_QLineF(lua_State* const);
+extern "C" int luaopen_Qt5Core_QLineF(lua_State* const);
 
 #endif // luacxx_QLineF_INCLUDED

@@ -50,7 +50,7 @@ int QNetworkRequest_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QNetworkRequest(lua_State* const state)
+int luaopen_Qt5Network_QNetworkRequest(lua_State* const state)
 {
     lua::thread env(state);
 

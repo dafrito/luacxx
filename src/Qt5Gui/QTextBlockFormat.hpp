@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QTextBlockFormat)
 LUA_METATABLE_ENUM(QTextBlockFormat::LineHeightTypes)
 
-extern "C" int luaopen_luacxx_QTextBlockFormat(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextBlockFormat(lua_State* const);
 
 #endif // luacxx_QTextBlockFormat_INCLUDED

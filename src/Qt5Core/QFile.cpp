@@ -47,7 +47,7 @@ int QFile_decodeName(lua_State* const state)
     return 0;
 }
 
-int luaopen_luacxx_QFile(lua_State* const state)
+int luaopen_Qt5Core_QFile(lua_State* const state)
 {
     lua::thread env(state);
 

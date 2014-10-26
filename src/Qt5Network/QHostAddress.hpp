@@ -16,6 +16,6 @@ LUA_METATABLE_BUILT(QHostAddress);
 LUA_METATABLE_BUILT_WITH(Q_IPV6ADDR, Q_IPV6ADDR_metatable);
 LUA_METATABLE_ENUM(QHostAddress::SpecialAddress);
 
-extern "C" int luaopen_luacxx_QHostAddress(lua_State* const);
+extern "C" int luaopen_Qt5Network_QHostAddress(lua_State* const);
 
 #endif // luacxx_QHostAddress_INCLUDED

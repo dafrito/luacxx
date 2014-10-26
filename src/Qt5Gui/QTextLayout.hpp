@@ -8,6 +8,6 @@
 LUA_METATABLE_BUILT(QTextLayout)
 LUA_METATABLE_ENUM(QTextLayout::CursorMode)
 
-extern "C" int luaopen_luacxx_QTextLayout(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextLayout(lua_State* const);
 
 #endif // luacxx_QTextLayout_INCLUDED

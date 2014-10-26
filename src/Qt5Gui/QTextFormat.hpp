@@ -12,6 +12,6 @@ LUA_METATABLE_ENUM(QTextFormat::ObjectTypes)
 LUA_METATABLE_ENUM(QTextFormat::PageBreakFlag)
 LUA_METATABLE_ENUM(QTextFormat::Property)
 
-extern "C" int luaopen_luacxx_QTextFormat(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextFormat(lua_State* const);
 
 #endif // luacxx_QTextFormat_INCLUDED

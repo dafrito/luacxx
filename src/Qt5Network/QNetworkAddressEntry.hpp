@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QNetworkAddressEntry);
 
-extern "C" int luaopen_luacxx_QNetworkAddressEntry(lua_State* const);
+extern "C" int luaopen_Qt5Network_QNetworkAddressEntry(lua_State* const);
 
 #endif // luacxx_QNetworkAddressEntry_INCLUDED

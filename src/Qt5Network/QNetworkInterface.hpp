@@ -11,6 +11,6 @@ LUA_METATABLE_ENUM(QNetworkInterface::InterfaceFlag);
 
 bool operator==(const QNetworkInterface& first, const QNetworkInterface& second);
 
-extern "C" int luaopen_luacxx_QNetworkInterface(lua_State* const);
+extern "C" int luaopen_Qt5Network_QNetworkInterface(lua_State* const);
 
 #endif // luacxx_QNetworkInterface_INCLUDED

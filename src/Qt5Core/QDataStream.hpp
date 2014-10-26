@@ -12,6 +12,6 @@ LUA_METATABLE_ENUM(QDataStream::ByteOrder)
 LUA_METATABLE_ENUM(QDataStream::FloatingPointPrecision)
 LUA_METATABLE_ENUM(QDataStream::Version)
 
-extern "C" int luaopen_luacxx_QDataStream(lua_State* const);
+extern "C" int luaopen_Qt5Core_QDataStream(lua_State* const);
 
 #endif // luacxx_QDataStream_INCLUDED

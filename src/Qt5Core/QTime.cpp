@@ -78,7 +78,7 @@ int QTime_isValid_static(lua_State* const state)
     return 0;
 }
 
-int luaopen_luacxx_QTime(lua_State* const state)
+int luaopen_Qt5Core_QTime(lua_State* const state)
 {
     lua::thread env(state);
 

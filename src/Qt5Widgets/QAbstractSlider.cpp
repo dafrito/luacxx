@@ -46,7 +46,7 @@ int QAbstractSlider_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QAbstractSlider(lua_State* const state)
+int luaopen_Qt5Widgets_QAbstractSlider(lua_State* const state)
 {
     lua::thread env(state);
 

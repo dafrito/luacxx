@@ -22,7 +22,7 @@ void QGraphicsLayout_metatable(lua_State* const state, const int pos)
 
 } // namespace lua
 
-int luaopen_luacxx_QGraphicsLayout(lua_State* const state)
+int luaopen_Qt5Widgets_QGraphicsLayout(lua_State* const state)
 {
     lua::thread env(state);
 

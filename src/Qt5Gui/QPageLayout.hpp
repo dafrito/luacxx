@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QPageLayout)
 
-extern "C" int luaopen_luacxx_QPageLayout(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QPageLayout(lua_State* const);
 
 #endif // luacxx_QPageLayout_INCLUDED

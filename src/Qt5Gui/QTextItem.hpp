@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QTextItem)
 LUA_METATABLE_ENUM(QTextItem::RenderFlag)
 
-extern "C" int luaopen_luacxx_QTextItem(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextItem(lua_State* const);
 
 #endif // luacxx_QTextItem_INCLUDED

@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QGraphicsLayout)
 
-extern "C" int luaopen_luacxx_QGraphicsLayout(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QGraphicsLayout(lua_State* const);
 
 #endif // luacxx_QGraphicsLayout_INCLUDED

@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QDate)
 LUA_METATABLE_ENUM(QDate::MonthNameType);
 
-extern "C" int luaopen_luacxx_QDate(lua_State* const);
+extern "C" int luaopen_Qt5Core_QDate(lua_State* const);
 
 #endif // luacxx_QDate_INCLUDED

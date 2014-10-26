@@ -10,6 +10,6 @@ LUA_METATABLE_ENUM(QTextCharFormat::FontPropertiesInheritanceBehavior)
 LUA_METATABLE_ENUM(QTextCharFormat::UnderlineStyle)
 LUA_METATABLE_ENUM(QTextCharFormat::VerticalAlignment)
 
-extern "C" int luaopen_luacxx_QTextCharFormat(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextCharFormat(lua_State* const);
 
 #endif // luacxx_QTextCharFormat_INCLUDED

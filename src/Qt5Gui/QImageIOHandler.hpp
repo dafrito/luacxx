@@ -9,6 +9,6 @@
 LUA_METATABLE_BUILT(QImageIOHandler);
 LUA_METATABLE_ENUM(QImageIOHandler::ImageOption);
 
-extern "C" int luaopen_luacxx_QImageIOHandler(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QImageIOHandler(lua_State* const);
 
 #endif // LUA_CXX_QIMAGEIOHANDLER_INCLUDED

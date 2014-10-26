@@ -20,7 +20,7 @@ int QFontDatabase_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QFontDatabase(lua_State* const state)
+int luaopen_Qt5Gui_QFontDatabase(lua_State* const state)
 {
     lua::thread env(state);
 

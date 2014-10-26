@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTextFrame)
 
-extern "C" int luaopen_luacxx_QTextFrame(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextFrame(lua_State* const);
 
 #endif // luacxx_QTextFrame_INCLUDED

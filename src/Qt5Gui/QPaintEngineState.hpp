@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QPaintEngineState)
 
-extern "C" int luaopen_luacxx_QPaintEngineState(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QPaintEngineState(lua_State* const);
 
 #endif // luacxx_QPaintEngineState_INCLUDED

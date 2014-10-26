@@ -30,7 +30,7 @@ int QSslCipher_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QSslCipher(lua_State* const state)
+int luaopen_Qt5Network_QSslCipher(lua_State* const state)
 {
     lua::thread env(state);
 

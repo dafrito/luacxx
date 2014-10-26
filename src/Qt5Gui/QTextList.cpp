@@ -27,7 +27,7 @@ void QTextList_metatable(lua_State* const state, const int pos)
 
 } // namespace lua
 
-int luaopen_luacxx_QTextList(lua_State* const state)
+int luaopen_Qt5Gui_QTextList(lua_State* const state)
 {
     lua::thread env(state);
 

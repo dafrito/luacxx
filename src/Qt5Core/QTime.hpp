@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTime)
 
-extern "C" int luaopen_luacxx_QTime(lua_State* const);
+extern "C" int luaopen_Qt5Core_QTime(lua_State* const);
 
 #endif // luacxx_QTime_INCLUDED

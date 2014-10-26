@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QScrollBar)
 
-extern "C" int luaopen_luacxx_QScrollBar(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QScrollBar(lua_State* const);
 
 #endif // luacxx_QScrollBar_INCLUDED

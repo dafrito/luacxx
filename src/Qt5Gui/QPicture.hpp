@@ -7,6 +7,6 @@ class QPicture;
 
 LUA_METATABLE_BUILT(QPicture);
 
-extern "C" int luaopen_luacxx_QPicture(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QPicture(lua_State* const);
 
 #endif // luacxx_QPicture_INCLUDED

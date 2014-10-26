@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QSyntaxHighlighter)
 
-extern "C" int luaopen_luacxx_QSyntaxHighlighter(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QSyntaxHighlighter(lua_State* const);
 
 #endif // luacxx_QSyntaxHighlighter_INCLUDED

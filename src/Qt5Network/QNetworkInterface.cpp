@@ -38,7 +38,7 @@ int QNetworkInterface_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QNetworkInterface(lua_State* const state)
+int luaopen_Qt5Network_QNetworkInterface(lua_State* const state)
 {
     lua::thread env(state);
 

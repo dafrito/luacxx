@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTimeZone)
 
-extern "C" int luaopen_luacxx_QTimeZone(lua_State* const);
+extern "C" int luaopen_Qt5Core_QTimeZone(lua_State* const);
 
 #endif // luacxx_QTimeZone_INCLUDED

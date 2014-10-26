@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QSpacerItem)
 
-extern "C" int luaopen_luacxx_QSpacerItem(lua_State* const);
+extern "C" int luaopen_Qt5Widgets_QSpacerItem(lua_State* const);
 
 #endif // luacxx_QSpacerItem_INCLUDED

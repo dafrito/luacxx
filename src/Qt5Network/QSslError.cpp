@@ -34,7 +34,7 @@ int QSslError_new(lua_State* const state)
     return 1;
 }
 
-int luaopen_luacxx_QSslError(lua_State* const state)
+int luaopen_Qt5Network_QSslError(lua_State* const state)
 {
     lua::thread env(state);
 
