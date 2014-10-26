@@ -359,7 +359,26 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QKeySequence.cpp \
 	Qt5Gui/QPaintEngine.cpp \
 	Qt5Gui/QPaintEngineState.cpp \
+	Qt5Gui/QAbstractTextDocument.cpp \
 	Qt5Gui/QTextItem.cpp \
+	Qt5Gui/QTextBlockFormat.cpp \
+	Qt5Gui/QTextBlockGroup.cpp \
+	Qt5Gui/QTextCharFormat.cpp \
+	Qt5Gui/QTextCursor.cpp \
+	Qt5Gui/QTextFormat.cpp \
+	Qt5Gui/QTextFrame.cpp \
+	Qt5Gui/QTextFrameFormat.cpp \
+	Qt5Gui/QTextImageFormat.cpp \
+	Qt5Gui/QTextLayout.cpp \
+	Qt5Gui/QTextLength.cpp \
+	Qt5Gui/QTextLine.cpp \
+	Qt5Gui/QTextList.cpp \
+	Qt5Gui/QTextListFormat.cpp \
+	Qt5Gui/QTextObject.cpp \
+	Qt5Gui/QTextObjectInterface.cpp \
+	Qt5Gui/QTextTable.cpp \
+	Qt5Gui/QTextTableCell.cpp \
+	Qt5Gui/QTextTableFormat.cpp \
 	Qt5Gui/QMatrix.cpp \
 	Qt5Gui/QCursor.cpp \
 	Qt5Gui/QClipboard.cpp \
@@ -374,7 +393,12 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QPicture.cpp \
 	Qt5Gui/QFont.cpp \
 	Qt5Gui/QFontInfo.cpp \
+	Qt5Gui/QSyntaxHighlighter.cpp \
+	Qt5Gui/QPageSize.cpp \
+	Qt5Gui/QPageLayout.cpp \
+	Qt5Gui/QPagedPaintDevice.cpp \
 	Qt5Gui/QImageIOHandler.cpp \
+	Qt5Gui/QPdfWriter.cpp \
 	Qt5Gui/QImageReader.cpp \
 	Qt5Gui/QImageWriter.cpp \
 	Qt5Gui/QFontMetrics.cpp \
@@ -386,6 +410,9 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QPixmap.cpp \
 	Qt5Gui/QBitmap.cpp \
 	Qt5Gui/QPainter.cpp \
+	Qt5Gui/QAccessible.cpp \
+	Qt5Gui/QDesktopServices.cpp \
+	Qt5Gui/QFontDatabase.cpp \
 	Qt5Gui/QPaintDevice.cpp \
 	Qt5Gui/QBackingStore.cpp \
 	Qt5Gui/QTextOption.cpp
@@ -403,6 +430,11 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QMovie.hpp \
 	Qt5Gui/QFont.hpp \
 	Qt5Gui/QFontInfo.hpp \
+	Qt5Gui/QSyntaxHighlighter.hpp \
+	Qt5Gui/QPageSize.hpp \
+	Qt5Gui/QPageLayout.hpp \
+	Qt5Gui/QPagedPaintDevice.hpp \
+	Qt5Gui/QPdfWriter.hpp \
 	Qt5Gui/QImageIOHandler.hpp \
 	Qt5Gui/QImageReader.hpp \
 	Qt5Gui/QImageWriter.hpp \
@@ -419,9 +451,31 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QMatrix.hpp \
 	Qt5Gui/QCursor.hpp \
 	Qt5Gui/QClipboard.hpp \
+	Qt5Gui/QAccessible.hpp \
+	Qt5Gui/QDesktopServices.hpp \
+	Qt5Gui/QFontDatabase.hpp \
 	Qt5Gui/QPaintEngine.hpp \
 	Qt5Gui/QPaintEngineState.hpp \
+	Qt5Gui/QAbstractTextDocument.hpp \
 	Qt5Gui/QTextItem.hpp \
+	Qt5Gui/QTextBlockFormat.hpp \
+	Qt5Gui/QTextBlockGroup.hpp \
+	Qt5Gui/QTextCharFormat.hpp \
+	Qt5Gui/QTextCursor.hpp \
+	Qt5Gui/QTextFormat.hpp \
+	Qt5Gui/QTextFrame.hpp \
+	Qt5Gui/QTextFrameFormat.hpp \
+	Qt5Gui/QTextImageFormat.hpp \
+	Qt5Gui/QTextLayout.hpp \
+	Qt5Gui/QTextLength.hpp \
+	Qt5Gui/QTextLine.hpp \
+	Qt5Gui/QTextList.hpp \
+	Qt5Gui/QTextListFormat.hpp \
+	Qt5Gui/QTextObject.hpp \
+	Qt5Gui/QTextObjectInterface.hpp \
+	Qt5Gui/QTextTable.hpp \
+	Qt5Gui/QTextTableCell.hpp \
+	Qt5Gui/QTextTableFormat.hpp \
 	Qt5Gui/QDrag.hpp \
 	Qt5Gui/QIconEngine.hpp \
 	Qt5Gui/QIcon.hpp \
