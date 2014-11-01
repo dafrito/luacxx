@@ -3,7 +3,7 @@
 
 #include "Qt5Core.hpp"
 
-class QPointF;
+#include <QPointF>
 
 LUA_METATABLE_BUILT(QPointF)
 
