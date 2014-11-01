@@ -1050,8 +1050,13 @@ inline void call_destructor(T& value)
 template <class Stored>
 int free_userdata(lua_State* const state)
 {
+
     char* block = static_cast<char*>(lua_touserdata(state, 1));
     auto userdata_block = lua::get_userdata_block(state, 1);
+
+    if (is_debugging(state)) {
+        lua::logEntercm(state, "Userdata destruction", "Destroying ", lua::Metatable<Stored>::info().name());
+    }
 
     switch (userdata_block->storage()) {
     case userdata_storage::destroyed:
@@ -1084,6 +1089,10 @@ int free_userdata(lua_State* const state)
 
     // Finally, destroy the userdata block itself
     userdata_block->~userdata_block();
+
+    if (is_debugging(state)) {
+        lua::logLeave(state);
+    }
 
     return 0;
 }
