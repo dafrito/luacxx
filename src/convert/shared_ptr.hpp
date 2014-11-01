@@ -12,8 +12,7 @@ struct Metatable<std::shared_ptr<T>>
 {
     static const userdata_type& info()
     {
-        static userdata_type _info("shared_ptr");
-        return _info;
+        return Metatable<T>::info();
     }
 
     static bool metatable(const lua::index& mt, std::shared_ptr<T>* const source)
