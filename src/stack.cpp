@@ -1,16 +1,10 @@
 #include "stack.hpp"
 #include "algorithm.hpp"
-#include <iostream>
 #include <sstream>
 
 #include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
 #include "convert/callable.hpp"
-
-lua::userdata_type::~userdata_type()
-{
-    // std::cerr << "Destroying type " << this << " named " << _name << std::endl;
-}
 
 static bool debugging_allowed = false;
 

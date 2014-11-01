@@ -560,8 +560,6 @@ public:
 
     template <class Value>
     Value* cast(void* value) const;
-
-    ~userdata_type();
 };
 
 // Discriminant for how userdata is stored
