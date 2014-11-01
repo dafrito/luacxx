@@ -1,10 +1,13 @@
 #include "QTextTableFormat.hpp"
 #include "../convert/callable.hpp"
+#include "../convert/const_char_p.hpp"
+#include "../convert/numeric.hpp"
 #include "../thread.hpp"
 
 #include "QTextFrameFormat.hpp"
 #include "QTextLength.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QVector.hpp"
 
 namespace lua {

@@ -2,6 +2,7 @@
 #define luacxx_QTextCharFormat_INCLUDED
 
 #include "../stack.hpp"
+#include "../enum.hpp"
 
 #include <QTextCharFormat>
 

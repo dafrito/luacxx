@@ -1,7 +1,7 @@
 #include "QTextDocument.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
-#include "QUrl.hpp"
+#include "../Qt5Core/QUrl.hpp"
 #include "../Qt5Core/QVariant.hpp"
 #include "../Qt5Core/QVector.hpp"
 #include "QTextFormat.hpp"
@@ -10,12 +10,16 @@
 #include "QFont.hpp"
 #include "QTextCursor.hpp"
 #include "QTextObject.hpp"
+#include "QTextOption.hpp"
+#include "QPainter.hpp"
 #include "QAbstractTextDocumentLayout.hpp"
 #include "../Qt5Core/QSizeF.hpp"
 #include "QTextFrame.hpp"
 #include "QPagedPaintDevice.hpp"
+#include "../Qt5Core/QRectF.hpp"
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/Qt.hpp"
 
 #include <QTextDocument>
 
@@ -76,8 +80,8 @@ void lua::QTextDocument_metatable(lua_State* const state, const int pos)
     mt["objectForFormat"] = &QTextDocument::objectForFormat;
     mt["pageCount"] = &QTextDocument::pageCount;
     mt["pageSize"] = &QTextDocument::pageSize;
-    mt["print"] = &QAbstractSocket::print;
-    mt["redo"] = &QTextDocument::redo;
+    mt["print"] = &QTextDocument::print;
+    //mt["redo"] = &QTextDocument::redo;
     mt["resource"] = &QTextDocument::resource;
     mt["revision"] = &QTextDocument::revision;
     mt["rootFrame"] = &QTextDocument::rootFrame;
@@ -101,7 +105,7 @@ void lua::QTextDocument_metatable(lua_State* const state, const int pos)
     mt["textWidth"] = &QTextDocument::textWidth;
     mt["toHtml"] = QTextDocument_toHtml;
     mt["toPlainText"] = &QTextDocument::toPlainText;
-    mt["undo"] = &QTextDocument::undo;
+    //mt["undo"] = &QTextDocument::undo;
     mt["useDesignMetrics"] = &QTextDocument::useDesignMetrics;
 }
 
@@ -125,7 +129,7 @@ int luaopen_Qt5Gui_QTextDocument(lua_State* const state)
 
     // enum QTextDocument::FindFlag
     t["FindFlags"] = lua::QFlags_new<QTextDocument::FindFlags>;
-    t["TextDocument"] = QQApplication>TextDocument;
+    t["FindBackward"] = QTextDocument::FindBackward;
     t["FindCaseSensitively"] = QTextDocument::FindCaseSensitively;
     t["FindWholeWords"] = QTextDocument::FindWholeWords;
 

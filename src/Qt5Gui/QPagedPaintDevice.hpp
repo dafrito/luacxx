@@ -2,6 +2,7 @@
 #define luacxx_QPagedPaintDevice_INCLUDED
 
 #include "../stack.hpp"
+#include "../enum.hpp"
 
 #include <QPagedPaintDevice>
 

@@ -2,18 +2,47 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
+#include "QObject.hpp"
+#include "QVariant.hpp"
+#include "QByteArray.hpp"
+#include "QString.hpp"
+#include "QStringList.hpp"
+#include "QList.hpp"
+#include "QUrl.hpp"
+#include <iostream>
+
 void lua::QMimeData_metatable(lua_State* const state, const int pos)
 {
-    lua::index mt(state, pos);
+    lua::QObject_metatable(state, pos);
 
-    // TODO Set up metatable methods for this class
+    lua::index mt(state, pos);
+    mt["clear"] = &QMimeData::clear;
+    mt["colorData"] = &QMimeData::colorData;
+    mt["data"] = &QMimeData::data;
+    mt["formats"] = &QMimeData::formats;
+    mt["hasColor"] = &QMimeData::hasColor;
+    mt["hasFormat"] = &QMimeData::hasFormat;
+    mt["hasHtml"] = &QMimeData::hasHtml;
+    mt["hasImage"] = &QMimeData::hasImage;
+    mt["hasText"] = &QMimeData::hasText;
+    mt["hasUrls"] = &QMimeData::hasUrls;
+    mt["html"] = &QMimeData::html;
+    mt["imageData"] = &QMimeData::imageData;
+    mt["removeFormat"] = &QMimeData::removeFormat;
+    mt["setColorData"] = &QMimeData::setColorData;
+    mt["setData"] = &QMimeData::setData;
+    mt["setHtml"] = &QMimeData::setHtml;
+    mt["setImageData"] = &QMimeData::setImageData;
+    mt["setText"] = &QMimeData::setText;
+    mt["setUrls"] = &QMimeData::setUrls;
+    mt["text"] = &QMimeData::text;
+    mt["urls"] = &QMimeData::urls;
 }
 
 int QMimeData_new(lua_State* const state)
 {
     lua::make<QMimeData>(state);
-    // TODO Set up object-specific methods
-
+    std::cerr << "Creating QMimeData\n";
     return 1;
 }
 

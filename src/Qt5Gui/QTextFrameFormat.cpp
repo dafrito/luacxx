@@ -3,7 +3,18 @@
 #include "../thread.hpp"
 
 #include "QTextLength.hpp"
+#include "QTextFormat.hpp"
 #include "QBrush.hpp"
+#include "../Qt5Core/QFlags.hpp"
+
+int QTextFrameFormat_setHeight(lua_State* const state)
+{
+    return 0;
+}
+int QTextFrameFormat_setWidth(lua_State* const state)
+{
+    return 0;
+}
 
 namespace lua {
 
@@ -26,8 +37,7 @@ void QTextFrameFormat_metatable(lua_State* const state, const int pos)
     mt["setBorderBrush"] = &QTextFrameFormat::setBorderBrush;
     mt["setBorderStyle"] = &QTextFrameFormat::setBorderStyle;
     mt["setBottomMargin"] = &QTextFrameFormat::setBottomMargin;
-    mt["setHeight"] = &QTextFrameFormat::setHeight;
-    mt["setHeight"] = &QTextFrameFormat::setHeight;
+    mt["setHeight"] = QTextFrameFormat_setHeight;
     mt["setLeftMargin"] = &QTextFrameFormat::setLeftMargin;
     mt["setMargin"] = &QTextFrameFormat::setMargin;
     mt["setPadding"] = &QTextFrameFormat::setPadding;

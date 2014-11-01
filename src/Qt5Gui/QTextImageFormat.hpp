@@ -1,7 +1,7 @@
 #ifndef luacxx_QTextImageFormat_INCLUDED
 #define luacxx_QTextImageFormat_INCLUDED
 
-#include "../stack.hpp"
+#include "Qt5Gui.hpp"
 
 #include <QTextImageFormat>
 

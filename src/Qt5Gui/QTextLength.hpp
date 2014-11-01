@@ -2,6 +2,7 @@
 #define luacxx_QTextLength_INCLUDED
 
 #include "../stack.hpp"
+#include "../enum.hpp"
 
 #include <QTextLength>
 

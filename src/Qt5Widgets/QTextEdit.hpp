@@ -2,10 +2,14 @@
 #define luacxx_QTextEdit_INCLUDED
 
 #include "Qt5Widgets.hpp"
+#include "../enum.hpp"
 
 #include <QTextEdit>
 
 LUA_METATABLE_BUILT(QTextEdit)
+LUA_METATABLE_NAMED(QTextEdit::ExtraSelection)
+LUA_METATABLE_ENUM(QTextEdit::AutoFormattingFlag)
+LUA_METATABLE_ENUM(QTextEdit::LineWrapMode)
 
 extern "C" int luaopen_Qt5Widgets_QTextEdit(lua_State* const);
 

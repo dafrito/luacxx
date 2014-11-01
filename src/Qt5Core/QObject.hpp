@@ -2,13 +2,9 @@
 #define LUACXX_QOBJECT_INCLUDED
 
 #include <QObject>
-
 #include "Qt5Core.hpp"
-#include "../algorithm.hpp"
-#include "../convert/string.hpp"
 
 LUA_METATABLE_BUILT(QObject);
-LUA_METATABLE_BUILT(QMetaMethod);
 
 #define LUA_METATABLE_QOBJECT(name) \
 template <> \

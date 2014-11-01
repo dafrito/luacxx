@@ -2,6 +2,7 @@
 #define luacxx_QTextListFormat_INCLUDED
 
 #include "../stack.hpp"
+#include "../enum.hpp"
 
 #include <QTextListFormat>
 

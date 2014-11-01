@@ -147,6 +147,12 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QLine.cpp \
 	Qt5Core/QLineF.cpp \
 	Qt5Core/QObject.cpp \
+	Qt5Core/QMetaObject.cpp \
+	Qt5Core/QMetaMethod.cpp \
+	Qt5Core/QMetaEnum.cpp \
+	Qt5Core/QMetaClassInfo.cpp \
+	Qt5Core/QMetaProperty.cpp \
+	Qt5Core/QBitArray.cpp \
 	Qt5Core/QDataStream.cpp \
 	Qt5Core/QVariant.cpp \
 	Qt5Core/QStringList.cpp \
@@ -154,6 +160,9 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QPair.cpp \
 	Qt5Core/QLocale.cpp \
 	Qt5Core/QMargins.cpp \
+	Qt5Core/QMarginsF.cpp \
+	Qt5Core/QEasingCurve.cpp \
+	Qt5Core/QRegExp.cpp \
 	Qt5Core/QModelIndex.cpp \
 	Qt5Core/QThread.cpp \
 	Qt5Core/Qt_1.cpp \
@@ -188,8 +197,19 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QString.hpp \
 	Qt5Core/QChar.hpp \
 	Qt5Core/QList.hpp \
+	Qt5Core/QVector.hpp \
+	Qt5Core/QMap.hpp \
+	Qt5Core/QEasingCurve.hpp \
+	Qt5Core/QRegExp.hpp \
+	Qt5Core/QMultiMap.hpp \
 	Qt5Core/QObject.hpp \
 	Qt5Core/QObjectSlot.hpp \
+	Qt5Core/QMetaObject.hpp \
+	Qt5Core/QMetaMethod.hpp \
+	Qt5Core/QMetaEnum.hpp \
+	Qt5Core/QMetaClassInfo.hpp \
+	Qt5Core/QMetaProperty.hpp \
+	Qt5Core/QBitArray.hpp \
 	Qt5Core/QRect.hpp \
 	Qt5Core/QRectF.hpp \
 	Qt5Core/QPoint.hpp \
@@ -202,6 +222,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QPair.hpp \
 	Qt5Core/QThread.hpp \
 	Qt5Core/QMargins.hpp \
+	Qt5Core/QMarginsF.hpp \
 	Qt5Core/QModelIndex.hpp \
 	Qt5Core/QUrl.hpp \
 	Qt5Core/QIODevice.hpp \
@@ -359,10 +380,12 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QKeySequence.cpp \
 	Qt5Gui/QPaintEngine.cpp \
 	Qt5Gui/QPaintEngineState.cpp \
-	Qt5Gui/QAbstractTextDocument.cpp \
+	Qt5Gui/QAbstractTextDocumentLayout.cpp \
 	Qt5Gui/QTextItem.cpp \
+	Qt5Gui/QTextBlock.cpp \
 	Qt5Gui/QTextBlockFormat.cpp \
 	Qt5Gui/QTextBlockGroup.cpp \
+	Qt5Gui/QTextBlockUserData.cpp \
 	Qt5Gui/QTextCharFormat.cpp \
 	Qt5Gui/QTextCursor.cpp \
 	Qt5Gui/QTextFormat.cpp \
@@ -376,8 +399,11 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QTextListFormat.cpp \
 	Qt5Gui/QTextObject.cpp \
 	Qt5Gui/QTextObjectInterface.cpp \
+	Qt5Gui/QTextDocument.cpp \
+	Qt5Gui/QTextDocumentFragment.cpp \
 	Qt5Gui/QTextTable.cpp \
 	Qt5Gui/QTextTableCell.cpp \
+	Qt5Gui/QTextTableCellFormat.cpp \
 	Qt5Gui/QTextTableFormat.cpp \
 	Qt5Gui/QMatrix.cpp \
 	Qt5Gui/QCursor.cpp \
@@ -456,10 +482,12 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QFontDatabase.hpp \
 	Qt5Gui/QPaintEngine.hpp \
 	Qt5Gui/QPaintEngineState.hpp \
-	Qt5Gui/QAbstractTextDocument.hpp \
+	Qt5Gui/QAbstractTextDocumentLayout.hpp \
 	Qt5Gui/QTextItem.hpp \
+	Qt5Gui/QTextBlock.hpp \
 	Qt5Gui/QTextBlockFormat.hpp \
 	Qt5Gui/QTextBlockGroup.hpp \
+	Qt5Gui/QTextBlockUserData.hpp \
 	Qt5Gui/QTextCharFormat.hpp \
 	Qt5Gui/QTextCursor.hpp \
 	Qt5Gui/QTextFormat.hpp \
@@ -473,8 +501,11 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QTextListFormat.hpp \
 	Qt5Gui/QTextObject.hpp \
 	Qt5Gui/QTextObjectInterface.hpp \
+	Qt5Gui/QTextDocument.hpp \
+	Qt5Gui/QTextDocumentFragment.hpp \
 	Qt5Gui/QTextTable.hpp \
 	Qt5Gui/QTextTableCell.hpp \
+	Qt5Gui/QTextTableCellFormat.hpp \
 	Qt5Gui/QTextTableFormat.hpp \
 	Qt5Gui/QDrag.hpp \
 	Qt5Gui/QIconEngine.hpp \

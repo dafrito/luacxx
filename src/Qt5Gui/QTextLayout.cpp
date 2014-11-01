@@ -13,6 +13,7 @@
 #include "QFont.hpp"
 #include "QGlyphRun.hpp"
 #include "QTextOption.hpp"
+#include "QPaintDevice.hpp"
 
 int QTextLayout_draw(lua_State* const state)
 {
@@ -40,7 +41,7 @@ namespace lua {
 void QTextLayout_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);
-    mt["additionalFormats"] = &QTextLayout::additionalFormats;
+    //mt["additionalFormats"] = &QTextLayout::additionalFormats;
     mt["beginLayout"] = &QTextLayout::beginLayout;
     mt["boundingRect"] = &QTextLayout::boundingRect;
     mt["cacheEnabled"] = &QTextLayout::cacheEnabled;

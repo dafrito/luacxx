@@ -1,10 +1,14 @@
 #include "QTextTable.hpp"
 #include "../convert/callable.hpp"
+#include "../convert/numeric.hpp"
+#include "../convert/const_char_p.hpp"
 #include "../thread.hpp"
 
 #include "QTextTableCell.hpp"
 #include "QTextTableFormat.hpp"
 #include "QTextFrame.hpp"
+#include "QTextCursor.hpp"
+#include "QTextDocument.hpp"
 
 int QTextTable_cellAt(lua_State* const state)
 {
@@ -23,10 +27,15 @@ int QTextTable_cellAt(lua_State* const state)
     } else {
         // QTextTableCell   cellAt(const QTextCursor & cursor) const
         lua::push(state, self->cellAt(
-            lua::get<QTextCursor*>(state, 2)
+            lua::get<const QTextCursor&>(state, 2)
         ));
     }
     return 1;
+}
+
+int QTextTable_mergeCells(lua_State* const state)
+{
+    return 0;
 }
 
 namespace lua {
@@ -43,8 +52,7 @@ void QTextTable_metatable(lua_State* const state, const int pos)
     mt["format"] = &QTextTable::format;
     mt["insertColumns"] = &QTextTable::insertColumns;
     mt["insertRows"] = &QTextTable::insertRows;
-    mt["mergeCells"] = &QTextTable::mergeCells;
-    mt["mergeCells"] = &QTextTable::mergeCells;
+    mt["mergeCells"] = QTextTable_mergeCells;
     mt["removeColumns"] = &QTextTable::removeColumns;
     mt["removeRows"] = &QTextTable::removeRows;
     mt["resize"] = &QTextTable::resize;
@@ -59,9 +67,7 @@ void QTextTable_metatable(lua_State* const state, const int pos)
 
 int QTextTable_new(lua_State* const state)
 {
-    lua::make<QTextTable>(state);
-    // TODO Set up constructor
-
+    lua::make<QTextTable>(state, lua::get<QTextDocument*>(state, 1));
     return 1;
 }
 

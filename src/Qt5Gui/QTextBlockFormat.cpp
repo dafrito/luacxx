@@ -4,7 +4,14 @@
 
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QList.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "QTextOption.hpp"
+#include "QTextFormat.hpp"
+
+int QTextBlockFormat_lineHeight(lua_State* const state)
+{
+    return 0;
+}
 
 namespace lua {
 
@@ -16,13 +23,12 @@ void QTextBlockFormat_metatable(lua_State* const state, const int pos)
     mt["indent"] = &QTextBlockFormat::indent;
     mt["isValid"] = &QTextBlockFormat::isValid;
     mt["leftMargin"] = &QTextBlockFormat::leftMargin;
-    mt["lineHeight"] = &QTextBlockFormat::lineHeight;
-    mt["lineHeight"] = &QTextBlockFormat::lineHeight;
+    mt["lineHeight"] = QTextBlockFormat_lineHeight;
     mt["lineHeightType"] = &QTextBlockFormat::lineHeightType;
     mt["nonBreakableLines"] = &QTextBlockFormat::nonBreakableLines;
-    mt["pageBreakPolicy"] = &QTextBlockFormat::pageBreakPolicy;
+    //mt["pageBreakPolicy"] = &QTextBlockFormat::pageBreakPolicy;
     mt["rightMargin"] = &QTextBlockFormat::rightMargin;
-    mt["setAlignment"] = &QTextFormat::setAlignment;
+    mt["setAlignment"] = &QTextBlockFormat::setAlignment;
     mt["setBottomMargin"] = &QTextBlockFormat::setBottomMargin;
     mt["setIndent"] = &QTextBlockFormat::setIndent;
     mt["setLeftMargin"] = &QTextBlockFormat::setLeftMargin;

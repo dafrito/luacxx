@@ -17,8 +17,25 @@
 #include "../Qt5Core/QPoint.hpp"
 #include "../Qt5Core/QVariant.hpp"
 #include "../Qt5Core/QUrl.hpp"
-#include "QTextCursor.hpp"
+#include "../Qt5Core/QFlags.hpp"
 #include "QMenu.hpp"
+
+int QTextEdit_createStandardContextMenu(lua_State* const state)
+{
+    return 0;
+}
+int QTextEdit_cursorRect(lua_State* const state)
+{
+    return 0;
+}
+int QTextEdit_find(lua_State* const state)
+{
+    return 0;
+}
+int QTextEdit_moveCursor(lua_State* const state)
+{
+    return 0;
+}
 
 namespace lua {
 
@@ -32,18 +49,16 @@ void QTextEdit_metatable(lua_State* const state, const int pos)
     mt["anchorAt"] = &QTextEdit::anchorAt;
     mt["autoFormatting"] = &QTextEdit::autoFormatting;
     mt["canPaste"] = &QTextEdit::canPaste;
-    mt["createStandardContextMenu"] = &QTextEdit::createStandardContextMenu;
-    mt["createStandardContextMenu"] = &QTextEdit::createStandardContextMenu;
+    mt["createStandardContextMenu"] = QTextEdit_createStandardContextMenu;
     mt["currentCharFormat"] = &QTextEdit::currentCharFormat;
     mt["currentFont"] = &QTextEdit::currentFont;
     mt["cursorForPosition"] = &QTextEdit::cursorForPosition;
-    mt["cursorRect"] = &QTextEdit::cursorRect;
-    mt["cursorRect"] = &QTextEdit::cursorRect;
+    mt["cursorRect"] = QTextEdit_cursorRect;
     mt["cursorWidth"] = &QTextEdit::cursorWidth;
     mt["document"] = &QTextEdit::document;
     mt["documentTitle"] = &QTextEdit::documentTitle;
     mt["ensureCursorVisible"] = &QTextEdit::ensureCursorVisible;
-    mt["extraSelections"] = &QTextEdit::extraSelections;
+    //mt["extraSelections"] = &QTextEdit::extraSelections;
     mt["find"] = QTextEdit_find;
     mt["fontFamily"] = &QTextEdit::fontFamily;
     mt["fontItalic"] = &QTextEdit::fontItalic;
@@ -110,6 +125,18 @@ int luaopen_Qt5Widgets_QTextEdit(lua_State* const state)
     env["QTextEdit"] = lua::value::table;
     env["QTextEdit"]["new"] = QTextEdit_new;
     auto t = env["QTextEdit"];
+
+    // enum QTextEdit::AutoFormattingFlag
+    t["AutoFormatting"] = lua::QFlags_new<QTextEdit::AutoFormatting>;
+    t["AutoNone"] = QTextEdit::AutoNone;
+    t["AutoBulletList"] = QTextEdit::AutoBulletList;
+    t["AutoAll"] = QTextEdit::AutoAll;
+
+    // enum QTextEdit::LineWrapMode
+    t["NoWrap"] = QTextEdit::NoWrap;
+    t["WidgetWidth"] = QTextEdit::WidgetWidth;
+    t["FixedPixelWidth"] = QTextEdit::FixedPixelWidth;
+    t["FixedColumnWidth"] = QTextEdit::FixedColumnWidth;
 
     return 0;
 }

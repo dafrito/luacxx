@@ -4,7 +4,9 @@
 
 #include "QTextObject.hpp"
 #include "../Qt5Core/QObject.hpp"
+#include "../Qt5Core/QList.hpp"
 #include "QTextCursor.hpp"
+#include "QTextDocument.hpp"
 #include "QTextFrameFormat.hpp"
 
 namespace lua {

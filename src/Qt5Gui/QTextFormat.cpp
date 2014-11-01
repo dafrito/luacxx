@@ -12,6 +12,11 @@
 #include "QTextLength.hpp"
 #include "QTextCharFormat.hpp"
 #include "QTextBlockFormat.hpp"
+#include "QTextFrameFormat.hpp"
+#include "QTextImageFormat.hpp"
+#include "QTextListFormat.hpp"
+#include "QTextTableCellFormat.hpp"
+#include "QTextTableFormat.hpp"
 #include "../Qt5Core/QFlags.hpp"
 
 int QTextFormat_setProperty(lua_State* const state)
@@ -64,11 +69,11 @@ void QTextFormat_metatable(lua_State* const state, const int pos)
     mt["swap"] = &QTextFormat::swap;
     mt["toBlockFormat"] = &QTextFormat::toBlockFormat;
     mt["toCharFormat"] = &QTextFormat::toCharFormat;
-    QTextFrameFormat    toFrameFormat() const
-    QTextImageFormat    toImageFormat() const
-    QTextListFormat     toListFormat() const
-    QTextTableCellFormat    toTableCellFormat() const
-    QTextTableFormat    toTableFormat() const
+    mt["toFrameFormat"] = &QTextFormat::toFrameFormat;
+    mt["toImageFormat"] = &QTextFormat::toImageFormat;
+    mt["toListFormat"] = &QTextFormat::toListFormat;
+    mt["toTableCellFormat"] = &QTextFormat::toTableCellFormat;
+    mt["toTableFormat"] = &QTextFormat::toTableFormat;
     mt["type"] = &QTextFormat::type;
 }
 

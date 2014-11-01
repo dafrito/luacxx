@@ -5,8 +5,6 @@
 
 #include <QAccessible>
 
-LUA_METATABLE_BUILT(QAccessible)
-
 extern "C" int luaopen_Qt5Gui_QAccessible(lua_State* const);
 
 #endif // luacxx_QAccessible_INCLUDED

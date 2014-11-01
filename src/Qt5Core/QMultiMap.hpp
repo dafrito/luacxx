@@ -18,7 +18,7 @@ struct Metatable<QMultiMap<K, V>>
 {
     static const userdata_type& info()
     {
-        static userdata_type _info("QMultiMap<?. ?>");
+        static userdata_type _info;
         if (!_info.has_name()) {
             std::string str("QMultiMap<");
             str += Metatable<K>::info().name();

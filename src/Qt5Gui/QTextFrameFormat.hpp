@@ -2,6 +2,7 @@
 #define luacxx_QTextFrameFormat_INCLUDED
 
 #include "../stack.hpp"
+#include "../enum.hpp"
 
 #include <QTextFrameFormat>
 

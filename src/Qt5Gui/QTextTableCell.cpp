@@ -1,5 +1,7 @@
 #include "QTextTableCell.hpp"
 #include "../convert/callable.hpp"
+#include "../convert/numeric.hpp"
+#include "../convert/const_char_p.hpp"
 #include "../thread.hpp"
 
 #include "QTextCursor.hpp"

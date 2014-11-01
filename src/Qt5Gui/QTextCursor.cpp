@@ -7,13 +7,49 @@
 #include "QTextList.hpp"
 #include "QTextListFormat.hpp"
 #include "QTextTable.hpp"
-#include "QTextImage.hpp"
 #include "QTextImageFormat.hpp"
 #include "QTextFrame.hpp"
 #include "QTextFrameFormat.hpp"
 #include "QTextBlock.hpp"
 #include "QTextCharFormat.hpp"
 #include "QTextBlockFormat.hpp"
+
+int QTextCursor_createList(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_insertBlock(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_insertImage(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_insertList(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_insertTable(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_insertText(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_movePosition(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_selectedTableCells(lua_State* const state)
+{
+    return 0;
+}
+int QTextCursor_setPosition(lua_State* const state)
+{
+    return 0;
+}
 
 namespace lua {
 

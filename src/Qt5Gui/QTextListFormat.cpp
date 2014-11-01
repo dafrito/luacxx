@@ -1,6 +1,10 @@
 #include "QTextListFormat.hpp"
 #include "../convert/callable.hpp"
+#include "../convert/const_char_p.hpp"
+#include "../convert/numeric.hpp"
 #include "../thread.hpp"
+
+#include "../Qt5Core/QString.hpp"
 
 namespace lua {
 

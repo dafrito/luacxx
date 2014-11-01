@@ -2,6 +2,7 @@
 #define luacxx_Qt5Core_QVariant_INCLUDED
 
 #include "Qt5Core.hpp"
+#include "enum.hpp"
 
 #include <QVariant>
 
@@ -46,6 +47,7 @@ struct Get<QVariant>
 } // namespace lua
 
 LUA_METATABLE_BUILT(QVariant);
+LUA_METATABLE_ENUM(QVariant::Type);
 
 extern "C" int luaopen_Qt5Core_QVariant(lua_State* const);
 

@@ -1,4 +1,6 @@
 #include "QTextImageFormat.hpp"
+
+#include "../convert/const_char_p.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 

@@ -6,6 +6,8 @@
 #include "../Qt5Core/QStringList.hpp"
 #include "QFont.hpp"
 #include "QTextFormat.hpp"
+#include "QPen.hpp"
+#include "QColor.hpp"
 
 int QTextCharFormat_setFont(lua_State* const state)
 {

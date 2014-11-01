@@ -6,7 +6,7 @@
 #include "../Qt5Core/QPointF.hpp"
 #include "../Qt5Core/QRectF.hpp"
 #include "../Qt5Core/QList.hpp"
-#include "../Qt5Core/QGlyphRun.hpp"
+#include "QGlyphRun.hpp"
 #include "QTextLayout.hpp"
 
 int QTextLine_draw(lua_State* const state)
@@ -25,6 +25,10 @@ int QTextLine_xToCursor(lua_State* const state)
 {
     return 0;
 }
+int QTextLine_cursorToX(lua_State* const state)
+{
+    return 0;
+}
 
 namespace lua {
 
@@ -32,8 +36,7 @@ void QTextLine_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);
     mt["ascent"] = &QTextLine::ascent;
-    mt["cursorToX"] = &QTextLine::cursorToX;
-    mt["cursorToX"] = &QTextLine::cursorToX;
+    mt["cursorToX"] = QTextLine_cursorToX;
     mt["descent"] = &QTextLine::descent;
     mt["draw"] = QTextLine_draw;
     mt["glyphRuns"] = QTextLine_glyphRuns;

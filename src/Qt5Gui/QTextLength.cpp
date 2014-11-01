@@ -1,4 +1,6 @@
 #include "QTextLength.hpp"
+#include "../convert/const_char_p.hpp"
+#include "../convert/numeric.hpp"
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 

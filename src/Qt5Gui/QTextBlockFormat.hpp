@@ -2,7 +2,7 @@
 #define luacxx_QTextBlockFormat_INCLUDED
 
 #include "../stack.hpp"
-#include "../.hpp"
+#include "../enum.hpp"
 
 #include <QTextBlockFormat>
 

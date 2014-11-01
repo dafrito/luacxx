@@ -6,7 +6,16 @@
 #include "QPageLayout.hpp"
 #include "QPageSize.hpp"
 #include "../Qt5Core/QSizeF.hpp"
-#include "QMarginsF.hpp"
+#include "../Qt5Core/QMarginsF.hpp"
+
+int QPagedPaintDevice_setPageMargins(lua_State* const state)
+{
+    return 0;
+}
+int QPagedPaintDevice_setPageSize(lua_State* const state)
+{
+    return 0;
+}
 
 namespace lua {
 
@@ -30,20 +39,11 @@ void QPagedPaintDevice_metatable(lua_State* const state, const int pos)
 
 } // namespace lua
 
-int QPagedPaintDevice_new(lua_State* const state)
-{
-    lua::make<QPagedPaintDevice>(state);
-    // TODO Set up constructor
-
-    return 1;
-}
-
 int luaopen_Qt5Gui_QPagedPaintDevice(lua_State* const state)
 {
     lua::thread env(state);
 
     env["QPagedPaintDevice"] = lua::value::table;
-    env["QPagedPaintDevice"]["new"] = QPagedPaintDevice_new;
     auto t = env["QPagedPaintDevice"];
 
     // enum QPagedPaintDevice::PageSize
