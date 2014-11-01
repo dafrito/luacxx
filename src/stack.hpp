@@ -1422,7 +1422,8 @@ static void store_userdata(T& destination, lua_State* const state, const int sou
         auto block = lua::get_userdata_value(state, source);
         if (!block) {
             throw lua::error(state, "lua::store_userdata: Source at stack position ", source,
-                " was a ", lua_typename(state, lua_type(state, source)),  ", not a userdata as required."
+                " was a ", lua_typename(state, lua_type(state, source)),  ", not a ",
+                lua::Metatable<T>::info().name(), " as required."
             );
         }
 
