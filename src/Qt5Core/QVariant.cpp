@@ -120,7 +120,7 @@ void lua::push_qvariant(lua_State* const state, const QVariant& value)
             if (converter != qvariant_push_handler().end()) {
                 converter->second(state, value);
             } else {
-                throw std::logic_error(std::string("No handler exists to push QVariant type: ") + value.typeName());
+                throw lua::error(state, std::string("No handler exists to push QVariant type: ") + value.typeName());
             }
         }
     }
@@ -191,7 +191,7 @@ void lua::store_qvariant(QVariant& destination, lua_State* const state, const in
             if (converter != qvariant_store_handler().end()) {
                 converter->second(destination, source);
             } else {
-                throw std::logic_error(std::string("No QVariant handler exists to store type: ") + destination.typeName());
+                throw lua::error(state, std::string("No QVariant handler exists to store type: ") + destination.typeName());
             }
         }
     }
