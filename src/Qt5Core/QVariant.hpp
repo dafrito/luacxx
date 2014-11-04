@@ -2,7 +2,7 @@
 #define luacxx_Qt5Core_QVariant_INCLUDED
 
 #include "Qt5Core.hpp"
-#include "enum.hpp"
+#include "../enum.hpp"
 
 #include <QVariant>
 
