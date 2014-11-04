@@ -44,11 +44,11 @@ void QPdfWriter_metatable(lua_State* const state, const int pos)
 
 int QPdfWriter_new(lua_State* const state)
 {
-    // QPdfWriter(const QString & filename)
-    // QPdfWriter(QIODevice * device)
     if (lua::is_type<QIODevice>(state, 1)) {
+        // QPdfWriter(QIODevice * device)
         lua::make<QPdfWriter>(state, lua::get<QIODevice*>(state, 1));
     } else if (lua::is_type<QString>(state, 1)) {
+        // QPdfWriter(const QString & filename)
         lua::make<QPdfWriter>(state, lua::get<const QString&>(state, 1));
     } else {
         lua::make<QPdfWriter>(state, lua::get<QString>(state, 1));
