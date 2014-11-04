@@ -1595,6 +1595,30 @@ struct Metatable<name> \
 \
 };
 
+#define LUA_METATABLE_INHERIT(name, parent) \
+namespace lua { \
+\
+void name ## _metatable(lua_State* const state, const int mt); \
+\
+template<> \
+struct Metatable<name> \
+{ \
+    static const userdata_type& info() \
+    { \
+        static userdata_type _info(#name); \
+        _info.add_cast<parent, name>(); \
+        return _info; \
+    } \
+\
+    static bool metatable(lua_State* const state, const int mt, const void*) \
+    { \
+        name ## _metatable(state, mt); \
+        return true; \
+    } \
+}; \
+\
+};
+
 LUA_METATABLE_NAMED(lua_State*);
 
 // Create metatables for logging functions
