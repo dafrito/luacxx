@@ -625,6 +625,15 @@ struct Named {
     }
 };
 
+struct Numbered {
+    int num;
+
+    Numbered(int num) :
+        num(num)
+    {
+    }
+};
+
 struct Value {
     int version;
     const char* value;
@@ -637,10 +646,15 @@ struct Value {
 };
 
 struct Child : public Named, public Value {
-
-
 Child() :
     Named("Child"), Value("Boog", 42)
+    {
+    }
+};
+
+struct Grandchild : public Numbered, public Child {
+Grandchild() :
+    Numbered(24), Child()
     {
     }
 };
@@ -696,6 +710,38 @@ struct Metatable<Child>
     }
 };
 
+template<>
+struct Metatable<Numbered>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("Numbered");
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    {
+        return true;
+    }
+};
+
+template<>
+struct Metatable<Grandchild>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("Grandchild");
+        _info.add_cast<Numbered, Grandchild>();
+        _info.add_cast<Child, Grandchild>();
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    {
+        return true;
+    }
+};
+
 
 } // namespace lua
 
@@ -711,8 +757,32 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance)
     // distinct, rather than identical, pointer addresses?
     BOOST_REQUIRE(static_cast<void*>(child_as_value) != static_cast<void*>(child_as_named));
 
+    BOOST_CHECK(lua::is_type<Value*>(env, -1));
     BOOST_CHECK_EQUAL(child_as_value, lua::get<Value*>(env, -1));
+
+    BOOST_CHECK(lua::is_type<Named*>(env, -1));
     BOOST_CHECK_EQUAL(child_as_named, lua::get<Named*>(env, -1));
+
+    // Does is_type return false for classes outside an object hierarchy?
+    BOOST_CHECK(!lua::is_type<Counter*>(env, -1));
+
+    auto grandchild = lua::make<Grandchild>(env);
+    auto grandchild_as_Child = static_cast<Child*>(grandchild);
+    auto grandchild_as_Numbered = static_cast<Numbered*>(grandchild);
+    auto grandchild_as_Named = static_cast<Named*>(grandchild);
+    auto grandchild_as_Value = static_cast<Value*>(grandchild);
+
+    BOOST_CHECK(lua::is_type<Numbered*>(env, -1));
+    BOOST_CHECK_EQUAL(grandchild_as_Numbered, lua::get<Numbered*>(env, -1));
+
+    BOOST_CHECK(lua::is_type<Named*>(env, -1));
+    BOOST_CHECK_EQUAL(grandchild_as_Named, lua::get<Named*>(env, -1));
+
+    BOOST_CHECK(lua::is_type<Child*>(env, -1));
+    BOOST_CHECK_EQUAL(grandchild_as_Child, lua::get<Child*>(env, -1));
+
+    BOOST_CHECK(lua::is_type<Value*>(env, -1));
+    BOOST_CHECK_EQUAL(grandchild_as_Value, lua::get<Value*>(env, -1));
 }
 
 enum class Color {

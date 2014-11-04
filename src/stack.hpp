@@ -553,6 +553,12 @@ public:
     template <class Base, class Derived>
     void add_cast();
 
+    template <class Expected>
+    bool is_type() const;
+
+    template <class Type>
+    ptrdiff_t pointer_offset() const;
+
     bool has_casts() const
     {
         return !_casts.empty();
@@ -560,6 +566,16 @@ public:
 
     template <class Value>
     Value* cast(void* value) const;
+
+    bool operator==(const userdata_type& other) const
+    {
+        return this == &other;
+    }
+
+    bool operator!=(const userdata_type& other) const
+    {
+        return !(*this == other);
+    }
 };
 
 // Discriminant for how userdata is stored
@@ -592,9 +608,9 @@ public:
         _info = &info;
     }
 
-    const userdata_type* info() const
+    const userdata_type& info() const
     {
-        return _info;
+        return *_info;
     }
 
     template <class Value>
@@ -1011,8 +1027,10 @@ void userdata_type::add_cast()
     // need to be removed before use.
     offset -= static_cast<ptrdiff_t>(NON_NULL);
 
-    if (offset > 0) {
-        _casts.emplace_front(&info, offset);
+    _casts.emplace_front(&info, offset);
+
+    for (auto& cast : info._casts) {
+        _casts.emplace_front(cast.first, pointer_offset<Base>() + cast.second);
     }
 }
 
@@ -1037,12 +1055,38 @@ Value* userdata_type::cast(void* value) const
     return static_cast<Value*>(value);
 }
 
+template <class Type>
+ptrdiff_t userdata_type::pointer_offset() const
+{
+    auto& info = lua::Metatable<Type>::info();
+    for (auto& cast : _casts) {
+        if (&info == cast.first) {
+            return cast.second;
+        }
+    }
+    return 0;
+}
+
+template <class Expected>
+bool userdata_type::is_type() const
+{
+    auto& info = lua::Metatable<Expected>::info();
+    if (this == &info) {
+        return true;
+    }
+    for (auto& cast : _casts) {
+        if (&info == cast.first) {
+            return true;
+        }
+    }
+    return false;
+}
+
 template <class T>
 inline void call_destructor(T& value)
 {
     value.~T();
 }
-
 
 // Destroy the userdata's value, specified by the template parameter
 template <class Stored>

@@ -47,13 +47,16 @@ const userdata_type* get_type_info(lua_State* const state, int pos);
 template <class Required>
 struct is_type
 {
-    const bool is_same;
+    bool _result;
 
-    is_type(const lua::index& index) :
-        // Compare exactly for efficiency, but I really should
-        // benchmark this to ensure the performance is worth it.
-        is_same(lua::get_type_info(index) == required_type())
+    is_type(const lua::index& index)
     {
+        auto info = lua::get_type_info(index);
+        if (info == nullptr) {
+            _result = false;
+            return;
+        }
+        _result = info->is_type<Required>();
     }
 
     is_type(lua_State* const state, const int pos) :
@@ -61,14 +64,14 @@ struct is_type
     {
     }
 
-    const userdata_type* required_type() const
+    const userdata_type& required_type() const
     {
-        return &lua::Metatable<Required>::info();
+        return lua::Metatable<Required>::info();
     }
 
     operator bool() const
     {
-        return is_same;
+        return _result;
     }
 };
 
