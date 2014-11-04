@@ -1046,7 +1046,7 @@ inline void call_destructor(T& value)
 
 // Destroy the userdata's value, specified by the template parameter
 template <class Stored>
-int free_userdata(lua_State* const state)
+int destroy_userdata(lua_State* const state)
 {
 
     char* block = static_cast<char*>(lua_touserdata(state, 1));
@@ -1069,7 +1069,7 @@ int free_userdata(lua_State* const state)
     }
     case userdata_storage::value:
     {
-        // reinterpret_cast is safe here since free_userdata must always be given an exact type.
+        // reinterpret_cast is safe here since destroy_userdata must always be given an exact type.
         auto value = reinterpret_cast<Stored*>(block);
         if (value != nullptr) {
             call_destructor(*value);
@@ -1077,10 +1077,60 @@ int free_userdata(lua_State* const state)
         break;
     }
     case userdata_storage::shared_ptr:
-        // reinterpret_cast is safe here since free_userdata must always be given an exact type.
+        // reinterpret_cast is safe here since destroy_userdata must always be given an exact type.
         auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block);
         if (value != nullptr) {
             call_destructor(*value);
+        }
+        break;
+    }
+
+    // Finally, destroy the userdata block itself
+    userdata_block->~userdata_block();
+
+    if (is_debugging(state)) {
+        lua::logLeave(state);
+    }
+
+    return 0;
+}
+
+template <class Stored>
+int delete_userdata(lua_State* const state)
+{
+    auto block = lua::get_userdata_value(state, 1);
+    auto userdata_block = lua::get_userdata_block(state, 1);
+
+    if (is_debugging(state)) {
+        lua::logEntercm(state, "Userdata destruction", "Destroying ", lua::Metatable<Stored>::info().name());
+    }
+
+    switch (userdata_block->storage()) {
+    case userdata_storage::destroyed:
+    {
+        // The object has already been destroyed, so just leave.
+        return 0;
+    }
+    case userdata_storage::pointer:
+    {
+        Stored* value = *reinterpret_cast<Stored**>(block);
+        if (value != nullptr) {
+            delete value;
+            *reinterpret_cast<Stored**>(block) = nullptr;
+        }
+        break;
+    }
+    case userdata_storage::value:
+    {
+        // reinterpret_cast is safe here since destroy_userdata must always be given an exact type.
+        throw lua::error(state, "A value object cannot be destroyed");
+        break;
+    }
+    case userdata_storage::shared_ptr:
+        // reinterpret_cast is safe here since destroy_userdata must always be given an exact type.
+        auto value = reinterpret_cast<std::shared_ptr<Stored>*>(block);
+        if (value != nullptr) {
+            value->reset();
         }
         break;
     }
@@ -1132,8 +1182,12 @@ void push_metatable(lua_State* const state, T* const value)
     lua_pushcclosure(state, __gc, 0);
     lua_settable(state, mt);
 
-    lua_pushstring(state, "free_userdata");
-    lua_pushcfunction(state, free_userdata<Stored>);
+    lua_pushstring(state, "destroy_userdata");
+    lua_pushcfunction(state, destroy_userdata<Stored>);
+    lua_settable(state, mt);
+
+    lua_pushstring(state, "delete_userdata");
+    lua_pushcfunction(state, delete_userdata<Stored>);
     lua_settable(state, mt);
 
     // Use this metatable as the default index and newindex.

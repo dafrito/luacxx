@@ -225,14 +225,9 @@ int lua::__gc(lua_State* const state)
             lua::logEntercm(state, "Lua memory allocations", str.str());
         }
 
-        auto destroy = lua::table::get(mt, "destroy");
-        if (destroy.type().function()) {
-            lua::call(destroy, lua::index(state, 1));
-        }
-
-        auto free_userdata = lua::table::get(mt, "free_userdata");
-        if (free_userdata.type().function()) {
-            lua::call(free_userdata, lua::index(state, 1));
+        auto destroy_userdata = lua::table::get(mt, "destroy_userdata");
+        if (destroy_userdata.type().function()) {
+            lua::call(destroy_userdata, lua::index(state, 1));
         }
 
     } catch (lua::error& ex) {
