@@ -69,6 +69,24 @@ int QCoreApplication_processEvents(lua_State* const state)
     return 0;
 }
 
+int QCoreApplication_sendPostedEvents(lua_State* const state)
+{
+    switch (lua_gettop(state)) {
+    case 0:
+        QCoreApplication::sendPostedEvents();
+        break;
+    case 1:
+        QCoreApplication::sendPostedEvents(lua::get<QObject*>(state, 1));
+        break;
+    default:
+        QCoreApplication::sendPostedEvents(
+            lua::get<QObject*>(state, 1),
+            lua::get<int>(state, 2)
+        );
+    }
+    return 0;
+}
+
 int luaopen_Qt5Core_QCoreApplication(lua_State* const state)
 {
     luaL_requiref(state, "luacxx.QEventLoop", luaopen_Qt5Core_QEventLoop, false);
@@ -103,7 +121,7 @@ int luaopen_Qt5Core_QCoreApplication(lua_State* const state)
     t["removePostedEvents"] = &QCoreApplication::removePostedEvents;
     t["removeTranslator"] = &QCoreApplication::removeTranslator;
     t["sendEvent"] = &QCoreApplication::sendEvent;
-    t["sendPostedEvents"] = &QCoreApplication::sendPostedEvents;
+    t["sendPostedEvents"] = QCoreApplication_sendPostedEvents;
     t["setApplicationName"] = &QCoreApplication::setApplicationName;
     t["setApplicationVersion"] = &QCoreApplication::setApplicationVersion;
     t["setAttribute"] = &QCoreApplication::setAttribute;

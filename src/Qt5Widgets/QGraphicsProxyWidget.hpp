@@ -3,9 +3,10 @@
 
 #include "Qt5Widgets.hpp"
 
-class QGraphicsProxyWidget;
+#include <QGraphicsProxyWidget>
+#include "QGraphicsWidget.hpp"
 
-LUA_METATABLE_BUILT(QGraphicsProxyWidget);
+LUA_METATABLE_INHERIT(QGraphicsProxyWidget, QGraphicsWidget);
 
 extern "C" int luaopen_Qt5Widgets_QGraphicsProxyWidget(lua_State* const);
 

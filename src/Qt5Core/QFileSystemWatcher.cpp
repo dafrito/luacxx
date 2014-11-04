@@ -2,7 +2,6 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include "QObject.hpp"
 #include "QStringList.hpp"
 #include "QString.hpp"
 

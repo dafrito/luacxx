@@ -33,6 +33,19 @@ int QGraphicsWidget_paintWindowFrame(lua_State* const state)
 }
 int QGraphicsWidget_resize(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsWidget*>(state, 1);
+    // void resize(const QSizeF & size)
+    // void resize(qreal w, qreal h)
+    if (lua_gettop(state) == 2) {
+        self->resize(
+            lua::get<const QSizeF&>(state, 2)
+        );
+    } else {
+        self->resize(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        );
+    }
     return 0;
 }
 int QGraphicsWidget_setAttribute(lua_State* const state)
@@ -41,6 +54,14 @@ int QGraphicsWidget_setAttribute(lua_State* const state)
 }
 int QGraphicsWidget_setGeometry(lua_State* const state)
 {
+    // void setGeometry(qreal x, qreal y, qreal w, qreal h)
+    auto self = lua::get<QGraphicsWidget*>(state, 1);
+    self->setGeometry(
+        lua::get<qreal>(state, 2),
+        lua::get<qreal>(state, 3),
+        lua::get<qreal>(state, 4),
+        lua::get<qreal>(state, 5)
+    );
     return 0;
 }
 int QGraphicsWidget_setShortcutAutoRepeat(lua_State* const state)

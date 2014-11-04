@@ -6,7 +6,9 @@
 
 #include <QTextDocument>
 
-LUA_METATABLE_BUILT(QTextDocument);
+#include "../Qt5Core/QObject.hpp"
+LUA_METATABLE_INHERIT(QTextDocument, QObject)
+
 LUA_METATABLE_ENUM(QTextDocument::FindFlag)
 LUA_METATABLE_ENUM(QTextDocument::MetaInformation)
 LUA_METATABLE_ENUM(QTextDocument::ResourceType)

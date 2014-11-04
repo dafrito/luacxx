@@ -2,11 +2,12 @@
 #define luacxx_QCompleter_INCLUDED
 
 #include "Qt5Widgets.hpp"
+#include "../Qt5Core/QObject.hpp"
 #include "../enum.hpp"
 
 #include <QCompleter>
 
-LUA_METATABLE_BUILT(QCompleter);
+LUA_METATABLE_INHERIT(QCompleter, QObject);
 LUA_METATABLE_ENUM(QCompleter::CompletionMode);
 LUA_METATABLE_ENUM(QCompleter::ModelSorting);
 

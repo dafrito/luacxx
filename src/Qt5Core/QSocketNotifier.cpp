@@ -9,6 +9,7 @@ namespace lua {
 void QSocketNotifier_metatable(lua_State* const state, const int pos)
 {
     lua::QObject_metatable(state, pos);
+
     lua::index mt(state, pos);
     mt["isEnabled"] = &QSocketNotifier::isEnabled;
     mt["socket"] = &QSocketNotifier::socket;

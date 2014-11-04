@@ -4,9 +4,12 @@
 #include "Qt5Core.hpp"
 #include "../enum.hpp"
 
+#include "QIODevice.hpp"
+
 #include <QFileDevice>
 
-LUA_METATABLE_BUILT(QFileDevice)
+LUA_METATABLE_INHERIT(QFileDevice, QIODevice);
+
 LUA_METATABLE_ENUM(QFileDevice::MemoryMapFlags)
 LUA_METATABLE_ENUM(QFileDevice::Permission)
 LUA_METATABLE_ENUM(QFileDevice::FileError)

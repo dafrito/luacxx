@@ -4,9 +4,11 @@
 #include "Qt5Widgets.hpp"
 #include "../enum.hpp"
 
+#include "QAbstractScrollArea.hpp"
+
 #include <QTextEdit>
 
-LUA_METATABLE_BUILT(QTextEdit)
+LUA_METATABLE_INHERIT(QTextEdit, QAbstractScrollArea);
 LUA_METATABLE_NAMED(QTextEdit::ExtraSelection)
 LUA_METATABLE_ENUM(QTextEdit::AutoFormattingFlag)
 LUA_METATABLE_ENUM(QTextEdit::LineWrapMode)

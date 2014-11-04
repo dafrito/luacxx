@@ -5,7 +5,8 @@
 
 #include <QTextFrame>
 
-LUA_METATABLE_BUILT(QTextFrame)
+#include "QTextObject.hpp"
+LUA_METATABLE_INHERIT(QTextFrame, QTextObject)
 
 extern "C" int luaopen_Qt5Gui_QTextFrame(lua_State* const);
 
