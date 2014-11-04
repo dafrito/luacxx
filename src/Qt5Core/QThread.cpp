@@ -39,9 +39,13 @@ void QThread_metatable(lua_State* const state, const int pos)
 
 int QThread_new(lua_State* const state)
 {
-    // QThread(QObject * parent = 0)
-    lua::make<QThread>(state);
-
+    if (lua_gettop(state) > 0) {
+        // QThread(QObject * parent)
+        lua::push(state, new QThread(lua::get<QObject*>(state, 1)));
+    } else {
+        // QThread()
+        lua::push(state, new QThread);
+    }
     return 1;
 }
 

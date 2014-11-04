@@ -57,7 +57,7 @@ void lua::QDrag_metatable(lua_State* const state, const int pos)
 
 int QDrag_new(lua_State* const state)
 {
-    lua::make<QDrag>(state, lua::get<QObject*>(state, 2));
+    lua::push(state, new QDrag(lua::get<QObject*>(state, 1)));
     return 1;
 }
 

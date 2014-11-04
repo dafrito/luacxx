@@ -25,7 +25,11 @@ void lua::QEventLoop_metatable(lua_State* const state, const int pos)
 
 int QEventLoop_new(lua_State* const state)
 {
-    lua::make<QEventLoop>(state);
+    if (lua_gettop(state) > 0) {
+        lua::push(state, new QEventLoop(lua::get<QObject*>(state, 1)));
+    } else {
+        lua::push(state, new QEventLoop);
+    }
     return 1;
 }
 

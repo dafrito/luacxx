@@ -89,7 +89,7 @@ int QCoreApplication_new(lua_State* const state)
     auto arguments = lua::save_arguments(lua::index(state, 2));
 
     // Create the application
-    lua::make<App>(state, arguments->argc(), arguments->argv());
+    lua::push(state, new App(arguments->argc(), arguments->argv()));
 
     // Save the arguments table within the metatable
     lua_getmetatable(state, -1);

@@ -53,8 +53,7 @@ void lua::QActionGroup_metatable(lua_State* const state, const int pos)
 
 int QActionGroup_new(lua_State* const state)
 {
-    // QActionGroup(QObject * parent)
-    lua::make<QActionGroup>(state, lua::get<QObject*>(state, 1));
+    lua::push(state, new QActionGroup(lua::get<QObject*>(state, 1)));
     return 1;
 }
 

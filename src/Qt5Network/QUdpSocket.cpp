@@ -3,6 +3,7 @@
 #include "QHostAddress.hpp"
 #include "QNetworkInterface.hpp"
 #include "QAbstractSocket.hpp"
+#include "../Qt5Core/QObject.hpp"
 
 int QUdpSocket_joinMulticastGroup(lua_State* const state)
 {
@@ -38,9 +39,11 @@ void lua::QUdpSocket_metatable(lua_State* const state, const int pos)
 
 int QUdpSocket_new(lua_State* const state)
 {
-    lua::make<QUdpSocket>(state);
-    // TODO Set up object-specific methods
-
+    if (lua_gettop(state) == 1) {
+        lua::push(state, new QUdpSocket(lua::get<QObject*>(state, 1)));
+    } else {
+        lua::push(state, new QUdpSocket);
+    }
     return 1;
 }
 

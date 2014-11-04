@@ -28,11 +28,45 @@ void lua::QDockWidget_metatable(lua_State* const state, const int pos)
 
 int QDockWidget_new(lua_State* const state)
 {
-    // QDockWidget(const QString & title, QWidget * parent = 0, Qt::WindowFlags flags = 0)
-    // QDockWidget(QWidget * parent = 0, Qt::WindowFlags flags = 0)
-    lua::make<QDockWidget>(state);
-    // TODO Set up object-specific methods
-
+    if (lua_gettop(state) == 0) {
+        // QDockWidget()
+        lua::push(state, new QDockWidget);
+    } else if (lua::is_type<QString>(state, 1) || lua_isstring(state, 1)) {
+        switch (lua_gettop(state)) {
+            case 1:
+                // QDockWidget(const QString & title)
+                lua::push(state, new QDockWidget(lua::get<QString>(state, 1)));
+                break;
+            case 2:
+                // QDockWidget(const QString & title, QWidget * parent)
+                lua::push(state, new QDockWidget(
+                    lua::get<QString>(state, 1),
+                    lua::get<QWidget*>(state, 2)
+                ));
+                break;
+            default:
+                // QDockWidget(const QString & title, QWidget * parent, Qt::WindowFlags flags)
+                lua::push(state, new QDockWidget(
+                    lua::get<QString>(state, 1),
+                    lua::get<QWidget*>(state, 2),
+                    lua::get<Qt::WindowFlags>(state, 3)
+                ));
+                break;
+        }
+    } else {
+        if (lua_gettop(state) == 1) {
+            // QDockWidget(QWidget * parent)
+            lua::push(state, new QDockWidget(
+                lua::get<QWidget*>(state, 1)
+            ));
+        } else {
+            // QDockWidget(QWidget * parent, Qt::WindowFlags flags)
+            lua::push(state, new QDockWidget(
+                lua::get<QWidget*>(state, 1),
+                lua::get<Qt::WindowFlags>(state, 2)
+            ));
+        }
+    }
     return 1;
 }
 

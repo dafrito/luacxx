@@ -49,11 +49,54 @@ void lua::QMovie_metatable(lua_State* const state, const int pos)
 
 int QMovie_new(lua_State* const state)
 {
-    // QMovie(QObject * parent = 0)
-    // QMovie(QIODevice * device, const QByteArray & format = QByteArray(), QObject * parent = 0)
-    // QMovie(const QString & fileName, const QByteArray & format = QByteArray(), QObject * parent = 0)
-    lua::make<QMovie>(state);
-    // TODO Set up object-specific methods
+    if (lua::is_type<QIODevice*>(state, 1)) {
+        // QMovie(QIODevice * device, const QByteArray & format = QByteArray(), QObject * parent = 0)
+        switch (lua_gettop(state)) {
+        case 1:
+            lua::push(state, new QMovie(lua::get<QIODevice*>(state, 1)));
+            break;
+        case 2:
+            lua::push(state, new QMovie(
+                lua::get<QIODevice*>(state, 1),
+                lua::get<QByteArray>(state, 2)
+            ));
+            break;
+        case 3:
+            lua::push(state, new QMovie(
+                lua::get<QIODevice*>(state, 1),
+                lua::get<QByteArray>(state, 2),
+                lua::get<QObject*>(state, 3)
+            ));
+            break;
+        }
+    } else if (lua::is_type<QString>(state, 1) || lua_type(state, 1) == LUA_TSTRING) {
+        // QMovie(const QString & fileName, const QByteArray & format = QByteArray(), QObject * parent = 0)
+        switch (lua_gettop(state)) {
+        case 1:
+            lua::push(state, new QMovie(
+                lua::get<QString>(state, 1)
+            ));
+            break;
+        case 2:
+            lua::push(state, new QMovie(
+                lua::get<QString>(state, 1),
+                lua::get<QByteArray>(state, 2)
+            ));
+            break;
+        case 3:
+            lua::push(state, new QMovie(
+                lua::get<QString>(state, 1),
+                lua::get<QByteArray>(state, 2),
+                lua::get<QObject*>(state, 3)
+            ));
+            break;
+        }
+    } else if (lua_gettop(state) > 0) {
+        // QMovie(QObject * parent = 0)
+        lua::push(state, new QMovie(lua::get<QObject*>(state, 1)));
+    } else {
+        lua::push(state, new QMovie);
+    }
 
     return 1;
 }

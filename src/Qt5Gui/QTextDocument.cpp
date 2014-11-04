@@ -111,10 +111,22 @@ void lua::QTextDocument_metatable(lua_State* const state, const int pos)
 
 int QTextDocument_new(lua_State* const state)
 {
-    if (lua_gettop(state) > 1) {
-        lua::make<QTextDocument>(state,
-            lua::get<QString>(state, 2)
-        );
+    switch (lua_gettop(state)) {
+    case 0:
+        lua::push(state, new QTextDocument);
+        break;
+    case 1:
+        if (lua::is_type<QString>(state, 1) || lua_isstring(state, 1)) {
+            lua::push(state, new QTextDocument(lua::get<QString>(state, 1)));
+        } else {
+            lua::push(state, new QTextDocument(lua::get<QObject*>(state, 1)));
+        }
+        break;
+    default:
+        lua::push(state, new QTextDocument(
+            lua::get<QString>(state, 1),
+            lua::get<QObject*>(state, 2)
+        ));
     }
     return 1;
 }

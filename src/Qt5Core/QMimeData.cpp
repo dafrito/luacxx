@@ -41,8 +41,7 @@ void lua::QMimeData_metatable(lua_State* const state, const int pos)
 
 int QMimeData_new(lua_State* const state)
 {
-    lua::make<QMimeData>(state);
-    std::cerr << "Creating QMimeData\n";
+    lua::push(state, new QMimeData);
     return 1;
 }
 

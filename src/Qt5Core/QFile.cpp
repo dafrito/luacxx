@@ -29,10 +29,22 @@ void lua::QFile_metatable(lua_State* const state, const int pos)
 
 int QFile_new(lua_State* const state)
 {
-    // QFile(const QString & name)
-    // QFile(QObject * parent)
-    // QFile(const QString & name, QObject * parent)
-    lua::make<QFile>(state);
+    if (lua_gettop(state) == 0) {
+        // QFile()
+        lua::push(state, new QFile);
+    } else if (lua::is_type<QString>(state, 1) || lua_type(state, 1) == LUA_TSTRING) {
+        // QFile(const QString & name)
+        lua::push(state, new QFile(lua::get<QString>(state, 1)));
+    } else if (lua_gettop(state) == 2) {
+        // QFile(const QString & name, QObject * parent)
+        lua::push(state, new QFile(
+            lua::get<QString>(state, 1),
+            lua::get<QObject*>(state, 2)
+        ));
+    } else {
+        // QFile(QObject * parent)
+        lua::push(state, new QFile(lua::get<QObject*>(state, 1)));
+    }
 
     return 1;
 }

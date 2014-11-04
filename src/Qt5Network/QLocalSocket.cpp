@@ -2,6 +2,7 @@
 #include "../thread.hpp"
 
 #include "../Qt5Core/QString.hpp"
+#include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QIODevice.hpp"
 
 // https://qt-project.org/doc/qt-5/qlocalsocket.html
@@ -57,10 +58,13 @@ void lua::QLocalSocket_metatable(lua_State* const state, const int pos)
 
 int QLocalSocket_new(lua_State* const state)
 {
-    // QLocalSocket(QObject * parent = 0)
-    lua::make<QLocalSocket>(state);
-    // TODO Set up object-specific methods
-
+    if (lua_gettop(state) == 1) {
+        // QLocalSocket(QObject * parent)
+        lua::push(state, new QLocalSocket(lua::get<QObject*>(state, 1)));
+    } else {
+        // QLocalSocket()
+        lua::push(state, new QLocalSocket);
+    }
     return 1;
 }
 

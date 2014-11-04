@@ -51,12 +51,36 @@ void lua::QCompleter_metatable(lua_State* const state, const int pos)
 
 int QCompleter_new(lua_State* const state)
 {
-    // QCompleter(QObject * parent = 0)
-    // QCompleter(QAbstractItemModel * model, QObject * parent = 0)
-    // QCompleter(const QStringList & list, QObject * parent = 0)
-    lua::make<QCompleter>(state);
-    // TODO Set up object-specific methods
+    if (lua_gettop(state) == 0) {
+        // QCompleter()
+        lua::push(state, new QCompleter);
+    } else if (lua::is_type<QStringList>(state, 1)) {
+        // QCompleter(const QStringList & list, QObject * parent = 0)
+        if (lua_gettop(state) == 1) {
+            lua::push(state, new QCompleter(lua::get<const QStringList&>(state, 1)));
+        } else {
+            lua::push(state, new QCompleter(
+                lua::get<const QStringList&>(state, 1),
+                lua::get<QObject*>(state, 2)
+            ));
+        }
+    } else if (lua::is_type<QAbstractItemModel>(state, 1)) {
+        // QCompleter(QAbstractItemModel * model, QObject * parent = 0)
+        if (lua_gettop(state) == 1) {
+            lua::push(state, new QCompleter(lua::get<QAbstractItemModel*>(state, 1)));
+        } else {
+            lua::push(state, new QCompleter(
+                lua::get<QAbstractItemModel*>(state, 1),
+                lua::get<QObject*>(state, 2)
+            ));
+        }
 
+    } else {
+        // QCompleter(QObject * parent)
+        lua::push(state, new QCompleter(
+            lua::get<QObject*>(state, 1)
+        ));
+    }
     return 1;
 }
 

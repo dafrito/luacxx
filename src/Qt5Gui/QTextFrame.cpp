@@ -32,7 +32,7 @@ void QTextFrame_metatable(lua_State* const state, const int pos)
 
 int QTextFrame_new(lua_State* const state)
 {
-    lua::make<QTextFrame>(state, lua::get<QTextDocument*>(state, 1));
+    lua::push(state, new QTextFrame(lua::get<QTextDocument*>(state, 1)));
     return 1;
 }
 

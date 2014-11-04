@@ -48,7 +48,11 @@ void lua::QOpenGLContext_metatable(lua_State* const state, const int pos)
 
 int QOpenGLContext_new(lua_State* const state)
 {
-    lua::make<QOpenGLContext>(state);
+    if (lua_gettop(state) > 0) {
+        lua::push(state, new QOpenGLContext(lua::get<QObject*>(state, 1)));
+    } else {
+        lua::push(state, new QOpenGLContext);
+    }
     return 1;
 }
 

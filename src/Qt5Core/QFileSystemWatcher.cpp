@@ -25,12 +25,24 @@ void QFileSystemWatcher_metatable(lua_State* const state, const int pos)
 
 int QFileSystemWatcher_new(lua_State* const state)
 {
-    // QFileSystemWatcher(QObject * parent = 0)
-    // QFileSystemWatcher(const QStringList & paths, QObject * parent = 0)
-    if (lua_gettop(state) > 0) {
-        lua::make<QFileSystemWatcher>(state, lua::get<const QStringList&>(state, 1));
-    } else {
-        lua::make<QFileSystemWatcher>(state);
+    switch (lua_gettop(state)) {
+    case 0:
+        lua::push(state, new QFileSystemWatcher);
+        break;
+    case 1:
+        if (lua::is_type<QStringList>(state, 1)) {
+            lua::push(state, new QFileSystemWatcher(lua::get<const QStringList&>(state, 1)));
+        } else {
+            lua::push(state, new QFileSystemWatcher(lua::get<QObject*>(state, 1)));
+        }
+        break;
+    default:
+        // QFileSystemWatcher(const QStringList & paths, QObject * parent = 0)
+        lua::push(state, new QFileSystemWatcher(
+            lua::get<const QStringList&>(state, 1),
+            lua::get<QObject*>(state, 2)
+        ));
+        break;
     }
     return 1;
 }

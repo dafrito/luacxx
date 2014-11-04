@@ -40,9 +40,11 @@ void QAbstractSlider_metatable(lua_State* const state, const int pos)
 
 int QAbstractSlider_new(lua_State* const state)
 {
-    lua::make<QAbstractSlider>(state);
-    // TODO Set up constructor
-
+    if (lua_gettop(state) == 0) {
+        lua::push(state, new QAbstractSlider);
+    } else {
+        lua::push(state, new QAbstractSlider(lua::get<QWidget*>(state, 1)));
+    }
     return 1;
 }
 

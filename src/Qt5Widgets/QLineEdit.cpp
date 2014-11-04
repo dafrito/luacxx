@@ -98,12 +98,25 @@ void lua::QLineEdit_metatable(lua_State* const state, const int pos)
 
 int QLineEdit_new(lua_State* const state)
 {
-    if (lua_gettop(state) > 0) {
-        // QLineEdit(const QString & contents, QWidget * parent = 0)
-        lua::make<QLineEdit>(state, lua::get<const QString&>(state, 1));
-    } else {
-        // QLineEdit(QWidget * parent = 0)
-        lua::make<QLineEdit>(state);
+    if (lua_gettop(state) == 0) {
+        // QLineEdit()
+        lua::push(state, new QLineEdit);
+    } else if (lua_gettop(state) == 2) {
+        // QLineEdit(const QString & contents, QWidget * parent)
+        lua::push(state, new QLineEdit(
+            lua::get<QString>(state, 1),
+            lua::get<QWidget*>(state, 2)
+        ));
+    } else if (lua::is_type<QString>(state, 1) || lua_isstring(state, 1)) {
+        // QLineEdit(const QString& contents)
+        lua::push(state, new QLineEdit(
+            lua::get<QString>(state, 1)
+        ));
+    } else if (lua_gettop(state) == 1) {
+        // QLineEdit(QWidget * parent)
+        lua::push(state, new QLineEdit(
+            lua::get<QWidget*>(state, 2)
+        ));
     }
     return 1;
 }

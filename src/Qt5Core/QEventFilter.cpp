@@ -36,7 +36,7 @@ void lua::QEventFilter_metatable(lua_State* const state, const int pos)
 
 int QEventFilter_new(lua_State* const state)
 {
-    lua::make<QEventFilter>(state, state);
+    lua::push(state, new QEventFilter(state));
     return 1;
 }
 

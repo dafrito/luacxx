@@ -86,10 +86,25 @@ void lua::QAction_metatable(lua_State* const state, const int pos)
 
 int QAction_new(lua_State* const state)
 {
-    // QAction(QObject * parent)
-    // QAction(const QString & text, QObject * parent)
-    // QAction(const QIcon & icon, const QString & text, QObject * parent)
-    lua::make<QAction>(state, nullptr);
+    if (lua::is_type<QIcon>(state, 1)) {
+        // QAction(const QIcon & icon, const QString & text, QObject * parent)
+        lua::push(state, new QAction(
+            lua::get<const QIcon&>(state, 1),
+            lua::get<QString>(state, 2),
+            lua::get<QObject*>(state, 3)
+        ));
+    } else if (lua::is_type<QString>(state, 1) || lua_isstring(state, 1)) {
+        // QAction(const QString & text, QObject * parent)
+        lua::push(state, new QAction(
+            lua::get<QString>(state, 1),
+            lua::get<QObject*>(state, 2)
+        ));
+    } else {
+        // QAction(QObject * parent)
+        lua::push(state, new QAction(
+            lua::get<QObject*>(state, 1)
+        ));
+    }
     return 1;
 }
 

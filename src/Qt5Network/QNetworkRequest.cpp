@@ -2,12 +2,12 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QVariant.hpp"
 #include "../Qt5Core/QByteArray.hpp"
 #include "../Qt5Core/QList.hpp"
 #include "QSslConfiguration.hpp"
 #include "../Qt5Core/QUrl.hpp"
+#include "../Qt5Core/QObject.hpp"
 
 int QNetworkRequest_attribute(lua_State* const state)
 {
@@ -42,11 +42,16 @@ void QNetworkRequest_metatable(lua_State* const state, const int pos)
 
 int QNetworkRequest_new(lua_State* const state)
 {
-    // QNetworkRequest(const QUrl & url = QUrl())
-    // QNetworkRequest(const QNetworkRequest & other)
-    lua::make<QNetworkRequest>(state);
-    // TODO Set up constructor
-
+    if (lua_gettop(state) == 0) {
+        // QNetworkRequest()
+        lua::make<QNetworkRequest>(state);
+    } else if (lua::is_type<QUrl>(state, 1)) {
+        // QNetworkRequest(const QUrl & url)
+        lua::make<QNetworkRequest>(state, lua::get<const QUrl&>(state, 1));
+    } else {
+        // QNetworkRequest(const QNetworkRequest & other)
+        lua::make<QNetworkRequest>(state, lua::get<const QNetworkRequest&>(state, 1));
+    }
     return 1;
 }
 

@@ -19,11 +19,20 @@ void QSocketNotifier_metatable(lua_State* const state, const int pos)
 
 int QSocketNotifier_new(lua_State* const state)
 {
-    // QSocketNotifier(qintptr socket, Type type, QObject * parent = 0)
-    lua::make<QSocketNotifier>(state,
-        lua::get<qintptr>(state, 1),
-        lua::get<QSocketNotifier::Type>(state, 2)
-    );
+    if (lua_gettop(state) == 3) {
+        // QSocketNotifier(qintptr socket, Type type, QObject * parent = 0)
+        lua::push(state, new QSocketNotifier(
+            lua::get<qintptr>(state, 1),
+            lua::get<QSocketNotifier::Type>(state, 2),
+            lua::get<QObject*>(state, 3)
+        ));
+    } else {
+        // QSocketNotifier(qintptr socket, Type type)
+        lua::push(state, new QSocketNotifier(
+            lua::get<qintptr>(state, 1),
+            lua::get<QSocketNotifier::Type>(state, 2)
+        ));
+    }
     return 1;
 }
 

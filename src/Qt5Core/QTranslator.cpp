@@ -29,7 +29,11 @@ void lua::QTranslator_metatable(lua_State* const state, const int pos)
 
 int QTranslator_new(lua_State* const state)
 {
-    lua::make<QTranslator>(state);
+    if (lua_gettop(state) > 0) {
+        lua::push(state, new QTranslator(lua::get<QObject*>(state, 1)));
+    } else {
+        lua::push(state, new QTranslator);
+    }
     return 1;
 }
 

@@ -9,6 +9,7 @@
 #include "QSslCipher.hpp"
 #include "QSslConfiguration.hpp"
 #include "QSsl.hpp"
+#include "../Qt5Core/QObject.hpp"
 
 int QSslSocket_addCaCertificates(lua_State* const state)
 {
@@ -87,9 +88,12 @@ void lua::QSslSocket_metatable(lua_State* const state, const int pos)
 
 int QSslSocket_new(lua_State* const state)
 {
-    // QSslSocket(QObject * parent = 0)
-    lua::make<QSslSocket>(state);
-
+    if (lua_gettop(state) == 1) {
+        // QSslSocket(QObject * parent = 0)
+        lua::push(state, new QSslSocket(lua::get<QObject*>(state, 1)));
+    } else {
+        lua::push(state, new QSslSocket);
+    }
     return 1;
 }
 
