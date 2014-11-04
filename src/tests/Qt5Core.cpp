@@ -13,6 +13,7 @@
 #include "convert/char.hpp"
 #include "convert/callable.hpp"
 #include "convert/numeric.hpp"
+#include "convert/shared_ptr.hpp"
 
 #include "Qt5Core/QString.hpp"
 #include "Qt5Core/QChar.hpp"
