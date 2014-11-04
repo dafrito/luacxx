@@ -249,20 +249,4 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
 
         return 1;
     });
-
-    mt["on_retain_userdata"] = lua_CFunction([](lua_State* const state) {
-        auto obj = lua::get<QObject*>(state, 1);
-        auto userdata_block = lua::get_userdata_block(state, 1);
-        QObject::connect(obj, &QObject::destroyed, [state, userdata_block](QObject* obj) {
-            if (!userdata_block->retained()) {
-                return;
-            }
-            if (!userdata_block->destroyed()) {
-                userdata_block->release(state);
-                userdata_block->~userdata_block();
-            }
-            return;
-        });
-        return 0;
-    });
 }
