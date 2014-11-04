@@ -22,6 +22,7 @@ namespace lua {
 void QAbstractEventDispatcher_metatable(lua_State* const state, const int pos)
 {
     lua::QObject_metatable(state, pos);
+
     lua::index mt(state, pos);
     mt["filterNativeEvent"] = &QAbstractEventDispatcher::filterNativeEvent;
     mt["flush"] = &QAbstractEventDispatcher::flush;
