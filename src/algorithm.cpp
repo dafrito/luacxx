@@ -47,7 +47,17 @@ void lua::invoke(const lua::index& callable)
     lua::invoke(callable.state(), callable.pos());
 }
 
+void lua::invoke(const int nresults, const lua::index& callable)
+{
+    lua::invoke(nresults, callable.state(), callable.pos());
+}
+
 void lua::invoke(lua_State* const state, const int pos)
+{
+    lua::invoke(LUA_MULTRET, state, pos);
+}
+
+void lua::invoke(int nresults, lua_State* const state, const int pos)
 {
     int nargs = lua_gettop(state) - pos;
 
@@ -57,7 +67,7 @@ void lua::invoke(lua_State* const state, const int pos)
     lua::push(state, on_error);
     lua_insert(state, pos);
 
-    int result = lua_pcall(state, nargs, LUA_MULTRET, pos);
+    int result = lua_pcall(state, nargs, nresults, pos);
 
     // Be sure to remove the error handler
     lua_remove(state, pos);

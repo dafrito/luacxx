@@ -369,7 +369,11 @@ are usually not recoverable.
 
 void invoke(const lua::index& callable);
 
+void invoke(const int nresults, const lua::index& callable);
+
 void invoke(lua_State* const state, const int pos);
+
+void invoke(const int nresults, lua_State* const state, const int pos);
 
 /*
 
@@ -398,8 +402,7 @@ auto call(Callable source, Args... args) -> decltype(lua::get<RV>(source.state()
         return (*saved_function)(args...);
     }
     lua::push(callable.state(), args...);
-    lua::invoke(callable);
-    lua_settop(callable.state(), callable.pos());
+    lua::invoke(1, callable);
     return lua::get<RV>(callable.state(), callable.pos());
 }
 
@@ -409,9 +412,16 @@ void call(Callable source, Args... args)
     lua::index callable(lua::push(source.state(), source));
     lua::assert_type("lua::call", lua::type::function, callable);
     lua::push(callable.state(), args...);
-    lua::invoke(callable);
+    lua::invoke(0, callable);
+}
 
-    lua_settop(callable.state(), callable.pos() - 1);
+template <int returned, typename Callable, typename... Args>
+void call(Callable source, Args... args)
+{
+    lua::index callable(lua::push(source.state(), source));
+    lua::assert_type("lua::call", lua::type::function, callable);
+    lua::push(callable.state(), args...);
+    lua::invoke(returned, callable);
 }
 
 template <class T>

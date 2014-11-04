@@ -838,6 +838,25 @@ BOOST_AUTO_TEST_CASE(logging)
     lua::logLeave(env);
 }
 
+BOOST_AUTO_TEST_CASE(algorithm_call_with_int)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, ""
+    "function return_1_2()\n"
+    "    return 1, 2;\n"
+    "end;\n"
+    );
+
+    lua::call<1>(env["return_1_2"]);
+    BOOST_CHECK_EQUAL(1, lua::get<int>(env, 1));
+
+    lua_settop(env, 0);
+    lua::call<2>(env["return_1_2"]);
+    BOOST_CHECK_EQUAL(1, lua::get<int>(env, 1));
+    BOOST_CHECK_EQUAL(2, lua::get<int>(env, 2));
+}
+
 #ifdef HAVE_gobject_introspection
 
 #include "search/GIRepository.hpp"
