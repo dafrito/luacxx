@@ -609,7 +609,7 @@ int QPainter_drawPixmap(lua_State* const state)
                 lua::get<int>(state, 5),
                 lua::get<const QPixmap&>(state, 6)
             );
-            return 0;
+            break;
         }
         case 10:
         {
@@ -625,6 +625,7 @@ int QPainter_drawPixmap(lua_State* const state)
                 lua::get<int>(state, 9),
                 lua::get<int>(state, 10)
             );
+            break;
         }
         case 8:
         {
@@ -638,6 +639,7 @@ int QPainter_drawPixmap(lua_State* const state)
                 lua::get<int>(state, 7),
                 lua::get<int>(state, 8)
             );
+            break;
         }
         default:
         {
@@ -647,8 +649,10 @@ int QPainter_drawPixmap(lua_State* const state)
                 lua::get<int>(state, 3),
                 lua::get<const QPixmap&>(state, 4)
             );
+            break;
         }
         }
+        return 0;
     }
 
     auto pixmap = lua::get<const QPixmap&>(state, 3);
