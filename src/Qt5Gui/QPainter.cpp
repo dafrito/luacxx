@@ -1744,9 +1744,9 @@ void lua::QPainter_metatable(lua_State* const state, const int pos)
 
 int QPainter_new(lua_State* const state)
 {
-    if (lua_gettop(state) > 1) {
+    if (lua_gettop(state) > 0) {
         // QPainter ( QPaintDevice * device )
-        lua::make<QPainter>(state, lua::get<QPaintDevice*>(state, 2));
+        lua::make<QPainter>(state, lua::get<QPaintDevice*>(state, 1));
     } else {
         // QPainter ()
         lua::make<QPainter>(state);
