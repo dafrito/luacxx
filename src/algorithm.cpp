@@ -82,7 +82,7 @@ void lua::invoke(int nresults, lua_State* const state, const int pos)
         case LUA_ERRERR:
             throw std::runtime_error("Lua error within error handler");
         case LUA_ERRRUN:
-            throw lua::get<lua::error>(state, 1);
+            throw lua::get<lua::error>(state, -1);
     }
 
     std::stringstream str;
