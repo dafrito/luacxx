@@ -49,7 +49,21 @@ public:
 
 BOOST_GLOBAL_FIXTURE(QGuiApplicationFixture);
 
-BOOST_AUTO_TEST_CASE(run_file)
+BOOST_AUTO_TEST_CASE(QObject_destruction)
 {
     auto env = lua::create();
+
+    lua::run_string(env, ""
+    "require 'Qt5Gui.QWindow';"
+    "require 'Qt5Gui.QDrag';"
+    "require 'Qt5Core.QMimeData';"
+    "require 'Qt5Core.QCoreApplication';"
+    ""
+    "win = QWindow.new();\n"
+    "drag = QDrag.new(win);\n"
+    "md = QMimeData.new();\n"
+    "drag:setMimeData(md);\n"
+    );
+
+    lua_gc(env, LUA_GCCOLLECT, 0);
 }
