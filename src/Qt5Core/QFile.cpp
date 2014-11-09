@@ -6,10 +6,46 @@
 #include "QFileDevice.hpp"
 #include "QByteArray.hpp"
 #include "QFlags.hpp"
+#include "QObject.hpp"
+#include "QIODevice.hpp"
 
 int QFile_open(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QFile*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        lua::push(state, self->open(lua::get<QIODevice::OpenMode>(state, 2)));
+    } else if (lua_isnumber(state, 2)) {
+        // bool    open(int fd, OpenMode mode, FileHandleFlags handleFlags = DontCloseHandle)
+        if (lua_gettop(state) > 3) {
+            lua::push(state, self->open(
+                lua::get<int>(state, 2),
+                lua::get<QIODevice::OpenMode>(state, 3),
+                lua::get<QFileDevice::FileHandleFlags>(state, 4)
+            ));
+        } else {
+            lua::push(state, self->open(
+                lua::get<int>(state, 2),
+                lua::get<QIODevice::OpenMode>(state, 3)
+            ));
+        }
+/*    } else {
+        // TODO Uncomment once a binding for FILE* has been added
+        // bool    open(FILE * fh, OpenMode mode, FileHandleFlags handleFlags = DontCloseHandle)
+        if (lua_gettop(state) > 3) {
+            lua::push(state, self->open(
+                lua::get<FILE*>(state, 2),
+                lua::get<QIODevice::OpenMode>(state, 3),
+                lua::get<QFileDevice::FileHandleFlags>(state, 4)
+            ));
+        } else {
+            lua::push(state, self->open(
+                lua::get<FILE*>(state, 2),
+                lua::get<QIODevice::OpenMode>(state, 3)
+            ));
+        }*/
+    }
+    return 1;
 }
 
 void lua::QFile_metatable(lua_State* const state, const int pos)
@@ -49,14 +85,26 @@ int QFile_new(lua_State* const state)
     return 1;
 }
 
-int QFile_copy(lua_State* const state)
+int static_QFile_copy(lua_State* const state)
 {
-    return 0;
+    // bool     copy(const QString & fileName, const QString & newName)
+    lua::push(state, QFile::copy(
+        lua::get<QString>(state, 1),
+        lua::get<QString>(state, 2)
+    ));
+    return 1;
 }
 
-int QFile_decodeName(lua_State* const state)
+int static_QFile_decodeName(lua_State* const state)
 {
-    return 0;
+    if (lua::is_type<QByteArray>(state, 1)) {
+        //  QString     decodeName(const QByteArray & localFileName)
+        lua::push(state, QFile::decodeName(lua::get<const QByteArray&>(state, 1)));
+    } else {
+        //  QString     decodeName(const char * localFileName)
+        lua::push(state, QFile::decodeName(lua::get<const char*>(state, 1)));
+    }
+    return 1;
 }
 
 int luaopen_Qt5Core_QFile(lua_State* const state)
@@ -67,8 +115,8 @@ int luaopen_Qt5Core_QFile(lua_State* const state)
     env["QFile"]["new"] = QFile_new;
     auto t = env["QFile"];
 
-    t["copy"] = QFile_copy;
-    t["decodeName"] = QFile_decodeName;
+    t["copy"] = static_QFile_copy;
+    t["decodeName"] = static_QFile_decodeName;
     t["encodeName"] = &QFile::encodeName;
     t["exists"] = static_cast<bool(*)(const QString&)>(&QFile::exists);
     t["link"] = static_cast<bool(*)(const QString&, const QString&)>(&QFile::link);
