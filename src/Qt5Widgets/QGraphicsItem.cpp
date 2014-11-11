@@ -6,7 +6,10 @@
 #include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QString.hpp"
 #include "../Qt5Core/QPointF.hpp"
+#include "../Qt5Core/QSize.hpp"
 #include "../Qt5Core/QRectF.hpp"
+#include "../Qt5Gui/QPolygonF.hpp"
+#include "../Qt5Gui/QPainter.hpp"
 #include "../Qt5Gui/QPainterPath.hpp"
 #include "../Qt5Gui/QCursor.hpp"
 #include "../Qt5Gui/QTransform.hpp"
@@ -14,189 +17,697 @@
 #include "../Qt5Gui/QRegion.hpp"
 #include "QGraphicsEffect.hpp"
 #include "../Qt5Core/QVariant.hpp"
+#include "QWidget.hpp"
 #include "QGraphicsWidget.hpp"
 #include "QGraphicsObject.hpp"
 #include "QGraphicsScene.hpp"
 #include "QGraphicsTransform.hpp"
 #include "QGraphicsItemGroup.hpp"
+#include "QStyleOptionGraphicsItem.hpp"
 #include "../Qt5Core/QVariant.hpp"
 
 #include <iostream>
 
 int QGraphicsItem_collidesWithItem(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // virtual bool     collidesWithItem(const QGraphicsItem * other, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const
-    std::cerr << "QGraphicsItem_collidesWithItem\n";
-    return 0;
+    switch (lua_gettop(state)) {
+    case 2:
+        lua::push(state, self->collidesWithItem(
+            lua::get<QGraphicsItem*>(state, 2)
+        ));
+        break;
+    case 3:
+    default:
+        lua::push(state, self->collidesWithItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<Qt::ItemSelectionMode>(state, 3)
+        ));
+        break;
+    }
+    return 1;
 }
+
 int QGraphicsItem_collidesWithPath(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // virtual bool     collidesWithPath(const QPainterPath & path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const
-    std::cerr << "QGraphicsItem_collidesWithPath\n";
-    return 0;
+    switch (lua_gettop(state)) {
+    case 2:
+        lua::push(state, self->collidesWithPath(
+            lua::get<const QPainterPath&>(state, 2)
+        ));
+        break;
+    case 3:
+    default:
+        lua::push(state, self->collidesWithPath(
+            lua::get<const QPainterPath&>(state, 2),
+            lua::get<Qt::ItemSelectionMode>(state, 3)
+        ));
+        break;
+    }
+    return 1;
 }
+
 int QGraphicsItem_collidingItems(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QList<QGraphicsItem *>   collidingItems(Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const
-    std::cerr << "QGraphicsItem_collidingItems\n";
-    return 0;
+    switch (lua_gettop(state)) {
+    case 1:
+        lua::push(state, self->collidingItems());
+        break;
+    case 2:
+    default:
+        lua::push(state, self->collidingItems(
+            lua::get<Qt::ItemSelectionMode>(state, 2)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_ensureVisible(lua_State* const state)
 {
-    //  void    ensureVisible(const QRectF & rect = QRectF(), int xmargin = 50, int ymargin = 50)
-    //  void    ensureVisible(qreal x, qreal y, qreal w, qreal h, int xmargin = 50, int ymargin = 50)
-    std::cerr << "QGraphicsItem_ensureVisible\n";
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua_isnumber(state, 2)) {
+        //  void    ensureVisible(qreal x, qreal y, qreal w, qreal h, int xmargin = 50, int ymargin = 50)
+        switch (lua_gettop(state)) {
+        case 5:
+            self->ensureVisible(
+                lua::get<qreal>(state, 2),
+                lua::get<qreal>(state, 3),
+                lua::get<qreal>(state, 4),
+                lua::get<qreal>(state, 5)
+            );
+            break;
+        case 6:
+            self->ensureVisible(
+                lua::get<qreal>(state, 2),
+                lua::get<qreal>(state, 3),
+                lua::get<qreal>(state, 4),
+                lua::get<qreal>(state, 5),
+                lua::get<int>(state, 6)
+            );
+            break;
+        case 7:
+        default:
+            self->ensureVisible(
+                lua::get<qreal>(state, 2),
+                lua::get<qreal>(state, 3),
+                lua::get<qreal>(state, 4),
+                lua::get<qreal>(state, 5),
+                lua::get<int>(state, 6),
+                lua::get<int>(state, 7)
+            );
+            break;
+        }
+    } else {
+        //  void    ensureVisible(const QRectF & rect = QRectF(), int xmargin = 50, int ymargin = 50)
+        switch (lua_gettop(state)) {
+        case 1:
+            self->ensureVisible();
+            break;
+        case 2:
+            self->ensureVisible(
+                lua::get<const QRectF&>(state, 2)
+            );
+            break;
+        case 3:
+            self->ensureVisible(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<int>(state, 3)
+            );
+            break;
+        case 4:
+        default:
+            self->ensureVisible(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
+            );
+            break;
+        }
+    }
     return 0;
 }
+
 int QGraphicsItem_isObscured(lua_State* const state)
 {
-    // bool     isObscured(const QRectF & rect = QRectF()) const
-    // bool     isObscured(qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_isObscured\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua_isnumber(state, 2)) {
+        // bool     isObscured(qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->isObscured(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    } else {
+        // bool     isObscured(const QRectF & rect = QRectF()) const
+        if (lua_gettop(state) == 1) {
+            lua::push(state, self->isObscured());
+        } else {
+            lua::push(state, self->isObscured(
+                lua::get<const QRectF&>(state, 2)
+            ));
+        }
+    }
+    return 1;
 }
+
 int QGraphicsItem_itemTransform(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QTransform   itemTransform(const QGraphicsItem * other, bool * ok = 0) const
-    std::cerr << "QGraphicsItem_itemTransform\n";
-    return 0;
+    switch (lua_gettop(state)) {
+    case 2:
+        bool ok;
+        lua::push(state, self->itemTransform(
+            lua::get<QGraphicsItem*>(state, 2),
+            &ok
+        ));
+        lua::push(state, ok);
+        return 2;
+    case 3:
+    default:
+        lua::push(state, self->itemTransform(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<bool*>(state, 3)
+        ));
+        return 1;
+    }
 }
+
 int QGraphicsItem_mapFromItem(lua_State* const state)
 {
-    // QPointF  mapFromItem(const QGraphicsItem * item, const QPointF & point) const
-    // QPolygonF    mapFromItem(const QGraphicsItem * item, const QRectF & rect) const
-    // QPolygonF    mapFromItem(const QGraphicsItem * item, const QPolygonF & polygon) const
-    // QPainterPath     mapFromItem(const QGraphicsItem * item, const QPainterPath & path) const
-    // QPolygonF    mapFromItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
-    // QPointF  mapFromItem(const QGraphicsItem * item, qreal x, qreal y) const
-    std::cerr << "QGraphicsItem_mapFromItem\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 3)) {
+        // QPointF  mapFromItem(const QGraphicsItem * item, const QPointF & point) const
+        lua::push(state, self->mapFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QPointF&>(state, 3)
+        ));
+    } else if (lua::is_type<QRectF>(state, 3)) {
+        // QPolygonF    mapFromItem(const QGraphicsItem * item, const QRectF & rect) const
+        lua::push(state, self->mapFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QRectF&>(state, 3)
+        ));
+    } else if (lua::is_type<QPolygonF>(state, 3)) {
+        // QPolygonF    mapFromItem(const QGraphicsItem * item, const QPolygonF & polygon) const
+        lua::push(state, self->mapFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QPolygonF&>(state, 3)
+        ));
+    } else if (lua::is_type<QPainterPath>(state, 3)) {
+        // QPainterPath     mapFromItem(const QGraphicsItem * item, const QPainterPath & path) const
+        lua::push(state, self->mapFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QPainterPath&>(state, 3)
+        ));
+    } else if (lua_gettop(state) > 4) {
+        // QPolygonF    mapFromItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->mapFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5),
+            lua::get<qreal>(state, 6)
+        ));
+    } else {
+        // QPointF  mapFromItem(const QGraphicsItem * item, qreal x, qreal y) const
+        lua::push(state, self->mapFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapFromParent(lua_State* const state)
 {
-    // QPointF  mapFromParent(const QPointF & point) const
-    // QPolygonF    mapFromParent(const QRectF & rect) const
-    // QPolygonF    mapFromParent(const QPolygonF & polygon) const
-    // QPainterPath     mapFromParent(const QPainterPath & path) const
-    // QPolygonF    mapFromParent(qreal x, qreal y, qreal w, qreal h) const
-    // QPointF  mapFromParent(qreal x, qreal y) const
-    std::cerr << "QGraphicsItem_mapFromParent\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // QPointF  mapFromParent(const QPointF & point) const
+        lua::push(state, self->mapFromParent(
+            lua::get<const QPointF&>(state, 2)
+        ));
+    } else if (lua::is_type<QRectF>(state, 2)) {
+        // QPolygonF    mapFromParent(const QRectF & rect) const
+        lua::push(state, self->mapFromParent(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPolygonF>(state, 2)) {
+        // QPolygonF    mapFromParent(const QPolygonF & polygon) const
+        lua::push(state, self->mapFromParent(
+            lua::get<const QPolygonF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPainterPath>(state, 2)) {
+        // QPainterPath     mapFromParent(const QPainterPath & path) const
+        lua::push(state, self->mapFromParent(
+            lua::get<const QPainterPath&>(state, 2)
+        ));
+    } else if (lua_gettop(state) > 3) {
+        // QPolygonF    mapFromParent(qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->mapFromParent(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    } else {
+        // QPointF  mapFromParent(qreal x, qreal y) const
+        lua::push(state, self->mapFromParent(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapFromScene(lua_State* const state)
 {
-    // QPointF  mapFromScene(const QPointF & point) const
-    // QPolygonF    mapFromScene(const QRectF & rect) const
-    // QPolygonF    mapFromScene(const QPolygonF & polygon) const
-    // QPainterPath     mapFromScene(const QPainterPath & path) const
-    // QPolygonF    mapFromScene(qreal x, qreal y, qreal w, qreal h) const
-    // QPointF  mapFromScene(qreal x, qreal y) const
-    std::cerr << "QGraphicsItem_mapFromScene\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // QPointF  mapFromScene(const QPointF & point) const
+        lua::push(state, self->mapFromScene(
+            lua::get<const QPointF&>(state, 2)
+        ));
+    } else if (lua::is_type<QRectF>(state, 2)) {
+        // QPolygonF    mapFromScene(const QRectF & rect) const
+        lua::push(state, self->mapFromScene(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPolygonF>(state, 2)) {
+        // QPolygonF    mapFromScene(const QPolygonF & polygon) const
+        lua::push(state, self->mapFromScene(
+            lua::get<const QPolygonF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPainterPath>(state, 2)) {
+        // QPainterPath     mapFromScene(const QPainterPath & path) const
+        lua::push(state, self->mapFromScene(
+            lua::get<const QPainterPath&>(state, 2)
+        ));
+    } else if (lua_gettop(state) > 3) {
+        // QPolygonF    mapFromScene(qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->mapFromScene(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    } else {
+        // QPointF  mapFromScene(qreal x, qreal y) const
+        lua::push(state, self->mapFromScene(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapRectFromItem(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QRectF   mapRectFromItem(const QGraphicsItem * item, const QRectF & rect) const
     // QRectF   mapRectFromItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_mapRectFromItem\n";
-    return 0;
+    if (lua::is_type<QRectF>(state, 3)) {
+        lua::push(state, self->mapRectFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QRectF&>(state, 3)
+        ));
+    } else {
+        lua::push(state, self->mapRectFromItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5),
+            lua::get<qreal>(state, 6)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapRectFromParent(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QRectF   mapRectFromParent(const QRectF & rect) const
     // QRectF   mapRectFromParent(qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_mapRectFromParent\n";
-    return 0;
+    if (lua::is_type<QRectF>(state, 2)) {
+        lua::push(state, self->mapRectFromParent(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else {
+        lua::push(state, self->mapRectFromParent(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapRectFromScene(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QRectF   mapRectFromScene(const QRectF & rect) const
     // QRectF   mapRectFromScene(qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_mapRectFromScene\n";
-    return 0;
+    if (lua::is_type<QRectF>(state, 2)) {
+        lua::push(state, self->mapRectFromScene(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else {
+        lua::push(state, self->mapRectFromScene(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapRectToItem(lua_State* const state)
 {
-    //  QRectF  mapRectToItem(const QGraphicsItem * item, const QRectF & rect) const
-    //  QRectF  mapRectToItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_mapRectToItem\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    // QRectF   mapRectToItem(const QGraphicsItem * item, const QRectF & rect) const
+    // QRectF   mapRectToItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
+    if (lua::is_type<QRectF>(state, 3)) {
+        lua::push(state, self->mapRectToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QRectF&>(state, 3)
+        ));
+    } else {
+        lua::push(state, self->mapRectToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5),
+            lua::get<qreal>(state, 6)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapRectToParent(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QRectF   mapRectToParent(const QRectF & rect) const
     // QRectF   mapRectToParent(qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_mapRectToParent\n";
-    return 0;
+    if (lua::is_type<QRectF>(state, 2)) {
+        lua::push(state, self->mapRectToParent(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else {
+        lua::push(state, self->mapRectToParent(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapRectToScene(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // QRectF   mapRectToScene(const QRectF & rect) const
     // QRectF   mapRectToScene(qreal x, qreal y, qreal w, qreal h) const
-    std::cerr << "QGraphicsItem_mapRectToScene\n";
-    return 0;
+    if (lua::is_type<QRectF>(state, 2)) {
+        lua::push(state, self->mapRectToScene(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else {
+        lua::push(state, self->mapRectToScene(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapToItem(lua_State* const state)
 {
-    // QPointF  mapToItem(const QGraphicsItem * item, const QPointF & point) const
-    // QPolygonF    mapToItem(const QGraphicsItem * item, const QRectF & rect) const
-    // QPolygonF    mapToItem(const QGraphicsItem * item, const QPolygonF & polygon) const
-    // QPainterPath     mapToItem(const QGraphicsItem * item, const QPainterPath & path) const
-    // QPolygonF    mapToItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
-    // QPointF  mapToItem(const QGraphicsItem * item, qreal x, qreal y) const
-    std::cerr << "QGraphicsItem_mapToItem\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 3)) {
+        // QPointF  mapToItem(const QGraphicsItem * item, const QPointF & point) const
+        lua::push(state, self->mapToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QPointF&>(state, 3)
+        ));
+    } else if (lua::is_type<QRectF>(state, 3)) {
+        // QPolygonF    mapToItem(const QGraphicsItem * item, const QRectF & rect) const
+        lua::push(state, self->mapToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QRectF&>(state, 3)
+        ));
+    } else if (lua::is_type<QPolygonF>(state, 3)) {
+        // QPolygonF    mapToItem(const QGraphicsItem * item, const QPolygonF & polygon) const
+        lua::push(state, self->mapToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QPolygonF&>(state, 3)
+        ));
+    } else if (lua::is_type<QPainterPath>(state, 3)) {
+        // QPainterPath     mapToItem(const QGraphicsItem * item, const QPainterPath & path) const
+        lua::push(state, self->mapToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<const QPainterPath&>(state, 3)
+        ));
+    } else if (lua_gettop(state) > 4) {
+        // QPolygonF    mapToItem(const QGraphicsItem * item, qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->mapToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5),
+            lua::get<qreal>(state, 6)
+        ));
+    } else {
+        // QPointF  mapToItem(const QGraphicsItem * item, qreal x, qreal y) const
+        lua::push(state, self->mapToItem(
+            lua::get<QGraphicsItem*>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapToParent(lua_State* const state)
 {
-    //  QPointF     mapToParent(const QPointF & point) const
-    //  QPolygonF   mapToParent(const QRectF & rect) const
-    //  QPolygonF   mapToParent(const QPolygonF & polygon) const
-    //  QPainterPath    mapToParent(const QPainterPath & path) const
-    //  QPolygonF   mapToParent(qreal x, qreal y, qreal w, qreal h) const
-    //  QPointF     mapToParent(qreal x, qreal y) const
-    std::cerr << "QGraphicsItem_mapToParent\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // QPointF  mapToParent(const QPointF & point) const
+        lua::push(state, self->mapToParent(
+            lua::get<const QPointF&>(state, 2)
+        ));
+    } else if (lua::is_type<QRectF>(state, 2)) {
+        // QPolygonF    mapToParent(const QRectF & rect) const
+        lua::push(state, self->mapToParent(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPolygonF>(state, 2)) {
+        // QPolygonF    mapToParent(const QPolygonF & polygon) const
+        lua::push(state, self->mapToParent(
+            lua::get<const QPolygonF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPainterPath>(state, 2)) {
+        // QPainterPath     mapToParent(const QPainterPath & path) const
+        lua::push(state, self->mapToParent(
+            lua::get<const QPainterPath&>(state, 2)
+        ));
+    } else if (lua_gettop(state) > 3) {
+        // QPolygonF    mapToParent(qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->mapToParent(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    } else {
+        // QPointF  mapToParent(qreal x, qreal y) const
+        lua::push(state, self->mapToParent(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_mapToScene(lua_State* const state)
 {
-    // QPointF  mapToScene(const QPointF & point) const
-    // QPolygonF    mapToScene(const QRectF & rect) const
-    // QPolygonF    mapToScene(const QPolygonF & polygon) const
-    // QPainterPath     mapToScene(const QPainterPath & path) const
-    // QPolygonF    mapToScene(qreal x, qreal y, qreal w, qreal h) const
-    // QPointF  mapToScene(qreal x, qreal y) const
-    std::cerr << "QGraphicsItem_mapToScene\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // QPointF  mapToScene(const QPointF & point) const
+        lua::push(state, self->mapToScene(
+            lua::get<const QPointF&>(state, 2)
+        ));
+    } else if (lua::is_type<QRectF>(state, 2)) {
+        // QPolygonF    mapToScene(const QRectF & rect) const
+        lua::push(state, self->mapToScene(
+            lua::get<const QRectF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPolygonF>(state, 2)) {
+        // QPolygonF    mapToScene(const QPolygonF & polygon) const
+        lua::push(state, self->mapToScene(
+            lua::get<const QPolygonF&>(state, 2)
+        ));
+    } else if (lua::is_type<QPainterPath>(state, 2)) {
+        // QPainterPath     mapToScene(const QPainterPath & path) const
+        lua::push(state, self->mapToScene(
+            lua::get<const QPainterPath&>(state, 2)
+        ));
+    } else if (lua_gettop(state) > 3) {
+        // QPolygonF    mapToScene(qreal x, qreal y, qreal w, qreal h) const
+        lua::push(state, self->mapToScene(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<qreal>(state, 4),
+            lua::get<qreal>(state, 5)
+        ));
+    } else {
+        // QPointF  mapToScene(qreal x, qreal y) const
+        lua::push(state, self->mapToScene(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        ));
+    }
+    return 1;
 }
+
 int QGraphicsItem_paint(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // virtual void     paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0) = 0
-    std::cerr << "QGraphicsItem_paint\n";
+    switch (lua_gettop(state)) {
+    case 3:
+        self->paint(
+            lua::get<QPainter*>(state, 2),
+            lua::get<QStyleOptionGraphicsItem*>(state, 3)
+        );
+        break;
+    case 4:
+    default:
+        self->paint(
+            lua::get<QPainter*>(state, 2),
+            lua::get<QStyleOptionGraphicsItem*>(state, 3),
+            lua::get<QWidget*>(state, 4)
+        );
+        break;
+    }
+
     return 0;
 }
+
 int QGraphicsItem_scroll(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // void     scroll(qreal dx, qreal dy, const QRectF & rect = QRectF())
-    std::cerr << "QGraphicsItem_scroll\n";
+    switch (lua_gettop(state)) {
+    case 3:
+        self->scroll(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        );
+        break;
+    case 4:
+    default:
+        self->scroll(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3),
+            lua::get<const QRectF&>(state, 4)
+        );
+        break;
+    }
     return 0;
 }
+
 int QGraphicsItem_setCacheMode(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // void     setCacheMode(CacheMode mode, const QSize & logicalCacheSize = QSize())
-    std::cerr << "QGraphicsItem_setCacheMode\n";
+    switch (lua_gettop(state)) {
+    case 2:
+        self->setCacheMode(
+            lua::get<QGraphicsItem::CacheMode>(state, 2)
+        );
+        break;
+    case 3:
+    default:
+        self->setCacheMode(
+            lua::get<QGraphicsItem::CacheMode>(state, 2),
+            lua::get<const QSize&>(state, 3)
+        );
+        break;
+    }
     return 0;
 }
+
 int QGraphicsItem_setFlag(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // void     setFlag(GraphicsItemFlag flag, bool enabled = true)
-    std::cerr << "QGraphicsItem_setFlag\n";
+    switch (lua_gettop(state)) {
+    case 2:
+        self->setFlag(
+            lua::get<QGraphicsItem::GraphicsItemFlag>(state, 2)
+        );
+        break;
+    case 3:
+    default:
+        self->setFlag(
+            lua::get<QGraphicsItem::GraphicsItemFlag>(state, 2),
+            lua::get<bool>(state, 3)
+        );
+        break;
+    }
     return 0;
 }
+
 int QGraphicsItem_setFocus(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // void     setFocus(Qt::FocusReason focusReason = Qt::OtherFocusReason)
-    std::cerr << "QGraphicsItem_setFocus\n";
+    switch (lua_gettop(state)) {
+    case 1:
+        self->setFocus();
+        break;
+    case 3:
+    default:
+        self->setFocus(
+            lua::get<Qt::FocusReason>(state, 2)
+        );
+        break;
+    }
     return 0;
 }
 
@@ -219,24 +730,53 @@ int QGraphicsItem_setPos(lua_State* const state)
 
 int QGraphicsItem_setTransform(lua_State* const state)
 {
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
     // void     setTransform(const QTransform & matrix, bool combine = false)
-    std::cerr << "QGraphicsItem_setTransform\n";
+    switch (lua_gettop(state)) {
+    case 2:
+        self->setTransform(
+            lua::get<const QTransform&>(state, 2)
+        );
+        break;
+    case 3:
+    default:
+        self->setTransform(
+            lua::get<const QTransform&>(state, 2),
+            lua::get<bool>(state, 3)
+        );
+        break;
+    }
     return 0;
 }
+
 int QGraphicsItem_setTransformOriginPoint(lua_State* const state)
 {
-    // void     setTransformOriginPoint(const QPointF & origin)
-    // void     setTransformOriginPoint(qreal x, qreal y)
-    std::cerr << "QGraphicsItem_setTransformOriginPoint\n";
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    if (lua::is_type<QPointF>(state, 2)) {
+        // void setTransformOriginPoint(const QPointF & origin)
+        self->setTransformOriginPoint(
+            lua::get<const QPointF&>(state, 2)
+        );
+    } else {
+        // void setTransformOriginPoint(qreal x, qreal y)
+        self->setTransformOriginPoint(
+            lua::get<qreal>(state, 2),
+            lua::get<qreal>(state, 3)
+        );
+    }
     return 0;
 }
+
 int QGraphicsItem_toGraphicsObject(lua_State* const state)
 {
-    // QGraphicsObject *    toGraphicsObject()
-    // const QGraphicsObject *  toGraphicsObject() const
-    std::cerr << "QGraphicsItem_toGraphicsObject\n";
-    return 0;
+    auto self = lua::get<QGraphicsItem*>(state, 1);
+
+    lua::push(state, self->toGraphicsObject());
+    return 1;
 }
+
 int QGraphicsItem_update(lua_State* const state)
 {
     auto self = lua::get<QGraphicsItem*>(state, 1);

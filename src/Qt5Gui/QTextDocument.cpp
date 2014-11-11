@@ -20,17 +20,119 @@
 #include "../Qt5Core/QObject.hpp"
 #include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/Qt.hpp"
+#include "../Qt5Core/QByteArray.hpp"
+#include "../Qt5Core/QRegExp.hpp"
 
 #include <QTextDocument>
 
 int QTextDocument_toHtml(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QTextDocument*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        // QString toHtml() const
+        lua::push(state, self->toHtml());
+    } else {
+        // QString toHtml(const QByteArray & encoding) const
+        lua::push(state, self->toHtml(lua::get<const QByteArray&>(state, 2)));
+    }
+
+    return 1;
 }
 
 int QTextDocument_find(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QTextDocument*>(state, 1);
+
+    if (lua::is_type<QRegExp>(state, 2)) {
+        if (lua::is_type<QTextCursor>(state, 3)) {
+            // QTextCursor     find(const QRegExp & expr, const QTextCursor & cursor, FindFlags options = 0) const
+            switch (lua_gettop(state)) {
+            case 3:
+                lua::push(state, self->find(
+                    lua::get<const QRegExp&>(state, 2),
+                    lua::get<const QTextCursor&>(state, 3)
+                ));
+                break;
+            case 4:
+            default:
+                lua::push(state, self->find(
+                    lua::get<const QRegExp&>(state, 2),
+                    lua::get<const QTextCursor&>(state, 3),
+                    lua::get<QTextDocument::FindFlags>(state, 4)
+                ));
+                break;
+            }
+        } else {
+            // QTextCursor     find(const QRegExp & expr, int position = 0, FindFlags options = 0) const
+            switch (lua_gettop(state)) {
+            case 2:
+                lua::push(state, self->find(
+                    lua::get<const QRegExp&>(state, 2)
+                ));
+                break;
+            case 3:
+                lua::push(state, self->find(
+                    lua::get<const QRegExp&>(state, 2),
+                    lua::get<int>(state, 3)
+                ));
+                break;
+            case 4:
+            default:
+                lua::push(state, self->find(
+                    lua::get<const QRegExp&>(state, 2),
+                    lua::get<int>(state, 3),
+                    lua::get<QTextDocument::FindFlags>(state, 4)
+                ));
+                break;
+            }
+        }
+    } else {
+        if (lua::is_type<QTextCursor>(state, 3)) {
+            // QTextCursor     find(const QString & subString, const QTextCursor & cursor, FindFlags options = 0) const
+            switch (lua_gettop(state)) {
+            case 3:
+                lua::push(state, self->find(
+                    lua::get<QString>(state, 2),
+                    lua::get<const QTextCursor&>(state, 3)
+                ));
+                break;
+            case 4:
+            default:
+                lua::push(state, self->find(
+                    lua::get<QString>(state, 2),
+                    lua::get<const QTextCursor&>(state, 3),
+                    lua::get<QTextDocument::FindFlags>(state, 4)
+                ));
+                break;
+            }
+        } else {
+            // QTextCursor     find(const QString & subString, int position = 0, FindFlags options = 0) const
+            switch (lua_gettop(state)) {
+            case 2:
+                lua::push(state, self->find(
+                    lua::get<QString>(state, 2)
+                ));
+                break;
+            case 3:
+                lua::push(state, self->find(
+                    lua::get<QString>(state, 2),
+                    lua::get<int>(state, 3)
+                ));
+                break;
+            case 4:
+            default:
+                lua::push(state, self->find(
+                    lua::get<QString>(state, 2),
+                    lua::get<int>(state, 3),
+                    lua::get<QTextDocument::FindFlags>(state, 4)
+                ));
+                break;
+            }
+        }
+    }
+
+    return 1;
 }
 
 void lua::QTextDocument_metatable(lua_State* const state, const int pos)

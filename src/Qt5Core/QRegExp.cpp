@@ -9,27 +9,102 @@
 
 int QRegExp_cap(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QRegExp*>(state, 1);
+
+    if (lua_gettop(state) > 1) {
+        lua::push(state, self->cap(lua::get<int>(state, 2)));
+    } else {
+        lua::push(state, self->cap());
+    }
+    return 1;
 }
+
 int QRegExp_indexIn(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QRegExp*>(state, 1);
+
+    // int indexIn(const QString & str, int offset = 0, CaretMode caretMode = CaretAtZero) const
+    switch (lua_gettop(state)) {
+    case 2:
+        lua::push(state, self->indexIn(
+            lua::get<QString>(state, 2)
+        ));
+        break;
+    case 3:
+        lua::push(state, self->indexIn(
+            lua::get<QString>(state, 2),
+            lua::get<int>(state, 3)
+        ));
+        break;
+    case 4:
+    default:
+        lua::push(state, self->indexIn(
+            lua::get<QString>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<QRegExp::CaretMode>(state, 4)
+        ));
+        break;
+    }
+
+    return 1;
 }
+
 int QRegExp_lastIndexIn(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QRegExp*>(state, 1);
+
+    // int lastIndexIn(const QString & str, int offset = -1, CaretMode caretMode = CaretAtZero) const
+    switch (lua_gettop(state)) {
+    case 2:
+        lua::push(state, self->lastIndexIn(
+            lua::get<QString>(state, 2)
+        ));
+        break;
+    case 3:
+        lua::push(state, self->lastIndexIn(
+            lua::get<QString>(state, 2),
+            lua::get<int>(state, 3)
+        ));
+        break;
+    case 4:
+    default:
+        lua::push(state, self->lastIndexIn(
+            lua::get<QString>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<QRegExp::CaretMode>(state, 4)
+        ));
+        break;
+    }
+
+    return 1;
 }
+
 int QRegExp_pos(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QRegExp*>(state, 1);
+
+    if (lua_gettop(state) > 1) {
+        lua::push(state, self->pos(lua::get<int>(state, 2)));
+    } else {
+        lua::push(state, self->pos());
+    }
+    return 1;
 }
+
 int QRegExp_errorString(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QRegExp*>(state, 1);
+
+    lua::push(state, self->errorString());
+    return 1;
 }
+
 int QRegExp_capturedTexts(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QRegExp*>(state, 1);
+
+    lua::push(state, self->capturedTexts());
+    return 1;
 }
 
 namespace lua {
@@ -64,8 +139,36 @@ void QRegExp_metatable(lua_State* const state, const int pos)
 int QRegExp_new(lua_State* const state)
 {
     lua::make<QRegExp>(state);
-    // TODO Set up constructor
-
+    if (lua_gettop(state) == 0) {
+        // QRegExp()
+        lua::make<QRegExp>(state);
+    } else if (lua::is_type<QRegExp>(state, 1)) {
+        // QRegExp(const QRegExp & rx)
+        lua::make<QRegExp>(state, lua::get<const QRegExp&>(state, 1));
+    } else {
+        // QRegExp(const QString & pattern, Qt::CaseSensitivity cs = Qt::CaseSensitive, PatternSyntax syntax = RegExp)
+        switch (lua_gettop(state)) {
+        case 1:
+            lua::make<QRegExp>(state,
+                lua::get<QString>(state, 1)
+            );
+            break;
+        case 2:
+            lua::make<QRegExp>(state,
+                lua::get<QString>(state, 1),
+                lua::get<Qt::CaseSensitivity>(state, 2)
+            );
+            break;
+        case 3:
+        default:
+            lua::make<QRegExp>(state,
+                lua::get<QString>(state, 1),
+                lua::get<Qt::CaseSensitivity>(state, 2),
+                lua::get<QRegExp::PatternSyntax>(state, 3)
+            );
+            break;
+        }
+    }
     return 1;
 }
 

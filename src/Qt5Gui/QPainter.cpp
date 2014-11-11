@@ -16,6 +16,7 @@
 #include "QImage.hpp"
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QFlags.hpp"
+#include "../Qt5Core/QVector.hpp"
 #include "../Qt5Core/QLineF.hpp"
 #include "../Qt5Core/QLine.hpp"
 #include "QPicture.hpp"
@@ -40,12 +41,6 @@ void lua::QPainter_PixmapFragment_metatable(lua_State* const state, const int mt
 {
     // TODO Implement QPainter::PixmapFragment binding
 }
-
-/*
-
-QVector and QString are treated as tables and strings, respectively.
-
-*/
 
 int QPainter_boundingRect(lua_State* const state)
 {
@@ -110,13 +105,14 @@ int QPainter_drawArc(lua_State* const state)
                 lua::get<int>(state, 3),
                 lua::get<int>(state, 4)
             );
+        } else {
+            // void drawArc( const QRectF & rectangle, int startAngle, int spanAngle )
+            self->drawArc(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
+            );
         }
-        // void drawArc( const QRectF & rectangle, int startAngle, int spanAngle )
-        self->drawArc(
-            lua::get<const QRectF&>(state, 2),
-            lua::get<int>(state, 3),
-            lua::get<int>(state, 4)
-        );
         return 0;
     }
 
@@ -143,13 +139,14 @@ int QPainter_drawChord(lua_State* const state)
                 lua::get<int>(state, 3),
                 lua::get<int>(state, 4)
             );
+        } else {
+            // void drawChord( const QRectF & rectangle, int startAngle, int spanAngle )
+            self->drawChord(
+                lua::get<const QRectF&>(state, 2),
+                lua::get<int>(state, 3),
+                lua::get<int>(state, 4)
+            );
         }
-        // void drawChord( const QRectF & rectangle, int startAngle, int spanAngle )
-        self->drawChord(
-            lua::get<const QRectF&>(state, 2),
-            lua::get<int>(state, 3),
-            lua::get<int>(state, 4)
-        );
         return 0;
     }
 
@@ -522,6 +519,24 @@ int QPainter_drawLines(lua_State* const state)
             lua::get<int>(state, 3)
         );
         return 0;
+    } else {
+        if (lua::is_type<QVector<QPointF>>(state, 2)) {
+            self->drawLines(
+                lua::get<const QVector<QPointF>&>(state, 2)
+            );
+        } else if (lua::is_type<QVector<QPoint>>(state, 2)) {
+            self->drawLines(
+                lua::get<const QVector<QPoint>&>(state, 2)
+            );
+        } else if (lua::is_type<QVector<QLineF>>(state, 2)) {
+            self->drawLines(
+                lua::get<const QVector<QLineF>&>(state, 2)
+            );
+        } else if (lua::is_type<QVector<QLine>>(state, 2)) {
+            self->drawLines(
+                lua::get<const QVector<QLine>&>(state, 2)
+            );
+        }
     }
 
     return 0;

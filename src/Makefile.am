@@ -589,6 +589,8 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QGraphicsWidget.cpp \
 	Qt5Widgets/QGraphicsItemGroup.cpp \
 	Qt5Widgets/QGraphicsTransform.cpp \
+	Qt5Widgets/QStyleOption.cpp \
+	Qt5Widgets/QStyleOptionGraphicsItem.cpp \
 	Qt5Widgets/QScrollBar.cpp \
 	Qt5Widgets/QAbstractItemView.cpp \
 	Qt5Widgets/QLabel.cpp \
@@ -602,7 +604,6 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QMenuBar.cpp \
 	Qt5Widgets/QSizePolicy.cpp \
 	Qt5Widgets/QStatusBar.cpp \
-	Qt5Widgets/QStyleOption.cpp \
 	Qt5Widgets/QStyle.cpp \
 	Qt5Widgets/QTabBar.cpp \
 	Qt5Widgets/QTabWidget.cpp \
@@ -633,6 +634,8 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QGraphicsWidget.hpp \
 	Qt5Widgets/QGraphicsItemGroup.hpp \
 	Qt5Widgets/QGraphicsTransform.hpp \
+	Qt5Widgets/QStyleOption.hpp \
+	Qt5Widgets/QStyleOptionGraphicsItem.hpp \
 	Qt5Widgets/QScrollBar.hpp \
 	Qt5Widgets/QAbstractItemView.hpp \
 	Qt5Widgets/QLabel.hpp \
@@ -646,7 +649,6 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QValidator.hpp \
 	Qt5Widgets/QSizePolicy.hpp \
 	Qt5Widgets/QStatusBar.hpp \
-	Qt5Widgets/QStyleOption.hpp \
 	Qt5Widgets/QStyle.hpp \
 	Qt5Widgets/QTabBar.hpp \
 	Qt5Widgets/QTabWidget.hpp \

@@ -2,21 +2,35 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
+#include "QWidget.hpp"
+
 namespace lua {
 
 void QStyleOption_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);
-    // TODO Set up metatable methods for this class
+
+    mt["initFrom"] = &QStyleOption::initFrom;
+
+    // TODO Public Variables
+    // Qt::LayoutDirection  direction
+    // QFontMetrics     fontMetrics
+    // QPalette     palette
+    // QRect    rect
+    // QStyle::State    state
+    // QObject *    styleObject
+    // int  type
+    // int  version
 }
 
 } // namespace lua
 
 int QStyleOption_new(lua_State* const state)
 {
+    // TODO QStyleOption
+    // QStyleOption(int version = QStyleOption::Version, int type = SO_Default)
+    // QStyleOption(const QStyleOption & other)
     lua::make<QStyleOption>(state);
-    // TODO Set up constructor
-
     return 1;
 }
 
