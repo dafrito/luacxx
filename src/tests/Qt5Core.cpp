@@ -23,7 +23,6 @@
 #include "Qt5Core/Qt.hpp"
 #include "Qt5Core/QFlags.hpp"
 
-#include "load/DirectoryModuleLoader.hpp"
 #include <QDir>
 #include <QPoint>
 
@@ -209,43 +208,6 @@ BOOST_AUTO_TEST_CASE(qobject_methods)
     lua::run_string(env, "px, py = point:values()");
     BOOST_CHECK_EQUAL(env["px"].get<int>(), 4);
     BOOST_CHECK_EQUAL(env["py"].get<int>(), 6);
-}
-
-BOOST_AUTO_TEST_CASE(directory_module_loader)
-{
-    auto env = lua::create();
-
-    DirectoryModuleLoader loader;
-    loader.setRoot(QDir(TEST_DIR "testlib"));
-    loader.setPrefix("testlib/");
-
-    const char* searchersName = "searchers";
-    #if LUA_VERSION_NUM < 502
-        searchersName = "loaders";
-    #endif
-
-    std::string module;
-    lua::table::insert(env["package"][searchersName],
-        std::function<std::function<void()>(const std::string&) >(
-            [&](const std::string& arg) {
-                module = arg;
-                return [&]() {
-                    loader.load(env, module);
-                };
-            }
-        )
-    );
-
-    env["foo"] = lua::push_function<int(int, int)>(env, [](int a, int b) {
-        return a + b;
-    });
-
-    lua::run_string(env, "require 'testlib/Partial';"
-        ""
-        "bar = Partial(foo, 40);"
-    );
-
-    BOOST_CHECK_EQUAL(lua::call<int>(env["bar"], 2), 42);
 }
 
 BOOST_AUTO_TEST_CASE(test_QElapsedTimer)

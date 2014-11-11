@@ -5,12 +5,10 @@ lib_LTLIBRARIES = libluacxx.la
 libluacxx_la_CPPFLAGS = \
 	@stdcxx11_CFLAGS@ \
 	@gobject_introspection_CFLAGS@ \
-	@Qt5Core_CFLAGS@ -fPIC \
 	@lua_CFLAGS@
 
 libluacxx_la_LIBADD = \
 	@gobject_introspection_LIBS@ \
-	@Qt5Core_LIBS@ \
 	@lua_LIBS@
 
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
@@ -40,7 +38,6 @@ nobase_pkginclude_HEADERS = \
 	convert/string.hpp \
 	convert/vector.hpp \
 	convert/void.hpp \
-	load/ModuleLoader.hpp \
 	std/vector.hpp
 
 libluacxx_la_SOURCES = \
@@ -135,7 +132,6 @@ luacxx_LDADD = $(libluacxx_Qt5Core_la_LIBADD)
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Core_la_SOURCES = \
-	load/DirectoryModuleLoader.cpp \
 	Qt5Core/QPoint.cpp \
 	Qt5Core/QPointF.cpp \
 	Qt5Core/QSize.cpp \
@@ -192,7 +188,6 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QCoreApplication.cpp
 
 nobase_pkginclude_HEADERS += \
-	load/DirectoryModuleLoader.hpp \
 	Qt5Core/Qt5Core.hpp \
 	Qt5Core/QString.hpp \
 	Qt5Core/QChar.hpp \
@@ -1008,7 +1003,7 @@ endif
 
 bin_PROGRAMS = luacxx
 luacxx_CPPFLAGS += $(libluacxx_la_CPPFLAGS)
-luacxx_LDADD += libluacxx.la libluacxx-Qt5Core.la libluacxx-Qt5Gui.la
+luacxx_LDADD += libluacxx.la
 
 luacxx_SOURCES = \
 	luacxx.cpp
