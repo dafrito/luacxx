@@ -2,11 +2,11 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include <QStringList>
+#include "QList.hpp"
 
 void lua::QStringList_metatable(lua_State* const state, const int mt)
 {
-    // TODO Set up metatable methods for this class
+    lua::QList_metatable<QString>(state, mt);
 }
 
 int QStringList_new(lua_State* const state)
