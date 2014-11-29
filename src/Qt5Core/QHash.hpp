@@ -39,6 +39,6 @@ struct Metatable<QHash<K, V>>
 
 } // namespace lua
 
-extern "C" int luaopen_luacxx_QHash(lua_State* const);
+extern "C" int luaopen_Qt5Core_QHash(lua_State* const);
 
 #endif // luacxx_QHash_INCLUDED

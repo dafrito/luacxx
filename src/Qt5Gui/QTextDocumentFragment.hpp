@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTextDocumentFragment)
 
-extern "C" int luaopen_luacxx_QTextDocumentFragment(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextDocumentFragment(lua_State* const);
 
 #endif // luacxx_QTextDocumentFragment_INCLUDED

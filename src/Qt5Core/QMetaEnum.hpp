@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QMetaEnum)
 
-extern "C" int luaopen_luacxx_QMetaEnum(lua_State* const);
+extern "C" int luaopen_Qt5Core_QMetaEnum(lua_State* const);
 
 #endif // luacxx_QMetaEnum_INCLUDED

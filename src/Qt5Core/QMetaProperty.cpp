@@ -58,7 +58,7 @@ void QMetaProperty_metatable(lua_State* const state, const int pos)
 
 } // namespace lua
 
-int luaopen_luacxx_QMetaProperty(lua_State* const state)
+int luaopen_Qt5Core_QMetaProperty(lua_State* const state)
 {
     lua::thread env(state);
 

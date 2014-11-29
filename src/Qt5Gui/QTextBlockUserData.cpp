@@ -11,7 +11,7 @@ void QTextBlockUserData_metatable(lua_State* const state, const int pos)
 
 } // namespace lua
 
-int luaopen_luacxx_QTextBlockUserData(lua_State* const state)
+int luaopen_Qt5Gui_QTextBlockUserData(lua_State* const state)
 {
     lua::thread env(state);
 

@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QBitArray)
 
-extern "C" int luaopen_luacxx_QBitArray(lua_State* const);
+extern "C" int luaopen_Qt5Core_QBitArray(lua_State* const);
 
 #endif // luacxx_QBitArray_INCLUDED

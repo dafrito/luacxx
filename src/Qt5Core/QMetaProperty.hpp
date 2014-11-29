@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QMetaProperty)
 
-extern "C" int luaopen_luacxx_QMetaProperty(lua_State* const);
+extern "C" int luaopen_Qt5Core_QMetaProperty(lua_State* const);
 
 #endif // luacxx_QMetaProperty_INCLUDED

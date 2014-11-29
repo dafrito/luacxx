@@ -8,6 +8,6 @@
 LUA_METATABLE_BUILT(QMetaObject)
 LUA_METATABLE_NAMED(QMetaObject::Connection)
 
-extern "C" int luaopen_luacxx_QMetaObject(lua_State* const);
+extern "C" int luaopen_Qt5Core_QMetaObject(lua_State* const);
 
 #endif // luacxx_QMetaObject_INCLUDED

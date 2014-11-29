@@ -17,6 +17,6 @@ QString QMetaMethod_signature(const QMetaMethod& method);
 
 }
 
-extern "C" int luaopen_luacxx_QMetaMethod(lua_State* const);
+extern "C" int luaopen_Qt5Core_QMetaMethod(lua_State* const);
 
 #endif // luacxx_QMetaMethod_INCLUDED

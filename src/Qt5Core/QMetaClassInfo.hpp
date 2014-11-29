@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QMetaClassInfo)
 
-extern "C" int luaopen_luacxx_QMetaClassInfo(lua_State* const);
+extern "C" int luaopen_Qt5Core_QMetaClassInfo(lua_State* const);
 
 #endif // luacxx_QMetaClassInfo_INCLUDED

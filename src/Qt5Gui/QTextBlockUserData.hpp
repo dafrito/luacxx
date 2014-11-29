@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QTextBlockUserData)
 
-extern "C" int luaopen_luacxx_QTextBlockUserData(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QTextBlockUserData(lua_State* const);
 
 #endif // luacxx_QTextBlockUserData_INCLUDED

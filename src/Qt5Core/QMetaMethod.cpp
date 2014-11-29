@@ -116,7 +116,7 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
     });
 }
 
-int luaopen_luacxx_QMetaMethod(lua_State* const state)
+int luaopen_Qt5Core_QMetaMethod(lua_State* const state)
 {
     lua::thread env(state);
 
