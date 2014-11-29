@@ -247,6 +247,7 @@ BOOST_AUTO_TEST_CASE(test_QString)
 BOOST_AUTO_TEST_CASE(test_QFlags)
 {
     auto env = lua::create();
+    env["package"]["cpath"] = ".libs/libluacxx-?.so";
 
     lua::run_string(env, "require 'Qt5Core.Qt'");
     lua::run_string(env, "foo = Qt.Alignment()");

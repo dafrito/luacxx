@@ -52,9 +52,9 @@ BOOST_GLOBAL_FIXTURE(QApplicationFixture);
 BOOST_AUTO_TEST_CASE(Qt5Widgets_QGraphicsScene)
 {
     auto env = lua::create();
+    env["package"]["cpath"] = ".libs/libluacxx-?.so";
 
     BOOST_REQUIRE(qApp != nullptr);
-    env["package"]["cpath"] = ".libs/libluacxx-?.so";
 
     lua::run_string(env, "require 'Qt5Widgets.QGraphicsScene'");
     lua::run_string(env, "require 'Qt5Widgets.QGraphicsObject'");

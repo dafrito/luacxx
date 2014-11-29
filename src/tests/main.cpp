@@ -864,8 +864,8 @@ BOOST_AUTO_TEST_CASE(algorithm_call_with_int)
 BOOST_AUTO_TEST_CASE(gobject_introspection)
 {
     auto env = lua::create();
+    env["package"]["cpath"] = ".libs/libluacxx-?.so";
 
-    env["package"]["cpath"] = ".libs/lib?.so";
     lua::run_string(env, "require 'luacxx.search.GIRepository'");
     lua::run_string(env, "require 'Gtk'");
     lua::run_string(env, "app = gtk_application_new()");

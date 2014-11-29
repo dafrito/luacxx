@@ -52,6 +52,7 @@ BOOST_GLOBAL_FIXTURE(QGuiApplicationFixture);
 BOOST_AUTO_TEST_CASE(QObject_destruction)
 {
     auto env = lua::create();
+    env["package"]["cpath"] = ".libs/libluacxx-?.so";
 
     lua::run_string(env, ""
     "require 'Qt5Gui.QWindow';"
