@@ -1,11 +1,17 @@
 #ifndef luacxx_QAbstractItemModel_INCLUDED
 #define luacxx_QAbstractItemModel_INCLUDED
 
-#include "Qt5Core.hpp"
+#include "../stack.hpp"
+#include "../enum.hpp"
 
-class QAbstractItemModel;
+#include <QAbstractItemModel>
 
-LUA_METATABLE_BUILT(QAbstractItemModel)
+#include "QObject.hpp"
+
+// http://qt-project.org/doc/qt-5/qabstractitemmodel.html
+
+LUA_METATABLE_INHERIT(QAbstractItemModel, QObject)
+LUA_METATABLE_ENUM(QAbstractItemModel::LayoutChangeHint)
 
 extern "C" int luaopen_Qt5Core_QAbstractItemModel(lua_State* const);
 
