@@ -3,7 +3,7 @@
 
 #include "Qt5Core.hpp"
 
-class QSizeF;
+#include <QSizeF>
 
 LUA_METATABLE_BUILT(QSizeF)
 
