@@ -602,6 +602,15 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QGraphicsWidget.cpp \
 	Qt5Widgets/QGraphicsItemGroup.cpp \
 	Qt5Widgets/QGraphicsTransform.cpp \
+	Qt5Widgets/QAbstractGraphicsShapeItem.cpp \
+	Qt5Widgets/QGraphicsEllipseItem.cpp \
+	Qt5Widgets/QGraphicsLineItem.cpp \
+	Qt5Widgets/QGraphicsPathItem.cpp \
+	Qt5Widgets/QGraphicsRectItem.cpp \
+	Qt5Widgets/QGraphicsPixmapItem.cpp \
+	Qt5Widgets/QGraphicsPolygonItem.cpp \
+	Qt5Widgets/QGraphicsTextItem.cpp \
+	Qt5Widgets/QGraphicsSimpleTextItem.cpp \
 	Qt5Widgets/QStyleOption.cpp \
 	Qt5Widgets/QStyleOptionGraphicsItem.cpp \
 	Qt5Widgets/QStyleOptionViewItem.cpp \
@@ -653,6 +662,15 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QGraphicsWidget.hpp \
 	Qt5Widgets/QGraphicsItemGroup.hpp \
 	Qt5Widgets/QGraphicsTransform.hpp \
+	Qt5Widgets/QAbstractGraphicsShapeItem.hpp \
+	Qt5Widgets/QGraphicsEllipseItem.hpp \
+	Qt5Widgets/QGraphicsLineItem.hpp \
+	Qt5Widgets/QGraphicsPathItem.hpp \
+	Qt5Widgets/QGraphicsRectItem.hpp \
+	Qt5Widgets/QGraphicsPixmapItem.hpp \
+	Qt5Widgets/QGraphicsPolygonItem.hpp \
+	Qt5Widgets/QGraphicsTextItem.hpp \
+	Qt5Widgets/QGraphicsSimpleTextItem.hpp \
 	Qt5Widgets/QStyleOption.hpp \
 	Qt5Widgets/QStyleOptionGraphicsItem.hpp \
 	Qt5Widgets/QStyleOptionViewItem.hpp \
