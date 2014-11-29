@@ -199,31 +199,111 @@ void lua::store_qvariant(QVariant& destination, lua_State* const state, const in
 
 int QVariant_toDouble(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toDouble(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toDouble(lua::get<bool*>(state, 2)));
+    return 1;
 }
+
 int QVariant_toFloat(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toFloat(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toFloat(lua::get<bool*>(state, 2)));
+    return 1;
 }
+
 int QVariant_toInt(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toInt(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toInt(lua::get<bool*>(state, 2)));
+    return 1;
 }
+
 int QVariant_toLongLong(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toLongLong(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toLongLong(lua::get<bool*>(state, 2)));
+
+    return 1;
 }
+
 int QVariant_toReal(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toReal(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toReal(lua::get<bool*>(state, 2)));
+
+    return 1;
 }
+
 int QVariant_toUInt(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toUInt(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toUInt(lua::get<bool*>(state, 2)));
+
+    return 1;
 }
+
 int QVariant_toULongLong(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QVariant*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        bool ok;
+        lua::push(state, self->toULongLong(&ok));
+        lua::push(state, ok);
+        return 2;
+    }
+
+    lua::push(state, self->toULongLong(lua::get<bool*>(state, 2)));
+
+    return 1;
 }
 
 namespace lua {
