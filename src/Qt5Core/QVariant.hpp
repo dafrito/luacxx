@@ -9,6 +9,8 @@
 #include <functional>
 #include <unordered_map>
 
+// https://qt-project.org/doc/qt-5/qvariant.html
+
 namespace lua {
 
 void set_qvariant_push_handler(const int type, const std::function<void(lua_State* const, const QVariant&)>& handler);

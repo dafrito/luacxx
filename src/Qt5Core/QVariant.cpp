@@ -34,6 +34,8 @@
 #include "QHash.hpp"
 #include "QBitArray.hpp"
 
+// https://qt-project.org/doc/qt-5/qvariant.html
+
 std::unordered_map<int, std::function<void(lua_State* const, const QVariant&)>>& qvariant_push_handler()
 {
     static std::unordered_map<int, std::function<void(lua_State* const, const QVariant&)>> _rv;
