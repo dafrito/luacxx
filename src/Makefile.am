@@ -160,6 +160,8 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QEasingCurve.cpp \
 	Qt5Core/QRegExp.cpp \
 	Qt5Core/QModelIndex.cpp \
+	Qt5Core/QPersistentModelIndex.cpp \
+	Qt5Core/QModelIndexList.cpp \
 	Qt5Core/QThread.cpp \
 	Qt5Core/Qt_1.cpp \
 	Qt5Core/Qt_2.cpp \
@@ -169,6 +171,10 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QAbstractEventDispatcher.cpp \
 	Qt5Core/QAbstractNativeEventFilter.cpp \
 	Qt5Core/QAbstractItemModel.cpp \
+	Qt5Core/QAbstractTableModel.cpp \
+	Qt5Core/QItemSelection.cpp \
+	Qt5Core/QItemSelectionModel.cpp \
+	Qt5Core/QItemSelectionRange.cpp \
 	Qt5Core/QFileSystemWatcher.cpp \
 	Qt5Core/QUrl.cpp \
 	Qt5Core/QIODevice.cpp \
@@ -219,6 +225,8 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QMargins.hpp \
 	Qt5Core/QMarginsF.hpp \
 	Qt5Core/QModelIndex.hpp \
+	Qt5Core/QPersistentModelIndex.hpp \
+	Qt5Core/QModelIndexList.hpp \
 	Qt5Core/QUrl.hpp \
 	Qt5Core/QIODevice.hpp \
 	Qt5Core/QFileDevice.hpp \
@@ -239,6 +247,10 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QEventFilter.hpp \
 	Qt5Core/Qt.hpp \
 	Qt5Core/QAbstractItemModel.hpp \
+	Qt5Core/QAbstractTableModel.hpp \
+	Qt5Core/QItemSelection.hpp \
+	Qt5Core/QItemSelectionModel.hpp \
+	Qt5Core/QItemSelectionRange.hpp \
 	Qt5Core/QSize.hpp \
 	Qt5Core/QObservable.hpp \
 	Qt5Core/QDateTime.hpp \
@@ -409,6 +421,7 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QInputMethod.cpp \
 	Qt5Gui/QPalette.cpp \
 	Qt5Gui/QScreen.cpp \
+	Qt5Gui/QHelpEvent.cpp \
 	Qt5Gui/QImage.cpp \
 	Qt5Gui/QMovie.cpp \
 	Qt5Gui/QPicture.cpp \
@@ -475,6 +488,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QAccessible.hpp \
 	Qt5Gui/QDesktopServices.hpp \
 	Qt5Gui/QFontDatabase.hpp \
+	Qt5Gui/QHelpEvent.hpp \
 	Qt5Gui/QPaintEngine.hpp \
 	Qt5Gui/QPaintEngineState.hpp \
 	Qt5Gui/QAbstractTextDocumentLayout.hpp \
@@ -567,6 +581,8 @@ libluacxx_Qt5Widgets_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QAbstractScrollArea.cpp \
+	Qt5Widgets/QAbstractItemView.cpp \
+	Qt5Widgets/QAbstractItemDelegate.cpp \
 	Qt5Widgets/QAction.cpp \
 	Qt5Widgets/QAbstractSlider.cpp \
 	Qt5Widgets/QActionGroup.cpp \
@@ -586,8 +602,11 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QGraphicsTransform.cpp \
 	Qt5Widgets/QStyleOption.cpp \
 	Qt5Widgets/QStyleOptionGraphicsItem.cpp \
+	Qt5Widgets/QStyleOptionViewItem.cpp \
+	Qt5Widgets/QItemEditorFactory.cpp \
+	Qt5Widgets/QItemEditorCreatorBase.cpp \
 	Qt5Widgets/QScrollBar.cpp \
-	Qt5Widgets/QAbstractItemView.cpp \
+	Qt5Widgets/QItemDelegate.cpp \
 	Qt5Widgets/QLabel.cpp \
 	Qt5Widgets/QLayout.cpp \
 	Qt5Widgets/QLayoutItem.cpp \
@@ -612,12 +631,15 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/Qt5Widgets.hpp \
 	Qt5Widgets/QAbstractSlider.hpp \
 	Qt5Widgets/QAbstractScrollArea.hpp \
+	Qt5Widgets/QAbstractItemView.hpp \
+	Qt5Widgets/QAbstractItemDelegate.hpp \
 	Qt5Widgets/QAction.hpp \
 	Qt5Widgets/QActionGroup.hpp \
 	Qt5Widgets/QApplication.hpp \
 	Qt5Widgets/QCompleter.hpp \
 	Qt5Widgets/QDockWidget.hpp \
 	Qt5Widgets/QFrame.hpp \
+	Qt5Widgets/QItemDelegate.hpp \
 	Qt5Widgets/QGraphicsEffect.hpp \
 	Qt5Widgets/QGraphicsItem.hpp \
 	Qt5Widgets/QGraphicsLayout.hpp \
@@ -631,8 +653,10 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QGraphicsTransform.hpp \
 	Qt5Widgets/QStyleOption.hpp \
 	Qt5Widgets/QStyleOptionGraphicsItem.hpp \
+	Qt5Widgets/QStyleOptionViewItem.hpp \
+	Qt5Widgets/QItemEditorFactory.hpp \
+	Qt5Widgets/QItemEditorCreatorBase.hpp \
 	Qt5Widgets/QScrollBar.hpp \
-	Qt5Widgets/QAbstractItemView.hpp \
 	Qt5Widgets/QLabel.hpp \
 	Qt5Widgets/QLayout.hpp \
 	Qt5Widgets/QLayoutItem.hpp \
