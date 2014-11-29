@@ -571,6 +571,7 @@ lib_LTLIBRARIES += libluacxx-Qt5Widgets.la
 
 libluacxx_Qt5Widgets_la_CPPFLAGS = \
 	$(libluacxx_Qt5Gui_la_CPPFLAGS) \
+	-DQT_WIDGETS_LIB \
 	@Qt5Widgets_CFLAGS@
 
 libluacxx_Qt5Widgets_la_LIBADD = \
