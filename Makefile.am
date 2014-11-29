@@ -2,6 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 
 luacxx_libraries = \
+	luacxx \
 	ncurses \
 	Qt5Core \
 	Qt5Network \
@@ -40,12 +41,12 @@ install-exec-hook:
 		fi; \
 	done;
 
-TESTPROG=luacxx
+TESTPROG=Qt5Gui
 
 checkdebug: $(TESTS)
 	cd src && gdb ./.libs/lt-test_$(TESTPROG)
 
-VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes
+VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes --show-leak-kinds=all
 
 checkvalgrind:
 	$(VALGRIND) ./src/.libs/lt-test_$(TESTPROG)
