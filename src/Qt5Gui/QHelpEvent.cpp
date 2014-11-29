@@ -9,7 +9,7 @@ namespace lua {
 
 void QHelpEvent_metatable(lua_State* const state, const int pos)
 {
-    lua::QEvent_metatable(state, pos, nullptr);
+    lua::QEvent_metatable(state, pos);
 
     lua::index mt(state, pos);
     mt["globalPos"] = &QHelpEvent::globalPos;

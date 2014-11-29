@@ -113,14 +113,11 @@ moc_Qt5Core.cpp: tests/Qt5Core.hpp
 
 lib_LTLIBRARIES += libluacxx-Qt5Core.la
 
-# Include Qt5Gui for QEvent support
 libluacxx_Qt5Core_la_CPPFLAGS = \
 	$(libluacxx_la_CPPFLAGS) \
-	@Qt5Gui_CFLAGS@
 
 libluacxx_Qt5Core_la_LIBADD = \
 	@Qt5Core_LIBS@ \
-	@Qt5Gui_LIBS@ \
 	libluacxx.la
 
 # It's necessary to include these since Qt likes to have global static objects
@@ -413,6 +410,8 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QTextTableCellFormat.cpp \
 	Qt5Gui/QTextTableFormat.cpp \
 	Qt5Gui/QMatrix.cpp \
+	Qt5Gui/QResizeEvent.cpp \
+	Qt5Gui/QExposeEvent.cpp \
 	Qt5Gui/QCursor.cpp \
 	Qt5Gui/QClipboard.cpp \
 	Qt5Gui/QDrag.cpp \
@@ -516,6 +515,8 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QTextTableCell.hpp \
 	Qt5Gui/QTextTableCellFormat.hpp \
 	Qt5Gui/QTextTableFormat.hpp \
+	Qt5Gui/QResizeEvent.hpp \
+	Qt5Gui/QExposeEvent.hpp \
 	Qt5Gui/QDrag.hpp \
 	Qt5Gui/QIconEngine.hpp \
 	Qt5Gui/QIcon.hpp \
