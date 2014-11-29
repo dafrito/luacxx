@@ -95,6 +95,20 @@ if test x$with_Qt5Gui = xyes; then
 fi;
 AM_CONDITIONAL([BUILD_Qt5Gui], [test x$with_Qt5Gui = xyes])
 
+AC_ARG_WITH([Qt5Sql],
+    [AS_HELP_STRING([--with-Qt5Sql], [build Qt5Sql module])],
+    [],
+    [with_Qt5Sql=$luacxx_with_default]
+)
+if test x$with_Qt5Sql = xyes; then
+    PKG_CHECK_MODULES(Qt5Sql, [Qt5Sql],
+        [with_Qt5Sql=yes],
+        [with_Qt5Sql=no]
+    )
+    AC_DEFINE([HAVE_Qt5Sql], [1], [Defined if Qt5Sql is available])
+fi;
+AM_CONDITIONAL([BUILD_Qt5Sql], [test x$with_Qt5Sql = xyes])
+
 AC_ARG_WITH([Qt5Widgets],
     [AS_HELP_STRING([--with-Qt5Widgets], [build Qt5Widgets module])],
     [],
@@ -249,6 +263,7 @@ AC_CONFIG_FILES([
     src/pkg-config/Qt5Core.pc.head
     src/pkg-config/Qt5Network.pc.head
     src/pkg-config/Qt5Gui.pc.head
+    src/pkg-config/Qt5Sql.pc.head
     src/pkg-config/Qt5Widgets.pc.head
     src/pkg-config/gobject-introspection.pc.head
     src/pkg-config/ncurses.pc.head
@@ -265,6 +280,7 @@ AC_OUTPUT
 AC_MSG_RESULT([
     Qt5Core                 ${with_Qt5Core}
     Qt5Network              ${with_Qt5Network}
+    Qt5Sql                  ${with_Qt5Sql}
     Qt5Gui                  ${with_Qt5Gui}
     Qt5Widgets              ${with_Qt5Widgets}
     ncurses                 ${with_ncurses}

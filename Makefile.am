@@ -5,6 +5,7 @@ luacxx_libraries = \
 	ncurses \
 	Qt5Core \
 	Qt5Network \
+	Qt5Sql \
 	Qt5Gui \
 	Qt5Widgets \
 	nanomsg \

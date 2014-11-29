@@ -1,0 +1,6 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+
+Name: luacxx-Qt5Sql
+Description: Luacxx bindings for Qt5Sql
+Version: @PACKAGE_VERSION@

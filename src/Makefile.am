@@ -709,6 +709,68 @@ pkg-config/luacxx-Qt5Widgets.pc: pkg-config/Qt5Widgets.pc.head
 
 endif
 
+if BUILD_Qt5Sql
+
+lib_LTLIBRARIES += libluacxx-Qt5Sql.la
+
+libluacxx_Qt5Sql_la_CPPFLAGS = \
+	$(libluacxx_Qt5Widgets_la_CPPFLAGS) \
+	@Qt5Sql_CFLAGS@
+
+libluacxx_Qt5Sql_la_LIBADD = \
+	@Qt5Sql_LIBS@ \
+	$(libluacxx_Qt5Widgets_la_LIBADD)
+
+libluacxx_Qt5Sql_la_LDFLAGS = -version-info 0:0:0 --build-id
+
+libluacxx_Qt5Sql_la_SOURCES = \
+	Qt5Sql/QSql.cpp \
+	Qt5Sql/QSqlDatabase.cpp \
+	Qt5Sql/QSqlDriver.cpp \
+	Qt5Sql/QSqlDriverCreator.cpp \
+	Qt5Sql/QSqlDriverCreatorBase.cpp \
+	Qt5Sql/QSqlDriverPlugin.cpp \
+	Qt5Sql/QSqlError.cpp \
+	Qt5Sql/QSqlField.cpp \
+	Qt5Sql/QSqlIndex.cpp \
+	Qt5Sql/QSqlQuery.cpp \
+	Qt5Sql/QSqlQueryModel.cpp \
+	Qt5Sql/QSqlRecord.cpp \
+	Qt5Sql/QSqlRelation.cpp \
+	Qt5Sql/QSqlRelationalDelegate.cpp \
+	Qt5Sql/QSqlRelationalTableModel.cpp \
+	Qt5Sql/QSqlResult.cpp \
+	Qt5Sql/QSqlTableModel.cpp
+
+nobase_pkginclude_HEADERS += \
+	Qt5Sql/QSql.hpp \
+	Qt5Sql/QSqlDatabase.hpp \
+	Qt5Sql/QSqlDriver.hpp \
+	Qt5Sql/QSqlDriverCreator.hpp \
+	Qt5Sql/QSqlDriverCreatorBase.hpp \
+	Qt5Sql/QSqlDriverPlugin.hpp \
+	Qt5Sql/QSqlError.hpp \
+	Qt5Sql/QSqlField.hpp \
+	Qt5Sql/QSqlIndex.hpp \
+	Qt5Sql/QSqlQuery.hpp \
+	Qt5Sql/QSqlQueryModel.hpp \
+	Qt5Sql/QSqlRecord.hpp \
+	Qt5Sql/QSqlRelation.hpp \
+	Qt5Sql/QSqlRelationalDelegate.hpp \
+	Qt5Sql/QSqlRelationalTableModel.hpp \
+	Qt5Sql/QSqlResult.hpp \
+	Qt5Sql/QSqlTableModel.hpp
+
+pkgconfig_DATA += pkg-config/luacxx-Qt5Sql.pc
+
+pkg-config/luacxx-Qt5Sql.pc: pkg-config/Qt5Sql.pc.head
+	cat $< >$@
+	echo "Requires: luacxx Qt5Sql" >>$@
+	echo "Libs: -L$(libdir) -lluacxx-Qt5Sql" >>$@
+	echo "Cflags: -I$(includedir) $(libluacxx_Qt5Sql_la_CPPFLAGS)" >>$@
+
+endif
+
 if BUILD_gobject_introspection
 
 libluacxx_la_SOURCES += \
