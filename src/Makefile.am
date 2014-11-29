@@ -577,7 +577,7 @@ libluacxx_Qt5Widgets_la_CPPFLAGS = \
 
 libluacxx_Qt5Widgets_la_LIBADD = \
 	@Qt5Widgets_LIBS@ \
-	$(libluacxx_Qt5Gui_la_LIBADD)
+	libluacxx-Qt5Gui.la
 
 libluacxx_Qt5Widgets_la_LDFLAGS = -version-info 0:0:0 --build-id
 
@@ -720,7 +720,8 @@ libluacxx_Qt5Sql_la_CPPFLAGS = \
 
 libluacxx_Qt5Sql_la_LIBADD = \
 	@Qt5Sql_LIBS@ \
-	$(libluacxx_Qt5Widgets_la_LIBADD)
+	$(libluacxx_Qt5Widgets_la_LIBADD) \
+	libluacxx-Qt5Widgets.la
 
 libluacxx_Qt5Sql_la_LDFLAGS = -version-info 0:0:0 --build-id
 
