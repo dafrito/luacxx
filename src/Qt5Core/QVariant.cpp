@@ -48,6 +48,12 @@ std::unordered_map<int, std::function<void(QVariant&, const lua::index&)>>& qvar
     return _rv;
 }
 
+std::unordered_map<const lua::userdata_type*, std::function<QVariant(const lua::index&)>>& qvariant_get_handler()
+{
+    static std::unordered_map<const lua::userdata_type*, std::function<QVariant(const lua::index&)>> _rv;
+    return _rv;
+}
+
 namespace std {
     template<>
     class hash<QVariant::Type>
@@ -58,6 +64,11 @@ namespace std {
             return static_cast<int>(value);
         }
     };
+}
+
+void lua::set_qvariant_get_handler(const lua::userdata_type& info, const std::function<QVariant(const lua::index&)>& handler)
+{
+    qvariant_get_handler()[&info] = handler;
 }
 
 void lua::set_qvariant_push_handler(const int type, const std::function<void(lua_State* const, const QVariant&)>& handler)
@@ -197,6 +208,33 @@ void lua::store_qvariant(QVariant& destination, lua_State* const state, const in
             }
         }
     }
+}
+
+QVariant lua::get_qvariant(lua_State* const state, const int pos)
+{
+    if (lua::is_type<QVariant>(state, pos)) {
+        return lua::get<const QVariant&>(state, pos);
+    }
+
+    lua::index data(state, pos);
+    auto info = lua::get_type_info(state, pos);
+
+    switch (lua_type(state, pos)) {
+    case LUA_TNUMBER:
+        return QVariant(data.get<qreal>());
+    case LUA_TSTRING:
+        return QVariant(data.get<QString>());
+    case LUA_TBOOLEAN:
+        return QVariant(data.get<bool>());
+    case LUA_TNIL:
+        return QVariant();
+    case LUA_TUSERDATA:
+        auto getter = qvariant_get_handler().find(lua::get_type_info(state, pos));
+        if (getter != qvariant_get_handler().end()) {
+            return getter->second(data);
+        }
+    }
+    throw lua::error(state, std::string("No QVariant handler exists to get type: ") + info->name());
 }
 
 int QVariant_toDouble(lua_State* const state)
