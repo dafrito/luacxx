@@ -171,13 +171,6 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
         auto obj = lua::get<QObject*>(state, 1);
         auto name = lua::get<const char*>(state, 2);
 
-        // Properties
-        QVariant propValue = obj->property(name);
-        if (propValue.isValid()) {
-            lua::push(state, propValue);
-            return 1;
-        }
-
         // Do we have a cached value?
         lua_getmetatable(state, 1);
         lua::push(state, name);
@@ -188,6 +181,13 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
         } else {
             // Nope, so clean up and move on. Keep the metatable around.
             lua_pop(state, 1);
+        }
+
+        // Properties
+        QVariant propValue = obj->property(name);
+        if (propValue.isValid()) {
+            lua::push(state, propValue);
+            return 1;
         }
 
         // Invokables
