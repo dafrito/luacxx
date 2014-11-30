@@ -23,12 +23,37 @@
 
 int QAction_setShortcuts(lua_State* const state)
 {
+    auto self = lua::get<QAction*>(state, 1);
+
+    // void     setShortcuts(const QList<QKeySequence> & shortcuts)
+    // void     setShortcuts(QKeySequence::StandardKey key)
+    if (lua::is_type<QList<QKeySequence>>(state, 2)) {
+        self->setShortcuts(
+            lua::get<const QList<QKeySequence>&>(state, 2)
+        );
+    } else {
+        self->setShortcuts(
+            lua::get<QKeySequence::StandardKey>(state, 2)
+        );
+    }
+
     return 0;
 }
 
 int QAction_showStatusText(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QAction*>(state, 1);
+
+    // bool    showStatusText(QWidget * widget = 0)
+    if (lua_gettop(state) == 1) {
+        lua::push(state, self->showStatusText());
+    } else {
+        lua::push(state, self->showStatusText(
+            lua::get<QWidget*>(state, 2)
+        ));
+    }
+
+    return 1;
 }
 
 void lua::QAction_metatable(lua_State* const state, const int pos)
