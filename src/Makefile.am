@@ -448,6 +448,36 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QFontDatabase.cpp \
 	Qt5Gui/QPaintDevice.cpp \
 	Qt5Gui/QBackingStore.cpp \
+	Qt5Gui/QCloseEvent.cpp \
+	Qt5Gui/QDragEnterEvent.cpp \
+	Qt5Gui/QDragLeaveEvent.cpp \
+	Qt5Gui/QDragMoveEvent.cpp \
+	Qt5Gui/QDropEvent.cpp \
+	Qt5Gui/QEnterEvent.cpp \
+	Qt5Gui/QFileOpenEvent.cpp \
+	Qt5Gui/QFocusEvent.cpp \
+	Qt5Gui/QHideEvent.cpp \
+	Qt5Gui/QHoverEvent.cpp \
+	Qt5Gui/QIconDragEvent.cpp \
+	Qt5Gui/QInputEvent.cpp \
+	Qt5Gui/QInputMethodEvent.cpp \
+	Qt5Gui/QInputMethodQueryEvent.cpp \
+	Qt5Gui/QKeyEvent.cpp \
+	Qt5Gui/QMouseEvent.cpp \
+	Qt5Gui/QMoveEvent.cpp \
+	Qt5Gui/QNativeGestureEvent.cpp \
+	Qt5Gui/QPaintEvent.cpp \
+	Qt5Gui/QScrollEvent.cpp \
+	Qt5Gui/QScrollPrepareEvent.cpp \
+	Qt5Gui/QShortcutEvent.cpp \
+	Qt5Gui/QShowEvent.cpp \
+	Qt5Gui/QStatusTipEvent.cpp \
+	Qt5Gui/QTabletEvent.cpp \
+	Qt5Gui/QTouchDevice.cpp \
+	Qt5Gui/QTouchEvent.cpp \
+	Qt5Gui/QWhatsThisClickedEvent.cpp \
+	Qt5Gui/QWheelEvent.cpp \
+	Qt5Gui/QWindowStateChangeEvent.cpp \
 	Qt5Gui/QTextOption.cpp
 
 nobase_pkginclude_HEADERS += \
@@ -533,6 +563,36 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QOpenGLFunctions.hpp \
 	Qt5Gui/QScreen.hpp \
 	Qt5Gui/QRegion.hpp \
+	Qt5Gui/QCloseEvent.hpp \
+	Qt5Gui/QDragEnterEvent.hpp \
+	Qt5Gui/QDragLeaveEvent.hpp \
+	Qt5Gui/QDragMoveEvent.hpp \
+	Qt5Gui/QDropEvent.hpp \
+	Qt5Gui/QEnterEvent.hpp \
+	Qt5Gui/QFileOpenEvent.hpp \
+	Qt5Gui/QFocusEvent.hpp \
+	Qt5Gui/QHideEvent.hpp \
+	Qt5Gui/QHoverEvent.hpp \
+	Qt5Gui/QIconDragEvent.hpp \
+	Qt5Gui/QInputEvent.hpp \
+	Qt5Gui/QInputMethodEvent.hpp \
+	Qt5Gui/QInputMethodQueryEvent.hpp \
+	Qt5Gui/QKeyEvent.hpp \
+	Qt5Gui/QMouseEvent.hpp \
+	Qt5Gui/QMoveEvent.hpp \
+	Qt5Gui/QNativeGestureEvent.hpp \
+	Qt5Gui/QPaintEvent.hpp \
+	Qt5Gui/QScrollEvent.hpp \
+	Qt5Gui/QScrollPrepareEvent.hpp \
+	Qt5Gui/QShortcutEvent.hpp \
+	Qt5Gui/QShowEvent.hpp \
+	Qt5Gui/QStatusTipEvent.hpp \
+	Qt5Gui/QTabletEvent.hpp \
+	Qt5Gui/QTouchDevice.hpp \
+	Qt5Gui/QTouchEvent.hpp \
+	Qt5Gui/QWhatsThisClickedEvent.hpp \
+	Qt5Gui/QWheelEvent.hpp \
+	Qt5Gui/QWindowStateChangeEvent.hpp \
 	Qt5Gui/QTextOption.hpp
 
 test_Qt5Gui_CXXFLAGS = \
@@ -636,6 +696,7 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QPushButton.cpp \
 	Qt5Widgets/QTextEdit.cpp \
 	Qt5Widgets/QApplication.cpp \
+	Qt5Widgets/QActionEvent.cpp \
 	Qt5Widgets/QWidget.cpp
 
 nobase_pkginclude_HEADERS += \
@@ -694,6 +755,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Widgets/QTextEdit.hpp \
 	Qt5Widgets/QAbstractButton.hpp \
 	Qt5Widgets/QPushButton.hpp \
+	Qt5Widgets/QActionEvent.hpp \
 	Qt5Widgets/QWidget.hpp
 
 test_Qt5Widgets_CXXFLAGS = \

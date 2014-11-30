@@ -63,6 +63,7 @@ LUA_METATABLE_ENUM(Qt::Modifier);
 LUA_METATABLE_ENUM(Qt::MouseButton);
 LUA_METATABLE_ENUM(Qt::MouseEventFlag);
 LUA_METATABLE_ENUM(Qt::MouseEventSource);
+LUA_METATABLE_ENUM(Qt::NativeGestureType);
 LUA_METATABLE_ENUM(Qt::NavigationMode);
 LUA_METATABLE_ENUM(Qt::Orientation);
 LUA_METATABLE_ENUM(Qt::PenCapStyle);

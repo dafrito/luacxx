@@ -33,6 +33,18 @@ int QHelpEvent_new(lua_State* const state)
     return 1;
 }
 
+QHelpEvent* QHelpEvent_cast(QEvent* event)
+{
+    switch (event->type()) {
+    case QEvent::GraphicsSceneHelp:
+    case QEvent::ToolTip:
+    case QEvent::WhatsThis:
+        return static_cast<QHelpEvent*>(event);
+    default:
+        return nullptr;
+    }
+}
+
 int luaopen_luacxx_QHelpEvent(lua_State* const state)
 {
     lua::thread env(state);
@@ -40,6 +52,8 @@ int luaopen_luacxx_QHelpEvent(lua_State* const state)
     env["QHelpEvent"] = lua::value::table;
     env["QHelpEvent"]["new"] = QHelpEvent_new;
     auto t = env["QHelpEvent"];
+
+    t["cast"] = QHelpEvent_cast;
 
     return 0;
 }
