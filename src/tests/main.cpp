@@ -667,6 +667,9 @@ struct Metatable<Named>
     static const userdata_type& info()
     {
         static userdata_type _info("Named");
+        if (!_info.has_casts()) {
+            _info.add_cast<Named>();
+        }
         return _info;
     }
 
@@ -682,6 +685,9 @@ struct Metatable<Value>
     static const userdata_type& info()
     {
         static userdata_type _info("Value");
+        if (!_info.has_casts()) {
+            _info.add_cast<Value>();
+        }
         return _info;
     }
 
@@ -697,8 +703,10 @@ struct Metatable<Child>
     static const userdata_type& info()
     {
         static userdata_type _info("Child");
-        _info.add_cast<Named, Child>();
-        _info.add_cast<Value, Child>();
+        if (!_info.has_casts()) {
+            _info.add_cast<Named, Child>();
+            _info.add_cast<Value, Child>();
+        }
         return _info;
     }
 
@@ -716,6 +724,9 @@ struct Metatable<Numbered>
     static const userdata_type& info()
     {
         static userdata_type _info("Numbered");
+        if (!_info.has_casts()) {
+            _info.add_cast<Numbered>();
+        }
         return _info;
     }
 
@@ -731,8 +742,11 @@ struct Metatable<Grandchild>
     static const userdata_type& info()
     {
         static userdata_type _info("Grandchild");
-        _info.add_cast<Numbered, Grandchild>();
-        _info.add_cast<Child, Grandchild>();
+        if (!_info.has_casts()) {
+            _info.add_cast<Grandchild>();
+            _info.add_cast<Numbered, Grandchild>();
+            _info.add_cast<Child, Grandchild>();
+        }
         return _info;
     }
 

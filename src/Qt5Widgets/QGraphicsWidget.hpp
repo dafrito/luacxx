@@ -20,6 +20,7 @@ struct Metatable<QGraphicsWidget>
         static userdata_type _info;
         if (!_info.has_name()) {
             _info.set_name("QGraphicsWidget");
+            _info.add_cast<QGraphicsWidget>();
             _info.add_cast<QGraphicsObject, QGraphicsWidget>();
             _info.add_cast<QGraphicsLayoutItem, QGraphicsWidget>();
         }

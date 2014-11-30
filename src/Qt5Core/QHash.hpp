@@ -26,6 +26,8 @@ struct Metatable<QHash<K, V>>
             str += Metatable<V>::info().name();
             str += ">";
             _info.set_name(str);
+
+            _info.add_cast<QHash<K, V>>();
         }
         return _info;
     }

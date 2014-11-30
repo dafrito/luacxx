@@ -26,6 +26,8 @@ struct Metatable<QMultiMap<K, V>>
             str += Metatable<V>::info().name();
             str += ">";
             _info.set_name(str);
+
+            _info.add_cast<QMultiMap<K, V>>();
         }
         return _info;
     }

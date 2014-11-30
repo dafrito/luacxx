@@ -582,6 +582,8 @@ struct Metatable<std::function<RV(Args...)>>
             AppendTypenames<Args..., ArgStop>::appendTypenames(str);
             str << ")>";
             _info.set_name(str.str());
+
+            _info.add_cast<std::function<RV(Args...)>>();
         }
         return _info;
     }
@@ -605,6 +607,8 @@ struct Metatable<RV(Args...)>
             AppendTypenames<Args..., ArgStop>::appendTypenames(str);
             str << ")";
             _info.set_name(str.str());
+
+            _info.add_cast<RV(Args...)>();
         }
         return _info;
     }

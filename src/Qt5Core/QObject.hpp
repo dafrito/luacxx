@@ -13,6 +13,9 @@ struct lua::Metatable<name> \
     static const lua::userdata_type& info() \
     { \
         static lua::userdata_type _info("name"); \
+        if (!_info.has_casts()) { \
+            _info.add_cast<name>(); \
+        } \
         return _info; \
     } \
 \

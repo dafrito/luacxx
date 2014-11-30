@@ -15,8 +15,11 @@ struct Metatable<QPdfWriter>
     static const userdata_type& info()
     {
         static userdata_type _info("QPdfWriter");
-        _info.add_cast<QPagedPaintDevice, QPdfWriter>();
-        _info.add_cast<QObject, QPdfWriter>();
+        if (!_info.has_casts()) {
+            _info.add_cast<QPdfWriter>();
+            _info.add_cast<QPagedPaintDevice, QPdfWriter>();
+            _info.add_cast<QObject, QPdfWriter>();
+        }
         return _info;
     }
 

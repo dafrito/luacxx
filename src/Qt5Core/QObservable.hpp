@@ -58,6 +58,8 @@ struct Metatable<QObservable<T>>
             str += Metatable<T>::info().name();
             str += ">";
             _info.set_name(str);
+
+            _info.add_cast<QObservable<T>>();
         }
         return _info;
     }

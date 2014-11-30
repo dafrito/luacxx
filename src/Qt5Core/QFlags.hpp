@@ -76,6 +76,8 @@ struct Metatable<QFlags<T>>
             str += Metatable<T>::info().name();
             str += ">";
             _info.set_name(str);
+
+            _info.add_cast<QFlags<T>>();
         }
         return _info;
     }

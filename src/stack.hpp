@@ -550,7 +550,7 @@ public:
         _name = name;
     }
 
-    template <class Base, class Derived>
+    template <class Base, class Derived = Base>
     void add_cast();
 
     template <class Expected>
@@ -859,6 +859,9 @@ for their type:
         static const userdata_type& info()
         {
             static userdata_type _info("Point");
+            if (!_info.has_casts()) {
+                _info.add_cast<Point>();
+            }
             return _info;
         }
 
@@ -903,6 +906,9 @@ struct Metatable
     static const userdata_type& info()
     {
         static userdata_type _info("anonymous userdata");
+        if (!_info.has_casts()) {
+            _info.add_cast<T>();
+        }
         return _info;
     }
 
@@ -923,6 +929,9 @@ struct Metatable<void>
     static const userdata_type& info()
     {
         static userdata_type _info("void");
+        if (!_info.has_casts()) {
+            _info.add_cast<void>();
+        }
         return _info;
     }
 
@@ -940,6 +949,9 @@ struct Metatable<lua::error>
     static const userdata_type& info()
     {
         static userdata_type _info("lua::error");
+        if (!_info.has_casts()) {
+            _info.add_cast<lua::error>();
+        }
         return _info;
     }
 
@@ -1640,6 +1652,9 @@ struct lua::Metatable<name> \
     static const lua::userdata_type& info() \
     { \
         static lua::userdata_type _info(#name); \
+        if (!_info.has_casts()) { \
+            _info.add_cast<name>(); \
+        } \
         return _info; \
     } \
 \
@@ -1660,6 +1675,9 @@ struct Metatable<name> \
     static const userdata_type& info() \
     { \
         static userdata_type _info(#name); \
+        if (!_info.has_casts()) { \
+            _info.add_cast<name>(); \
+        } \
         return _info; \
     } \
 \
@@ -1681,6 +1699,9 @@ struct Metatable<name> \
     static const userdata_type& info() \
     { \
         static userdata_type _info(#name); \
+        if (!_info.has_casts()) { \
+            _info.add_cast<name>(); \
+        } \
         return _info; \
     } \
 \
@@ -1704,7 +1725,10 @@ struct Metatable<name> \
     static const userdata_type& info() \
     { \
         static userdata_type _info(#name); \
-        _info.add_cast<parent, name>(); \
+        if (!_info.has_casts()) { \
+            _info.add_cast<name>(); \
+            _info.add_cast<parent, name>(); \
+        } \
         return _info; \
     } \
 \

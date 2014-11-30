@@ -19,6 +19,7 @@ struct Metatable<QGraphicsObject>
         static userdata_type _info;
         if (!_info.has_name()) {
             _info.set_name("QGraphicsObject");
+            _info.add_cast<QGraphicsObject>();
             _info.add_cast<QGraphicsItem, QGraphicsObject>();
             _info.add_cast<QObject, QGraphicsObject>();
         }

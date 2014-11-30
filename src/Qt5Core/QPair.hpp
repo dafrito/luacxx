@@ -41,6 +41,8 @@ struct Metatable<QPair<K, V>>
             str += Metatable<V>::info().name();
             str += ">";
             _info.set_name(str);
+
+            _info.add_cast<QPair<K, V>>();
         }
         return _info;
     }

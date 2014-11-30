@@ -182,6 +182,8 @@ struct Metatable<QVector<T>>
             str += Metatable<T>::info().name();
             str += ">";
             _info.set_name(str);
+
+            _info.add_cast<QVector<T>>();
         }
         return _info;
     }
