@@ -75,17 +75,31 @@ bindings.
 For C++ objects, a binding can easily be created manually by creating a
 lua::Metatable<> specialization, as shown:
 
+    namespace lua {
+
+    void QPainter_metatable(lua_State* const state, const int pos);
+
     template <>
     struct Metatable<QPainter>
     {
+        static const userdata_type& info()
+        {
+            static userdata_type _info("QPainter");
+            if (!_info.has_casts()) {
+                _info.add_cast<QPainter>();
+            }
+            return _info;
+        }
         static constexpr const char* name = "QPainter";
 
-        static bool metatable(const lua::index& mt, QPainter* const)
+        static bool metatable(lua_State* const state, const int pos, QPainter* const)
         {
-            lua::QPainter_metatable(mt);
+            lua::QPainter_metatable(state, pos);
             return true;
         }
     };
+
+    }
 
 The metatable will be used to expose behavior to Lua. By default, Lua-cxx's
 metatable will be used as its own index, so methods can be assigned directly
