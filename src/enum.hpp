@@ -17,7 +17,7 @@ int enum_eq(lua_State* const state)
     auto& self = lua::Get<T&>::get(state, 1);
     auto& other = lua::Get<T&>::get(state, 2);
 
-    if (lua::get_userdata_block(state, 1)->info() != lua::get_userdata_block(state, 2)->info()) {
+    if (lua::get_userdata_block(state, 1)->type() != lua::get_userdata_block(state, 2)->type()) {
         lua_pushboolean(state, false);
         return 1;
     }

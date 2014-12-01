@@ -29,7 +29,7 @@ int addLogger(lua_State* const state, const lua::logger& logFunction)
     }
     // Check if the list of loggers has been destroyed. This should only
     // happen during its __gc, but it's still a dangerous moment.
-    if (lua::get_userdata_block(state, -1)->destroyed()) {
+    if (!lua::get_userdata_block(state, -1)->has_value()) {
         return -1;
     }
 
@@ -49,7 +49,7 @@ void removeLogger(lua_State* const state, const int loggingPos)
     }
     // Check if the list of loggers has been destroyed. This should only
     // happen during its __gc, but it's still a dangerous moment.
-    if (lua::get_userdata_block(state, -1)->destroyed()) {
+    if (!lua::get_userdata_block(state, -1)->has_value()) {
         return;
     }
 
@@ -66,7 +66,7 @@ void dispatchLog(lua_State* const state, const LogMessageType messageType, const
     }
     // Check if the list of loggers has been destroyed. This should only
     // happen during its __gc, but it's still a dangerous moment.
-    if (lua::get_userdata_block(state, -1)->destroyed()) {
+    if (!lua::get_userdata_block(state, -1)->has_value()) {
         goto end;
     }
     for (auto& logFunction : lua::get<std::vector<lua::logger>&>(state, -1)) {

@@ -6,6 +6,10 @@
 #include "convert/string.hpp"
 #include "convert/callable.hpp"
 
+lua::userdata_type::~userdata_type()
+{
+}
+
 static bool debugging_allowed = false;
 
 void lua::allow_debugging(bool allowed)
@@ -142,18 +146,13 @@ lua::userdata_block* lua::get_userdata_block(lua_State* const state, const int p
     );
 }
 
-void* lua::get_userdata_value(lua_State* const state, const int pos)
-{
-    return static_cast<void*>(lua_touserdata(state, pos));
-}
-
 // Allow noop invocations from variadic templates
 lua::index lua::push(lua_State* const state)
 {
     return lua::index(state, -1);
 }
 
-char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_storage& storage)
+lua::userdata_block* lua::malloc(lua_State* const state, size_t size)
 {
     if (lua::is_debugging(state)) {
         std::stringstream str;
@@ -166,21 +165,30 @@ char* lua::malloc(lua_State* const state, size_t size, const lua::userdata_stora
         lua::logEntercm(state, "Lua memory allocations", str.str());
     }
 
-    // Get and push a chunk of memory from Lua to hold our metadata, as well as
-    // the underlying value.
-    char* block = static_cast<char*>(lua_newuserdata(state,
-        size + sizeof(lua::userdata_block)
-    ));
+    lua::userdata_block* userdata_block;
+    if (size > 0) {
+        // Get and push a chunk of memory from Lua to hold our metadata, as well as
+        // the underlying value.
+        char* raw_userdata = static_cast<char*>(lua_newuserdata(state,
+            size + sizeof(lua::userdata_block)
+        ));
 
-    // Create the metadata at the end of the memory block; lua_touserdata will return a
-    // valid pointer.
-    new (block + size) lua::userdata_block(storage);
+        // Create the metadata at the end of the memory block; lua_touserdata will return a
+        // valid pointer.
+        userdata_block = new (raw_userdata + size) lua::userdata_block(raw_userdata);
+    } else {
+        char* raw_userdata = static_cast<char*>(lua_newuserdata(state,
+            sizeof(lua::userdata_block)
+        ));
+
+        userdata_block = new (raw_userdata) lua::userdata_block;
+    }
 
     // Return a pointer to the data block
     if (lua::is_debugging(state)) {
         lua::logLeave(state);
     }
-    return block;
+    return userdata_block;
 }
 
 int lua::__tostring(lua_State* const state)
@@ -198,48 +206,6 @@ int lua::__tostring(lua_State* const state)
 
     lua_pushstring(state, str.str().c_str());
     return 1;
-}
-
-int lua::__gc(lua_State* const state)
-{
-    if (!lua_getmetatable(state, 1)) {
-        throw lua::error(state, "luacxx::__gc: No metatable available for __gc.");
-    }
-    lua::index mt(state, -1);
-
-    try {
-        lua::assert_type("luaxx::__gc", lua::type::table, mt);
-
-        if (lua::is_debugging(state)) {
-            std::stringstream str;
-            str << "Destroying ";
-
-            auto class_name = lua::class_name(state, 1);
-            if (!class_name.empty()) {
-                str << class_name;
-            } else {
-                str << "anonymous userdata";
-            }
-
-            str << " of size " << lua::object_size(state, 1);
-            lua::logEntercm(state, "Lua memory allocations", str.str());
-        }
-
-        auto destroy_userdata = lua::table::get(mt, "destroy_userdata");
-        if (destroy_userdata.type().function()) {
-            lua::call(destroy_userdata, lua::index(state, 1));
-        }
-
-    } catch (lua::error& ex) {
-        lua::log(state, "Lua errors",
-            std::string("Error occurred during Lua garbage collection: ") + ex.what()
-        );
-    }
-
-    if (lua::is_debugging(state)) {
-        lua::logLeave(state);
-    }
-    return 0;
 }
 
 void lua::lua_error_metatable(lua_State* const state, const int pos)

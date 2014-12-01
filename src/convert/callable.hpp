@@ -182,7 +182,8 @@ struct Store<lua::callable>
             return;
         }
         lua_getupvalue(state, source, 1);
-        lua::store_userdata<lua::userdata_storage::value>(destination, state, -1);
+        auto block = lua::get_userdata_block(state, -1);
+        destination = *block->cast<lua::callable>(state);
         lua_pop(state, 1);
     }
 };
@@ -274,9 +275,7 @@ namespace lua {
 template <typename RV, typename... Args>
 int invoke_callable(lua_State* const state)
 {
-    auto wrapped = static_cast<std::function<RV(Args...)>*>(
-        lua::get_userdata_value(state, lua_upvalueindex(1))
-    );
+    auto wrapped = lua::get_userdata_block(state, lua_upvalueindex(1))->cast<std::function<RV(Args...)>>(state);
 
     if (lua::size(state) < sizeof...(Args)) {
         std::stringstream msg;

@@ -56,7 +56,7 @@ struct is_type
             _result = false;
             return;
         }
-        _result = info->is_type<Required>();
+        _result = info->has_cast<Required>();
     }
 
     is_type(lua_State* const state, const int pos) :

@@ -13,7 +13,6 @@
 #include "convert/char.hpp"
 #include "convert/callable.hpp"
 #include "convert/numeric.hpp"
-#include "convert/shared_ptr.hpp"
 
 #include "Qt5Core/QString.hpp"
 #include "Qt5Core/QChar.hpp"
@@ -135,7 +134,7 @@ BOOST_AUTO_TEST_CASE(qobject_properties)
 {
     auto env = lua::create();
 
-    auto point = std::make_shared<QtPoint>(2, 2);
+    auto point = new QtPoint(2, 2);
     env["point"] = point;
 
     // Can QObject properties be accessed from lua?
@@ -162,6 +161,8 @@ BOOST_AUTO_TEST_CASE(qobject_properties)
     lua::call(env["work"], point, 3);
     BOOST_CHECK_EQUAL(point->getX(), 5);
     BOOST_CHECK_EQUAL(point->getY(), 5);
+
+    delete point;
 }
 
 BOOST_AUTO_TEST_CASE(qobject_signals)
@@ -231,8 +232,6 @@ BOOST_AUTO_TEST_CASE(test_QList)
 
     auto num = lua::run_string<int>(env, "return nums:at(1)");
     BOOST_CHECK_EQUAL(2, num);
-    auto class_name = lua::run_string<std::string>(env, "return nums.__class");
-    BOOST_CHECK_EQUAL(std::string("QList<int>"), class_name);
 }
 
 BOOST_AUTO_TEST_CASE(test_QString)
