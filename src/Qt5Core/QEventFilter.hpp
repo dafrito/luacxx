@@ -56,6 +56,13 @@ Creates a new filter with the given delegate, if one is given.
 */
 
 QEventFilter(lua_State* const state) :
+    QObject(),
+    _target(state)
+{
+}
+
+QEventFilter(lua_State* const state, QObject* const parent) :
+    QObject(parent),
     _target(state)
 {
 }

@@ -36,7 +36,11 @@ void lua::QEventFilter_metatable(lua_State* const state, const int pos)
 
 int QEventFilter_new(lua_State* const state)
 {
-    lua::push(state, new QEventFilter(state));
+    if (lua_gettop(state) == 0) {
+        lua::push(state, new QEventFilter(state));
+    } else {
+        lua::push(state, new QEventFilter(state, lua::get<QObject*>(state, 1)));
+    }
     return 1;
 }
 
