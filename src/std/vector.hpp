@@ -19,10 +19,14 @@ struct Metatable<std::vector<T>>
     static const userdata_type& info()
     {
         static userdata_type _info("std::vector<?>");
-        std::string str("std::vector<");
-        str += Metatable<T>::info().name();
-        str += ">";
-        _info.set_name(str);
+        if (!_info.has_casts()) {
+            std::string str("std::vector<");
+            str += Metatable<T>::info().name();
+            str += ">";
+            _info.set_name(str);
+
+            _info.add_cast<std::vector<T>>();
+        }
         return _info;
     }
 

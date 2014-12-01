@@ -35,6 +35,9 @@ struct Metatable<name> \
     static const userdata_type& info() \
     { \
         static userdata_type _info(#name); \
+        if (!_info.has_casts()) {\
+            _info.add_cast<name>(); \
+        } \
         return _info; \
     } \
 \
