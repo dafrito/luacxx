@@ -317,6 +317,8 @@ libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QNetworkInterface.cpp \
 	Qt5Network/QNetworkProxy.cpp \
 	Qt5Network/QNetworkRequest.cpp \
+	Qt5Network/QHttpPart.cpp \
+	Qt5Network/QHttpMultiPart.cpp \
 	Qt5Network/QSslSocket.cpp \
 	Qt5Network/QSslCertificate.cpp \
 	Qt5Network/QSslError.cpp \
@@ -338,6 +340,8 @@ nobase_pkginclude_HEADERS += \
 	Qt5Network/QNetworkRequest.hpp \
 	Qt5Network/QNetworkAddressEntry.hpp \
 	Qt5Network/QNetworkInterface.hpp \
+	Qt5Network/QHttpPart.hpp \
+	Qt5Network/QHttpMultiPart.hpp \
 	Qt5Network/QSslSocket.hpp \
 	Qt5Network/QSslCertificate.hpp \
 	Qt5Network/QSslError.hpp \
