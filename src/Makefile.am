@@ -308,7 +308,9 @@ libluacxx_Qt5Network_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QAbstractSocket.cpp \
 	Qt5Network/QLocalSocket.cpp \
+	Qt5Network/QLocalServer.cpp \
 	Qt5Network/QTcpSocket.cpp \
+	Qt5Network/QTcpServer.cpp \
 	Qt5Network/QUdpSocket.cpp \
 	Qt5Network/QHostAddress.cpp \
 	Qt5Network/QNetworkAddressEntry.cpp \
@@ -327,7 +329,9 @@ nobase_pkginclude_HEADERS += \
 	Qt5Network/Qt5Network.hpp \
 	Qt5Network/QAbstractSocket.hpp \
 	Qt5Network/QLocalSocket.hpp \
+	Qt5Network/QLocalServer.hpp \
 	Qt5Network/QTcpSocket.hpp \
+	Qt5Network/QTcpServer.hpp \
 	Qt5Network/QUdpSocket.hpp \
 	Qt5Network/QHostAddress.hpp \
 	Qt5Network/QNetworkProxy.hpp \
