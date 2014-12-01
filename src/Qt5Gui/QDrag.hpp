@@ -3,9 +3,11 @@
 
 #include "Qt5Gui.hpp"
 
-class QDrag;
+#include <QDrag>
 
-LUA_METATABLE_BUILT(QDrag);
+// http://qt-project.org/doc/qt-5/qdrag.html
+
+LUA_METATABLE_INHERIT(QDrag, QObject);
 
 extern "C" int luaopen_Qt5Gui_QDrag(lua_State* const);
 
