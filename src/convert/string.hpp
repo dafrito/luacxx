@@ -21,7 +21,12 @@ struct Store<std::string>
 {
     static void store(std::string& destination, lua_State* const state, const int source)
     {
-        destination = lua::Get<const char*>::get(state, source);
+        auto str = lua::Get<const char*>::get(state, source);
+        if (str != nullptr) {
+            destination = str;
+        } else {
+            destination.clear();
+        }
     }
 };
 
