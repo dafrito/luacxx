@@ -1235,7 +1235,6 @@ void userdata_type::add_cast()
         info = &lua::Metatable<Base>::info();
     }
 
-
     constexpr ptrdiff_t NON_NULL = 0xffff;
 
     // Get the offset from the actual class to the base class. For most
