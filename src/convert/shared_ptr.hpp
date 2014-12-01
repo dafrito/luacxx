@@ -15,12 +15,12 @@ struct Metatable<std::shared_ptr<T>>
         return Metatable<T>::info();
     }
 
-    static bool metatable(const lua::index& mt, std::shared_ptr<T>* const source)
+    static bool metatable(lua_State* const state, const int pos, std::shared_ptr<T>* const source)
     {
         if (source != nullptr) {
-            Metatable<T>::metatable(mt, source->get());
+            Metatable<T>::metatable(state, pos, source->get());
         } else {
-            Metatable<T>::metatable(mt, nullptr);
+            Metatable<T>::metatable(state, pos, nullptr);
         }
         return false;
     }
