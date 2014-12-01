@@ -549,6 +549,8 @@ public:
     template <class Expected>
     bool has_cast() const;
 
+    bool has_cast(const lua::userdata_type* const info) const;
+
     template <class Type>
     ptrdiff_t pointer_offset() const;
 
@@ -1250,10 +1252,16 @@ void userdata_type::add_cast()
     // need to be removed before use.
     offset -= static_cast<ptrdiff_t>(NON_NULL);
 
-    _casts.emplace_front(info, offset);
+    if (!has_cast(info)) {
+        _casts.emplace_front(info, offset);
+    }
 
-    for (auto& cast : info->_casts) {
-        _casts.emplace_front(cast.first, pointer_offset<Base>() + cast.second);
+    if (info != this) {
+        for (auto& cast : info->_casts) {
+            if (!has_cast(cast.first)) {
+                _casts.emplace_front(cast.first, pointer_offset<Base>() + cast.second);
+            }
+        }
     }
 }
 
@@ -1290,13 +1298,7 @@ ptrdiff_t userdata_type::pointer_offset() const
 template <class Expected>
 bool userdata_type::has_cast() const
 {
-    auto& info = lua::Metatable<Expected>::info();
-    for (auto& cast : _casts) {
-        if (&info == cast.first) {
-            return true;
-        }
-    }
-    return false;
+    return has_cast(&lua::Metatable<Expected>::info());
 }
 
 /*

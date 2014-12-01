@@ -6,10 +6,6 @@
 #include "convert/string.hpp"
 #include "convert/callable.hpp"
 
-lua::userdata_type::~userdata_type()
-{
-}
-
 static bool debugging_allowed = false;
 
 void lua::allow_debugging(bool allowed)
@@ -123,6 +119,20 @@ std::string lua::dump(lua_State* const state)
     }
 
     return str.str();
+}
+
+bool lua::userdata_type::has_cast(const lua::userdata_type* const info) const
+{
+    for (auto& cast : _casts) {
+        if (info == cast.first) {
+            return true;
+        }
+    }
+    return false;
+}
+
+lua::userdata_type::~userdata_type()
+{
 }
 
 template <>
