@@ -2,14 +2,13 @@
 #include "../convert/callable.hpp"
 #include "../thread.hpp"
 
-#include "../Qt5Core/QObject.hpp"
 #include "QSurfaceFormat.hpp"
 #include "../Qt5Core/QSize.hpp"
 
+// http://qt-project.org/doc/qt-5/qsurface.html
+
 void lua::QSurface_metatable(lua_State* const state, const int pos)
 {
-    lua::QObject_metatable(state, pos);
-
     lua::index mt(state, pos);
     mt["format"] = &QSurface::format;
     mt["size"] = &QSurface::size;
