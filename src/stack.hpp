@@ -44,7 +44,7 @@ stack.hpp - Lua stack management and userdata support
         if (lua_gettop(state) > 1) {
             initial = lua_tointeger(state, 2);
         } else if (lua_gettop(state) == 0) {
-            throw lua::error("Sum metatable must be provided");
+            throw lua::error(state, "Sum metatable must be provided");
         }
         lua::make<Sum>(state, initial);
 
