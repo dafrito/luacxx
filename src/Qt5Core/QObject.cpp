@@ -21,6 +21,7 @@
 #include "QThread.hpp"
 #include "QString.hpp"
 #include "QVariant.hpp"
+#include "Qt.hpp"
 
 #include <cassert>
 #include <functional>
@@ -73,19 +74,67 @@ int QObject_connect(lua_State* const state)
 
 int QObject_disconnect(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QObject*>(state, 1);
+
+    if (lua_gettop(state) == 1) {
+        lua::push(state, self->disconnect());
+    } else if (lua::is_type<QObject*>(state, 2)) {
+        // bool    disconnect(const QObject * receiver, const char * method = 0) const
+        if (lua_gettop(state) == 2) {
+            lua::push(state, self->disconnect(
+                lua::get<QObject*>(state, 2)
+            ));
+        } else {
+            lua::push(state, self->disconnect(
+                lua::get<QObject*>(state, 2),
+                lua::get<const char*>(state, 3)
+            ));
+        }
+    } else {
+        // bool    disconnect(const char * signal = 0, const QObject * receiver = 0, const char * method = 0) const
+        switch (lua_gettop(state)) {
+        case 2:
+            lua::push(state, self->disconnect(
+                lua::get<const char*>(state, 2)
+            ));
+            break;
+        case 3:
+            lua::push(state, self->disconnect(
+                lua::get<const char*>(state, 2),
+                lua::get<QObject*>(state, 3)
+            ));
+            break;
+        case 4:
+        default:
+            lua::push(state, self->disconnect(
+                lua::get<const char*>(state, 2),
+                lua::get<QObject*>(state, 3),
+                lua::get<const char*>(state, 4)
+            ));
+            break;
+        }
+    }
+
+    return 1;
 }
-int QObject_findChild(lua_State* const state)
-{
-    return 0;
-}
-int QObject_findChildren(lua_State* const state)
-{
-    return 0;
-}
+
 int QObject_startTimer(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QObject*>(state, 1);
+
+    // int  startTimer(int interval, Qt::TimerType timerType = Qt::CoarseTimer)
+    if (lua_gettop(state) == 2) {
+        lua::push(state, self->startTimer(
+            lua::get<int>(state, 2)
+        ));
+    } else {
+        lua::push(state, self->startTimer(
+            lua::get<int>(state, 2),
+            lua::get<Qt::TimerType>(state, 3)
+        ));
+    }
+
+    return 1;
 }
 
 void lua::QObject_metatable(lua_State* const state, const int pos)
@@ -93,17 +142,17 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
     lua::index mt(state, pos);
 
     mt["blockSignals"] = &QObject::blockSignals;
-    //mt["children"] = &QObject::children;
+    mt["children"] = &QObject::children;
     mt["disconnect"] = QObject_disconnect;
     mt["dumpObjectInfo"] = &QObject::dumpObjectInfo;
     mt["dumpObjectTree"] = &QObject::dumpObjectTree;
     mt["dynamicPropertyNames"] = &QObject::dynamicPropertyNames;
     mt["event"] = &QObject::event;
     mt["eventFilter"] = &QObject::eventFilter;
-    mt["findChild"] = QObject_findChild;
-    mt["findChildren"] = QObject_findChildren;
+    // TODO (templated method) mt["findChild"] = QObject_findChild;
+    // TODO (templated method) mt["findChildren"] = QObject_findChildren;
     mt["inherits"] = &QObject::inherits;
-    //mt["installEventFilter"] = &QObject::installEventFilter;
+    mt["installEventFilter"] = &QObject::installEventFilter;
     mt["isWidgetType"] = &QObject::isWidgetType;
     mt["isWindowType"] = &QObject::isWindowType;
     mt["killTimer"] = &QObject::killTimer;
@@ -112,60 +161,13 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
     mt["objectName"] = &QObject::objectName;
     mt["parent"] = &QObject::parent;
     mt["property"] = &QObject::property;
-    //mt["removeEventFilter"] = &QObject::removeEventFilter;
+    mt["removeEventFilter"] = &QObject::removeEventFilter;
     mt["setObjectName"] = &QObject::setObjectName;
     mt["setParent"] = &QObject::setParent;
     mt["setProperty"] = &QObject::setProperty;
     mt["signalsBlocked"] = &QObject::signalsBlocked;
     mt["startTimer"] = QObject_startTimer;
     mt["thread"] = &QObject::thread;
-
-    mt["installEventFilter"] = lua_CFunction([](lua_State* const state) {
-        auto obj = lua::get<QObject*>(state, 1);
-        lua::index filter_arg(state, 2);
-        lua_settop(state, 2);
-
-        // Allow functions to be converted to a QEventFilter
-        if (filter_arg.type().function()) {
-            auto filter = lua::make<QEventFilter>(state, state);
-            filter->setDelegate(filter_arg);
-            obj->installEventFilter(filter);
-        } else {
-            auto filter = filter_arg.get<QObject*>();
-            obj->installEventFilter(filter);
-
-            // Just use the filter as its own key
-            lua_pushvalue(state, 2);
-        }
-
-        // [obj, filter delegate, QEventFilter]
-        lua_getmetatable(state, 1);
-        lua_insert(state, 2);
-        // [obj, mt, filter delegate, QEventFilter]
-        lua_settable(state, 2);
-
-        return 0;
-    });
-
-    mt["removeEventFilter"] = lua_CFunction([](lua_State* const state) {
-        auto obj = lua::get<QObject*>(state, 1);
-        lua::index filter_arg(state, 2);
-        lua_settop(state, 2);
-
-        // Check the metatable for a cached value
-        lua_getmetatable(state, 1);
-        lua::table::get(lua::index(state, -1), filter_arg);
-        if (lua::index(state, -1)) {
-            // We have one, so use it to clear our filter
-            obj->removeEventFilter(lua::index(state, -1).get<QObject*>());
-        }
-        lua_pop(state, 1);
-
-        // Clear the cached entry
-        lua::table::set(lua::index(state, -1), filter_arg, lua::value::nil);
-
-        return 0;
-    });
 
     mt["__index"] = lua_CFunction([](lua_State* const state) {
         auto obj = lua::get<QObject*>(state, 1);
