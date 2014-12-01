@@ -29,6 +29,10 @@
         return false;
     end);
 
+    local window = QWindow.new();
+    window:installEventFilter(filter);
+
+
 =head1 DESCRIPTION
 
 */
