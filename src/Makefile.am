@@ -188,6 +188,7 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QDate.cpp \
 	Qt5Core/QTime.cpp \
 	Qt5Core/QTimeZone.cpp \
+	Qt5Core/QObjectList.cpp \
 	Qt5Core/QCoreApplication.cpp
 
 nobase_pkginclude_HEADERS += \
@@ -253,6 +254,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QDateTime.hpp \
 	Qt5Core/QDate.hpp \
 	Qt5Core/QTime.hpp \
+	Qt5Core/QObjectList.hpp \
 	Qt5Core/QTimeZone.hpp
 
 check_PROGRAMS += test_Qt5Core
