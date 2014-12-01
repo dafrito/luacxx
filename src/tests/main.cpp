@@ -704,6 +704,7 @@ struct Metatable<Child>
     {
         static userdata_type _info("Child");
         if (!_info.has_casts()) {
+            _info.add_cast<Child>();
             _info.add_cast<Named, Child>();
             _info.add_cast<Value, Child>();
         }

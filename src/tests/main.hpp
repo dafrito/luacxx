@@ -109,6 +109,8 @@ struct lua::Metatable<Point<T>> {
             name += lua::Metatable<T>::info().name();
             name += ">";
             _info.set_name(name);
+
+            _info.add_cast<Point<T>>();
         }
         return _info;
     }
