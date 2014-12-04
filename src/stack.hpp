@@ -1229,10 +1229,11 @@ void userdata_type::add_cast()
     if (std::is_same<Base, Actual>::value) {
         info = this;
     } else {
-        if (has_cast<Base>()) {
-            return;
-        }
         info = &lua::Metatable<Base>::info();
+    }
+
+    if (has_cast(info)) {
+        return;
     }
 
     constexpr ptrdiff_t NON_NULL = 0xffff;
@@ -1267,27 +1268,33 @@ void userdata_type::add_cast()
 template <class Value>
 Value* userdata_type::cast(lua_State* const state, const lua::userdata_block* const block) const
 {
-    auto& info = lua::Metatable<Value>::info();
+    auto info = &lua::Metatable<Value>::info();
     for (auto& cast : _casts) {
-        if (&info == cast.first) {
+        if (info == cast.first) {
             return reinterpret_cast<Value*>(reinterpret_cast<ptrdiff_t>(block->value()) + cast.second);
         }
     }
 
     std::stringstream str;
     for (auto& cast : _casts) {
-        str << "Cast to " << cast.first->name() << ": " << cast.second << std::endl;
+        if (cast.second == 1) {
+            str << "\tCast from " << cast.first->name() << " with offset of " << cast.second << "byte" << std::endl;
+        } else if (cast.second == 0) {
+            str << "\tCast from " << cast.first->name() << " with no offset" << std::endl;
+        } else {
+            str << "\tCast from " << cast.first->name() << " with offset of " << cast.second << "bytes" << std::endl;
+        }
     }
 
-    throw lua::error(state, std::string("The provided ") + block->type()->name() + " value cannot be cast to the requested " + info.name() + " type. Available casts:\n" + str.str());
+    throw lua::error(state, std::string("The provided ") + block->type()->name() + " value cannot be cast to the requested " + info->name() + " type. Available casts:\n" + str.str());
 }
 
 template <class Type>
 ptrdiff_t userdata_type::pointer_offset() const
 {
-    auto& info = lua::Metatable<Type>::info();
+    auto info = &lua::Metatable<Type>::info();
     for (auto& cast : _casts) {
-        if (&info == cast.first) {
+        if (info == cast.first) {
             return cast.second;
         }
     }
