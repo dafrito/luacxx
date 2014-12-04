@@ -17,6 +17,7 @@
 
 #include <forward_list>
 #include <utility>
+#include <cassert>
 
 /*
 
@@ -1268,6 +1269,7 @@ void userdata_type::add_cast()
 template <class Value>
 Value* userdata_type::cast(lua_State* const state, const lua::userdata_block* const block) const
 {
+    assert(this == block->type());
     auto info = &lua::Metatable<Value>::info();
     for (auto& cast : _casts) {
         if (info == cast.first) {
@@ -1278,15 +1280,15 @@ Value* userdata_type::cast(lua_State* const state, const lua::userdata_block* co
     std::stringstream str;
     for (auto& cast : _casts) {
         if (cast.second == 1) {
-            str << "\tCast from " << cast.first->name() << " with offset of " << cast.second << "byte" << std::endl;
+            str << "\tCast from " << name()<< " to " << cast.first->name() << " with an offset of " << cast.second << " byte" << std::endl;
         } else if (cast.second == 0) {
-            str << "\tCast from " << cast.first->name() << " with no offset" << std::endl;
+            str << "\tCast from " << name() << " to " << cast.first->name() << " with no offset" << std::endl;
         } else {
-            str << "\tCast from " << cast.first->name() << " with offset of " << cast.second << "bytes" << std::endl;
+            str << "\tCast from " << name() << " to " << cast.first->name() << " with an offset of " << cast.second << " bytes" << std::endl;
         }
     }
 
-    throw lua::error(state, std::string("The provided ") + block->type()->name() + " value cannot be cast to the requested " + info->name() + " type. Available casts:\n" + str.str());
+    throw lua::error(state, std::string("The provided ") + name() + " value cannot be cast to the requested " + info->name() + " type. Available casts:\n" + str.str());
 }
 
 template <class Type>
