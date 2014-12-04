@@ -800,6 +800,18 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance)
     BOOST_CHECK_EQUAL(grandchild_as_Value, lua::get<Value*>(env, -1));
 }
 
+BOOST_AUTO_TEST_CASE(casting)
+{
+    auto env = lua::create();
+
+    auto child = lua::make<Child>(env);
+    auto child_as_named = static_cast<Named*>(child);
+    lua::push(env, child_as_named);
+    BOOST_CHECK_THROW(lua::get<Value*>(env, -1), lua::error);
+}
+
+
+
 enum class Color {
     Red = 1,
     Blue,
