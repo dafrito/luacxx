@@ -6,7 +6,9 @@
 
 #include <QFrame>
 
-LUA_METATABLE_BUILT(QFrame);
+#include "QWidget.hpp"
+
+LUA_METATABLE_INHERIT(QFrame, QWidget);
 LUA_METATABLE_ENUM(QFrame::Shadow);
 LUA_METATABLE_ENUM(QFrame::Shape);
 LUA_METATABLE_ENUM(QFrame::StyleMask);

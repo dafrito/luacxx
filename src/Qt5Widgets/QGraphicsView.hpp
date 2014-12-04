@@ -6,7 +6,12 @@
 
 #include <QGraphicsView>
 
-LUA_METATABLE_BUILT(QGraphicsView);
+#include "QAbstractScrollArea.hpp"
+
+// http://qt-project.org/doc/qt-5/qgraphicsview.html
+
+LUA_METATABLE_INHERIT(QGraphicsView, QAbstractScrollArea);
+
 LUA_METATABLE_ENUM(QGraphicsView::CacheModeFlag);
 LUA_METATABLE_ENUM(QGraphicsView::DragMode);
 LUA_METATABLE_ENUM(QGraphicsView::OptimizationFlag);

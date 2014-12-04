@@ -5,7 +5,11 @@
 
 #include <QAbstractButton>
 
-LUA_METATABLE_BUILT(QAbstractButton)
+#include "QWidget.hpp"
+
+// http://qt-project.org/doc/qt-5/qabstractbutton.html
+
+LUA_METATABLE_INHERIT(QAbstractButton, QWidget)
 
 extern "C" int luaopen_Qt5Widgets_QAbstractButton(lua_State* const);
 
