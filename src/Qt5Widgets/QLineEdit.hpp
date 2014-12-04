@@ -6,7 +6,11 @@
 
 #include <QLineEdit>
 
-LUA_METATABLE_BUILT(QLineEdit);
+#include "QWidget.hpp"
+
+// https://qt-project.org/doc/qt-5/qlineedit.html
+
+LUA_METATABLE_INHERIT(QLineEdit, QWidget);
 LUA_METATABLE_ENUM(QLineEdit::ActionPosition);
 LUA_METATABLE_ENUM(QLineEdit::EchoMode);
 

@@ -5,7 +5,9 @@
 
 #include <QLinearGradient>
 
-LUA_METATABLE_BUILT(QLinearGradient);
+#include "QGradient.hpp"
+
+LUA_METATABLE_INHERIT(QLinearGradient, QGradient);
 
 extern "C" int luaopen_Qt5Gui_QLinearGradient(lua_State* const);
 

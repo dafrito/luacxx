@@ -6,7 +6,9 @@
 
 #include <QSslSocket>
 
-LUA_METATABLE_BUILT(QSslSocket);
+#include "QAbstractSocket.hpp"
+
+LUA_METATABLE_INHERIT(QSslSocket, QAbstractSocket);
 LUA_METATABLE_ENUM(QSslSocket::PeerVerifyMode);
 LUA_METATABLE_ENUM(QSslSocket::SslMode);
 

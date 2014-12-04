@@ -6,7 +6,11 @@
 
 #include <QLocalSocket>
 
-LUA_METATABLE_BUILT(QLocalSocket);
+#include "../Qt5Core/QIODevice.hpp"
+
+// http://qt-project.org/doc/qt-5/qlocalsocket.html
+
+LUA_METATABLE_INHERIT(QLocalSocket, QIODevice);
 LUA_METATABLE_ENUM(QLocalSocket::LocalSocketError);
 LUA_METATABLE_ENUM(QLocalSocket::LocalSocketState);
 

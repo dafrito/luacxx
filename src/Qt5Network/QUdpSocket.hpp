@@ -5,7 +5,9 @@
 
 #include <QUdpSocket>
 
-LUA_METATABLE_BUILT(QUdpSocket);
+#include "QAbstractSocket.hpp"
+
+LUA_METATABLE_INHERIT(QUdpSocket, QAbstractSocket);
 
 extern "C" int luaopen_Qt5Network_QUdpSocket(lua_State* const);
 

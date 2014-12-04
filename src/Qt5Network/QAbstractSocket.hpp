@@ -6,7 +6,11 @@
 
 #include <QAbstractSocket>
 
-LUA_METATABLE_BUILT(QAbstractSocket);
+#include "../Qt5Core/QIODevice.hpp"
+
+// http://qt-project.org/doc/qt-5/qabstractsocket.html
+
+LUA_METATABLE_INHERIT(QAbstractSocket, QIODevice);
 LUA_METATABLE_ENUM(QAbstractSocket::BindFlag);
 LUA_METATABLE_ENUM(QAbstractSocket::NetworkLayerProtocol);
 LUA_METATABLE_ENUM(QAbstractSocket::PauseMode);

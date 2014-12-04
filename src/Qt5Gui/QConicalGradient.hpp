@@ -3,9 +3,11 @@
 
 #include "Qt5Gui.hpp"
 
-class QConicalGradient;
+#include <QConicalGradient>
 
-LUA_METATABLE_BUILT(QConicalGradient);
+#include "QGradient.hpp"
+
+LUA_METATABLE_INHERIT(QConicalGradient, QGradient);
 
 extern "C" int luaopen_Qt5Gui_QConicalGradient(lua_State* const);
 

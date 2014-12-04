@@ -1,11 +1,15 @@
 #ifndef luacxx_QTcpSocket_INCLUDED
 #define luacxx_QTcpSocket_INCLUDED
 
-#include "Qt5Network.hpp"
+#include "../stack.hpp"
 
 #include <QTcpSocket>
 
-LUA_METATABLE_BUILT(QTcpSocket);
+#include "QAbstractSocket.hpp"
+
+// http://qt-project.org/doc/qt-5/qtcpsocket.html
+
+LUA_METATABLE_INHERIT(QTcpSocket, QAbstractSocket)
 
 extern "C" int luaopen_Qt5Network_QTcpSocket(lua_State* const);
 
