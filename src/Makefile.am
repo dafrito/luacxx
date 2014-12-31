@@ -513,6 +513,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Gui/QImageWriter.hpp \
 	Qt5Gui/QFontMetrics.hpp \
 	Qt5Gui/QPainterPath.hpp \
+	Qt5Gui/QPicture.hpp \
 	Qt5Gui/QPaintDevice.hpp \
 	Qt5Gui/QWindow.hpp \
 	Qt5Gui/QGuiApplication.hpp \
