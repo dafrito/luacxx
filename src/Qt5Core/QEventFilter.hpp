@@ -86,7 +86,7 @@ bool eventFilter(QObject* watched, QEvent* event);
 
 }; // class QEventFilter
 
-LUA_METATABLE_BUILT(QEventFilter);
+LUA_METATABLE_INHERIT(QEventFilter, QObject);
 
 extern "C" int luaopen_Qt5Core_QEventFilter(lua_State* const);
 
