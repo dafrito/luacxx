@@ -14,6 +14,11 @@ struct Push<std::string>
     {
         lua::Push<const char*>::push(state, source.c_str());
     }
+
+    static void push(lua_State* const state, const std::string& source)
+    {
+        lua::Push<const char*>::push(state, source.c_str());
+    }
 };
 
 template <>
