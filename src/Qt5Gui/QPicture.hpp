@@ -3,9 +3,11 @@
 
 #include "../stack.hpp"
 
-class QPicture;
+#include <QPicture>
 
-LUA_METATABLE_BUILT(QPicture);
+#include "QPaintDevice.hpp"
+
+LUA_METATABLE_INHERIT(QPicture, QPaintDevice)
 
 extern "C" int luaopen_Qt5Gui_QPicture(lua_State* const);
 
