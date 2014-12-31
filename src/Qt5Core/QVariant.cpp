@@ -102,6 +102,12 @@ void lua::push_qvariant(lua_State* const state, const QVariant& value)
         case QVariant::UInt:
             lua::push(state, value.toDouble());
             break;
+        case QVariant::LongLong:
+            lua::push(state, value.toLongLong());
+            break;
+        case QVariant::ULongLong:
+            lua::push(state, value.toULongLong());
+            break;
         case QVariant::String:
             lua::push(state, value.toString());
             break;
