@@ -45,7 +45,7 @@ QHelpEvent* QHelpEvent_cast(QEvent* event)
     }
 }
 
-int luaopen_luacxx_QHelpEvent(lua_State* const state)
+int luaopen_Qt5Gui_QHelpEvent(lua_State* const state)
 {
     lua::thread env(state);
 

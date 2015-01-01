@@ -7,6 +7,6 @@
 
 LUA_METATABLE_BUILT(QHelpEvent)
 
-extern "C" int luaopen_luacxx_QHelpEvent(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QHelpEvent(lua_State* const);
 
 #endif // luacxx_QHelpEvent_INCLUDED

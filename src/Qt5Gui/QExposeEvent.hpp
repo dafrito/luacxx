@@ -11,6 +11,6 @@
 
 LUA_METATABLE_INHERIT(QExposeEvent, QEvent)
 
-extern "C" int luaopen_luacxx_QExposeEvent(lua_State* const);
+extern "C" int luaopen_Qt5Gui_QExposeEvent(lua_State* const);
 
 #endif // luacxx_QExposeEvent_INCLUDED
