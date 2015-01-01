@@ -307,12 +307,15 @@ libluacxx_Qt5Network_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QAbstractSocket.cpp \
+	Qt5Network/QAbstractNetworkCache.cpp \
+	Qt5Network/QAuthenticator.cpp \
 	Qt5Network/QDnsDomainNameRecord.cpp \
 	Qt5Network/QDnsHostAddressRecord.cpp \
 	Qt5Network/QDnsMailExchangeRecord.cpp \
 	Qt5Network/QDnsServiceRecord.cpp \
 	Qt5Network/QDnsTextRecord.cpp \
 	Qt5Network/QDnsLookup.cpp \
+	Qt5Network/QHostInfo.cpp \
 	Qt5Network/QLocalSocket.cpp \
 	Qt5Network/QLocalServer.cpp \
 	Qt5Network/QTcpSocket.cpp \
@@ -336,12 +339,15 @@ libluacxx_Qt5Network_la_SOURCES = \
 nobase_pkginclude_HEADERS += \
 	Qt5Network/Qt5Network.hpp \
 	Qt5Network/QAbstractSocket.hpp \
+	Qt5Network/QAuthenticator.hpp \
 	Qt5Network/QDnsDomainNameRecord.hpp \
 	Qt5Network/QDnsHostAddressRecord.hpp \
 	Qt5Network/QDnsLookup.hpp \
 	Qt5Network/QDnsMailExchangeRecord.hpp \
 	Qt5Network/QDnsServiceRecord.hpp \
 	Qt5Network/QDnsTextRecord.hpp \
+	Qt5Network/QHostInfo.hpp \
+	Qt5Network/QAbstractNetworkCache.hpp \
 	Qt5Network/QLocalSocket.hpp \
 	Qt5Network/QLocalServer.hpp \
 	Qt5Network/QTcpSocket.hpp \
