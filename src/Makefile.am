@@ -331,6 +331,7 @@ libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QUdpSocket.cpp \
 	Qt5Network/QHostAddress.cpp \
 	Qt5Network/QNetworkAddressEntry.cpp \
+	Qt5Network/QNetworkAccessManager.cpp \
 	Qt5Network/QNetworkInterface.cpp \
 	Qt5Network/QNetworkProxy.cpp \
 	Qt5Network/QNetworkRequest.cpp \
@@ -362,6 +363,7 @@ nobase_pkginclude_HEADERS += \
 	Qt5Network/QTcpServer.hpp \
 	Qt5Network/QUdpSocket.hpp \
 	Qt5Network/QHostAddress.hpp \
+	Qt5Network/QNetworkAccessManager.hpp \
 	Qt5Network/QNetworkProxy.hpp \
 	Qt5Network/QNetworkRequest.hpp \
 	Qt5Network/QNetworkAddressEntry.hpp \
