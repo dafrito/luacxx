@@ -148,6 +148,10 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QBitArray.cpp \
 	Qt5Core/QDataStream.cpp \
 	Qt5Core/QVariant.cpp \
+	convert/QVariant.cpp \
+	Qt5Core/QVariantHash.cpp \
+	Qt5Core/QVariantList.cpp \
+	Qt5Core/QVariantMap.cpp \
 	Qt5Core/QStringList.cpp \
 	Qt5Core/QByteArray.cpp \
 	Qt5Core/QPair.cpp \
@@ -225,6 +229,11 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QModelIndex.hpp \
 	Qt5Core/QPersistentModelIndex.hpp \
 	Qt5Core/QModelIndexList.hpp \
+	Qt5Core/QVariant.hpp \
+	convert/QVariant.hpp \
+	Qt5Core/QVariantHash.hpp \
+	Qt5Core/QVariantList.hpp \
+	Qt5Core/QVariantMap.hpp \
 	Qt5Core/QUrl.hpp \
 	Qt5Core/QIODevice.hpp \
 	Qt5Core/QFileDevice.hpp \
@@ -234,7 +243,6 @@ nobase_pkginclude_HEADERS += \
 	Qt5Core/QAbstractNativeEventFilter.hpp \
 	Qt5Core/QAbstractEventDispatcher.hpp \
 	Qt5Core/QTranslator.hpp \
-	Qt5Core/QVariant.hpp \
 	Qt5Core/QByteArray.hpp \
 	Qt5Core/QCoreApplication.hpp \
 	Qt5Core/QEvent.hpp \

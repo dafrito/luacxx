@@ -6,10 +6,10 @@
 
 #include <QVariant>
 
-#include <functional>
-#include <unordered_map>
+// http://doc.qt.io/qt-5/qvariant.html
 
-// https://qt-project.org/doc/qt-5/qvariant.html
+LUA_METATABLE_BUILT(QVariant);
+LUA_METATABLE_ENUM(QVariant::Type);
 
 namespace lua {
 
@@ -21,37 +21,7 @@ QVariant get_qvariant(lua_State* const state, const int pos);
 void push_qvariant(lua_State* const state, const QVariant& value);
 void store_qvariant(QVariant& destination, lua_State* const state, const int source);
 
-template<>
-struct Push<QVariant>
-{
-    static void push(lua_State* const state, QVariant value)
-    {
-        push_qvariant(state, value);
-    }
-};
-
-template<>
-struct Store<QVariant>
-{
-    static void store(QVariant& destination, lua_State* const state, const int index)
-    {
-        store_qvariant(destination, state, index);
-    }
-};
-
-template<>
-struct Get<QVariant>
-{
-    static QVariant get(lua_State* const state, const int pos)
-    {
-        return get_qvariant(state, pos);
-    }
-};
-
 } // namespace lua
-
-LUA_METATABLE_BUILT(QVariant);
-LUA_METATABLE_ENUM(QVariant::Type);
 
 extern "C" int luaopen_Qt5Core_QVariant(lua_State* const);
 
