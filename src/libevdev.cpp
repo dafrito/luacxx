@@ -4,9 +4,6 @@
 #include "thread.hpp"
 #include "linux/input.hpp"
 
-#include <libevdev/libevdev.h>
-#include <libevdev/libevdev-uinput.h>
-
 int _libevdev_new_from_fd(lua_State* const state)
 {
     libevdev* dev;
@@ -26,13 +23,13 @@ void libevdev_log_handler(libevdev_log_priority priority, void *data, const char
         return;
     }
 
+    // FIXME Determine how args should be passed.
     lua::call(lua::index(state, -1),
         priority,
         file,
         line,
         func,
-        format,
-        args
+        format
     );
 }
 
@@ -56,21 +53,30 @@ int _libevdev_get_repeat(lua_State* const state)
     return 3;
 }
 
+int _libevdev_kernel_set_led_values(lua_State* const state)
+{
+    return 1;
+}
+
 int luaopen_libevdev(lua_State* const state)
 {
     luaL_requiref(state, "linux.input", luaopen_linux_input, false);
 
     lua::thread env(state);
 
+
+    // enum libevdev_read_flag
     env["LIBEVDEV_READ_FLAG_BLOCKING "] = LIBEVDEV_READ_FLAG_BLOCKING;
     env["LIBEVDEV_READ_FLAG_FORCE_SYNC"] = LIBEVDEV_READ_FLAG_FORCE_SYNC;
     env["LIBEVDEV_READ_FLAG_NORMAL"] = LIBEVDEV_READ_FLAG_NORMAL;
     env["LIBEVDEV_READ_FLAG_SYNC"] = LIBEVDEV_READ_FLAG_SYNC;
 
+    // enum libevdev_log_priority
     env["LIBEVDEV_LOG_DEBUG "] = LIBEVDEV_LOG_DEBUG;
     env["LIBEVDEV_LOG_INFO"] = LIBEVDEV_LOG_INFO;
     env["LIBEVDEV_LOG_ERROR"] = LIBEVDEV_LOG_ERROR;
 
+    // enum libevdev_grab_mode
     env["LIBEVDEV_UNGRAB "] = LIBEVDEV_UNGRAB;
     env["LIBEVDEV_GRAB"] = LIBEVDEV_GRAB;
 
@@ -137,7 +143,7 @@ int luaopen_libevdev(lua_State* const state)
     env["libevdev_disable_event_code"] = libevdev_disable_event_code;
     env["libevdev_kernel_set_abs_info"] = libevdev_kernel_set_abs_info;
     env["libevdev_kernel_set_led_value"] = libevdev_kernel_set_led_value;
-    env["libevdev_kernel_set_led_values"] = libevdev_kernel_set_led_values;
+    env["libevdev_kernel_set_led_values"] = _libevdev_kernel_set_led_values;
     env["libevdev_set_clock_id"] = libevdev_set_clock_id;
     env["libevdev_event_is_type"] = libevdev_event_is_type;
     env["libevdev_event_is_code"] = libevdev_event_is_code;

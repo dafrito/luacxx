@@ -2,6 +2,22 @@
 #define LUACXX_LIBEVDEV_INCLUDED
 
 #include "stack.hpp"
+#include "enum.hpp"
+
+#include <libevdev/libevdev.h>
+#include <libevdev/libevdev-uinput.h>
+
+#include "convert/numeric.hpp"
+#include "convert/const_char_p.hpp"
+
+LUA_METATABLE_NAMED(libevdev);
+LUA_METATABLE_ENUM(libevdev_log_priority);
+LUA_METATABLE_ENUM(libevdev_read_flag);
+LUA_METATABLE_ENUM(libevdev_read_status);
+LUA_METATABLE_ENUM(libevdev_grab_mode);
+LUA_METATABLE_ENUM(libevdev_led_value);
+LUA_METATABLE_NAMED(input_absinfo);
+LUA_METATABLE_NAMED(input_event);
 
 /*
 
@@ -18,23 +34,6 @@ libevdev
     yum install libevdev-devel
 
 */
-
-struct libevdev;
-
-namespace lua {
-
-template <>
-struct Metatable<libevdev>
-{
-    static constexpr const char* name = "libevdev";
-
-    static bool metatable(const lua::index& mt, libevdev* const)
-    {
-        return true;
-    }
-};
-
-}; // namespace lua
 
 extern "C" int luaopen_libevdev(lua_State* const);
 
