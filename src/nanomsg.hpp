@@ -5,6 +5,7 @@
 #include "algorithm.hpp"
 #include "convert/numeric.hpp"
 #include "convert/callable.hpp"
+#include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
 
 #include <nanomsg/nn.h>
@@ -39,93 +40,12 @@ itself.
 
 */
 
-namespace lua {
-
-void nn_symbol_properties_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<nn_symbol_properties>
-{
-    constexpr static const char* name = "nn_symbol_properties";
-
-    static bool metatable(const lua::index& mt, nn_symbol_properties* const)
-    {
-        lua::nn_symbol_properties_metatable(mt);
-        return true;
-    }
-};
-
-void nn_req_handle_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<nn_req_handle>
-{
-    constexpr static const char* name = "nn_req_handle";
-
-    static bool metatable(const lua::index& mt, nn_req_handle* const)
-    {
-        lua::nn_req_handle_metatable(mt);
-        return true;
-    }
-};
-
-void nn_pollfd_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<nn_pollfd>
-{
-    constexpr static const char* name = "nn_pollfd";
-
-    static bool metatable(const lua::index& mt, nn_pollfd* const)
-    {
-        lua::nn_pollfd_metatable(mt);
-        return true;
-    }
-};
-
-void nn_msghdr_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<nn_msghdr>
-{
-    constexpr static const char* name = "nn_msghdr";
-
-    static bool metatable(const lua::index& mt, nn_msghdr* const)
-    {
-        lua::nn_msghdr_metatable(mt);
-        return true;
-    }
-};
-
-void nn_cmsghdr_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<nn_cmsghdr>
-{
-    constexpr static const char* name = "nn_cmsghdr";
-
-    static bool metatable(const lua::index& mt, nn_cmsghdr* const)
-    {
-        lua::nn_cmsghdr_metatable(mt);
-        return true;
-    }
-};
-
-void nn_iovec_metatable(const lua::index& mt);
-
-template <>
-struct Metatable<nn_iovec>
-{
-    constexpr static const char* name = "nn_iovec";
-
-    static bool metatable(const lua::index& mt, nn_iovec* const)
-    {
-        lua::nn_iovec_metatable(mt);
-        return true;
-    }
-};
-
-}; // namespace lua
+LUA_METATABLE_BUILT(nn_symbol_properties);
+LUA_METATABLE_BUILT(nn_req_handle);
+LUA_METATABLE_BUILT(nn_pollfd);
+LUA_METATABLE_BUILT(nn_msghdr);
+LUA_METATABLE_BUILT(nn_cmsghdr);
+LUA_METATABLE_BUILT(nn_iovec);
 
 extern "C" int luaopen_nanomsg(lua_State* const);
 

@@ -41,8 +41,9 @@ int nn_symbol_properties_index(lua_State* const state)
     return 0;
 }
 
-void lua::nn_symbol_properties_metatable(const lua::index& mt)
+void lua::nn_symbol_properties_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["__index"] = nn_symbol_properties_index;
 }
 
@@ -72,8 +73,9 @@ int nn_pollfd_index(lua_State* const state)
     return 0;
 }
 
-void lua::nn_pollfd_metatable(const lua::index& mt)
+void lua::nn_pollfd_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["__index"] = nn_pollfd_index;
 }
 
@@ -99,8 +101,9 @@ int nn_iovec_index(lua_State* const state)
     return 0;
 }
 
-void lua::nn_iovec_metatable(const lua::index& mt)
+void lua::nn_iovec_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["__index"] = nn_iovec_index;
 }
 
@@ -134,8 +137,9 @@ int nn_msghdr_index(lua_State* const state)
     return 0;
 }
 
-void lua::nn_msghdr_metatable(const lua::index& mt)
+void lua::nn_msghdr_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["__index"] = nn_msghdr_index;
 }
 
@@ -165,8 +169,9 @@ int nn_cmsghdr_index(lua_State* const state)
     return 0;
 }
 
-void lua::nn_cmsghdr_metatable(const lua::index& mt)
+void lua::nn_cmsghdr_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["__index"] = nn_cmsghdr_index;
 }
 
