@@ -31,7 +31,7 @@ int ncurses_MEVENT_index(lua_State* const state)
 
 namespace lua {
 
-void ncurses_MEVENT_metatable(const lua::index& mt)
+void MEVENT_metatable(const lua::index& mt)
 {
     mt["__index"] = ncurses_MEVENT_index;
 }

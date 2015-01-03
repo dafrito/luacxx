@@ -3,9 +3,12 @@
 
 #include "stack.hpp"
 #include "algorithm.hpp"
+
 #include "convert/numeric.hpp"
 #include "convert/callable.hpp"
+#include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
+#include "convert/char.hpp"
 
 #include <ncurses.h>
 #include <cstdio>
@@ -68,21 +71,14 @@ As much as is possible, this binding uses the same license as ncurses itself.
 
 */
 
+LUA_METATABLE_BUILT(MEVENT);
+LUA_METATABLE_NAMED(cchar_t);
+LUA_METATABLE_NAMED(WINDOW);
+LUA_METATABLE_NAMED(wchar_t);
+LUA_METATABLE_NAMED(SCREEN);
+LUA_METATABLE_NAMED(FILE);
+
 namespace lua {
-
-void ncurses_MEVENT_metatable(lua_State* const state, const int mt);
-
-template <>
-struct Metatable<MEVENT>
-{
-    static constexpr const char* name = "MEVENT";
-
-    static bool metatable(lua_State* const state, const int mt, MEVENT* const)
-    {
-        lua::ncurses_MEVENT_metatable(state, mt);
-        return true;
-    }
-};
 
 void ncurses_curs_add_wch(lua_State* const state);
 void ncurses_curs_add_wchstr(lua_State* const state);
