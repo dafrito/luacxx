@@ -2,9 +2,11 @@
 #define LUACXX_LIBINPUT_INCLUDED
 
 #include "stack.hpp"
-#include "algorithm.hpp"
+#include "enum.hpp"
+
 #include "convert/numeric.hpp"
 #include "convert/callable.hpp"
+#include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
 
 #include <libinput.h>
@@ -58,9 +60,37 @@ As much as is possible, this binding uses the same license as libinput itself.
 
 */
 
-namespace lua {
+LUA_METATABLE_NAMED(libinput);
+LUA_METATABLE_NAMED(libinput_interface);
+LUA_METATABLE_NAMED(libinput_device);
+LUA_METATABLE_NAMED(libinput_event);
+LUA_METATABLE_NAMED(libinput_event_device_notify);
+LUA_METATABLE_NAMED(libinput_event_keyboard);
+LUA_METATABLE_NAMED(libinput_event_pointer);
+LUA_METATABLE_NAMED(libinput_event_touch);
+LUA_METATABLE_NAMED(libinput_seat);
 
-}; // namespace lua
+LUA_METATABLE_ENUM(libinput_event_type);
+LUA_METATABLE_ENUM(libinput_log_priority);
+LUA_METATABLE_ENUM(libinput_config_scroll_method)
+LUA_METATABLE_ENUM(libinput_config_status)
+LUA_METATABLE_ENUM(libinput_config_tap_state)
+LUA_METATABLE_ENUM(libinput_button_state)
+LUA_METATABLE_ENUM(libinput_device_capability)
+LUA_METATABLE_ENUM(libinput_key_state)
+LUA_METATABLE_ENUM(libinput_led)
+LUA_METATABLE_ENUM(libinput_pointer_axis)
+
+namespace lua {
+    int libinput_group__base(lua_State* const state);
+    int libinput_group__config(lua_State* const state);
+    int libinput_group__device(lua_State* const state);
+    int libinput_group__event(lua_State* const state);
+    int libinput_group__event__keyboard(lua_State* const state);
+    int libinput_group__event__pointer(lua_State* const state);
+    int libinput_group__event__touch(lua_State* const state);
+    int libinput_group__seat(lua_State* const state);
+} // namespace lua
 
 extern "C" int luaopen_libinput(lua_State* const);
 
