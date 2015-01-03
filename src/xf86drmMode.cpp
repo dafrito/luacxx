@@ -6,9 +6,6 @@
 #include "convert/callable.hpp"
 #include "convert/vector.hpp"
 
-#include <drm/drm_mode.h>
-#include <xf86drmMode.h>
-
 int _drmModeDirtyFB(lua_State* const state)
 {
     if (lua_gettop(state) == 3) {

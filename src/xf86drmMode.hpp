@@ -29,12 +29,24 @@ xf86drmMode.h uses the following license:
 
 #include "stack.hpp"
 
-namespace lua {
+#include "convert/char.hpp"
 
-} // namespace lua
+#include <drm/drm_mode.h>
+#include <xf86drmMode.h>
 
-extern "C" {
+LUA_METATABLE_NAMED(drm_clip_rect);
+LUA_METATABLE_NAMED(_drmModeConnector);
+LUA_METATABLE_NAMED(drmModeConnection);
+LUA_METATABLE_NAMED(_drmModeEncoder);
+LUA_METATABLE_NAMED(_drmModeObjectProperties);
+LUA_METATABLE_NAMED(_drmModePlane);
+LUA_METATABLE_NAMED(_drmModeProperty);
+LUA_METATABLE_NAMED(_drmModePropertyBlob);
+LUA_METATABLE_NAMED(_drmModePlaneRes);
+LUA_METATABLE_NAMED(drmModeSubPixel);
+LUA_METATABLE_NAMED(_drmModeModeInfo);
+LUA_METATABLE_NAMED(_drmModeRes);
+LUA_METATABLE_NAMED(_drmModeFB);
+LUA_METATABLE_NAMED(_drmModeCrtc);
 
-int luaopen_xf86drmMode(lua_State* const state);
-
-}
+extern "C" int luaopen_xf86drmMode(lua_State* const state);
