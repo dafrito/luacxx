@@ -3,8 +3,10 @@
 
 #include "stack.hpp"
 #include "algorithm.hpp"
+
 #include "convert/numeric.hpp"
 #include "convert/callable.hpp"
+#include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
 
 #include <EGL/egl.h>
@@ -51,6 +53,8 @@ Mesa's EGL/egl.h is licensed under the following terms:
     MATERIALS OR THE USE OR OTHER DEALINGS IN THE MATERIALS.
 
 */
+
+LUA_METATABLE_NAMED(_XDisplay);
 
 extern "C" int luaopen_egl(lua_State* const);
 

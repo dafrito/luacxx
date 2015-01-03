@@ -1,11 +1,8 @@
 #include "egl.hpp"
 
-#include "convert/callable.hpp"
-#include "convert/numeric.hpp"
-#include "convert/vector.hpp"
 #include "thread.hpp"
 
-#include <EGL/egl.h>
+#include "convert/vector.hpp"
 
 int _eglInitialize(lua_State* const state)
 {
