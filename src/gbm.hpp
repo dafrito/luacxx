@@ -2,9 +2,11 @@
 #define luacxx_gbm_INCLUDED
 
 #include "stack.hpp"
+#include "enum.hpp"
 #include "algorithm.hpp"
 #include "convert/numeric.hpp"
 #include "convert/callable.hpp"
+#include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
 
 #include <gbm.h>
@@ -59,9 +61,11 @@ As much as is possible, this file uses the same license as gbm itself.
 
 */
 
-namespace lua {
-
-}; // namespace lua
+LUA_METATABLE_ENUM(gbm_bo_format);
+LUA_METATABLE_ENUM(gbm_bo_flags);
+LUA_METATABLE_NAMED(gbm_device);
+LUA_METATABLE_NAMED(gbm_bo);
+LUA_METATABLE_NAMED(gbm_bo_handle);
 
 extern "C" int luaopen_gbm(lua_State* const);
 

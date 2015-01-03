@@ -1,9 +1,6 @@
 #include "gbm.hpp"
 
-#include "convert/callable.hpp"
 #include "thread.hpp"
-
-#include <gbm.h>
 
 int _gbm_bo_write(lua_State* const state)
 {
@@ -156,11 +153,13 @@ int luaopen_gbm(lua_State* const state)
     env["gbm_bo_get_user_data"] = _gbm_bo_get_user_data;
 
     env["gbm_bo_destroy"] = gbm_bo_destroy;
-    env["gbm_surface_create"] = gbm_surface_create;
-    env["gbm_surface_lock_front_buffer"] = gbm_surface_lock_front_buffer;
-    env["gbm_surface_release_buffer"] = gbm_surface_release_buffer;
-    env["gbm_surface_has_free_buffers"] = gbm_surface_has_free_buffers;
-    env["gbm_surface_destroy"] = gbm_surface_destroy;
+
+    // FIXME Determine the status of gbm_surface; where is it defined?
+    //env["gbm_surface_create"] = gbm_surface_create;
+    //env["gbm_surface_lock_front_buffer"] = gbm_surface_lock_front_buffer;
+    //env["gbm_surface_release_buffer"] = gbm_surface_release_buffer;
+    //env["gbm_surface_has_free_buffers"] = gbm_surface_has_free_buffers;
+    //env["gbm_surface_destroy"] = gbm_surface_destroy;
 
     return 0;
 }
