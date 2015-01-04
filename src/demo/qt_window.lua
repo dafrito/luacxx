@@ -13,6 +13,9 @@ function demo.qt_window(...)
     require "Qt5Gui.QPainter";
     require "Qt5Gui.QVector3D";
     require "Qt5Gui.QRegion";
+    require "Qt5Gui.QResizeEvent";
+
+    require "Qt5Core.QEventFilter";
 
     local qApp = QGuiApplication.new("demo", ...);
 
@@ -42,15 +45,19 @@ function demo.qt_window(...)
         store:flush(QRegion.new(rect));
     end;
 
-    window:event(function(event)
+    local filter = QEventFilter.new(window);
+    filter:setDelegate(function(watched, event)
+        print("DELEGATE", event);
         if event:type() == QEvent.Expose then
+            print("RENDERING");
             render();
         elseif event:type() == QEvent.Resize then
-            store:resize(event:size());
+            store:resize(QResizeEvent.cast(event):size());
             render();
         end;
         return false;
     end);
+    window:installEventFilter(filter);
     window:show();
 
     return QGuiApplication.exec();
