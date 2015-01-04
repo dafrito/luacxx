@@ -91,10 +91,12 @@ libluacxx_llvm_la_LIBADD = \
 libluacxx_llvm_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_llvm_la_SOURCES = \
-	llvm/IR/IRBuilder.cpp
+	llvm/IR/IRBuilder.cpp \
+	llvm/IR/Instruction.cpp
 
 nobase_pkginclude_HEADERS += \
-	llvm/IR/IRBuilder.hpp
+	llvm/IR/IRBuilder.hpp \
+	llvm/IR/Instruction.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-llvm.pc
 

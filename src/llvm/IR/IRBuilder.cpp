@@ -13,9 +13,15 @@
 #include <llvm/Transforms/Scalar.h>
 #include <llvm/IR/IRBuilder.h>
 
+#include "Value.hpp"
+#include "BranchInst.hpp"
+#include "Instruction.hpp"
+#include "../../std/vector.hpp"
+
 #include "../../algorithm.hpp"
 #include "../../thread.hpp"
 #include "../../convert/callable.hpp"
+#include "../../convert/const_char_p.hpp"
 #include "../../convert/numeric.hpp"
 
 using namespace llvm;
@@ -872,8 +878,9 @@ int IRBuilder_CreateExtractInteger(lua_State* const state)
     return 1;
 }
 
-void lua::llvm_IRBuilder_metatable(const lua::index& mt)
+void lua::llvm_IRBuilder_metatable(lua_State* const state, const int pos)
 {
+    lua::index mt(state, pos);
     mt["getFolder"] = &IRBuilder<>::getFolder;
     mt["isNamePreserving"] = &IRBuilder<>::isNamePreserving;
     mt["Insert"] = IRBuilder_Insert;
