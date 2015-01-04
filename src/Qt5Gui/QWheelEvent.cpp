@@ -65,13 +65,25 @@ int QWheelEvent_new(lua_State* const state)
     return 1;
 }
 
+QWheelEvent* QWheelEvent_cast(QEvent* event)
+{
+    switch (event->type()) {
+    case QEvent::Wheel:
+        return static_cast<QWheelEvent*>(event);
+    default:
+        return nullptr;
+    }
+}
+
 int luaopen_Qt5Gui_QWheelEvent(lua_State* const state)
 {
     lua::thread env(state);
 
     env["QWheelEvent"] = lua::value::table;
     env["QWheelEvent"]["new"] = QWheelEvent_new;
+
     auto t = env["QWheelEvent"];
+    t["cast"] = QWheelEvent_cast;
 
     return 0;
 }
