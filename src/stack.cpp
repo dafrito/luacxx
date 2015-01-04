@@ -1,6 +1,7 @@
 #include "stack.hpp"
 #include "algorithm.hpp"
 #include <sstream>
+#include <iostream>
 
 #include "convert/const_char_p.hpp"
 #include "convert/string.hpp"
@@ -121,14 +122,69 @@ std::string lua::dump(lua_State* const state)
     return str.str();
 }
 
-bool lua::userdata_type::has_cast(const lua::userdata_type* const info) const
+void lua::userdata_type::add_cast(const lua::userdata_type* info, ptrdiff_t offset)
+{
+    // Uncomment when necessary. State is not available, so logging cannot be used.
+    // std::cerr << this << ": Adding cast from " << name() << " to " << info->name() << "@" << info << std::endl;
+
+    if (has_cast(info)) {
+        return;
+    }
+
+    _casts.emplace_front(info, offset);
+
+    if (info == this) {
+        return;
+    }
+
+    for (auto& cast : info->_casts) {
+        if (!has_cast(cast.first)) {
+            _casts.emplace_front(cast.first, pointer_offset(info) + cast.second);
+        }
+    }
+}
+
+ptrdiff_t lua::userdata_type::pointer_offset(const lua::userdata_type* const requested) const
 {
     for (auto& cast : _casts) {
-        if (info == cast.first) {
+        if (requested == cast.first || requested->name() == cast.first->name()) {
+            return cast.second;
+        }
+    }
+    return 0;
+}
+
+bool lua::userdata_type::has_cast(const lua::userdata_type* const requested) const
+{
+    for (auto& cast : _casts) {
+        if (requested == cast.first || requested->name() == cast.first->name()) {
             return true;
         }
     }
     return false;
+}
+
+void* lua::userdata_type::cast(lua_State* const state, const lua::userdata_block* const block, const lua::userdata_type* const requested) const
+{
+    assert(this == block->type());
+    for (auto& cast : _casts) {
+        if (requested == cast.first || requested->name() == cast.first->name()) {
+            return reinterpret_cast<void*>(reinterpret_cast<ptrdiff_t>(block->value()) + cast.second);
+        }
+    }
+
+    std::stringstream str;
+    for (auto& cast : _casts) {
+        if (cast.second == 1) {
+            str << "\tCast from " << name()<< " to " << cast.first->name() << " with an offset of " << cast.second << " byte" << std::endl;
+        } else if (cast.second == 0) {
+            str << "\tCast from " << name() << " to " << cast.first->name() << " with no offset" << std::endl;
+        } else {
+            str << "\tCast from " << name() << " to " << cast.first->name() << " with an offset of " << cast.second << " bytes" << std::endl;
+        }
+    }
+
+    throw lua::error(state, std::string("The provided ") + name() + " value cannot be cast to the requested " + requested->name() + " type. Available casts:\n" + str.str());
 }
 
 lua::userdata_type::~userdata_type()

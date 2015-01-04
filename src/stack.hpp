@@ -547,6 +547,8 @@ public:
     template <class Base, class Derived = Base>
     void add_cast();
 
+    void add_cast(const lua::userdata_type* info, ptrdiff_t offset);
+
     template <class Expected>
     bool has_cast() const;
 
@@ -555,10 +557,13 @@ public:
     template <class Type>
     ptrdiff_t pointer_offset() const;
 
+    ptrdiff_t pointer_offset(const lua::userdata_type* const info) const;
+
     bool has_casts() const
     {
         return !_casts.empty();
     }
+
     bool operator==(const userdata_type& other) const
     {
         return this == &other;
@@ -572,6 +577,8 @@ public:
 private:
     template <class Value>
     Value* cast(lua_State* const state, const lua::userdata_block* const block) const;
+
+    void* cast(lua_State* const state, const lua::userdata_block* const block, const lua::userdata_type* const requested) const;
 
     friend class userdata_block;
 };
@@ -1233,10 +1240,6 @@ void userdata_type::add_cast()
         info = &lua::Metatable<Base>::info();
     }
 
-    if (has_cast(info)) {
-        return;
-    }
-
     constexpr ptrdiff_t NON_NULL = 0xffff;
 
     // Get the offset from the actual class to the base class. For most
@@ -1253,54 +1256,19 @@ void userdata_type::add_cast()
     // need to be removed before use.
     offset -= static_cast<ptrdiff_t>(NON_NULL);
 
-    if (!has_cast(info)) {
-        _casts.emplace_front(info, offset);
-    }
-
-    if (info != this) {
-        for (auto& cast : info->_casts) {
-            if (!has_cast(cast.first)) {
-                _casts.emplace_front(cast.first, pointer_offset<Base>() + cast.second);
-            }
-        }
-    }
+    return add_cast(info, offset);
 }
 
 template <class Value>
 Value* userdata_type::cast(lua_State* const state, const lua::userdata_block* const block) const
 {
-    assert(this == block->type());
-    auto info = &lua::Metatable<Value>::info();
-    for (auto& cast : _casts) {
-        if (info == cast.first) {
-            return reinterpret_cast<Value*>(reinterpret_cast<ptrdiff_t>(block->value()) + cast.second);
-        }
-    }
-
-    std::stringstream str;
-    for (auto& cast : _casts) {
-        if (cast.second == 1) {
-            str << "\tCast from " << name()<< " to " << cast.first->name() << " with an offset of " << cast.second << " byte" << std::endl;
-        } else if (cast.second == 0) {
-            str << "\tCast from " << name() << " to " << cast.first->name() << " with no offset" << std::endl;
-        } else {
-            str << "\tCast from " << name() << " to " << cast.first->name() << " with an offset of " << cast.second << " bytes" << std::endl;
-        }
-    }
-
-    throw lua::error(state, std::string("The provided ") + name() + " value cannot be cast to the requested " + info->name() + " type. Available casts:\n" + str.str());
+    return static_cast<Value*>(cast(state, block, &lua::Metatable<Value>::info()));
 }
 
 template <class Type>
 ptrdiff_t userdata_type::pointer_offset() const
 {
-    auto info = &lua::Metatable<Type>::info();
-    for (auto& cast : _casts) {
-        if (info == cast.first) {
-            return cast.second;
-        }
-    }
-    return 0;
+    return pointer_offset(&lua::Metatable<Type>::info());
 }
 
 template <class Expected>
