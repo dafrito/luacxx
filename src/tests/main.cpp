@@ -810,12 +810,10 @@ BOOST_AUTO_TEST_CASE(casting)
     BOOST_CHECK_THROW(lua::get<Value*>(env, -1), lua::error);
 }
 
-
-
 enum class Color {
     Red = 1,
-    Blue,
-    Green
+    Blue = 2,
+    Green = 4
 };
 
 LUA_METATABLE_ENUM(Color);
@@ -852,6 +850,21 @@ BOOST_AUTO_TEST_CASE(enums_and_each)
     BOOST_CHECK(colors[3] == Color::Blue);
 
     BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return Test == Red"));
+}
+
+BOOST_AUTO_TEST_CASE(enum_bitwise)
+{
+    auto env = lua::create();
+    env["Red"] = Color::Red;
+    env["Green"] = Color::Green;
+    env["Blue"] = Color::Blue;
+
+    env["Test"] = Color::Red;
+
+    lua::run_string(env, "Test = Test | Blue");
+    BOOST_CHECK_EQUAL(1, lua::run_string<int>(env, "return (Test & Red):value()"));
+    BOOST_CHECK_EQUAL(0, lua::run_string<int>(env, "return (Red & Green):value()"));
+    BOOST_CHECK_EQUAL(2, lua::run_string<int>(env, "return (Test & Blue):value()"));
 }
 
 BOOST_AUTO_TEST_CASE(logging)

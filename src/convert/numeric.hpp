@@ -43,69 +43,268 @@ Pushes a floating-point value onto the stack.
 
 namespace lua {
 
+/*
+ * Stack bindings for floating-point types.
+ */
+
 template <>
-struct Push<lua_Number>
+struct Push<double>
 {
-    static void push(lua_State* const state, const lua_Number& value)
+    static void push(lua_State* const state, const double& value)
     {
-        lua_pushnumber(state, value);
+        lua_pushnumber(state, static_cast<lua_Number>(value));
     }
 };
 
 template <>
-struct Store<lua_Number>
+struct Store<double>
 {
-    static void store(lua_Number& destination, lua_State* const state, const int source)
+    static void store(double& destination, lua_State* const state, const int source)
     {
-        destination = lua_tonumber(state, source);
+        destination = static_cast<double>(lua_tonumber(state, source));
     }
 };
 
-LUA_METATABLE_NAMED(lua_Number);
+LUA_METATABLE_NAMED(double);
+
+template <>
+struct Push<float>
+{
+    static void push(lua_State* const state, const float& value)
+    {
+        lua_pushnumber(state, static_cast<lua_Number>(value));
+    }
+};
+
+template <>
+struct Store<float>
+{
+    static void store(float& destination, lua_State* const state, const int source)
+    {
+        destination = static_cast<float>(lua_tonumber(state, source));
+    }
+};
+
+LUA_METATABLE_NAMED(float)
+
+/*
+ * Stack bindings for integral types.
+ */
+
+/**
+ * Store the value at the specified Lua stack position into the given destination.
+ */
+void store_lua_Integer(lua_Integer& destination, lua_State* const state, const int source_pos);
+
+template <>
+struct Push<long long>
+{
+    static void push(lua_State* const state, const long long& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<long long>
+{
+    static void store(long long& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<long long>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(long long)
+
+template <>
+struct Push<unsigned long long>
+{
+    static void push(lua_State* const state, const unsigned long long& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<unsigned long long>
+{
+    static void store(unsigned long long& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<unsigned long long>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(unsigned long long)
 
 template <>
 struct Push<long>
 {
-    static void push(lua_State* const state, const long& source)
+    static void push(lua_State* const state, const long& value)
     {
-        lua_pushinteger(state, source);
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
     }
 };
-
-void store_lua_Integer(long& destination, lua_State* const state, const int source);
 
 template <>
 struct Store<long>
 {
     static void store(long& destination, lua_State* const state, const int source)
     {
-        store_lua_Integer(destination, state, source);
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<long>(sink);
     }
 };
 
-LUA_METATABLE_NAMED(lua_Integer);
+LUA_METATABLE_NAMED(long);
 
 template <>
-struct Push<lua_Unsigned>
+struct Push<unsigned long>
 {
-    static void push(lua_State* const state, const lua_Unsigned& source)
+    static void push(lua_State* const state, const unsigned long& value)
     {
-        lua_pushinteger(state, source);
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
     }
 };
-
-void store_lua_Unsigned(lua_Unsigned& destination, lua_State* const state, const int source);
 
 template <>
-struct Store<lua_Unsigned>
+struct Store<unsigned long>
 {
-    static void store(lua_Unsigned& destination, lua_State* const state, const int source)
+    static void store(unsigned long& destination, lua_State* const state, const int source)
     {
-        store_lua_Unsigned(destination, state, source);
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<unsigned long>(sink);
     }
 };
 
-LUA_METATABLE_NAMED(lua_Unsigned);
+LUA_METATABLE_NAMED(unsigned long)
+
+/* Int */
+
+template <>
+struct Push<int>
+{
+    static void push(lua_State* const state, const int& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<int>
+{
+    static void store(int& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<int>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(int)
+
+/* Unsigned int */
+
+template <>
+struct Push<unsigned int>
+{
+    static void push(lua_State* const state, const unsigned int& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<unsigned int>
+{
+    static void store(unsigned int& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<unsigned int>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(unsigned int)
+
+/* Short */
+
+template <>
+struct Push<short>
+{
+    static void push(lua_State* const state, const short& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<short>
+{
+    static void store(short& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<short>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(short)
+
+/* Unsigned short */
+
+template <>
+struct Push<unsigned short>
+{
+    static void push(lua_State* const state, const short& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<unsigned short>
+{
+    static void store(unsigned short& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<unsigned short>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(unsigned short)
+
+/* Unsigned char */
+
+template <>
+struct Push<unsigned char>
+{
+    static void push(lua_State* const state, const unsigned char& value)
+    {
+        lua_pushinteger(state, static_cast<lua_Integer>(value));
+    }
+};
+
+template <>
+struct Store<unsigned char>
+{
+    static void store(unsigned char& destination, lua_State* const state, const int source)
+    {
+        lua_Integer sink;
+        lua::store_lua_Integer(sink, state, source);
+        destination = static_cast<unsigned char>(sink);
+    }
+};
+
+LUA_METATABLE_NAMED(unsigned char)
+
+/* Boolean types */
 
 template <>
 struct Push<bool>
@@ -126,180 +325,6 @@ struct Store<bool>
 };
 
 LUA_METATABLE_NAMED(bool)
-
-template <>
-struct Push<unsigned char>
-{
-    static void push(lua_State* const state, const unsigned char& value)
-    {
-        lua::push<lua_Unsigned>(state, value);
-    }
-};
-
-template <>
-struct Store<unsigned char>
-{
-    static void store(unsigned char& destination, lua_State* const state, const int source)
-    {
-        lua_Unsigned sink;
-        lua::Store<lua_Unsigned>::store(sink, state, source);
-        destination = sink;
-    }
-};
-
-LUA_METATABLE_NAMED(unsigned char)
-
-template <>
-struct Push<int>
-{
-    static void push(lua_State* const state, const int& value)
-    {
-        lua::push<lua_Integer>(state, value);
-    }
-};
-
-template <>
-struct Store<int>
-{
-    static void store(int& destination, lua_State* const state, const int source)
-    {
-        lua_Integer sink;
-        lua::store(sink, state, source);
-        destination = sink;
-    }
-};
-
-LUA_METATABLE_NAMED(int)
-
-template <>
-struct Push<short>
-{
-    static void push(lua_State* const state, const short& value)
-    {
-        lua::push<lua_Integer>(state, value);
-    }
-};
-
-template <>
-struct Store<short>
-{
-    static void store(short& destination, lua_State* const state, const int source)
-    {
-        lua_Integer sink;
-        lua::Store<lua_Integer>::store(sink, state, source);
-        destination = sink;
-    }
-};
-
-LUA_METATABLE_NAMED(short)
-
-template <>
-struct Push<unsigned short>
-{
-    static void push(lua_State* const state, const unsigned short& value)
-    {
-        lua::push<lua_Unsigned>(state, value);
-    }
-};
-
-template <>
-struct Store<unsigned short>
-{
-    static void store(unsigned short& destination, lua_State* const state, const int source)
-    {
-        lua_Unsigned sink;
-        lua::Store<lua_Unsigned>::store(sink, state, source);
-        destination = sink;
-    }
-};
-
-LUA_METATABLE_NAMED(unsigned short)
-
-template <>
-struct Push<unsigned long>
-{
-    static void push(lua_State* const state, const unsigned long& value)
-    {
-        lua::push(state, static_cast<lua_Unsigned>(value));
-    }
-};
-
-template <>
-struct Store<unsigned long>
-{
-    static void store(unsigned long& destination, lua_State* const state, const int source)
-    {
-        destination = lua::Get<lua_Unsigned>::get(state, source);
-    }
-};
-
-LUA_METATABLE_NAMED(unsigned long)
-
-template <>
-struct Push<long long>
-{
-    static void push(lua_State* const state, const long long& value)
-    {
-        lua::push(state, static_cast<lua_Integer>(value));
-    }
-};
-
-template <>
-struct Store<long long>
-{
-    static void store(long long& destination, lua_State* const state, const int source)
-    {
-        lua_Integer sink;
-        lua::Store<lua_Integer>::store(sink, state, source);
-        destination = sink;
-    }
-};
-
-LUA_METATABLE_NAMED(long long)
-
-template <>
-struct Push<unsigned long long>
-{
-    static void push(lua_State* const state, const unsigned long long& value)
-    {
-        lua::push(state, static_cast<lua_Integer>(value));
-    }
-};
-
-template <>
-struct Store<unsigned long long>
-{
-    static void store(unsigned long long& destination, lua_State* const state, const int source)
-    {
-        lua_Integer sink;
-        lua::Store<lua_Integer>::store(sink, state, source);
-        destination = sink;
-    }
-};
-
-LUA_METATABLE_NAMED(unsigned long long)
-
-template <>
-struct Push<float>
-{
-    static void push(lua_State* const state, const float& value)
-    {
-        lua::Push<lua_Number>::push(state, value);
-    }
-};
-
-template <>
-struct Store<float>
-{
-    static void store(float& destination, lua_State* const state, const int source)
-    {
-        lua_Number sink;
-        lua::Store<lua_Number>::store(sink, state, source);
-        destination = static_cast<float>(sink);
-    }
-};
-
-LUA_METATABLE_NAMED(float)
 
 } // namespace lua
 
