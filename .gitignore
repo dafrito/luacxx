@@ -33,6 +33,7 @@ rpm.spec
 ar-lib
 lua-cxx.m4
 test-driver
+compile
 
 # Dist artifacts
 *.tar.gz
