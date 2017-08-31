@@ -41,17 +41,17 @@ install-exec-hook:
 		fi; \
 	done;
 
-TESTPROG=Qt5Gui
+TESTPROG=luacxx
 
 checkdebug: $(TESTS)
 	cd src && gdb ./.libs/lt-test_$(TESTPROG)
 
-VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes --show-leak-kinds=all
+VALGRIND = valgrind -v --num-callers=40 --leak-check=full --trace-children=yes
 
 checkvalgrind:
 	$(VALGRIND) ./src/.libs/lt-test_$(TESTPROG)
 
-RUNPROG=quat_benchmark
+RUNPROG=qt_window
 
 valgrind:
 	cd lua && $(VALGRIND) ./luacxx demo.lua $(RUNPROG)

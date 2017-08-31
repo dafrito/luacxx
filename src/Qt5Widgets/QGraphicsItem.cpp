@@ -701,7 +701,7 @@ int QGraphicsItem_setFocus(lua_State* const state)
     case 1:
         self->setFocus();
         break;
-    case 3:
+    case 2:
     default:
         self->setFocus(
             lua::get<Qt::FocusReason>(state, 2)

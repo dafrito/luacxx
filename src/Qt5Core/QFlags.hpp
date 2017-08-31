@@ -11,25 +11,36 @@ namespace lua {
 template <class T>
 int QFlags_bor(lua_State* const state)
 {
-    auto& self = lua::get<QFlags<T>&>(state, 1);
+    auto self = lua::get<QFlags<T>>(state, 1);
     self |= lua::get<T>(state, 2);
-    return 0;
+    lua::push(state, self);
+    return 1;
 }
 
 template <class T>
 int QFlags_bxor(lua_State* const state)
 {
-    auto& self = lua::get<QFlags<T>&>(state, 1);
+    auto self = lua::get<QFlags<T>>(state, 1);
     self ^= lua::get<T>(state, 2);
-    return 0;
+    lua::push(state, self);
+    return 1;
 }
 
 template <class T>
 int QFlags_band(lua_State* const state)
 {
-    auto& self = lua::get<QFlags<T>&>(state, 1);
+    auto self = lua::get<QFlags<T>>(state, 1);
     self &= lua::get<T>(state, 2);
-    return 0;
+    lua::push(state, self);
+    return 1;
+}
+
+template <class T>
+int QFlags_bnot(lua_State* const state)
+{
+    auto self = lua::get<QFlags<T>&>(state, 1);
+    lua::push(state, ~self);
+    return 1;
 }
 
 template <class T>
@@ -41,15 +52,27 @@ int QFlags_value(lua_State* const state)
 }
 
 template <class T>
+int QFlags_test(lua_State* const state)
+{
+    auto& self = lua::get<QFlags<T>&>(state, 1);
+    lua::push(state, !(!self));
+    return 1;
+}
+
+template <class T>
 void QFlags_metatable(lua_State* const state, const int pos)
 {
     lua::index mt(state, pos);
 
-    mt["band"] = QFlags_band<T>;
-    mt["bor"] = QFlags_bor<T>;
-    mt["bxor"] = QFlags_bxor<T>;
+    mt["__band"] = QFlags_band<T>;
+    mt["__bor"] = QFlags_bor<T>;
+    mt["__bxor"] = QFlags_bxor<T>;
+    mt["__bnot"] = QFlags_bnot<T>;
     mt["value"] = QFlags_value<T>;
     mt["testFlag"] = &QFlags<T>::testFlag;
+
+    // Equivalent to !!flag
+    mt["testAny"] = QFlags_test<T>;
 }
 
 template <class T>
@@ -90,7 +113,6 @@ struct Metatable<QFlags<T>>
 };
 
 };
-
 
 extern "C" int luaopen_Qt5Core_QFlags(lua_State* const);
 

@@ -79,6 +79,7 @@ int QDnsLookup_new(lua_State* const state)
             ));
         }
         break;
+        #if QT_VERSION >= 0x050400
     case 4:
     default:
         // QDnsLookup(Type type, const QString & name, const QHostAddress & nameserver, QObject * parent = 0)
@@ -88,6 +89,7 @@ int QDnsLookup_new(lua_State* const state)
             lua::get<const QHostAddress&>(state, 3),
             lua::get<QObject*>(state, 4)
         ));
+        #endif
     }
 
     return 1;

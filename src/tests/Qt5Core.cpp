@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(test_QFlags)
 
     lua::run_string(env, "require 'Qt5Core.Qt'");
     lua::run_string(env, "foo = Qt.Alignment()");
-    lua::run_string(env, "foo:bor(Qt.AlignBottom)");
+    lua::run_string(env, "foo = foo | Qt.AlignBottom");
     auto foo = env["foo"].get<Qt::Alignment>();
     BOOST_CHECK_EQUAL(true, lua::run_string<bool>(env, "return foo:testFlag(Qt.AlignBottom)"));
 }

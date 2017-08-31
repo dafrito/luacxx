@@ -1,7 +1,7 @@
 #ifndef LUACXX_LOADERS_INCLUDED
 #define LUACXX_LOADERS_INCLUDED
 
-#include <config.hpp>
+#include "config.hpp"
 
 #include <string>
 

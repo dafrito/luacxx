@@ -11,8 +11,16 @@ OUTPUT=/tmp/cpod.$$
 touch $OUTPUT
 trap 'rm -f $OUTPUT' INT EXIT
 
+if ! which perldoc >/dev/null; then
+    die "perldoc must be installed for cpod to work."
+fi
+
 FILE=$1
 shift
+
+if test -z $FILE; then
+    die "USAGE: cpod <filename>";
+fi;
 
 EXPRESSION=
 case "$FILE" in

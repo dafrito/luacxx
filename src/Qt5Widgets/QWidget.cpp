@@ -9,6 +9,7 @@
 #include "../Qt5Core/QSize.hpp"
 #include "../Qt5Core/QPoint.hpp"
 #include "../Qt5Core/QRect.hpp"
+#include "../Qt5Gui/QBitmap.hpp"
 #include "../Qt5Gui/QRegion.hpp"
 #include "../Qt5Gui/QWindow.hpp"
 #include "../Qt5Gui/QPalette.hpp"
@@ -19,6 +20,7 @@
 #include "../Qt5Gui/QKeySequence.hpp"
 #include "../Qt5Gui/QIcon.hpp"
 #include "../Qt5Gui/QIcon.hpp"
+#include "../Qt5Gui/QPixmap.hpp"
 #include "../Qt5Core/Qt.hpp"
 #include "../Qt5Core/QFlags.hpp"
 #include "../Qt5Core/QLocale.hpp"
@@ -41,39 +43,125 @@
 
 int QWidget_childAt(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // QWidget *    childAt(int x, int y) const
+    // QWidget *    childAt(const QPoint & p) const
+    if (lua_gettop(state) == 2) {
+        lua::push(state, self->childAt(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        ));
+    } else {
+        lua::push(state, self->childAt(
+            lua::get<const QPoint&>(state, 2)
+        ));
+    }
+    return 1;
 }
+
 int QWidget_getContentsMargins(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     getContentsMargins(int * left, int * top, int * right, int * bottom) const
+    if (lua_gettop(state) == 1) {
+        int left, top, right, bottom;
+        self->getContentsMargins(
+            &left,
+            &top,
+            &right,
+            &bottom
+        );
+        lua::push(state,
+            left,
+            top,
+            right,
+            bottom
+        );
+        return 4;
+    } else {
+        self->getContentsMargins(
+            lua::get<int*>(state, 2),
+            lua::get<int*>(state, 3),
+            lua::get<int*>(state, 4),
+            lua::get<int*>(state, 5)
+        );
+        return 0;
+    }
 }
+
 int QWidget_grab(lua_State* const state)
 {
-    return 0;
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // QPixmap  grab(const QRect & rectangle = QRect( QPoint( 0, 0 ), QSize( -1, -1 ) ))
+    switch (lua_gettop(state)) {
+    case 1:
+        lua::push(state, self->grab());
+        break;
+    case 2:
+    default:
+        lua::push(state, self->grab(
+            lua::get<const QRect&>(state, 2)
+        ));
+        break;
+    }
+
+    return 1;
 }
+
 int QWidget_grabGesture(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     grabGesture(Qt::GestureType gesture, Qt::GestureFlags flags = Qt::GestureFlags())
+    switch (lua_gettop(state)) {
+    case 2:
+        self->grabGesture(
+            lua::get<Qt::GestureType>(state, 2)
+        );
+        break;
+    case 3:
+        self->grabGesture(
+            lua::get<Qt::GestureType>(state, 2),
+            lua::get<Qt::GestureFlags>(state, 3)
+        );
+        break;
+    }
+
     return 0;
 }
+
 int QWidget_grabMouse(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     grabMouse()
+    // void     grabMouse(const QCursor & cursor)
+    
     return 0;
 }
+
 int QWidget_move(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
     return 0;
 }
 int QWidget_render(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
     return 0;
 }
 int QWidget_repaint(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
     return 0;
 }
 int QWidget_resize(lua_State* const state)
 {
     auto self = lua::get<QWidget*>(state, 1);
+
     if (lua::size(state) > 2) {
         self->resize(
             lua::get<int>(state, 2),
@@ -84,70 +172,326 @@ int QWidget_resize(lua_State* const state)
             lua::get<const QSize&>(state, 2)
         );
     }
+
     return 0;
 }
 int QWidget_scroll(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     scroll(int dx, int dy)
+    // void     scroll(int dx, int dy, const QRect & r)
+    if (lua_gettop(state) == 3) {
+        self->scroll(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    } else {
+        self->scroll(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<const QRect&>(state, 4)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setAttribute(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setAttribute(Qt::WidgetAttribute attribute, bool on = true)
+    if (lua_gettop(state) == 2) {
+        self->setAttribute(
+            lua::get<Qt::WidgetAttribute>(state, 2)
+        );
+    } else {
+        self->setAttribute(
+            lua::get<Qt::WidgetAttribute>(state, 2),
+            lua::get<bool>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setBaseSize(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setBaseSize(const QSize &)
+    // void     setBaseSize(int basew, int baseh)
+    if (lua_gettop(state) == 2) {
+        self->setBaseSize(
+            lua::get<const QSize&>(state, 2)
+        );
+    } else {
+        self->setBaseSize(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setContentsMargins(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    //  void    setContentsMargins(int left, int top, int right, int bottom)
+    //  void    setContentsMargins(const QMargins & margins)
+    if (lua_gettop(state) == 2) {
+        self->setContentsMargins(
+            lua::get<const QMargins&>(state, 2)
+        );
+    } else {
+        self->setContentsMargins(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setFixedSize(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setFixedSize(const QSize & s)
+    // void     setFixedSize(int w, int h)
+    if (lua_gettop(state) == 2) {
+        self->setFixedSize(
+            lua::get<const QSize&>(state, 2)
+        );
+    } else {
+        self->setFixedSize(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setFocus(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setFocus(Qt::FocusReason reason)
+    self->setFocus(
+        lua::get<Qt::FocusReason>(state, 2)
+    );
+
     return 0;
 }
+
 int QWidget_setGeometry(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setGeometry(const QRect &)
+    // void     setGeometry(int x, int y, int w, int h)
+    if (lua_gettop(state) == 2) {
+        self->setGeometry(
+            lua::get<const QRect&>(state, 2)
+        );
+    } else {
+        self->setGeometry(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setMask(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setMask(const QBitmap & bitmap)
+    // void     setMask(const QRegion & region)
+    if (lua::is_type<QBitmap>(state, 2)) {
+        self->setMask(
+            lua::get<const QBitmap&>(state, 2)
+        );
+    } else {
+        self->setMask(
+            lua::get<const QRegion&>(state, 2)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setMaximumSize(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setMaximumSize(const QSize &)
+    // void     setMaximumSize(int maxw, int maxh)
+    if (lua_gettop(state) == 2) {
+        self->setMaximumSize(
+            lua::get<const QSize&>(state, 2)
+        );
+    } else {
+        self->setMaximumSize(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setMinimumSize(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setMinimumSize(const QSize &)
+    // void     setMinimumSize(int minw, int minh)
+    if (lua_gettop(state) == 2) {
+        self->setMinimumSize(
+            lua::get<const QSize&>(state, 2)
+        );
+    } else {
+        self->setMinimumSize(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setParent(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setParent(QWidget * parent)
+    // void     setParent(QWidget * parent, Qt::WindowFlags f)
+    if (lua_gettop(state) == 2) {
+        self->setParent(
+            lua::get<QWidget*>(state, 2)
+        );
+    } else {
+        self->setParent(
+            lua::get<QWidget*>(state, 2),
+            lua::get<Qt::WindowFlags>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setShortcutAutoRepeat(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setShortcutAutoRepeat(int id, bool enable = true)
+    if (lua_gettop(state) == 2) {
+        self->setShortcutAutoRepeat(
+            lua::get<int>(state, 2)
+        );
+    } else {
+        self->setShortcutAutoRepeat(
+            lua::get<int>(state, 2),
+            lua::get<bool>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setShortcutEnabled(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setShortcutEnabled(int id, bool enable = true)
+    if (lua_gettop(state) == 2) {
+        self->setShortcutEnabled(
+            lua::get<int>(state, 2)
+        );
+    } else {
+        self->setShortcutEnabled(
+            lua::get<int>(state, 2),
+            lua::get<bool>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_setSizeIncrement(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setSizeIncrement(const QSize &)
+    // void     setSizeIncrement(int w, int h)
+    if (lua_gettop(state) == 2) {
+        self->setSizeIncrement(
+            lua::get<const QSize&>(state, 2)
+        );
+    } else {
+        self->setSizeIncrement(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3)
+        );
+    }
     return 0;
 }
+
 int QWidget_setSizePolicy(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    // void     setSizePolicy(QSizePolicy)
+    // void     setSizePolicy(QSizePolicy::Policy horizontal, QSizePolicy::Policy vertical)
+    if (lua_gettop(state) == 2) {
+        self->setSizePolicy(
+            lua::get<QSizePolicy>(state, 2)
+        );
+    } else {
+        self->setSizePolicy(
+            lua::get<QSizePolicy::Policy>(state, 2),
+            lua::get<QSizePolicy::Policy>(state, 3)
+        );
+    }
+
     return 0;
 }
+
 int QWidget_update(lua_State* const state)
 {
+    auto self = lua::get<QWidget*>(state, 1);
+
+    //  void    update(int x, int y, int w, int h)
+    //  void    update(const QRect & rect)
+    //  void    update(const QRegion & rgn)
+    if (lua_gettop(state) > 2) {
+        self->update(
+            lua::get<int>(state, 2),
+            lua::get<int>(state, 3),
+            lua::get<int>(state, 4),
+            lua::get<int>(state, 5)
+        );
+    } else if (lua::is_type<QRect>(state, 2)) {
+        self->update(
+            lua::get<const QRect&>(state, 2)
+        );
+    } else {
+        self->update(
+            lua::get<const QRegion&>(state, 2)
+        );
+    }
+
     return 0;
 }
 

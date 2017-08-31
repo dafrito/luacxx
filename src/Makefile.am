@@ -4,11 +4,9 @@ lib_LTLIBRARIES = libluacxx.la
 
 libluacxx_la_CPPFLAGS = \
 	@stdcxx11_CFLAGS@ \
-	@gobject_introspection_CFLAGS@ \
 	@lua_CFLAGS@
 
 libluacxx_la_LIBADD = \
-	@gobject_introspection_LIBS@ \
 	@lua_LIBS@
 
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
@@ -115,12 +113,19 @@ moc_Qt5Core.cpp: tests/Qt5Core.hpp
 
 lib_LTLIBRARIES += libluacxx-Qt5Core.la
 
+libluacxx_la_CPPFLAGS += \
+	@Qt5Core_CFLAGS@ -fPIC
+
 libluacxx_Qt5Core_la_CPPFLAGS = \
 	$(libluacxx_la_CPPFLAGS) \
+	@Qt5Core_CFLAGS@ -fPIC
 
 libluacxx_Qt5Core_la_LIBADD = \
 	@Qt5Core_LIBS@ \
 	libluacxx.la
+
+libluacxx_la_LIBADD += \
+	@Qt5Core_LIBS@
 
 # It's necessary to include these since Qt likes to have global static objects
 # that are destroyed on exit. If Qt's libraries are loaded from Lua, then Lua
@@ -334,9 +339,19 @@ libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QHostAddress.cpp \
 	Qt5Network/QNetworkAddressEntry.cpp \
 	Qt5Network/QNetworkAccessManager.cpp \
+	Qt5Network/QNetworkCacheMetaData.cpp \
+	Qt5Network/QNetworkConfiguration.cpp \
+	Qt5Network/QNetworkConfigurationManager.cpp \
+	Qt5Network/QNetworkCookie.cpp \
+	Qt5Network/QNetworkCookieJar.cpp \
+	Qt5Network/QNetworkDiskCache.cpp \
 	Qt5Network/QNetworkInterface.cpp \
 	Qt5Network/QNetworkProxy.cpp \
+	Qt5Network/QNetworkProxyFactory.cpp \
+	Qt5Network/QNetworkProxyQuery.cpp \
+	Qt5Network/QNetworkReply.cpp \
 	Qt5Network/QNetworkRequest.cpp \
+	Qt5Network/QNetworkSession.cpp \
 	Qt5Network/QHttpPart.cpp \
 	Qt5Network/QHttpMultiPart.cpp \
 	Qt5Network/QSslSocket.cpp \
@@ -365,8 +380,18 @@ nobase_pkginclude_HEADERS += \
 	Qt5Network/QTcpServer.hpp \
 	Qt5Network/QUdpSocket.hpp \
 	Qt5Network/QHostAddress.hpp \
+	Qt5Network/QNetworkCacheMetaData.hpp \
+	Qt5Network/QNetworkConfiguration.hpp \
+	Qt5Network/QNetworkConfigurationManager.hpp \
+	Qt5Network/QNetworkCookie.hpp \
+	Qt5Network/QNetworkCookieJar.hpp \
+	Qt5Network/QNetworkDiskCache.hpp \
 	Qt5Network/QNetworkAccessManager.hpp \
 	Qt5Network/QNetworkProxy.hpp \
+	Qt5Network/QNetworkProxyFactory.hpp \
+	Qt5Network/QNetworkProxyQuery.hpp \
+	Qt5Network/QNetworkReply.hpp \
+	Qt5Network/QNetworkSession.hpp \
 	Qt5Network/QNetworkRequest.hpp \
 	Qt5Network/QNetworkAddressEntry.hpp \
 	Qt5Network/QNetworkInterface.hpp \
@@ -401,6 +426,11 @@ libluacxx_Qt5Gui_la_CPPFLAGS = \
 libluacxx_Qt5Gui_la_LIBADD = \
 	@Qt5Gui_LIBS@ \
 	libluacxx-Qt5Core.la
+
+# It's necessary to include these since Qt likes to have global static objects
+# that are destroyed on exit. If Qt's libraries are loaded from Lua, then Lua
+# will unload Qt's source code without removing the registered exit handler.
+luacxx_LDADD += $(libluacxx_Qt5Gui_la_LIBADD)
 
 libluacxx_Qt5Gui_la_LDFLAGS = -version-info 0:0:0 --build-id
 
@@ -1079,7 +1109,15 @@ libluacxx_libinput_la_LIBADD = \
 libluacxx_libinput_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_libinput_la_SOURCES = \
-	libinput.cpp
+	libinput.cpp \
+	libinput/group__base.cpp \
+	libinput/group__config.cpp \
+	libinput/group__device.cpp \
+	libinput/group__event.cpp \
+	libinput/group__event__keyboard.cpp \
+	libinput/group__event__pointer.cpp \
+	libinput/group__event__touch.cpp \
+	libinput/group__seat.cpp
 
 nobase_pkginclude_HEADERS += \
 	libinput.hpp

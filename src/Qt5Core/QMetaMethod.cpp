@@ -88,7 +88,7 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
                 }
 
                 QVariant arg(type, nullptr);
-                lua::store(arg, state, i + 3);
+                lua::store_qvariant(arg, state, i + 3);
                 arg.convert(static_cast<QVariant::Type>(type));
                 variants << arg;
             }
@@ -108,7 +108,7 @@ void lua::QMetaMethod_metatable(lua_State* const state, const int pos)
             if (method_is_lua_CFunction) {
                 return variants.at(0).toInt();
             }
-            lua::push(state, variants.at(0));
+            lua::push_qvariant(state, variants.at(0));
             return 1;
         }
 

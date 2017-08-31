@@ -233,7 +233,7 @@ void lua::QObject_metatable(lua_State* const state, const int pos)
             throw lua::error("New properties must not be added to this userdata");
         }
 
-        lua::store(propValue, state, 3);
+        lua::store_qvariant(propValue, state, 3);
         obj->setProperty(name, propValue);
 
         return 0;

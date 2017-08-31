@@ -73,48 +73,48 @@ void lua::QFont_metatable(lua_State* const state, const int pos)
 
 int QFont_new(lua_State* const state)
 {
-    if (lua_gettop(state) <= 1) {
+    if (lua_gettop(state) == 0) {
         lua::make<QFont>(state);
         return 1;
     }
 
-    if (lua::is_type<QFont>(state, 2)) {
-        if (lua_gettop(state) == 2) {
-            lua::make<QFont>(state, lua::get<const QFont&>(state, 2));
+    if (lua::is_type<QFont>(state, 1)) {
+        if (lua_gettop(state) == 1) {
+            lua::make<QFont>(state, lua::get<const QFont&>(state, 1));
             return 1;
         }
         lua::make<QFont>(state,
-            lua::get<const QFont&>(state, 2),
-            lua::get<QPaintDevice*>(state, 3)
+            lua::get<const QFont&>(state, 1),
+            lua::get<QPaintDevice*>(state, 2)
         );
         return 1;
     }
 
     switch (lua_gettop(state)) {
+    case 1:
+        lua::make<QFont>(state,
+            lua::get<QString>(state, 1) // family
+        );
+        return 1;
     case 2:
         lua::make<QFont>(state,
-            lua::get<QString>(state, 2) // family
+            lua::get<QString>(state, 1), // family
+            lua::get<int>(state, 2) // pointSize
         );
         return 1;
     case 3:
         lua::make<QFont>(state,
-            lua::get<QString>(state, 2), // family
-            lua::get<int>(state, 3) // pointSize
-        );
-        return 1;
-    case 4:
-        lua::make<QFont>(state,
-            lua::get<QString>(state, 2), // family
-            lua::get<int>(state, 3), // pointSize
-            lua::get<int>(state, 4) // weight
+            lua::get<QString>(state, 1), // family
+            lua::get<int>(state, 2), // pointSize
+            lua::get<int>(state, 3) // weight
         );
         return 1;
     default:
         lua::make<QFont>(state,
-            lua::get<QString>(state, 2), // family
-            lua::get<int>(state, 3), // pointSize
-            lua::get<int>(state, 4), // weight
-            lua::get<bool>(state, 5) // italic
+            lua::get<QString>(state, 1), // family
+            lua::get<int>(state, 2), // pointSize
+            lua::get<int>(state, 3), // weight
+            lua::get<bool>(state, 4) // italic
         );
         return 1;
     }
