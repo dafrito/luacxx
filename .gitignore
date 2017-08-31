@@ -6,6 +6,15 @@ lib*.so.*
 *.o
 *.lo
 *.la
+*.pc.head
+.dirstamp
+
+# Binaries and build artifacts
+src/test_luacxx
+src/test_luacxx_without_conversions
+src/pkg-config/*.pc
+src/luacxx
+luacxx.spec
 
 # Autotools artifacts
 stamp*
