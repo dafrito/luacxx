@@ -54,52 +54,52 @@ checkvalgrind:
 RUNPROG=qt_window
 
 valgrind:
-	cd lua && $(VALGRIND) ./luacxx demo.lua $(RUNPROG)
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" $(VALGRIND) ./luacxx demo.lua $(RUNPROG)
 
 run: lua
-	cd lua && ./luacxx demo.lua $(RUNPROG)
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua $(RUNPROG)
 
 debug: lua
-	cd lua && gdb ../src/.libs/lt-luacxx
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" gdb ../src/.libs/lt-luacxx
 
 run-quat_benchmark:
-	cd lua && ./luacxx demo.lua quat_benchmark
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua quat_benchmark
 
 run-gtk_gstreamer:
-	cd lua && ./luacxx demo.lua gtk_gstreamer
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua gtk_gstreamer
 
 run-qt_window:
-	cd lua && ./luacxx demo.lua qt_window
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua qt_window
 
 valgrind-qt_window:
-	cd lua && $(VALGRIND) ./luacxx demo.lua qt_window
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" $(VALGRIND) ./luacxx demo.lua qt_window
 
 run-cairo:
-	cd lua && ./luacxx demo.lua cairo
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua cairo
 
 valgrind-cairo:
-	cd lua && $(VALGRIND) ./luacxx demo.lua cairo
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" $(VALGRIND) ./luacxx demo.lua cairo
 
 run-Gst:
-	cd lua && ./luacxx demo.lua Gst
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua Gst
 
 valgrind-Gst:
-	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" $(VALGRIND) ./luacxx demo.lua Gst
 
 run-ncurses_getch:
 	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua ncurses_getch
 
 run-nanorecv:
-	cd lua && ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
 
 valgrind-nanorecv:
-	cd lua && $(VALGRIND) ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" $(VALGRIND) ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc
 
 run-nanosend:
-	cd lua && ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
 
 valgrind-nanosend:
-	cd lua && $(VALGRIND) ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" $(VALGRIND) ./luacxx demo.lua nanosend ipc:///tmp/pipeline.ipc "Hello!"
 
 RPMFLAGS ?= --ba
 SRCRPM=luacxx-@PACKAGE_VERSION@-@PACKAGE_RELEASE@.src.rpm
