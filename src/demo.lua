@@ -8,7 +8,7 @@ require "demo.nanosend";
 require "demo.cairo";
 require "demo.Gst";
 
-local name = ...;
+local _, _, name = ...;
 
 if name and demo[name] then
     print("Running " .. name);

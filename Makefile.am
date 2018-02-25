@@ -29,7 +29,7 @@ lua:
 	done;
 .PHONY: lua
 
-LUA_LIB_DIR="$(libdir)/lua/5.2/"
+LUA_LIB_DIR="$(libdir)/lua/5.3/"
 
 install-exec-hook:
 	mkdir -p $(DESTDIR)$(LUA_LIB_DIR)
@@ -87,7 +87,7 @@ valgrind-Gst:
 	cd lua && $(VALGRIND) ./luacxx demo.lua Gst
 
 run-ncurses_getch:
-	cd lua && ./luacxx demo.lua ncurses_getch
+	cd src && LUA_CPATH="$(LUA_LIB_DIR)/?.so;" ./luacxx demo.lua ncurses_getch
 
 run-nanorecv:
 	cd lua && ./luacxx demo.lua nanorecv ipc:///tmp/pipeline.ipc

@@ -2,6 +2,10 @@
 
 #include "../thread.hpp"
 
+void lua::MEVENT_metatable(lua_State* const state, const int mt)
+{
+}
+
 
 /*
 

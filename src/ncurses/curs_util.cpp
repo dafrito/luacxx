@@ -8,10 +8,10 @@ void lua::ncurses_curs_util(lua_State* const state)
 {
     lua::thread env(state);
 
-    env["unctrl"] = std::function<char*(chtype)>(unctrl);
+    env["unctrl"] = unctrl;//std::function<char*(chtype)>(unctrl);
     env["wunctrl"] = std::function<wchar_t*(cchar_t*)>(wunctrl);
     env["keyname"] = keyname;
-    env["key_name"] = std::function<char*(wchar_t)>(key_name);
+    env["key_name"] = key_name;//std::function<char*(wchar_t)>(key_name);
     env["filter"] = filter;
     env["nofilter"] = nofilter;
     env["use_env"] = use_env;
