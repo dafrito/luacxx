@@ -28,9 +28,9 @@ struct Store<char>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(char)
 LUA_METATABLE_NAMED(char const)
-
-} // namespace lua
 
 #endif // LUA_CXX_CHAR_HEADER

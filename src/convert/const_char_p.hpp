@@ -50,8 +50,8 @@ struct Get<const char*>
     }
 };
 
-LUA_METATABLE_NAMED(const char*)
-
 } // namespace lua
+
+LUA_METATABLE_NAMED(const char*)
 
 #endif // LUACXX_CONVERT_CONST_CHAR_P_INCLUDED

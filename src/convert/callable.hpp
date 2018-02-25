@@ -188,9 +188,9 @@ struct Store<lua::callable>
     }
 };
 
-LUA_METATABLE_NAMED(lua::callable);
-
 } // namespace lua
+
+LUA_METATABLE_NAMED(lua::callable);
 
 namespace {
 

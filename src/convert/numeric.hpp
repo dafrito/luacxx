@@ -65,7 +65,11 @@ struct Store<double>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(double);
+
+namespace lua {
 
 template <>
 struct Push<float>
@@ -85,7 +89,11 @@ struct Store<float>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(float)
+
+namespace lua {
 
 /*
  * Stack bindings for integral types.
@@ -116,7 +124,11 @@ struct Store<long long>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(long long)
+
+namespace lua {
 
 template <>
 struct Push<unsigned long long>
@@ -138,7 +150,11 @@ struct Store<unsigned long long>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(unsigned long long)
+
+namespace lua {
 
 template <>
 struct Push<long>
@@ -160,7 +176,11 @@ struct Store<long>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(long);
+
+namespace lua {
 
 template <>
 struct Push<unsigned long>
@@ -182,9 +202,12 @@ struct Store<unsigned long>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(unsigned long)
 
 /* Int */
+namespace lua {
 
 template <>
 struct Push<int>
@@ -206,9 +229,12 @@ struct Store<int>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(int)
 
 /* Unsigned int */
+namespace lua {
 
 template <>
 struct Push<unsigned int>
@@ -230,9 +256,12 @@ struct Store<unsigned int>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(unsigned int)
 
 /* Short */
+namespace lua {
 
 template <>
 struct Push<short>
@@ -254,9 +283,12 @@ struct Store<short>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(short)
 
 /* Unsigned short */
+namespace lua {
 
 template <>
 struct Push<unsigned short>
@@ -278,7 +310,11 @@ struct Store<unsigned short>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(unsigned short)
+
+namespace lua {
 
 /* Unsigned char */
 
@@ -302,7 +338,11 @@ struct Store<unsigned char>
     }
 };
 
+} // namespace lua
+
 LUA_METATABLE_NAMED(unsigned char)
+
+namespace lua {
 
 /* Boolean types */
 
@@ -324,8 +364,8 @@ struct Store<bool>
     }
 };
 
-LUA_METATABLE_NAMED(bool)
-
 } // namespace lua
+
+LUA_METATABLE_NAMED(bool)
 
 #endif // luacxx_convert_numeric_INCLUDED
