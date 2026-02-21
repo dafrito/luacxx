@@ -5,7 +5,7 @@ AC_SUBST([PACKAGE_RELEASE], [1])
 AC_SUBST([PACKAGE_DESCRIPTION], ["C++11 bindings and modules for Lua"])
 
 AM_INIT_AUTOMAKE([-Wall foreign serial-tests subdir-objects])
-AC_CONFIG_SRCDIR([src/stack.hpp])
+AC_CONFIG_SRCDIR([include/luacxx/stack.hpp])
 AC_CONFIG_MACRO_DIR([m4])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])

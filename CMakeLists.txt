@@ -31,42 +31,51 @@ set(Boost_USE_STATIC_RUNTIME OFF)
 find_package(Boost 1.70 REQUIRED COMPONENTS unit_test_framework)
 
 # ---- Library ----
-add_library(luacxx
-	src/algorithm.cpp
-	src/log.cpp
-	src/error.cpp
-	src/reference.cpp
-	src/load.cpp
-	src/stack.cpp
-	src/thread.cpp
-	src/convert/callable.cpp
-	src/convert/const_char_p.cpp
-	src/convert/char.cpp
-	src/convert/numeric.cpp
-	include/luacxx/algorithm.hpp
-	include/luacxx/log.hpp
-	include/luacxx/stack.hpp
-	include/luacxx/enum.hpp
-	include/luacxx/link.hpp
-	include/luacxx/index.hpp
-	include/luacxx/error.hpp
-	include/luacxx/global.hpp
-	include/luacxx/load.hpp
-	include/luacxx/range.hpp
-	include/luacxx/reference.hpp
-	include/luacxx/thread.hpp
-	include/luacxx/type.hpp
-	include/luacxx/value.hpp
-	include/luacxx/convert/callable.hpp
-	include/luacxx/convert/char.hpp
-	include/luacxx/convert/char_p.hpp
-	include/luacxx/convert/const_char_p.hpp
-	include/luacxx/convert/numeric.hpp
-	include/luacxx/convert/shared_ptr.hpp
-	include/luacxx/convert/string.hpp
-	include/luacxx/convert/vector.hpp
-	include/luacxx/convert/void.hpp
-	include/luacxx/std/vector.hpp
+add_library(luacxx)
+
+target_sources(luacxx
+  PRIVATE
+    src/algorithm.cpp
+    src/log.cpp
+    src/error.cpp
+    src/reference.cpp
+    src/load.cpp
+    src/stack.cpp
+    src/thread.cpp
+    src/convert/callable.cpp
+    src/convert/const_char_p.cpp
+    src/convert/char.cpp
+    src/convert/numeric.cpp
+
+  PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS
+      include
+    FILES
+      include/luacxx/algorithm.hpp
+      include/luacxx/log.hpp
+      include/luacxx/stack.hpp
+      include/luacxx/enum.hpp
+      include/luacxx/link.hpp
+      include/luacxx/index.hpp
+      include/luacxx/error.hpp
+      include/luacxx/global.hpp
+      include/luacxx/load.hpp
+      include/luacxx/range.hpp
+      include/luacxx/reference.hpp
+      include/luacxx/thread.hpp
+      include/luacxx/type.hpp
+      include/luacxx/value.hpp
+      include/luacxx/convert/callable.hpp
+      include/luacxx/convert/char.hpp
+      include/luacxx/convert/char_p.hpp
+      include/luacxx/convert/const_char_p.hpp
+      include/luacxx/convert/numeric.hpp
+      include/luacxx/convert/shared_ptr.hpp
+      include/luacxx/convert/string.hpp
+      include/luacxx/convert/vector.hpp
+      include/luacxx/convert/void.hpp
+      include/luacxx/std/vector.hpp
 )
 
 target_include_directories(luacxx
