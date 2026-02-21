@@ -558,10 +558,7 @@ AC_DEFUN([_AX_HAVE_QT_COMPILE], [
   CXXFLAGS="$QT_CXXFLAGS $ax_qt_compile_CXXFLAGS -fPIC"
       LIBS="$QT_LIBS $ax_qt_compile_LIBS"
 
-  AC_TRY_LINK(
-    [$ax_qt_module_prologue],
-    $2,
-  [
+  AC_LINK_IFELSE([AC_LANG_PROGRAM([[$ax_qt_module_prologue]], [[$2]])],[
     CXXFLAGS="$ax_save_CXXFLAGS"
         LIBS="$ax_save_LIBS"
 
@@ -578,7 +575,7 @@ AC_DEFUN([_AX_HAVE_QT_COMPILE], [
     _AX_HAVE_QT_INSERT([QT_LIBS], [$ax_qt_compile_reversed_LIBS], [yes])
 
     $5
-  ], [
+  ],[
     # Failed to link the test program, so do nothing except call
     # the client-provided code
 
