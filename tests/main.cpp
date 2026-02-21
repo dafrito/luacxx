@@ -317,12 +317,12 @@ BOOST_AUTO_TEST_CASE(pointer_userdata)
 }
 
 template <class T>
-void acceptShared(std::shared_ptr<T> ptr)
+void acceptShared(std::shared_ptr<T>)
 {
 }
 
 template <class T>
-void acceptSharedRef(const std::shared_ptr<T>& ptr)
+void acceptSharedRef(const std::shared_ptr<T>&)
 {
 }
 
@@ -585,7 +585,7 @@ BOOST_AUTO_TEST_CASE(error_support)
     BOOST_CHECK(errored);
 
     // Does pcall handle lua::error gracefully?
-    env["thrower"] = lua::callable([](lua_State* const state) -> int {
+    env["thrower"] = lua::callable([](lua_State* const) -> int {
         throw lua::error("Intentional");
     });
     lua::run_string(env, "return not pcall(thrower);");
@@ -673,7 +673,7 @@ struct Metatable<Named>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }
@@ -691,7 +691,7 @@ struct Metatable<Value>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }
@@ -711,10 +711,8 @@ struct Metatable<Child>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    static bool metatable(lua_State* const state, const int pos, const void* const)
     {
-        auto userdata = lua::get<lua::userdata_block*>(state, pos - 1);
-
         return true;
     }
 };
@@ -731,7 +729,7 @@ struct Metatable<Numbered>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }
@@ -751,7 +749,7 @@ struct Metatable<Grandchild>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }
@@ -871,7 +869,7 @@ BOOST_AUTO_TEST_CASE(logging)
 {
     auto env = lua::create();
 
-    lua::addLogger(env, lua::logger([](lua_State* const state, const lua::LogMessageType mtype, const lua::LogMessage& message) {
+    lua::addLogger(env, lua::logger([](lua_State* const, const lua::LogMessageType, const lua::LogMessage&) {
     }));
 
     lua::logEnterm(env, "No time");

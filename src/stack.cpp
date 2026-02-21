@@ -192,7 +192,7 @@ lua::userdata_type::~userdata_type()
 }
 
 template <>
-void lua::get<void>(const lua::index& source)
+void lua::get<void>(const lua::index&)
 {
 }
 

@@ -115,7 +115,7 @@ struct lua::Metatable<Point<T>> {
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int mt, const void* const)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }

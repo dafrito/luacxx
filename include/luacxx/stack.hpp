@@ -934,7 +934,7 @@ struct Metatable
     //
     // Return true if the metatable can be cached for future values (requires
     // the name to be specified).
-    static bool metatable(lua_State* const state, const int pos, const T* value)
+    static bool metatable(lua_State* const, const int, const T*)
     {
         return true;
     }
@@ -953,7 +953,7 @@ struct Metatable<void>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const value)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }
@@ -1051,7 +1051,7 @@ struct lua::Metatable<name> \
         return _info; \
     } \
 \
-    static bool metatable(lua_State* const state, const int mt, const void*) \
+    static bool metatable(lua_State* const, const int, const void*) \
     { \
         return true; \
     } \
@@ -1460,7 +1460,7 @@ struct Get<T&>
 template <>
 struct Get<void>
 {
-    static void get(lua_State* const state, const int source)
+    static void get(lua_State* const, const int)
     {
     }
 };

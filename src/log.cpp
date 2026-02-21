@@ -11,7 +11,7 @@
 
 namespace lua {
 
-void appendStrings(std::stringstream& str)
+void appendStrings(std::stringstream&)
 {
 }
 

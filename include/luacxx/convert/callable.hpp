@@ -223,7 +223,7 @@ template <typename Callee>
 struct Invoke<Callee, void, ArgStop>
 {
     template <typename... Arguments>
-    static int invoke(const Callee& func, lua::index& index, Arguments... arguments)
+    static int invoke(const Callee& func, lua::index&, Arguments... arguments)
     {
         func(arguments...);
         return 0;
@@ -562,7 +562,7 @@ struct AppendTypenames<Arg, ArgStop>
 template <>
 struct AppendTypenames<ArgStop>
 {
-    static void appendTypenames(std::stringstream& str)
+    static void appendTypenames(std::stringstream&)
     {
     }
 };
@@ -587,7 +587,7 @@ struct Metatable<std::function<RV(Args...)>>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int table, void* const value)
+    static bool metatable(lua_State* const, const int, void* const)
     {
         return true;
     }
@@ -612,7 +612,7 @@ struct Metatable<RV(Args...)>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int table, void* const value)
+    static bool metatable(lua_State* const, const int, void* const)
     {
         return true;
     }
