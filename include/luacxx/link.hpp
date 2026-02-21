@@ -45,6 +45,13 @@ public:
     {
     }
 
+    link(const lua::link<Source, Name>& value) :
+        _state(value.state()),
+        _source(value.source()),
+        _name(value.name())
+    {
+    }
+
     lua::type_info type() const;
 
     lua_State* const state() const
