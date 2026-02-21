@@ -12,7 +12,6 @@ libluacxx_la_LIBADD = \
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 nobase_pkginclude_HEADERS = \
-	config.hpp \
 	algorithm.hpp \
 	log.hpp \
 	stack.hpp \
