@@ -2,10 +2,10 @@ AC_PREREQ([2.72])
 
 AC_INIT([luacxx],[3.0],[dafrito@gmail.com],[luacxx],[http://www.github.com/dafrito/luacxx])
 AC_SUBST([PACKAGE_RELEASE], [1])
-AC_SUBST([PACKAGE_DESCRIPTION], ["C++11 bindings and modules for Lua"])
+AC_SUBST([PACKAGE_DESCRIPTION], ["Modern C++ bindings and modules for Lua"])
 
 AM_INIT_AUTOMAKE([-Wall foreign serial-tests subdir-objects])
-AC_CONFIG_SRCDIR([include/luacxx/stack.hpp])
+AC_CONFIG_SRCDIR([src/stack.cpp])
 AC_CONFIG_MACRO_DIR([m4])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
@@ -22,8 +22,7 @@ AC_PROG_LN_S
 AC_LANG([C++])
 AC_HEADER_STDBOOL
 AC_TYPE_SIZE_T
-AX_CXX_COMPILE_STDCXX_11([noext],[stdcxx11_CFLAGS])
-AC_SUBST([stdcxx11_CFLAGS])
+AX_CXX_COMPILE_STDCXX([23],[noext],[mandatory])
 
 # Check for Boost. It's used for unit tests
 AX_BOOST_BASE([], [:], [:])
@@ -31,7 +30,7 @@ AX_BOOST_UNIT_TEST_FRAMEWORK
 
 AX_HAVE_QT_MOC
 
-PKG_CHECK_MODULES(lua, [lua >= 5.0],
+PKG_CHECK_MODULES(lua, [lua >= 5.2],
     [],
     [AC_MSG_ERROR([Lua is required to build Luacxx])]
 )

@@ -7,6 +7,8 @@ project(luacxx
 
 option(BUILD_TESTING "Enable unit tests" ON)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # ---- C++ standard ----
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -82,13 +84,14 @@ target_include_directories(luacxx
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
+    ${LUA_INCLUDE_DIR}
 )
 
 target_compile_features(luacxx PUBLIC cxx_std_20)
 
 target_link_libraries(luacxx
   PUBLIC
-    Lua
+    ${LUA_LIBRARIES}
   PRIVATE
     project_warnings
 )
@@ -99,21 +102,33 @@ include(CTest)
 if(BUILD_TESTING)
   enable_testing()
 
-  add_executable(luacxx_tests
+  add_executable(luacxx_test_main
     tests/main.cpp
     tests/main.hpp
-    tests/luacxx_without_conversions.cpp
     tests/luacxx_convert_vector.cpp
   )
 
-  target_link_libraries(luacxx_tests
+  add_executable(luacxx_test_without_conversion
+    tests/luacxx_without_conversions.cpp
+    tests/main.hpp
+  )
+
+  target_link_libraries(luacxx_test_main
     PRIVATE
       luacxx
       Boost::unit_test_framework
       project_warnings
   )
 
-  add_test(NAME myproj.unit COMMAND myproj_tests)
+  target_link_libraries(luacxx_test_without_conversion
+    PRIVATE
+      luacxx
+      Boost::unit_test_framework
+      project_warnings
+  )
+
+  add_test(NAME luacxx.test_main COMMAND luacxx_test_main)
+  add_test(NAME luacxx.test_without_conversion COMMAND luacxx_test_without_conversion)
 endif()
 
 # ---- (Optional) Install rules for the library ----

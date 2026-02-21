@@ -3,7 +3,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 lib_LTLIBRARIES = libluacxx.la
 
 libluacxx_la_CPPFLAGS = \
-	@stdcxx11_CFLAGS@ \
+	-std=c++23 \
 	@lua_CFLAGS@ \
 	-I../include
 
@@ -49,7 +49,7 @@ test_luacxx_without_conversions_LDADD = \
 	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 test_luacxx_without_conversions_SOURCES = \
-	tests/luacxx_without_conversions.cpp
+	../tests/luacxx_without_conversions.cpp
 
 if BUILD_llvm
 
@@ -1248,6 +1248,6 @@ test_luacxx_LDADD = \
 	@BOOST_UNIT_TEST_FRAMEWORK_LIB@
 
 test_luacxx_SOURCES = \
-	tests/main.cpp
+	../tests/main.cpp
 
 TESTS = $(check_PROGRAMS)
