@@ -390,10 +390,32 @@ struct Push<void(Object::*)(Args...) const>
     }
 };
 
+template <typename Object, typename... Args>
+struct Push<void(Object::*)(Args...) const noexcept>
+{
+    static void push(lua_State* const state, void(Object::* func)(Args...) const noexcept)
+    {
+        lua::push(state, std::function<void(Object*, Args...)>(
+            std::mem_fn(func)
+        ));
+    }
+};
+
 template <typename RV, typename Object, typename... Args>
 struct Push<RV(Object::*)(Args...) const>
 {
     static void push(lua_State* const state, RV(Object::* func)(Args...) const)
+    {
+        lua::push(state, std::function<RV(Object*, Args...)>(
+            std::mem_fn(func)
+        ));
+    }
+};
+
+template <typename RV, typename Object, typename... Args>
+struct Push<RV(Object::*)(Args...) const noexcept>
+{
+    static void push(lua_State* const state, RV(Object::* func)(Args...) const noexcept)
     {
         lua::push(state, std::function<RV(Object*, Args...)>(
             std::mem_fn(func)
