@@ -2,25 +2,23 @@
 #define LUACXX_TESTS_INCLUDED
 
 #include <boost/test/unit_test.hpp>
-
+#include <sstream>
 #include <functional>
 
-#include "stack.hpp"
+#include "luacxx/stack.hpp"
 
-#include "convert/const_char_p.hpp"
-#include "convert/numeric.hpp"
-#include "convert/string.hpp"
-#include "convert/char.hpp"
-#include "convert/callable.hpp"
-#include "convert/shared_ptr.hpp"
+#include "luacxx/convert/const_char_p.hpp"
+#include "luacxx/convert/numeric.hpp"
+#include "luacxx/convert/string.hpp"
+#include "luacxx/convert/char.hpp"
+#include "luacxx/convert/callable.hpp"
+#include "luacxx/convert/shared_ptr.hpp"
 
-#include "range.hpp"
-#include "thread.hpp"
-#include "algorithm.hpp"
-#include "load.hpp"
-#include "reference.hpp"
-
-#include <sstream>
+#include "luacxx/range.hpp"
+#include "luacxx/thread.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/load.hpp"
+#include "luacxx/reference.hpp"
 
 class Counter
 {

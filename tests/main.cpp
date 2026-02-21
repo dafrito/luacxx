@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE luacxx
 #include "main.hpp"
-#include "log.hpp"
-#include "enum.hpp"
+#include "luacxx/log.hpp"
+#include "luacxx/enum.hpp"
 
 #include <boost/test/unit_test.hpp>
 
