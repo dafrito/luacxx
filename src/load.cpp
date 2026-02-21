@@ -1,8 +1,8 @@
-#include "load.hpp"
-#include "error.hpp"
-
 #include <fstream>
 #include <sstream>
+
+#include "luacxx/load.hpp"
+#include "luacxx/error.hpp"
 
 namespace {
     struct LuaReadingData

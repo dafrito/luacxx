@@ -1,15 +1,13 @@
-#include "stack.hpp"
-
-#include "convert/const_char_p.hpp"
-#include "convert/string.hpp"
-#include "convert/char_p.hpp"
-#include "convert/numeric.hpp"
-
-#include "thread.hpp"
-#include "algorithm.hpp"
-#include "load.hpp"
-
 #include <iostream>
+
+#include "luacxx/stack.hpp"
+#include "luacxx/convert/const_char_p.hpp"
+#include "luacxx/convert/string.hpp"
+#include "luacxx/convert/char_p.hpp"
+#include "luacxx/convert/numeric.hpp"
+#include "luacxx/thread.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/load.hpp"
 
 int run_interactive(lua::thread& env)
 {

@@ -1,7 +1,6 @@
-#include "numeric.hpp"
-#include "../algorithm.hpp"
-
-#include "const_char_p.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/convert/numeric.hpp"
+#include "luacxx/convert/const_char_p.hpp"
 
 void lua::store_lua_Integer(lua_Integer& destination, lua_State* const state, const int source_pos)
 {

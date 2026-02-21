@@ -1,6 +1,6 @@
 #include "gbm.hpp"
 
-#include "thread.hpp"
+#include "luacxx/thread.hpp"
 
 int _gbm_bo_write(lua_State* const state)
 {

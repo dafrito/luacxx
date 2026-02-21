@@ -1,15 +1,13 @@
-#include "log.hpp"
-
-#include "stack.hpp"
-#include "enum.hpp"
-#include "algorithm.hpp"
-#include "thread.hpp"
-#include "convert/numeric.hpp"
-#include "convert/callable.hpp"
-#include "convert/const_char_p.hpp"
-#include "convert/string.hpp"
-
-#include "std/vector.hpp"
+#include "luacxx/log.hpp"
+#include "luacxx/stack.hpp"
+#include "luacxx/enum.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/thread.hpp"
+#include "luacxx/convert/numeric.hpp"
+#include "luacxx/convert/callable.hpp"
+#include "luacxx/convert/const_char_p.hpp"
+#include "luacxx/convert/string.hpp"
+#include "luacxx/std/vector.hpp"
 
 namespace lua {
 

@@ -1,4 +1,4 @@
-#include "algorithm.hpp"
+#include "luacxx/algorithm.hpp"
 
 lua::error::error(lua_State* const state, const std::string& what) :
     std::runtime_error("lua::error"),

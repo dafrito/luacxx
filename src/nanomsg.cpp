@@ -1,6 +1,3 @@
-#include "nanomsg.hpp"
-#include "thread.hpp"
-
 #include <nanomsg/bus.h>
 #include <nanomsg/ipc.h>
 #include <nanomsg/inproc.h>
@@ -12,6 +9,10 @@
 #include <nanomsg/tcp.h>
 
 #include <cstring>
+
+#include "luacxx/thread.hpp"
+
+#include "nanomsg.hpp"
 
 int nn_symbol_properties_index(lua_State* const state)
 {

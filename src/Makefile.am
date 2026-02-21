@@ -4,38 +4,15 @@ lib_LTLIBRARIES = libluacxx.la
 
 libluacxx_la_CPPFLAGS = \
 	@stdcxx11_CFLAGS@ \
-	@lua_CFLAGS@
+	@lua_CFLAGS@ \
+	-I../include
 
 libluacxx_la_LIBADD = \
 	@lua_LIBS@
 
 libluacxx_la_LDFLAGS = -version-info 0:0:0 --build-id
 
-nobase_pkginclude_HEADERS = \
-	algorithm.hpp \
-	log.hpp \
-	stack.hpp \
-	enum.hpp \
-	link.hpp \
-	index.hpp \
-	error.hpp \
-	global.hpp \
-	load.hpp \
-	range.hpp \
-	reference.hpp \
-	thread.hpp \
-	type.hpp \
-	value.hpp \
-	convert/callable.hpp \
-	convert/char.hpp \
-	convert/char_p.hpp \
-	convert/const_char_p.hpp \
-	convert/numeric.hpp \
-	convert/shared_ptr.hpp \
-	convert/string.hpp \
-	convert/vector.hpp \
-	convert/void.hpp \
-	std/vector.hpp
+nobase_include_HEADERS =
 
 libluacxx_la_SOURCES = \
 	algorithm.cpp \
@@ -91,7 +68,7 @@ libluacxx_llvm_la_SOURCES = \
 	llvm/IR/IRBuilder.cpp \
 	llvm/IR/Instruction.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	llvm/IR/IRBuilder.hpp \
 	llvm/IR/Instruction.hpp
 
@@ -202,7 +179,7 @@ libluacxx_Qt5Core_la_SOURCES = \
 	Qt5Core/QObjectList.cpp \
 	Qt5Core/QCoreApplication.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	Qt5Core/Qt5Core.hpp \
 	Qt5Core/QString.hpp \
 	Qt5Core/QChar.hpp \
@@ -362,7 +339,7 @@ libluacxx_Qt5Network_la_SOURCES = \
 	Qt5Network/QSslConfiguration.cpp \
 	Qt5Network/QSslCertificateExtension.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	Qt5Network/Qt5Network.hpp \
 	Qt5Network/QAbstractSocket.hpp \
 	Qt5Network/QAuthenticator.hpp \
@@ -550,7 +527,7 @@ libluacxx_Qt5Gui_la_SOURCES = \
 	Qt5Gui/QWindowStateChangeEvent.cpp \
 	Qt5Gui/QTextOption.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	Qt5Gui/Qt5Gui.hpp \
 	Qt5Gui/QPen.hpp \
 	Qt5Gui/QBrush.hpp \
@@ -770,7 +747,7 @@ libluacxx_Qt5Widgets_la_SOURCES = \
 	Qt5Widgets/QActionEvent.cpp \
 	Qt5Widgets/QWidget.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	Qt5Widgets/Qt5Widgets.hpp \
 	Qt5Widgets/QAbstractSlider.hpp \
 	Qt5Widgets/QAbstractScrollArea.hpp \
@@ -895,7 +872,7 @@ libluacxx_Qt5Sql_la_SOURCES = \
 	Qt5Sql/QSqlResult.cpp \
 	Qt5Sql/QSqlTableModel.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	Qt5Sql/QSql.hpp \
 	Qt5Sql/QSqlDatabase.hpp \
 	Qt5Sql/QSqlDriver.hpp \
@@ -931,7 +908,7 @@ libluacxx_la_SOURCES += \
 	Gtk/GObject.cpp \
 	search/GIRepository.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	Gtk/GIBaseInfo.hpp \
 	Gtk/GObject.hpp \
 	search/GIRepository.hpp
@@ -1022,7 +999,7 @@ libluacxx_ncurses_la_SOURCES = \
 	ncurses/resizeterm.cpp \
 	ncurses/wresize.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	ncurses.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-ncurses.pc
@@ -1052,7 +1029,7 @@ libluacxx_nanomsg_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_nanomsg_la_SOURCES = \
 	nanomsg.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	nanomsg.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-nanomsg.pc
@@ -1081,7 +1058,7 @@ libluacxx_libevdev_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_libevdev_la_SOURCES = \
 	libevdev.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	libevdev.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-libevdev.pc
@@ -1119,7 +1096,7 @@ libluacxx_libinput_la_SOURCES = \
 	libinput/group__event__touch.cpp \
 	libinput/group__seat.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	libinput.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-libinput.pc
@@ -1149,7 +1126,7 @@ libluacxx_egl_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_egl_la_SOURCES = \
 	egl.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	egl.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-egl.pc
@@ -1179,7 +1156,7 @@ libluacxx_drm_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_drm_la_SOURCES = \
 	xf86drmMode.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	xf86drmMode.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-drm.pc
@@ -1209,7 +1186,7 @@ libluacxx_gbm_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_gbm_la_SOURCES = \
 	gbm.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	gbm.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-gbm.pc
@@ -1237,7 +1214,7 @@ libluacxx_linux_la_LDFLAGS = -version-info 0:0:0 --build-id
 libluacxx_linux_la_SOURCES = \
 	linux/input.cpp
 
-nobase_pkginclude_HEADERS += \
+nobase_include_HEADERS += \
 	linux/input.hpp
 
 pkgconfig_DATA += pkg-config/luacxx-linux.pc
@@ -1250,7 +1227,7 @@ pkg-config/luacxx-linux.pc: pkg-config/linux.pc.head
 endif
 
 bin_PROGRAMS = luacxx
-luacxx_CPPFLAGS += $(libluacxx_la_CPPFLAGS)
+luacxx_CPPFLAGS += $(libluacxx_la_CPPFLAGS) -I../include
 luacxx_LDADD += libluacxx.la
 
 luacxx_SOURCES = \

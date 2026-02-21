@@ -1,8 +1,8 @@
 #include "libevdev.hpp"
-
-#include "convert/callable.hpp"
-#include "thread.hpp"
 #include "linux/input.hpp"
+
+#include "luacxx/convert/callable.hpp"
+#include "luacxx/thread.hpp"
 
 int _libevdev_new_from_fd(lua_State* const state)
 {

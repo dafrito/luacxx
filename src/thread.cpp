@@ -1,4 +1,4 @@
-#include "thread.hpp"
+#include "luacxx/thread.hpp"
 
 int lua::size(const lua::thread& env)
 {

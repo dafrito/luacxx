@@ -1,5 +1,5 @@
-#include "reference.hpp"
-#include "thread.hpp"
+#include "luacxx/reference.hpp"
+#include "luacxx/thread.hpp"
 
 lua::reference::reference(lua::thread& env) :
     _state(env.state()),

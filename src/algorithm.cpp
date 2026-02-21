@@ -1,14 +1,13 @@
-#include "luacxx/algorithm.hpp"
+#include <cassert>
+#include <string>
+#include <sstream>
 
+#include "luacxx/algorithm.hpp"
 #include "luacxx/error.hpp"
 #include "luacxx/convert/const_char_p.hpp"
 #include "luacxx/convert/string.hpp"
 #include "luacxx/convert/numeric.hpp"
 #include "luacxx/convert/callable.hpp"
-
-#include <cassert>
-#include <string>
-#include <sstream>
 
 static int on_error(lua_State* const state)
 {
@@ -75,8 +74,6 @@ void lua::invoke(int nresults, lua_State* const state, const int pos)
     switch (result) {
         case LUA_OK:
             return;
-        case LUA_ERRGCMM:
-            throw std::runtime_error("Lua garbage collector error");
         case LUA_ERRMEM:
             throw std::runtime_error("Lua memory error");
         case LUA_ERRERR:

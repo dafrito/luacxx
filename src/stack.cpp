@@ -1,11 +1,11 @@
-#include "stack.hpp"
-#include "algorithm.hpp"
 #include <sstream>
 #include <iostream>
 
-#include "convert/const_char_p.hpp"
-#include "convert/string.hpp"
-#include "convert/callable.hpp"
+#include "luacxx/stack.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/convert/const_char_p.hpp"
+#include "luacxx/convert/string.hpp"
+#include "luacxx/convert/callable.hpp"
 
 static bool debugging_allowed = false;
 

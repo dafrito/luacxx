@@ -255,6 +255,7 @@ AM_CONDITIONAL([BUILD_llvm], [test x$with_llvm = xyes])
 
 AC_CONFIG_FILES([
     Makefile
+    include/Makefile
     src/Makefile
     luacxx.spec
     src/pkg-config/luacxx.pc.head

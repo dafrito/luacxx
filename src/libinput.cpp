@@ -1,8 +1,8 @@
 #include "libinput.hpp"
-
-#include "convert/callable.hpp"
-#include "thread.hpp"
 #include "linux/input.hpp"
+
+#include "luacxx/convert/callable.hpp"
+#include "luacxx/thread.hpp"
 
 int luaopen_libinput(lua_State* const state)
 {

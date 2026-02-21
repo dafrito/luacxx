@@ -1,10 +1,10 @@
 #include "QVariant.hpp"
 
-#include "../algorithm.hpp"
-#include "../thread.hpp"
+#include "luacxx/algorithm.hpp"
+#include "luacxx/thread.hpp"
 
-#include "string.hpp"
-#include "numeric.hpp"
+#include "luacxx/convert/string.hpp"
+#include "luacxx/convert/numeric.hpp"
 
 #include <unordered_map>
 #include <QStringList>
