@@ -82,7 +82,7 @@ public:
     {
     }
 
-    lua_State* const state() const
+    lua_State* state() const
     {
         return _state;
     }
@@ -167,7 +167,7 @@ public:
     {
     }
 
-    lua_State* const state() const
+    lua_State* state() const
     {
         return _state;
     }

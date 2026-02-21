@@ -98,7 +98,7 @@ virtual const char* what() const noexcept override
     return _what.c_str();
 }
 
-const bool has_traceback() const
+bool has_traceback() const
 {
     return _what.size() <= _traceback;
 }

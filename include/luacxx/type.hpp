@@ -122,7 +122,7 @@ public:
         return get() == lua::type::lightuserdata;
     }
 
-    const lua::type get() const
+    lua::type get() const
     {
         return _value;
     }

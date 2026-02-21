@@ -81,7 +81,7 @@ public:
         _x = x;
     }
 
-    const int x() const
+    int x() const
     {
         return _x;
     }
@@ -91,7 +91,7 @@ public:
         _y = y;
     }
 
-    const int y() const
+    int y() const
     {
         return _y;
     }

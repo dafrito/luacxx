@@ -80,8 +80,8 @@ reference() :
 {
 }
 
-reference(lua_State* const $state) :
-    _state($state),
+reference(lua_State* state) :
+    _state(state),
     _id(LUA_NOREF)
 {
 }
@@ -121,7 +121,7 @@ reference(lua_State* const state, const int pos) :
     *this = lua::index(state, pos);
 }
 
-lua_State* const state() const
+lua_State* state() const
 {
     return _state;
 }
@@ -131,7 +131,7 @@ void set_state(lua_State* const state)
     _state = state;
 }
 
-const int id() const
+int id() const
 {
     return _id;
 }

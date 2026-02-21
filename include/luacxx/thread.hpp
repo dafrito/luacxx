@@ -71,7 +71,7 @@ thread(lua_State* const state) :
 Returns the underlying state.
 
 */
-lua_State* const state() const
+lua_State* state() const
 {
     return _state;
 }
