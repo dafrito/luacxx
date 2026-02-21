@@ -17,7 +17,7 @@ struct Push<std::vector<T>>
         lua_createtable(state, source.size(), 0);
 
         // Populate the table with each value in source
-        for (int i = 0; i < source.size(); ++i) {
+        for (size_t i = 0; i < source.size(); ++i) {
             lua::push(state, source[i]);
             lua_rawseti(state, -2, i + 1);
         }
@@ -42,7 +42,7 @@ struct Store<std::vector<T>>
         auto target_index = destination.size();
         destination.resize(destination.size() + num_elements);
 
-        for (int i = 1; i <= num_elements; ++i, ++target_index) {
+        for (lua_Unsigned i = 1; i <= num_elements; ++i, ++target_index) {
             lua_rawgeti(source.state(), source.pos(), i);
             lua::store(destination[target_index], source.state(), -1);
             lua_pop(source.state(), 1);

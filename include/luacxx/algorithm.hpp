@@ -562,7 +562,7 @@ template <class Value, class Callable>
 void each(lua_State* const state, const int pos, const Callable& callable)
 {
     auto len = lua_rawlen(state, pos);
-    for (int i = 1; i <= len; ++i) {
+    for (lua_Unsigned i = 1; i <= len; ++i) {
         lua_rawgeti(state, pos, i);
         callable(lua::get<Value>(state, -1));
         lua_pop(state, 1);
@@ -573,7 +573,7 @@ template <class Callable>
 void each(lua_State* const state, const int pos, const Callable& callable)
 {
     auto len = lua_rawlen(state, pos);
-    for (int i = 1; i <= len; ++i) {
+    for (lua_Unsigned i = 1; i <= len; ++i) {
         lua_rawgeti(state, pos, i);
         callable(state, -1);
         lua_pop(state, 1);
