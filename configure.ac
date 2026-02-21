@@ -1,6 +1,6 @@
-AC_PREREQ([2.68])
+AC_PREREQ([2.72])
 
-AC_INIT([luacxx], [3.0], [dafrito@gmail.com], [luacxx], [http://www.github.com/dafrito/luacxx])
+AC_INIT([luacxx],[3.0],[dafrito@gmail.com],[luacxx],[http://www.github.com/dafrito/luacxx])
 AC_SUBST([PACKAGE_RELEASE], [1])
 AC_SUBST([PACKAGE_DESCRIPTION], ["C++11 bindings and modules for Lua"])
 
@@ -12,7 +12,7 @@ AC_CONFIG_MACRO_DIR([m4])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 LT_PREREQ([2.2])
 LT_INIT
-AC_PROG_LIBTOOL
+LT_INIT
 
 # Check for build programs
 AC_PROG_CXX
