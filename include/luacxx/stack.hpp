@@ -1,8 +1,6 @@
 #ifndef luacxx_stack_INCLUDED
 #define luacxx_stack_INCLUDED
 
-#include "config.hpp"
-
 #include "type.hpp"
 #include "error.hpp"
 #include "log.hpp"

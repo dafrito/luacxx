@@ -136,6 +136,7 @@ luacxx_LDADD = $(libluacxx_Qt5Core_la_LIBADD)
 libluacxx_Qt5Core_la_LDFLAGS = -version-info 0:0:0 --build-id
 
 libluacxx_Qt5Core_la_SOURCES = \
+	Qt5Core/Qt5Core.cpp \
 	Qt5Core/QPoint.cpp \
 	Qt5Core/QPointF.cpp \
 	Qt5Core/QSize.cpp \

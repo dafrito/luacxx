@@ -1,19 +1,9 @@
 #ifndef LUACXX_LOADERS_INCLUDED
 #define LUACXX_LOADERS_INCLUDED
 
-#include "config.hpp"
-
 #include <string>
 
 #include "algorithm.hpp"
-
-#ifdef HAVE_Qt5Core
-
-#include <QDir>
-#include <QFile>
-#include <QString>
-
-#endif
 
 namespace lua {
 
@@ -37,10 +27,6 @@ If compilation errors occur, a lua::error will be thrown.
 lua::index load_file(lua_State* const state, const std::string& filename);
 lua::index load_file(lua_State* const state, const char* file);
 lua::index load_file(lua_State* const state, std::istream& stream, const std::string& name);
-#ifdef HAVE_Qt5Core
-lua::index load_file(lua_State* const state, QFile& file);
-lua::index load_file(lua_State* const state, const QString& filename);
-#endif
 
 /*
 
@@ -54,30 +40,6 @@ If compilation errors occur, a lua::error will be thrown.
 */
 lua::index load_string(lua_State* const state, const std::string& input);
 lua::index load_string(lua_State* const state, const char* input);
-
-/*
-
-=head2 lua::index run_dir(state, const QDir&, bool recurse)
-
-Runs every file in the specified directory, optionally recursing into
-subdirectories.
-
-By default, QDir will include every file, so if you want to filter the files,
-specify a filter list on the directory itself:
-
-    QDir dir = QDir::current();
-    dir.setFilters(QDir::Files);
-
-    QStringList filters;
-    filters << "*.lua";
-    dir.setNameFilters(filters);
-
-    lua::run_dir(state, dir, true);
-
-*/
-#ifdef HAVE_Qt5Core
-void run_dir(lua_State* const state, const QDir& dir, const bool recurse);
-#endif
 
 /*
 
