@@ -589,8 +589,8 @@ class userdata_block {
 
 public:
     userdata_block(void* value) :
-        _value(value),
         _info(nullptr),
+        _value(value),
         _destructor()
     {
     }
