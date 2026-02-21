@@ -1,7 +1,9 @@
 prefix=@prefix@
-exec_prefix=@exec_prefix@
+exec_prefix="${prefix}"
+libdir="${prefix}/lib"
+includedir="${prefix}/include"
 
-Name: luacxx
-Description: Lua bindings for C++
+Name: @PACKAGE_NAME@
+Description: @PACKAGE_DESCRIPTION@
 Version: @PACKAGE_VERSION@
-Requires: lua >= 5.0
+Requires: lua >= @LUA_MINIMUM_VERSION@

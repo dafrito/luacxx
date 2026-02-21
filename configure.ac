@@ -2,7 +2,7 @@ AC_PREREQ([2.72])
 
 AC_INIT([luacxx],[4.0.0],[dafrito@gmail.com],[luacxx],[http://www.github.com/dafrito/luacxx])
 AC_SUBST([PACKAGE_RELEASE], [1])
-AC_SUBST([PACKAGE_DESCRIPTION], ["Modern C++ bindings and modules for Lua"])
+AC_SUBST([PACKAGE_DESCRIPTION], ["Lua binding library for modern C++"])
 
 AM_INIT_AUTOMAKE([-Wall foreign serial-tests subdir-objects])
 AC_CONFIG_SRCDIR([src/stack.cpp])
@@ -30,7 +30,9 @@ AX_BOOST_UNIT_TEST_FRAMEWORK
 
 AX_HAVE_QT_MOC
 
-PKG_CHECK_MODULES(lua, [lua >= 5.2],
+LUA_MINIMUM_VERSION=5.3
+AC_SUBST([LUA_MINIMUM_VERSION])
+PKG_CHECK_MODULES(lua, [lua >= $LUA_MINIMUM_VERSION],
     [],
     [AC_MSG_ERROR([Lua is required to build Luacxx])]
 )

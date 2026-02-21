@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.24)
 project(luacxx
   VERSION 4.0.0
   LANGUAGES CXX
+  DESCRIPTION "Lua binding library for modern C++"
 )
 
 option(BUILD_TESTING "Enable unit tests" ON)
@@ -22,7 +23,8 @@ target_compile_options(project_warnings INTERFACE
 )
 
 # ---- Dependencies ----
-find_package(Lua 5.2 REQUIRED)
+set(LUA_MINIMUM_VERSION 5.2)
+find_package(Lua ${LUA_MINIMUM_VERSION} REQUIRED)
 
 if(POLICY CMP0167)
   cmake_policy(SET CMP0167 NEW)
@@ -131,16 +133,22 @@ if(BUILD_TESTING)
   add_test(NAME luacxx.test_without_conversion COMMAND luacxx_test_without_conversion)
 endif()
 
-# ---- (Optional) Install rules for the library ----
-# include(GNUInstallDirs)
-# install(TARGETS myproj
-#   EXPORT MyProjectTargets
-#   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#   INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-# )
-# install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-# install(EXPORT MyProjectTargets
-#   NAMESPACE MyProject::
-#   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MyProject
-# )
+configure_file(pkg-config/luacxx.pc.cmake pkg-config/luacxx.pc @ONLY)
+
+include(GNUInstallDirs)
+install(
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/pkg-config/luacxx.pc
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+install(
+  TARGETS project_warnings luacxx
+  EXPORT Luacxx
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(EXPORT Luacxx
+  NAMESPACE Luacxx::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Luacxx
+)
