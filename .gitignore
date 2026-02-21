@@ -8,6 +8,12 @@ lib*.so.*
 *.la
 *.pc.head
 .dirstamp
+build/
+CMakeFiles/
+CMakeCache.txt
+CTestTestfile.cmake
+DartConfiguration.tcl
+cmake_install.cmake
 
 # Binaries and build artifacts
 src/test_luacxx
