@@ -711,7 +711,7 @@ struct Metatable<Child>
         return _info;
     }
 
-    static bool metatable(lua_State* const state, const int pos, const void* const)
+    static bool metatable(lua_State* const, const int, const void* const)
     {
         return true;
     }
