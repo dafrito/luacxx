@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Mac",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/homebrew/include/**",
+                "/opt/homebrew/include/lua/**",
+                "/opt/homebrew/Cellar/lua/5.4.8/include/lua"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/c++",
+            "cStandard": "c17",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "macos-clang-arm64",
+            "compilerArgs": ["-Wall", "-Wconversion", "-Wignored-qualifiers", "-Werror"]
+        }
+    ],
+    "version": 4
+}
