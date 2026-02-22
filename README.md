@@ -1,6 +1,6 @@
 ### NAME
 
-luacxx - C++11 binding and modules for Lua
+luacxx - Lua binding library for modern C++
 
 ### SYNOPSIS
 
