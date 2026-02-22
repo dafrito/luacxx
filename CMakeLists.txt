@@ -139,13 +139,43 @@ install(
 )
 install(
   TARGETS project_warnings luacxx
-  EXPORT Luacxx
+  EXPORT luacxxTargets
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-install(EXPORT Luacxx
-  NAMESPACE Luacxx::
-  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/Luacxx
+install(EXPORT luacxxTargets
+  NAMESPACE luacxx::
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/luacxx"
 )
+
+# Generate luacxxConfig.cmake + luacxxConfigVersion.cmake
+include(CMakePackageConfigHelpers)
+set(LUACXX_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/luacxx")
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/luacxxConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/luacxxConfig.cmake"
+  INSTALL_DESTINATION ${LUACXX_CMAKEDIR}
+  NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/luacxxConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/luacxxConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/luacxxConfigVersion.cmake"
+  DESTINATION ${LUACXX_CMAKEDIR}
+)
+
+function(dump_variables)
+  get_cmake_property(_variableNames VARIABLES)
+  list (SORT _variableNames)
+  foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+  endforeach()
+endfunction()
+#dump_variables()

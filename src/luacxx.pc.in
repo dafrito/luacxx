@@ -7,3 +7,5 @@ Name: @CMAKE_PROJECT_NAME@
 Description: @CMAKE_PROJECT_DESCRIPTION@
 Version: @CMAKE_PROJECT_VERSION@
 Requires: lua >= @LUA_MINIMUM_VERSION@
+Cflags: -I${includedir}
+Libs: -L${libdir} -l@CMAKE_PROJECT_NAME@

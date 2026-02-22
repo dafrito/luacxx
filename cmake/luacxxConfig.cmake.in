@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+# If your exported target links Lua publicly, consumers may need this
+find_dependency(Lua)
+
+include("${CMAKE_CURRENT_LIST_DIR}/luacxxTargets.cmake")
