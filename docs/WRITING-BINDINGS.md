@@ -1,5 +1,4 @@
-
-=head1 SYNOPSIS
+### SYNOPSIS
 
     #include "../cairo.hpp"
     #include "../thread.hpp"
@@ -20,7 +19,7 @@
         env["cairo_device_flush"] = cairo_device_flush;
     }
 
-=head1 DESCRIPTION
+### DESCRIPTION
 
 Luacxx bindings adhere to the original library's API wherever possible.  They
 do not modify the API's naming conventions, method structure, or object
@@ -49,7 +48,7 @@ make APIs harder to use without providing much of a benefit. In other words,
 it's already something that will need to be looked up on a first go, so it's
 better to have a single standard that the programmer can anticipate.
 
-=head3 Enumerations
+### Enumerations
 
 C Enumerations should be treated as integer constants. Do not attempt to make
 the values more readable or non-numeric. Push and store support must be defined
@@ -75,7 +74,7 @@ for enum classes to make them behave as expected:
         }
     };
 
-=head3 Structs
+### Structs
 
 Structs should be constructible according to their documentation. Do not provide
 undocumented constructors, unless it is assumed that the struct should be constructed
@@ -91,7 +90,7 @@ Do not turn structs into classes. C libraries should never be converted to
 using an object model. Keep objects out unless the library actually uses C++
 methods.
 
-=head3 Objects
+### Objects
 
 Objects should map to tables with a special metatable. The naming and casing
 for members should match exactly, unless the name collides with a Lua keyword
@@ -108,7 +107,7 @@ partial functions, as shown below:
     // Does this call Vector("new, 50, 50) or Vector:new(50, 50) ?
     local vec = curried(50);
 
-=head3 Pointers and ownership
+### Pointers and ownership
 
 Object ownership must be considered for all incoming and outgoing pointers,
 just as must be done in C. Lua's lifecycle is determined by its own reference
@@ -138,7 +137,7 @@ destroyed. The "free_userdata" method must be idempotent, so as to allow the
 programmer to invoke it immediately if needed, rather than waiting for the
 next garbage collection cycle.
 
-=head3 Handling out arguments as placement constructors
+### Handling out arguments as placement constructors
 
 Functions and methods that use pointers as out-arguments can provide an
 implementation that provides that out-argument implicitly through Lua's memory
