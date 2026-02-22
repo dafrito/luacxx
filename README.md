@@ -69,7 +69,7 @@ written in Lua:
 *Luacxx is frugal*. Luacxx takes advantage of C++'s memory efficiency.
 Objects pushed on the Lua stack are instantiated directly on new Lua userdata,
 and with only 4 bytes of Luacxx-specific metadata appended to the end.
-lua_touserdata works out-of-the-box, and the returned value can be cast
+`lua_touserdata` works out-of-the-box, and the returned value can be cast
 directly to the intended C++ type.
 
 *Luacxx is open-ended*. Much of Luacxx is built using class templates. This
@@ -83,7 +83,7 @@ preliminary support for Gtk's introspection system, allowing any project with
 GObject introspection support to work with Luacxx.
 
 *Luacxx is not a generator*. Luacxx doesn't write header files or extra
-boilerplate. Everything can be done using just a C++11 compiler.
+boilerplate. Everything can be done using just a modern C++ compiler.
 
 ### OVERVIEW
 
