@@ -1,1 +1,450 @@
-src/README
+=head1 NAME
+
+luacxx - C++11 binding and modules for Lua
+
+=head1 SYNOPSIS
+
+    // Create a new Lua environment to play with.
+    auto env = lua::create();
+
+    // Introduce a global into Lua
+    env["foo"] = "No time";
+
+    // Run some Lua code directly
+    lua::run_string("assert(foo == 'No time')");
+
+    // Retrieve a global
+    auto value = env["foo"].get<std::string>();
+    assert(value == "No time");
+
+=head1 DESCRIPTION
+
+Luacxx is a C++ library that helps you write Lua bindings for C++ and C code.
+It also contains complete bindings for several major C and C++ libraries.
+
+B<Luacxx plays well with others.> Luacxx does not try to cover up Lua's C API
+or its stack-based model. In fact, Luacxx and Lua C API's can and must be
+mixed freely, and Luacxx works transparently over Lua's stack, so you can work
+using either one. There is absolutely no harm in mixing the two together.
+
+B<Luacxx is fast>. A binding's overhead of calling into C and converting
+arguments can be significant for simple methods. Luacxx has been built
+specifically for efficiency, so it has avoided much of the overhead
+that plagues other bindings (and older versions of Luacxx!).
+
+Luacxx's overhead is around that of an extra function call, which means that a
+C++ binding will be faster than equivalent Lua code for all but the most
+trivial of cases. For instance, this math-intensive benchmark has the
+QQuaternion binding performing ~150% faster than an API-indentical quaternion
+written in Lua:
+
+    quat = QQuaternion:new(2, 3, 7, 5);
+    for i=1, MAX do
+        -- Do some CPU-intensive matrix math, as well as creating a temporary.
+        quat = quat * QQuaternion:new(2, 2, 2, 2);
+        quat:normalize();
+    end
+
+    // My numbers
+    Benchmark Runs: 10000
+    C++:      0.824ms ( 1.00 relative to C++)
+    Lua:     21.514ms (26.10 relative to C++)
+    Luacxx:  13.579ms (16.47 relative to C++)
+
+B<Luacxx is frugal>. Luacxx takes advantage of C++'s memory efficiency.
+Objects pushed on the Lua stack are instantiated directly on new Lua userdata,
+and with only 4 bytes of Luacxx-specific metadata appended to the end.
+lua_touserdata works out-of-the-box, and the returned value can be cast
+directly to the intended C++ type.
+
+B<Luacxx is open-ended>. Much of Luacxx is built using class templates. This
+allows you to add new support for your own types without needing to recompile
+Luacxx. Once a new template specialization for your type is found, all of
+Luacxx's APIs will be able to use it.
+
+B<Luacxx is comprehensive>. Luacxx includes bindings for over 150 Qt classes,
+as well as automatic introspection support for QObjects. It also has
+preliminary support for Gtk's introspection system, allowing any project with
+GObject introspection support to work with Luacxx.
+
+B<Luacxx is not a generator>. Luacxx doesn't write header files or extra
+boilerplate. Everything can be done using just a C++11 compiler.
+
+=head2 OVERVIEW
+
+This library is designed to work in tandem with Lua's existing C API, so it
+does not provide a complete facade. On the contrary, I find Lua's C API to be
+amazingly well-designed, so I've tried to ensure that Luacxx can be intermixed
+freely with Lua's C API. In fact, most of the Lua C API has no analog in
+Luacxx - I just use the original, like in the following example:
+
+    // Add all arguments
+    int add_several(lua_State* const state)
+    {
+        // Get each argument
+        int sum = 0;
+        for (int i = 1; i <= lua_gettop(state); ++i) {
+            sum += lua::get<int>(state, i);
+        }
+
+        // Return the value
+        lua::push(state, sum);
+        lua_replace(state, 1);
+        return 1;
+    }
+
+That being said, there are several places where Luacxx greatly simplify common
+tasks. For instance, Lua has a number of lua_push* functions that can be
+replaced with Luacxx's lua::push template and appropriate specializations. You
+can extend this specialization with your own types, and Luacxx's other
+features will immediately support them.
+
+C++11 also adds support for variadic templates, which can be used to provide a
+way to push a function of any arity into Lua without needing to write the
+marshalling code yourself or running a preprocessor:
+
+    // Standard C API is, of course, supported
+    int create_foo(lua_State* const);
+    lua::push(state, create_foo);
+
+    // Fundamental types work, too
+    int sum(int a, int b);
+    lua::push(state, sum);
+
+    // As do pointers to userdata and conversions to C++ strings.
+    void changeTitle(QWindow* window, const std::string& title);
+    lua::push(state, changeTitle);
+
+    // Even lambdas work too, with a bit of help
+    lua::push_function< int(int, int) >(state, [](int first, int second) {
+        return first + second;
+    });
+
+=head1 STYLE
+
+STL conventions are used for naming and case, though not slavishly, to
+infer that a template-heavy C++ dialect is used. However, adherance to Lua's
+conventions is preferred over that of C++.
+
+=head1 BUILDING
+
+   git clone https://github.com/dafrito/luacxx.git
+   cd luacxx
+
+    autoreconf -i
+
+    mkdir build
+    cd build
+
+    ../configure --prefix=$HOME
+
+    make
+
+=head1 REQUIRED DEPENDENCIES
+
+=head2 C++11 compiler
+
+Luacxx depends heavily on C++11 features for its operation. It would be a
+large undertaking to remove the use of these new features, and not without a
+significant loss in the expressiveness of the code.
+
+Luacxx has been built successfully using the following compilers:
+
+    gcc version 4.8.3 20140911 (Red Hat 4.8.3-7) (GCC)
+    gcc version 4.8.3 20140624 (Red Hat 4.8.3-1) (GCC)
+    clang version 3.4 (tags/RELEASE_34/final)
+
+=head2 Lua 5.2
+
+Luacxx uses Lua as its underlying foundation. It would not be possible to
+remove it without rewriting the project, though support for older Lua versions
+be added.
+
+Luacxx has been built successfully using the following versions:
+
+    Lua 5.2.2  Copyright (C) 1994-2013 Lua.org, PUC-Rio
+
+=head1 OPTIONAL DEPENDENCIES
+
+=head2 Linux kernel
+
+If available, bindings for the Linux kernel headers will be compiled.
+
+    yum install kernel-headers
+
+This binding is minimal; see linux/* for what is available.
+
+=head2 Qt 5 - http://qt-project.org/doc/qt-5/index.html
+
+This binding is mostly complete for Qt5Core and Qt5Gui; see
+Qt5Core/*, Qt5Gui/*, et all for what is supported.
+
+This binding is only partially complete for Qt5Network and Qt5Widgets.
+
+=head2 libevdev
+
+If available, bindings for the evdev input library will be compiled.
+
+    yum install libevdev-devel
+
+This binding is complete; see libevdev.hpp for information.
+
+=head2 gobject-introspection
+
+If available, Gtk's GObject introspection model will be available to Lua.
+
+    yum install gobject-introspection-devel
+
+This binding is functional, but not complete. See search/GIRepository.cpp for more
+details.
+
+=head2 libinput - http://wayland.freedesktop.org/libinput/doc/latest/index.html
+
+If available, bindings for the libinput input handling library will be
+compiled.
+
+    yum install mtdev-devel systemd-devel
+
+This binding is complete; see libinput.hpp for more information.
+
+=head2 ncurses - http://invisible-island.net/ncurses/ncurses.html
+
+If available, bindings for the ncurses terminal library will be compiled.
+
+    yum install ncurses-devel
+
+This binding is complete; see ncurses.hpp for more information.
+
+=head2 gbm - http://www.mesa3d.org/
+
+If available, bindings for Mesa's generic buffer management will be compiled.
+
+    yum install mesa-libgbm-devel
+
+This binding is complete; see gbm.hpp for more information.
+
+=head2 nanomsg - http://nanomsg.org/
+
+If available, bindings for the nanomsg IPC library will be compiled.
+
+    yum install nanomsg-devel
+
+This binding is complete; see nanomsg.hpp for further information.
+
+=head2 DRM - http://dri.freedesktop.org/wiki/
+
+If available, bindings for the direct rendering manager will be compiled.
+
+    yum install libdrm-devel
+
+This binding is partially complete; see xf86drmMode.hpp for information.
+
+=head2 EGL - https://www.khronos.org/registry/egl/
+
+If available, bindings for the EGL graphics standard will be compiled.
+
+    yum install mesa-libEGL-devel
+
+This binding is complete; see egl.hpp for further information.
+
+=head1 BUILD PROCESS
+
+Compile this file with autoreconf, producing a ./configure script
+
+    autoreconf -i;
+
+If this command fails, you've likely found a bug in the project. Please report
+it, even if it's just dropping by via IRC.
+
+Create a build directory (optional, but assumed here)
+
+    mkdir build;
+    cd build;
+
+Run the output of this file, creating this project's Makefiles.
+
+   ../configure --prefix=$HOME;
+
+If this command fails, you have a missing dependency.  Look at this file
+for a detailed listing of the prerequisites.
+
+=head1 BUILD CONFIGURATION FILES
+
+=head2 configure.ac
+
+This is the Autoconf file for Luacxx and its underlying projects. It
+provides the configuration for how to compile Luacxx itself. The language
+this file is written is likely unfamiliar unless you have worked with the
+Autotools, but the syntax is simple: it's little more than a macro language
+to write shell scripts.
+
+=head2 Makefile.am
+
+This file contains the commands to implement Makefile targets like check
+and run. It also included the src/Makefile.am.
+
+This file can be updated to add new build targets (e.g. for new executables or
+for other build processes).
+
+=head2 src/Makefile.am
+
+This file contains the listing of source files for each library and executable
+produced by this project including the unit tests.
+
+This file must be updated whenever source files are added or removed from the
+project.
+
+=head2 MAKE TARGETS
+
+=head4 make lua
+
+Runs a Lua interpreter with package.path and package.cpath set up to use this
+repository's bindings and sources files.
+
+=head4 make run
+
+Runs the Luacxx demo.
+
+=head4 make debug
+
+Runs the Luacxx demo under gdb. When you are ready to run the application,
+you will need to pass the location of the demo source code, like so:
+
+    (gdb) r ../src/demo.lua
+
+=head4 make valgrind
+
+Runs the Luacxx demo under valgrind. This is useful for debugging memory
+leaks and segfaults.
+
+=head4 make check
+
+Runs Luacxx's test suite.
+
+=head4 make checkvalgrind
+
+Runs Luacxx's test suite under valgrind.
+
+=head4 make install
+
+Installs Luacxx's executables and libraries to configure's --prefix.
+
+For an install limited to your own home directory, ./configure --prefix=$HOME
+would be sufficient. Note that pkg-config must be configured to include other
+home-installed packages: on Fedora, appending the following to ~/.bashrc would
+work:
+
+    export PKG_CONFIG_PATH=$HOME/lib/pkgconfig
+
+Followed by the build process
+
+    ./configure --prefix=$HOME
+    make
+    make install
+
+For a system-wide install on Fedora, ./configure --prefix=/usr would be
+sufficient:
+
+    ./configure --prefix=/usr
+    make
+    make install
+
+If you wish to examine the files that will be installed, DESTDIR is a better
+option than --prefix. DESTDIR will relocate files under a subtree without
+affecting the paths used by Makefile variables. This target produces an
+identical tree as what would be done without DESTDIR, but DESTDIR ensures that
+the creation can take place at a safe location:
+
+    # Same as a system-wide install
+    ./configure --prefix=/usr
+    make
+
+    # ...but install to a temporary directory
+    mkdir -p ~/tmp/luacxx
+    make install DESTDIR=$HOME/tmp/luacxx
+
+=head1 OPERATING SYSTEM SUPPORT
+
+=head2 OSes that can build Luacxx without needing manually installed dependencies
+
+Luacxx has been built using the following operating systems:
+
+    Fedora 20 (Linux 3.14.8-200.fc20.x86_64 #1 SMP Mon Jun 16 21:57:53 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux)
+
+=head2 OSes that can build Luacxx with manually installed dependencies
+
+None yet known.
+
+=head2 OSes that can build Luacxx only with emulation
+
+=head3 Microsoft Windows
+
+Luacxx can be built using MinGW (and likely with Cygwin, though I haven't tried).
+
+=head1 GETTING IN TOUCH
+
+Send quick questions and comments to #luacxx on irc.freenode.net. For longer
+questions or concerns, please email me at dafrito@gmail.com. I will answer
+these as quickly as practical.
+
+=head1 LICENSE
+
+By default, this project uses the GNU General Public License, version 2, for
+all code. Licensing exceptions are noted in each file where they occur
+
+=head1 SEE ALSO
+
+Lua 5.2 - http://www.lua.org/manual/5.2/manual.html
+
+    Lua is an extension programming language designed to support general
+    procedural programming with data description facilities.
+
+Qt - http://qt-project.org/doc/qt-5/modules-cpp.html
+
+    Qt is a cross-platform application and UI framework for developers.
+
+=head1 ALTERNATIVES
+
+LuaJIT - http://luajit.org/index.html
+
+    LuaJIT is a Just-In-Time Compiler (JIT) for the Lua programming language.
+
+tolua++ - http://www.codenix.com/~tolua/
+
+    tolua++ is an extended version of tolua, a tool to integrate C/C++ code
+    with Lua.
+
+tolua - http://www.tecgraf.puc-rio.br/~celes/tolua/
+
+    tolua is a tool that greatly simplifies the integration of C/C++ code with Lua.
+    Based on a cleaned header file, tolua automatically generates the binding code
+    to access C/C++ features from Lua.
+
+Luabind - http://www.rasterbar.com/products/luabind.html
+
+    Luabind is a library that helps you create bindings between C++ and Lua. It
+    has the ability to expose functions and classes, written in C++, to Lua. It
+    will also supply the functionality to define classes in lua and let them
+    derive from other lua classes or C++ classes. Lua classes can override
+    virtual functions from their C++ baseclasses.
+
+lqt - https://github.com/mkottman/lqt
+
+    lqt is a Lua binding to the Qt framework. It is an automated binding
+    generated from the Qt headers, and covers almost all classes and methods
+    from supported Qt modules.
+
+QtLua - http://www.nongnu.org/libqtlua/
+
+    The QtLua library aims to make Qt4/Qt5 applications scriptable using the
+    Lua scripting language. It is an alternative to the QtScript module.
+
+LGI - https://github.com/pavouk/lgi
+
+    LGI is gobject-introspection based dynamic Lua binding to GObject based
+    libraries. It allows using GObject-based libraries directly from Lua.
+
+=head1 LICENSE
+
+This project uses the MIT license unless otherwise noted. See LICENSE for exact
+wording.

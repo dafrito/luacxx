@@ -1,8 +1,3 @@
-This license covers the Luacxx source code and documentation, unless overridden
-by another license. Such overrides will be indicated within a given file, and
-are typically used to ensure perfect license compatibility with an underlying
-library.
-
 Copyright (c) 2013-2026 Aaron Faanes
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

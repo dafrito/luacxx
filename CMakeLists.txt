@@ -133,11 +133,11 @@ if(BUILD_TESTING)
   add_test(NAME luacxx.test_without_conversion COMMAND luacxx_test_without_conversion)
 endif()
 
-configure_file(pkg-config/luacxx.pc.cmake pkg-config/luacxx.pc @ONLY)
+configure_file(src/luacxx.pc.in pkgconfig/luacxx.pc @ONLY)
 
 include(GNUInstallDirs)
 install(
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/pkg-config/luacxx.pc
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/luacxx.pc
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 install(
