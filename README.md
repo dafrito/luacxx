@@ -163,6 +163,7 @@ Luacxx has been built successfully using the following compilers:
     gcc version 4.8.3 20140911 (Red Hat 4.8.3-7) (GCC)
     gcc version 4.8.3 20140624 (Red Hat 4.8.3-1) (GCC)
     clang version 3.4 (tags/RELEASE_34/final)
+    Apple clang version 17.0.0 (clang-1700.6.3.2)
 
 ### Lua 5.2
 
