@@ -38,6 +38,7 @@ target_sources(luacxx
     src/load.cpp
     src/stack.cpp
     src/thread.cpp
+    src/global.cpp
     src/convert/callable.cpp
     src/convert/const_char_p.cpp
     src/convert/char.cpp

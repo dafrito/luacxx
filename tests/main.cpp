@@ -895,6 +895,73 @@ BOOST_AUTO_TEST_CASE(algorithm_call_with_int)
     BOOST_CHECK_EQUAL(2, lua::get<int>(env, 2));
 }
 
+BOOST_AUTO_TEST_CASE(globals_can_be_called)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, ""
+        "function getLuaValue(value)\n" \
+        "  return \"This is from a Lua function. You said \\\"\" .. value .. \"\\\"!\"\n" \
+        "end"
+    );
+
+    env["getLuacxx"] = std::function<std::string()>([&env] {
+        std::string str = "You're calling a C++ function from Lua!";
+        str += " " + std::string(env["getLuaValue"]("This is an argument from C++"));
+        return str;
+    });
+
+    auto rv = lua::run_string<std::string>(env, "return getLuacxx()");
+    auto expected = "You're calling a C++ function from Lua! This is from a Lua function. You said \"This is an argument from C++\"!";
+    BOOST_CHECK_EQUAL(expected, rv);
+}
+
+BOOST_AUTO_TEST_CASE(globals_can_be_called_without_args)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, ""
+        "function getLuaValue()\n" \
+        "  return \"This is from a Lua function.\"\n" \
+        "end"
+    );
+
+    env["getLuacxx"] = std::function<std::string()>([&env] {
+        std::string str = "You're calling a C++ function from Lua!";
+        str += " " + std::string(env["getLuaValue"]());
+        return str;
+    });
+
+    auto rv = lua::run_string<std::string>(env, "return getLuacxx()");
+    auto expected = "You're calling a C++ function from Lua! This is from a Lua function.";
+    BOOST_CHECK_EQUAL(expected, rv);
+}
+
+BOOST_AUTO_TEST_CASE(globals_can_be_called_without_rv)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, ""
+        "function setLuaValue(value)\n" \
+        "  FOO = value\n" \
+        "end"
+    );
+
+    env["getLuacxx"] = std::function<std::string()>([&env] {
+        std::string str = "You're calling a C++ function from Lua!";
+        auto rv = env["setLuaValue"]("This is an argument from C++");
+        BOOST_CHECK_EQUAL(lua::type::nil, rv.type());
+        return str;
+    });
+
+    auto rv = lua::run_string<std::string>(env, "return getLuacxx()");
+    auto expected = "You're calling a C++ function from Lua!";
+    BOOST_CHECK_EQUAL(expected, rv);
+
+    // Check the side-effect
+    BOOST_CHECK_EQUAL(env["FOO"].get<std::string>(), "This is an argument from C++");
+}
+
 #ifdef HAVE_gobject_introspection
 
 #include "search/GIRepository.hpp"

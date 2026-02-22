@@ -5,6 +5,7 @@
 #include "luacxx/convert/string.hpp"
 #include "luacxx/convert/char_p.hpp"
 #include "luacxx/convert/numeric.hpp"
+#include "luacxx/convert/string.hpp"
 #include "luacxx/thread.hpp"
 #include "luacxx/algorithm.hpp"
 #include "luacxx/load.hpp"
@@ -34,6 +35,18 @@ int on_panic(lua_State* const state)
 int main(int argc, char** argv)
 {
     auto env = lua::create();
+
+    lua::run_string(env, ""
+        "function getLuaValue(value)\n" \
+        "  return \"This is from a Lua function. You said \" + value + \"!\"\n" \
+        "end"
+    );
+
+    env["getLuacxx"], std::function<std::string()>([&env] {
+        std::string str = "You're calling a C++ function from Lua!\n";
+        str += std::string(env["getLuaValue"]());
+        return str;
+    });
 
     lua_atpanic(env, on_panic);
 

@@ -3,6 +3,7 @@
 
 #include "stack.hpp"
 #include "algorithm.hpp"
+#include "reference.hpp"
 
 #include <string>
 
@@ -75,6 +76,15 @@ public:
     {
         return lua::get<T>(*this);
     };
+
+    template <typename... Args>
+    lua::reference operator()(Args... args)
+    {
+      auto rv = lua::call<lua::reference>(*this, args...);
+      return rv;
+    }
+
+    lua::reference operator()() const;
 };
 
 template <>

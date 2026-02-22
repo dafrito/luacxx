@@ -1,6 +1,9 @@
 #ifndef luacxx_type_INCLUDED
 #define luacxx_type_INCLUDED
 
+#include <string_view>
+#include <ostream>
+
 #include <lua.hpp>
 
 namespace lua {
@@ -20,6 +23,30 @@ enum class type {
     thread = LUA_TTHREAD
 };
 
+constexpr std::string_view to_string(type value) noexcept
+{
+    // Lua provides lua_typename, but that requires a lua_State
+    // and I'd like this to work without one.
+    using enum type; // C++20; optional
+    switch (value) {
+        case none:          return "no value";
+        case nil:           return "nil";
+        case boolean:       return "boolean";
+        case number:        return "number";
+        case string:        return "string";
+        case table:         return "table";
+        case function:      return "function";
+        case thread:        return "thread";
+        case userdata:      return "userdata";
+        case lightuserdata: return "light userdata";
+    }
+    return "unknown";
+}
+
+inline std::ostream& operator<<(std::ostream& os, type value) {
+    return os << to_string(value);
+}
+
 class type_info
 {
     lua::type _value;
@@ -36,24 +63,8 @@ public:
     {
     }
 
-    const char* name() const {
-        // Lua provides lua_typename for this behavior presumably to allow
-        // localization, but I prefer just having these be inline here as
-        // they're usually just used for debugging purposes.
-
-        switch (get()) {
-            case lua::type::none:          return "none";
-            case lua::type::nil:           return "nil";
-            case lua::type::boolean:       return "boolean";
-            case lua::type::number:        return "number";
-            case lua::type::string:        return "string";
-            case lua::type::table:         return "table";
-            case lua::type::function:      return "function";
-            case lua::type::thread:        return "thread";
-            case lua::type::userdata:      return "userdata";
-            case lua::type::lightuserdata: return "lightuserdata";
-            default:                       return "unknown";
-        }
+    std::string_view name() const {
+      return to_string(get());
     }
 
     bool operator==(const lua::type_info& other) const
@@ -127,6 +138,10 @@ public:
         return _value;
     }
 };
+
+inline std::ostream& operator<<(std::ostream& os, const type_info& value) {
+    return os << value.name();
+}
 
 } // namespace lua
 

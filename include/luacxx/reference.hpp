@@ -176,7 +176,7 @@ void release()
 }
 
 template <class Type>
-auto get() -> decltype(lua::Get<Type>::get(state(), -1));
+auto get() const -> decltype(lua::Get<Type>::get(state(), -1));
 
 /*
 
@@ -191,6 +191,12 @@ template <class Name>
 lua::link<lua::reference, Name> operator[](Name name)
 {
     return lua::link<lua::reference, Name>(*this, name);
+}
+
+template <class T>
+operator T() const
+{
+  return get<T>();
 }
 
 /*
@@ -238,7 +244,7 @@ struct Store<lua::reference>
 };
 
 template <class Type>
-auto lua::reference::get() -> decltype(lua::Get<Type>::get(state(), -1))
+auto lua::reference::get() const -> decltype(lua::Get<Type>::get(state(), -1))
 {
     lua::Push<lua::reference>::push(state(), *this);
     auto rv = lua::Get<Type>::get(state(), -1);

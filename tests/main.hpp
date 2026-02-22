@@ -19,6 +19,7 @@
 #include "luacxx/algorithm.hpp"
 #include "luacxx/load.hpp"
 #include "luacxx/reference.hpp"
+#include "luacxx/global.hpp"
 
 class Counter
 {

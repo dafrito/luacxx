@@ -406,6 +406,19 @@ auto call(Callable source, Args... args) -> decltype(lua::get<RV>(source.state()
     return lua::get<RV>(callable.state(), callable.pos());
 }
 
+template <typename RV, typename Callable>
+auto call(Callable source) -> decltype(lua::get<RV>(source.state(), 0))
+{
+    lua::index callable(lua::push(source.state(), source));
+    if (lua::is_type<std::function<RV()>>(callable)) {
+        auto saved_function = callable.get<std::function<RV()>*>();
+        lua_pop(source.state(), 1);
+        return (*saved_function)();
+    }
+    lua::invoke(1, callable);
+    return lua::get<RV>(callable.state(), callable.pos());
+}
+
 template <typename Callable, typename... Args>
 void call(Callable source, Args... args)
 {
@@ -415,12 +428,28 @@ void call(Callable source, Args... args)
     lua::invoke(0, callable);
 }
 
+template <typename Callable>
+void call(Callable source)
+{
+    lua::index callable(lua::push(source.state(), source));
+    lua::assert_type("lua::call", lua::type::function, callable);
+    lua::invoke(0, callable);
+}
+
 template <int returned, typename Callable, typename... Args>
 void call(Callable source, Args... args)
 {
     lua::index callable(lua::push(source.state(), source));
     lua::assert_type("lua::call", lua::type::function, callable);
     lua::push(callable.state(), args...);
+    lua::invoke(returned, callable);
+}
+
+template <int returned, typename Callable>
+void call(Callable source)
+{
+    lua::index callable(lua::push(source.state(), source));
+    lua::assert_type("lua::call", lua::type::function, callable);
     lua::invoke(returned, callable);
 }
 
