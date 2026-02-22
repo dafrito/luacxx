@@ -205,22 +205,18 @@ on Github.
 By default, this project uses the MIT license. The included bindings use the
 license of their respective projects.
 
-### SEE ALSO
+### LUA DOCUMENTATION
 
 Lua 5.2 - http://www.lua.org/manual/5.2/manual.html
 
     Lua is an extension programming language designed to support general
     procedural programming with data description facilities.
 
-Qt - http://qt-project.org/doc/qt-5/modules-cpp.html
-
-    Qt is a cross-platform application and UI framework for developers.
-
-### ALTERNATIVES
-
 LuaJIT - http://luajit.org/index.html
 
     LuaJIT is a Just-In-Time Compiler (JIT) for the Lua programming language.
+
+### ALTERNATIVES
 
 tolua++ - http://www.codenix.com/~tolua/
 
