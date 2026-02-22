@@ -6,7 +6,7 @@ project(luacxx
   DESCRIPTION "Lua binding library for modern C++"
 )
 
-option(BUILD_TESTING "Enable unit tests" ON)
+option(LUACXX_BUILD_TESTS "Build tests" OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -25,14 +25,6 @@ target_compile_options(project_warnings INTERFACE
 # ---- Dependencies ----
 set(LUA_MINIMUM_VERSION 5.2)
 find_package(Lua ${LUA_MINIMUM_VERSION} REQUIRED)
-
-if(POLICY CMP0167)
-  cmake_policy(SET CMP0167 NEW)
-endif()
-set(Boost_USE_STATIC_LIBS OFF)
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-find_package(Boost 1.70 REQUIRED COMPONENTS unit_test_framework)
 
 # ---- Library ----
 add_library(luacxx)
@@ -98,11 +90,16 @@ target_link_libraries(luacxx
     project_warnings
 )
 
-# ---- Tests ----
-include(CTest)
-
-if(BUILD_TESTING)
+if(LUACXX_BUILD_TESTS)
   enable_testing()
+
+  if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 NEW)
+  endif()
+  set(Boost_USE_STATIC_LIBS OFF)
+  set(Boost_USE_MULTITHREADED ON)
+  set(Boost_USE_STATIC_RUNTIME OFF)
+  find_package(Boost 1.70 REQUIRED COMPONENTS unit_test_framework)
 
   add_executable(luacxx_test_main
     tests/main.cpp
