@@ -11,7 +11,7 @@ luacxx - C++11 binding and modules for Lua
     env["foo"] = "No time";
 
     // Run some Lua code directly
-    lua::run_string("assert(foo == 'No time')");
+    lua::run_string(env, "assert(foo == 'No time')");
 
     // Retrieve a global
     auto value = env["foo"].get<std::string>();
