@@ -906,7 +906,7 @@ BOOST_AUTO_TEST_CASE(globals_can_be_called)
     );
 
     env["getLuacxx"] = std::function<std::string()>([&env] {
-        std::string str = "You're calling a broken C++ function from Lua!";
+        std::string str = "You're calling a C++ function from Lua!";
         str += " " + std::string(env["getLuaValue"]("This is an argument from C++"));
         return str;
     });
