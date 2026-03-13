@@ -14,6 +14,7 @@ Luacxx's documentation is split into two parts:
 - [Understanding Userdata Memory](guide/understanding-userdata-memory.md)
 - [Metatable Macros](guide/metatable-macros.md)
 - [LUACXX_ALLOW_MISSING_METATABLES](guide/luacxx-allow-missing-metatables.md)
+- [Conversion Templates](guide/conversion-templates.md)
 - [Writing Bindings](guide/writing-bindings.md)
 - [Useful Lua Functions](guide/useful-lua-functions.md)
 

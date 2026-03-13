@@ -116,6 +116,7 @@ The user guide and reference live under [`docs/`](docs/):
 - [`docs/guide/understanding-userdata-memory.md`](docs/guide/understanding-userdata-memory.md)
 - [`docs/guide/metatable-macros.md`](docs/guide/metatable-macros.md)
 - [`docs/guide/luacxx-allow-missing-metatables.md`](docs/guide/luacxx-allow-missing-metatables.md)
+- [`docs/guide/conversion-templates.md`](docs/guide/conversion-templates.md)
 - [`docs/guide/writing-bindings.md`](docs/guide/writing-bindings.md)
 - [`docs/guide/useful-lua-functions.md`](docs/guide/useful-lua-functions.md)
 - [`docs/reference/stack-and-userdata.md`](docs/reference/stack-and-userdata.md)
