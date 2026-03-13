@@ -7,6 +7,8 @@ Luacxx's documentation is split into two parts:
 
 ## Guide
 
+- [Binding a Primitive Type](guide/binding-a-primitive-type.md)
+- [Binding a Class](guide/binding-a-class.md)
 - [Writing Bindings](guide/writing-bindings.md)
 - [Useful Lua Functions](guide/useful-lua-functions.md)
 
