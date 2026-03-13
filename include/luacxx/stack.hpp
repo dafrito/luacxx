@@ -271,6 +271,11 @@ namespace lua {
 
 class userdata_block;
 
+// `userdata_type` and `userdata_block` are the core of Luacxx's userdata type
+// safety. They record runtime type information, valid casts, payload location,
+// and destruction behavior so `lua::get<T*>()` can verify and adjust userdata
+// pointers safely. See docs/guide/understanding-type-safety.md for the full
+// explanation.
 class userdata_type {
     std::string _name;
     std::forward_list<std::pair<const lua::userdata_type*, unsigned short>> _casts;
@@ -347,7 +352,7 @@ private:
     friend class userdata_block;
 };
 
-// Metadata that defines the Lua userdata
+// Metadata stored alongside each Luacxx userdata instance.
 class userdata_block {
     const userdata_type* _info;
     void* _value;
