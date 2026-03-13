@@ -6,51 +6,9 @@
 #include "index.hpp"
 #include "algorithm.hpp"
 
-/*
-
-=head1 NAME
-
-lua::reference - a slot for C to save Lua values
-
-=head1 SYNOPSIS
-
-    #include <luacxx/reference.hpp>
-
-    struct MyData {
-        lua::reference target;
-    };
-
-    int MyData_new(lua_State* const state)
-    {
-        MyData* data = lua::make<MyData>(state);
-        data->target = lua::index(state, 2);
-
-        // Move the data to the first position and return
-        lua_replace(state, 1);
-        return 1;
-    }
-
-    int MyData_call(lua_State* const state)
-    {
-        auto data = lua::get<MyData*>(state, 1);
-        lua::call(data->target, lua::get<std::string>(state, 2));
-        return 0;
-    }
-
-    int luaopen_MyData(lua_State* const state)
-    {
-        lua::thread env(state);
-
-        env["MyData"] = lua::value::table;
-        env["MyData"]["new"] = MyData_new;
-        env["MyData"]["call"] = MyData_call;
-
-        return 0;
-    }
-
-=head1 DESCRIPTION
-
-*/
+// `lua::reference` is a registry-backed handle for keeping a Lua value alive
+// across C++ calls. For usage patterns and lifetime notes, see
+// docs/guide/working-with-reference.md.
 
 namespace {
     void* NIL_REFERENCE = reinterpret_cast<void*>(0xdeaddead);
@@ -67,12 +25,6 @@ lua_State* _state;
 int _id;
 
 public:
-
-/*
-
-=head4 lua::reference(state)
-
-*/
 
 reference() :
     _state(nullptr),
@@ -178,12 +130,6 @@ void release()
 template <class Type>
 auto get() const -> decltype(lua::Get<Type>::get(state(), -1));
 
-/*
-
-=head4 operator=(T source)
-
-*/
-
 template <class Source>
 reference& operator=(Source source);
 
@@ -198,14 +144,6 @@ operator T() const
 {
   return get<T>();
 }
-
-/*
-
-=head4 ~reference()
-
-Unreference this value.
-
-*/
 
 ~reference()
 {

@@ -18,7 +18,8 @@
 #include <cassert>
 
 // Core stack and userdata primitives.
-// Extended documentation lives in docs/reference/stack-and-userdata.md and
+// Extended documentation lives in docs/guide/working-with-the-lua-stack.md,
+// docs/reference/stack-and-userdata.md, and
 // docs/guide/useful-lua-functions.md.
 
 namespace lua {

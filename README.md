@@ -133,11 +133,20 @@ Start here:
 
 Common tasks:
 
+- [`docs/guide/handling-lua-errors.md`](docs/guide/handling-lua-errors.md) for catching, inspecting, and throwing `lua::error`
+- [`docs/guide/loading-and-running-lua-code.md`](docs/guide/loading-and-running-lua-code.md) for `load_*` and `run_*`
+- [`docs/guide/working-with-the-lua-stack.md`](docs/guide/working-with-the-lua-stack.md) for the basic Lua stack model and how Luacxx layers on top of it
+- [`docs/guide/iterating-stack-values.md`](docs/guide/iterating-stack-values.md) for `lua::range<T>` and homogeneous stack iteration
 - [`docs/guide/binding-a-primitive-type.md`](docs/guide/binding-a-primitive-type.md) for teaching Luacxx a value-like type
 - [`docs/guide/binding-a-class.md`](docs/guide/binding-a-class.md) for userdata-backed classes
 - [`docs/guide/working-with-shared-ptr.md`](docs/guide/working-with-shared-ptr.md) for shared-ownership bindings
 - [`docs/guide/working-with-strings.md`](docs/guide/working-with-strings.md) for the intended `std::string` path and the raw Lua string escape hatch
 - [`docs/guide/working-with-callables.md`](docs/guide/working-with-callables.md) for function pointers, member pointers, `std::function`, and `lua::call`
+- [`docs/guide/working-with-index.md`](docs/guide/working-with-index.md) for stack-slot access with `lua::index`
+- [`docs/guide/working-with-global-and-link.md`](docs/guide/working-with-global-and-link.md) for symbolic access to globals, fields, and nested Lua paths
+- [`docs/guide/working-with-reference.md`](docs/guide/working-with-reference.md) for keeping Lua values alive across C++ calls with registry-backed references
+- [`docs/guide/working-with-lua-values.md`](docs/guide/working-with-lua-values.md) for pushing Lua-specific values like `nil`, fresh tables, the globals table, and the registry
+- [`docs/guide/working-with-table-helpers.md`](docs/guide/working-with-table-helpers.md) for `lua::table::*`, `setfield`, and `setglobal`
 - [`docs/guide/standard-library-types.md`](docs/guide/standard-library-types.md) for how built-in `std` types are represented, copied, and validated
 - [`docs/guide/light-userdata-and-void-p.md`](docs/guide/light-userdata-and-void-p.md) for when `void*` works and why it is limited to light userdata
 

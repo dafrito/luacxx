@@ -244,21 +244,6 @@ lua::index push_global(lua_State* const state, const T&& name)
     return --rv;
 }
 
-/*
-
-=head4 int lua::make_malloc<T>(state)
-
-Creates a new userdata and pushed it on the stack. The userdata's size is
-determined by the specified type.
-
-This returns 1, so it can be used directly as a callable Lua function for
-simple C types, as shown in the example:
-
-    env["chtype"] = lua::value::table;
-    env["chtype"]["new"] = lua::make_malloc<chtype>;
-
-*/
-
 template <class Value>
 int make_malloc(lua_State* const state)
 {
@@ -268,27 +253,12 @@ int make_malloc(lua_State* const state)
 
 namespace table {
 
-/*
-
-=head4 lua::table::length(index)
-
-Returns the size of the table at the given index.
-
-*/
+// Small table helpers. See docs/guide/working-with-table-helpers.md for the
+// higher-level usage notes.
 
 int length(const lua::index& index);
 
 int length(lua_State* const state, const int pos);
-
-/*
-
-=head4 lua::table::insert(destination, value)
-
-Inserts a new value into the table at the given destination index.
-
-    lua::table::insert(env["package"]["searchers"], my_search_function);
-
-*/
 
 template <typename Value>
 void insert(lua_State* const state, const int pos, Value value)
@@ -306,19 +276,6 @@ void insert(Table destination, Value value)
     lua::table::insert(table.state(), table.pos(), value);
     lua_pop(table.state(), 1);
 }
-
-/*
-
-=head4 Value lua::table::get<Value>(source, key)
-
-Returns source[key] as a value of the given type. The Lua stack
-is unaffected.
-
-=head4 lua::index lua::table::get(source, key)
-
-Pushes source[key] onto the Lua stack.
-
-*/
 
 template <typename Value, typename Table, typename Key>
 Value get(Table source, Key key)
@@ -347,14 +304,6 @@ lua::index get(Table source, Key key)
 
     return lua::index(table.state(), -1);
 }
-
-/*
-
-=head4 lua::table::set(source, key, value)
-
-Sets source[key] to the given value.
-
-*/
 
 template <typename Value, typename Key, typename Table>
 void set(Table source, Key key, Value value)
@@ -413,14 +362,6 @@ void call_each(lua_State* const state, const int pos, Args... args)
     });
 }
 
-/*
-
-=head4 lua::type_info rv = lua::table::get_type(source, key)
-
-Returns the type of source[key], same as lua::index::type()
-
-*/
-
 template <typename Table, typename Key>
 lua::type_info get_type(Table source, Key key)
 {
@@ -432,25 +373,11 @@ lua::type_info get_type(Table source, Key key)
 
 } // namespace table
 
-/*
-
-=head4 lua::setfield(source, key, value)
-
-Identical to lua::table::set(source, key, value)
-
-*/
-
 template <typename Value, typename Key, typename Table>
 void setfield(Table source, Key key, Value value)
 {
     lua::table::set(source, key, value);
 }
-
-/*
-
-=head4 lua::setglobal<Value>(state, const char* name, Value value)
-
-*/
 
 template <typename Value>
 void setglobal(lua_State* const state, const char* name, Value value)

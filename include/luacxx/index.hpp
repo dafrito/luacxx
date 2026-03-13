@@ -4,124 +4,9 @@
 #include "stack.hpp"
 #include "link.hpp"
 
-/*
-
-=head2 class lua::index
-
-A reference to a stack position.
-
-    #include <stack.hpp>
-
-    // Concatenate all strings together
-    int strict_concat(lua_State* const state)
-    {
-        std::stringstream full_string;
-        lua::index value(state, 1);
-
-        while (value) {
-            if (value.type() != lua::type::string) {
-                std::stringstream str;
-                str << "Argument at index "<< value.pos();
-                str << " must be a string, but a ";
-                str << value.type().name() << " was given.";
-
-                throw lua::error(str.str());
-            }
-
-            // Add this value to the working total
-            full_string << lua_tostring(value.state(), value.pos());
-
-            // Go to the next value
-            ++value;
-        }
-
-        // Clear the stack and push the final string
-        lua_settop(state, 0);
-        lua_pushstring(state, full_string.str().c_str());
-        return 1;
-    }
-
-lua::index is a simple class, designed to give a more object-oriented
-approach to working with stack values. This is especially useful if
-you're iterating over the stack or were given a stack value from an
-external source.  The stack value's position is absolute, so external
-changes will not cause the index's value to move. This inflexibilty
-allows the index to optimize for speed.
-
-=head4 lua_State* index.state(), int index.pos()
-
-Return the underlying data for this index.
-
-    lua_replace(index.state(), index.pos());
-
-=head4 lua::type index.type();
-
-Returns the type of the value at this index. Refer to lua::type for
-more information.
-
-    switch (index.type().get()) {
-        case lua::type::nil:
-            // Handle nil
-            break;
-        case lua::type::number:
-        case lua::type::boolean:
-        case lua::type::string:
-            // Handle primitives
-            break;
-        case lua::type::function:
-            // Handle functions
-            break;
-        default:
-            // Handle tables, userdata, and special types
-            break;
-    }
-
-=head4 operator bool(), operator++(), operator--(), ...
-
-The index behaves as a smart pointer. operator bool() will return false
-if the index is out of range of the underlying state. The index is always
-positive, so increment and decrement work as expected.
-
-    #include <luacxx/convert/numeric.hpp>
-
-    int sum = 0;
-    while (index) {
-        sum += index.get<int>();
-        ++index;
-    }
-
-=head4 operator=(const T& source);
-
-Replace the value at this index's position with the given value, similar
-to lua_replace.
-
-    #include <luacxx/convert/numeric.hpp>
-
-    lua_pushnil(state);
-    lua::index index(state, -1);
-    assert(0 == index.get<int>());
-
-    // ... get other_index ...
-    other_index = 42;
-    index = other_index;
-    assert(42 == index.get<int>());
-
-=head4 operator[](T name);
-
-    #include <luacxx/convert/numeric.hpp>
-
-    auto id = index["id"];
-    assert(2 == id.get<int>());
-
-Creates a link using this index as a source, and the given value as the
-name. This does not modify the stack.
-
-=head4 T index.get<T>()
-
-Returns the stack value as the specified type. This method uses
-lua::get<T> internally, so refer to that method for more information.
-
-*/
+// `lua::index` is a lightweight wrapper around a Lua stack slot. For
+// usage patterns and stack-lifetime notes, see
+// docs/guide/working-with-index.md.
 
 namespace lua {
 
@@ -225,37 +110,9 @@ public:
     }
 };
 
-/*
-
-=head2 lua::index push(state, T value, Rest... values)
-
-    #include <luacxx/convert/string.hpp>
-    #include <luacxx/convert/numeric.hpp>
-
-    auto table = lua::push(state, lua::value::table);
-    table["Foo"] = 42;
-    table["Bar"] = 24;
-    assert(42 == table["Foo"].get<int>());
-
-Pushes the specified values onto the stack, and returns an index referring to
-the topmost value. Internally, lua::push just calls the Push struct, like so:
-
-    lua::Push<T>::push(state, value);
-
-Specialize the lua::Push struct if you wish for your type to be handled
-specially. For instance, the struct for lua::index looks like this:
-
-    template <>
-    struct Push<lua::index>
-    {
-        static void push(lua_State* const state, const lua::index& source)
-        {
-            // Push a copy of the value stored at source.pos()
-            lua_pushvalue(state, source.pos());
-        }
-    };
-
-*/
+// `lua::push(...)` returns a `lua::index` pointing at the topmost pushed
+// value. See docs/guide/working-with-index.md for examples and guidance on
+// when `index.get<T>()` is appropriate.
 
 template <class T>
 lua::index push(lua_State* const state, T value)
@@ -276,16 +133,8 @@ lua::index push(lua_State* const state, T value, Rest... values)
     return push(state, values...);
 }
 
-/*
-
-=head2 lua::index push(T value)
-
-Push a Lua object, like a lua::index, lua::global, or lua::link, onto the stack. This
-is defined as:
-
-    return lua::push(value.state(), value);
-
-*/
+// Push a Lua-facing object, such as `lua::index`, `lua::global`, or
+// `lua::link`, onto the stack.
 
 template <class Value>
 lua::index push(Value value)

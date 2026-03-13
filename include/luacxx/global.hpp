@@ -9,6 +9,9 @@
 
 namespace lua {
 
+// `lua::global` represents a named Lua global. For how it relates to
+// `lua::link` and `lua::index`, see docs/guide/working-with-global-and-link.md.
+
 class global
 {
     lua_State* _state;

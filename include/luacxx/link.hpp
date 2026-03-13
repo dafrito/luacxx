@@ -3,30 +3,9 @@
 
 #include "stack.hpp"
 
-/*
-
-=head2 class lua::link<Source, Name>
-
-Plumbing for representing symbolic paths to Lua values.
-
-    // Get a symbolic link to package.searchers
-    auto searchers = lua::make_link(lua::global(state, "package"), "searchers");
-    assert(searchers.type().table());
-
-    // lua::thread provides access (though lua::global is actually used here)
-    lua::thread env;
-    assert(env["package"]["searchers"].type().table());
-
-lua::link is useful solely for its operator[] overloading, which allows
-arbitrary nesting of Lua accesses to retrieve a value. Such nesting occurs
-very naturally when calling Lua, so it's very convenient to have an object
-that represents such addresses. You can use lua::make_link to quickly create a
-link; this function allows the compiler to deduce template parameters.
-
-lua::link's public API mimics that of lua::index, so refer to the
-documentation for that class for more information.
-
-*/
+// `lua::link` represents a keyed lookup rooted at another Lua-facing object.
+// For usage patterns and examples with `lua::global`, see
+// docs/guide/working-with-global-and-link.md.
 
 namespace lua {
 

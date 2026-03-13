@@ -3,65 +3,8 @@
 
 #include "stack.hpp"
 
-/*
-
-=head1 NAME
-
-lua::range - iterable Lua stacks
-
-=head1 SYNOPSIS
-
-    #include <luacxx/range.hpp>
-
-    int foo_sum(lua_State* const state)
-    {
-        int sum = 0;
-        for (int value : lua::range<int>(state)) {
-            sum += value;
-        }
-        lua_settop(state, 0);
-        lua::push(state, sum);
-        return 1;
-    }
-
-    int luaopen_Foo(lua_State* const state)
-    {
-        lua::thread env(state);
-        env["Foo"] = lua::value::table;
-
-        env["Foo"]["Sum"] = foo_sum;
-
-        return 0;
-    }
-
-=head1 DESCRIPTION
-
-=head2 lua::range<Value>(state)
-
-Constructs an iterable that can be used in a for-loop. A range has a
-begin() and an end() that will return iterators.
-
-    int string_join(lua_State* const state)
-    {
-        std::stringstream str;
-        bool first = true;
-        for (std::string name : lua::range<std::string>(state)) {
-            str << (first ? "" : " ") << name;
-        }
-    }
-
-The above example is equivalent to the following code:
-
-    int string_join(lua_State* const state)
-    {
-        std::stringstream str;
-        bool first = true;
-        for (lua::iterator iter(state); iter; ++i) {
-            auto name = iter.get<std::string>();
-            str << (first ? "" : " ") << str;
-        }
-    }
-*/
+// `lua::range<T>` and `lua::iterator<T>` provide typed iteration across the
+// current Lua stack. See docs/guide/iterating-stack-values.md for examples.
 
 namespace lua {
 

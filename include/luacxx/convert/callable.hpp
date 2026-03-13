@@ -8,131 +8,8 @@
 #include "../stack.hpp"
 #include "../reference.hpp"
 
-/*
-
-=head1 NAME
-
-convert/callable.hpp - support for C functions
-
-=head1 SYNOPSIS
-
-    #include <luacxx/convert/callable.hpp>
-    #include <luacxx/convert/string.hpp>
-    #include <luacxx/convert/numeric.hpp>
-
-    // Add all arguments
-    int add_several(lua_State* const state)
-    {
-        int sum = 0;
-        for (int i = 1; i <= lua_gettop(state); ++i) {
-            sum += lua::get<int>(state, i);
-        }
-
-        lua::push(state, sum);
-        lua_replace(state, 1);
-        return 1;
-    }
-
-    // Add two directly
-    int add_two(const int a, const int b)
-    {
-        return a + b;
-    }
-
-    // Add two, but have the first come from the upvalues
-    int adder(lua_State* const state)
-    {
-        auto first = lua::get<int>(state, lua_upvalueindex(state, 1));
-        auto second = lua::get<int>(state, 1);
-
-        lua_settop(state, 0);
-        lua::push(state, first + second);
-        return 1;
-    }
-
-    // Create a partial function that adds two values
-    int make_adder(lua_State* const state)
-    {
-        auto first = lua::get<int>(state, 1);
-        lua_settop(state, 0);
-
-        lua::push_closure(state, adder, first);
-        return 1;
-    }
-
-    // Open the "add" module
-    int luaopen_add(lua_State* const state)
-    {
-        lua:thread env(state);
-
-        env["Adder"] = make_adder;
-        env["AddTwo"] = add_two;
-        env["AddSeveral"] = add_several;
-
-        env["AddDelta"] = lua::push_function<int(int)>(state, [](int first) {
-            return first + 3;
-        );
-
-        return 0;
-    }
-
-    // And within Lua
-
-    require "add";
-
-    assert(4 == AddTwo(2, 2));
-    assert(6 == AddSeveral(1, 2, 3));
-    assert(5 == Adder(2)(3));
-    assert(5 == AddDelta(2));
-
-=head1 DESCRIPTION
-
-    int my_func(lua_State* const state);
-
-Lua-cxx provides support through lua::push and this header for the following
-types:
-
-=head4 lua::callable - std::function<int(lua_State*)>
-
-=head4 lua_CFunction, lua_CFunction
-
-Lua provides direct support for a single C function type, called lua_CFunction
-or lua_CFunction. They appear in Lua identically to Lua-defined functions (
-though perhaps with a telling memory address). Lua-cxx provides support for
-other function types, but these must ultimately end with a lua_CFunction if they
-are to do any work.
-
-The state is populated with the arguments passed to it. The function can then
-work on the stack. Once complete, the function should return the number of
-arguments that will be returned. The arguments are taken from the top, so the
-initial arguments do not need to be removed.
-
-    int demo(lua_State* const state)
-    {
-        // Pull arguments
-        auto id = lua::get<int>(state, 1);
-        auto value = lua::get<bool>(state, 2);
-
-        auto result = set_some_inner_value(id, value);
-
-        // Return the result
-        lua_settop(state, 0);
-        lua::push(state, result);
-        return 1;
-    }
-
-=head4 lua_pushcfunction(state, lua_CFunction)
-
-Pushes the given callable C function onto the stack.
-
-    int demo(lua_State* const state)
-    {
-        // ... same as above ...
-    }
-
-    lua::push(state, demo);
-
-*/
+// Callable conversion and binding helpers. See
+// docs/guide/working-with-callables.md for usage patterns and examples.
 
 namespace lua {
 
@@ -231,44 +108,6 @@ struct Invoke<Callee, void, ArgStop>
 };
 
 } // namespace anonymous
-
-/*
-
-=head4 struct lua::Push<RV(*)(Args...)>
-
-This allows function pointers to be pushed directly onto the stack. The
-function pointer must be comprised of objects that can be pushed, or void.
-
-    int multiply_direct(int a, int b)
-    {
-        return a * b;
-    }
-
-    lua::push(state, multiply_direct);
-
-This also supports C++ method pointers:
-
-    struct Foo {
-        void multiply(int a, int b);
-    };
-
-    // Equivalent to void get(Foo*, int, int);
-    lua::push(state, &Foo::get);
-
-=head4 struct lua::Push<std::function<RV(Args...)>>
-
-This allows std::functions to be pushed directly onto the stack. This follows
-the same rules as the function-pointer version, but works for anything that
-std::function supports. Notably, this allows lambdas to be pushed:
-
-    env["Multiply"] = std::function<int(int, int)>([](int a, int b) {
-        return a * b;
-    });
-
-Tragically, you can't omit the std::function. Lambdas don't have an accessible
-signature, so it needs to be specified externally using std::function.
-
-*/
 
 namespace lua {
 
@@ -640,79 +479,11 @@ struct Metatable<RV(Args...)>
     }
 };
 
-/*
-
-=head4 lua::push_function<Signature>(state, callable)
-
-Pushes the callable with the given function signature onto the Lua stack. This
-is useful if you want to be a bit clearer in how your functions are being
-converted into callables.
-
-*/
-
 template <typename Signature>
 static lua::index push_function(lua_State* const state, std::function<Signature> callable)
 {
     return lua::push(state, callable);
 }
-
-/*
-
-=head4 lua::push_closure(state, callable, upvalues...);
-
-Pushes the given callable onto the stack. The upvalues provided will be saved
-with the function, and made available using the lua_upvalueindex(n) accessor.
-
-The following example shows pushing a C function onto the stack, and then shows
-the function accessing its upvalues:
-
-    int get_worker(lua_State* const state)
-    {
-        auto url = lua::get<std::string>(state, 1);
-        lua_settop(state, 0);
-
-        // Return the worker function
-        lua::push_closure(work, url);
-        return 1;
-    }
-
-    void work()
-    {
-        // Get the URL, saved from when this worker was made
-        auto url = lua::get<std::string>(state, lua_upvalueindex(1));
-
-        // Upvalues don't interfere with regular arguments
-        auto units_to_perform = lua::get<int>(state, 1);
-
-        connect_to_the_server(url);
-        while (units_to_perform-- > 0) {
-            ... work ...
-        }
-    }
-
-    // Meanwhile, in Lua...
-
-    local workers = {};
-    for i=1, 100 do
-        -- Connect to each server in the network
-        local worker = get_worker("example.com/server/" .. i);
-        table.insert(workers, worker);
-    end;
-
-    -- Start some work
-    for _, worker in ipairs(workers) do
-        worker(1000);
-    end;
-
-=head4 lua_pushcclosure(state, lua::function, int upvalues)
-
-=head4 int lua_upvalueindex(int offset)
-
-Returns the stack index that corresponds to the upvalue at the specified
-offset. Upvalues are used to associate arbitrary Lua data with C functions,
-but are rare to actually need in practice.
-
-*/
 
 template <typename... Upvalues>
 static lua::index push_closure(lua_State* const state, lua_CFunction callable, Upvalues... upvalues)
