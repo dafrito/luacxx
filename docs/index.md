@@ -9,6 +9,7 @@ Luacxx's documentation is split into two parts:
 
 - [Binding a Primitive Type](guide/binding-a-primitive-type.md)
 - [Binding a Class](guide/binding-a-class.md)
+- [Working With shared_ptr](guide/working-with-shared-ptr.md)
 - [Writing Bindings](guide/writing-bindings.md)
 - [Useful Lua Functions](guide/useful-lua-functions.md)
 

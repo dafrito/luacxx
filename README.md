@@ -111,6 +111,7 @@ The user guide and reference live under [`docs/`](docs/):
 - [`docs/index.md`](docs/index.md)
 - [`docs/guide/binding-a-primitive-type.md`](docs/guide/binding-a-primitive-type.md)
 - [`docs/guide/binding-a-class.md`](docs/guide/binding-a-class.md)
+- [`docs/guide/working-with-shared-ptr.md`](docs/guide/working-with-shared-ptr.md)
 - [`docs/guide/writing-bindings.md`](docs/guide/writing-bindings.md)
 - [`docs/guide/useful-lua-functions.md`](docs/guide/useful-lua-functions.md)
 - [`docs/reference/stack-and-userdata.md`](docs/reference/stack-and-userdata.md)
