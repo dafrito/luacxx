@@ -13,6 +13,7 @@ Luacxx's documentation is split into two parts:
 - [Understanding Type Safety](guide/understanding-type-safety.md)
 - [Understanding Userdata Memory](guide/understanding-userdata-memory.md)
 - [Metatable Macros](guide/metatable-macros.md)
+- [LUACXX_AUTO_METATABLE](guide/luacxx-auto-metatable.md)
 - [Writing Bindings](guide/writing-bindings.md)
 - [Useful Lua Functions](guide/useful-lua-functions.md)
 

@@ -19,6 +19,10 @@ The macros cover the most common patterns:
 - types with a custom builder function
 - types that inherit from a base Luacxx userdata type
 
+These macros are especially important because Luacxx does not enable automatic
+fallback metatables by default. See [LUACXX_AUTO_METATABLE](luacxx-auto-metatable.md)
+for the policy behind that choice.
+
 ## `LUA_METATABLE_NAMED(name)`
 
 Use this when the type just needs a stable Luacxx type name and no custom

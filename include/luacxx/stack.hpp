@@ -216,6 +216,11 @@ lua::userdata_block* get_userdata_block(lua_State* const state, const int pos);
 
 namespace lua {
 
+// By default, Luacxx does not provide a fallback `Metatable<T>` for arbitrary
+// types. That strict behavior helps catch missing metatable headers at compile
+// time instead of silently producing generic opaque userdata. Defining
+// `LUACXX_AUTO_METATABLE` enables the fallback specialization below. See
+// docs/guide/luacxx-auto-metatable.md for the tradeoffs.
 #ifndef LUACXX_AUTO_METATABLE
 template <class T>
 struct Metatable
