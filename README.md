@@ -107,7 +107,8 @@ pkg-config --cflags --libs luacxx
 Built-in conversions include:
 
 - numbers and characters
-- C strings and `std::string`
+- `std::string`
+- C strings and `std::string_view` as push-only string inputs
 - `std::vector`
 - `std::array`
 - `std::map`

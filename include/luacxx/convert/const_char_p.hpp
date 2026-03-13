@@ -3,6 +3,8 @@
 
 #include "../stack.hpp"
 
+#include <string_view>
+
 namespace lua {
 
 template <>
@@ -23,6 +25,15 @@ struct Push<const char*&>
     }
 };
 
+template <>
+struct Push<char*>
+{
+    static void push(lua_State* const state, const char* const source)
+    {
+        lua_pushstring(state, source);
+    }
+};
+
 template <size_t N>
 struct Push<const char (&)[N]>
 {
@@ -32,26 +43,24 @@ struct Push<const char (&)[N]>
     }
 };
 
-template <>
-struct Store<const char*>
+template <size_t N>
+struct Push<char (&)[N]>
 {
-    static void store(const char*& destination, lua_State* const state, const int source)
+    static void push(lua_State* const state, const char* source)
     {
-        destination = lua_tostring(state, source);
+        lua_pushstring(state, source);
     }
 };
 
 template <>
-struct Get<const char*>
+struct Push<std::string_view>
 {
-    static const char* get(lua_State* const state, const int source)
+    static void push(lua_State* const state, std::string_view source)
     {
-        return lua_tostring(state, source);
+        lua_pushlstring(state, source.data(), source.size());
     }
 };
 
 } // namespace lua
-
-LUA_METATABLE_NAMED(const char*)
 
 #endif // LUACXX_CONVERT_CONST_CHAR_P_INCLUDED

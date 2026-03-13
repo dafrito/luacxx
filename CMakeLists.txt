@@ -66,7 +66,6 @@ target_sources(luacxx
       include/luacxx/convert/callable.hpp
       include/luacxx/convert/array.hpp
       include/luacxx/convert/char.hpp
-      include/luacxx/convert/char_p.hpp
       include/luacxx/convert/const_char_p.hpp
       include/luacxx/convert/map.hpp
       include/luacxx/convert/numeric.hpp

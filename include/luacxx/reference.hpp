@@ -33,7 +33,7 @@ lua::reference - a slot for C to save Lua values
     int MyData_call(lua_State* const state)
     {
         auto data = lua::get<MyData*>(state, 1);
-        lua::call(data->target, lua::get<const char*>(state, 2));
+        lua::call(data->target, lua::get<std::string>(state, 2));
         return 0;
     }
 

@@ -3,7 +3,6 @@
 #include "luacxx/stack.hpp"
 #include "luacxx/convert/const_char_p.hpp"
 #include "luacxx/convert/string.hpp"
-#include "luacxx/convert/char_p.hpp"
 #include "luacxx/convert/numeric.hpp"
 #include "luacxx/convert/string.hpp"
 #include "luacxx/thread.hpp"
@@ -29,7 +28,7 @@ int run_interactive(lua::thread& env)
 
 int on_panic(lua_State* const state)
 {
-    throw lua::error(lua::get<const char*>(state, -1));
+    throw lua::error(lua::get<std::string>(state, -1));
 }
 
 int main(int argc, char** argv)

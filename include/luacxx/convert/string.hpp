@@ -4,6 +4,7 @@
 #include "../stack.hpp"
 
 #include <string>
+#include <string_view>
 
 namespace lua {
 
@@ -12,12 +13,21 @@ struct Push<std::string>
 {
     static void push(lua_State* const state, std::string& source)
     {
-        lua::Push<const char*>::push(state, source.c_str());
+        lua_pushlstring(state, source.data(), source.size());
     }
 
     static void push(lua_State* const state, const std::string& source)
     {
-        lua::Push<const char*>::push(state, source.c_str());
+        lua_pushlstring(state, source.data(), source.size());
+    }
+};
+
+template <>
+struct Push<const std::string&>
+{
+    static void push(lua_State* const state, const std::string& source)
+    {
+        lua_pushlstring(state, source.data(), source.size());
     }
 };
 
@@ -26,9 +36,10 @@ struct Store<std::string>
 {
     static void store(std::string& destination, lua_State* const state, const int source)
     {
-        auto str = lua::Get<const char*>::get(state, source);
+        size_t len = 0;
+        auto str = lua_tolstring(state, source, &len);
         if (str != nullptr) {
-            destination = str;
+            destination.assign(str, len);
         } else {
             destination.clear();
         }

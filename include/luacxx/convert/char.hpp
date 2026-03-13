@@ -8,7 +8,7 @@ namespace lua {
 template <>
 struct Push<char>
 {
-    static void push(lua_State* const state, char& source)
+    static void push(lua_State* const state, char source)
     {
         lua_pushlstring(state, &source, 1);
     }
@@ -19,12 +19,17 @@ struct Store<char>
 {
     static void store(char& destination, lua_State* const state, const int source)
     {
-        if (lua_type(state, source) == LUA_TSTRING) {
-            size_t len = 1;
-            destination = *lua_tolstring(state, source, &len);
-        } else {
-            destination = lua_tonumber(state, source);
+        if (lua_type(state, source) != LUA_TSTRING) {
+            throw lua::error(state, "lua::Store<char>::store: source must be a string of length 1");
         }
+
+        size_t len = 0;
+        auto str = lua_tolstring(state, source, &len);
+        if (str == nullptr || len != 1) {
+            throw lua::error(state, "lua::Store<char>::store: source must be a string of length 1");
+        }
+
+        destination = str[0];
     }
 };
 

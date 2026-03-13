@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(run_string)
     lua::clear(env);
 
     lua::run_string(env, "No = 'Time'");
-    BOOST_CHECK_EQUAL(env["No"].get<const char*>(), "Time");
+    BOOST_CHECK_EQUAL(env["No"].get<std::string>(), "Time");
     lua::clear(env);
 
     lua::run_string(env, "return function() end");
@@ -126,7 +126,7 @@ BOOST_AUTO_TEST_CASE(reference)
     lua_pop(env, 1);
 
     BOOST_CHECK_EQUAL(lua_gettop(env), 0);
-    BOOST_CHECK_EQUAL(ref.get<const char*>(), "No Time");
+    BOOST_CHECK_EQUAL(ref.get<std::string>(), "No Time");
     BOOST_CHECK_EQUAL(lua_gettop(env), 0);
 
     env["Foo"] = lua::value::table;
@@ -464,7 +464,7 @@ BOOST_AUTO_TEST_CASE(call_cpp_from_lua)
     env["foo"] = std::function<std::string(const std::string&)>([&](const std::string& internal) {
         return internal + std::string("foo") + lua::call<std::string>(env["bar"]);
     });
-    BOOST_CHECK_EQUAL(lua::run_string<const char*>(env, "return foo('lua')"), "luafoobar");
+    BOOST_CHECK_EQUAL(lua::run_string<std::string>(env, "return foo('lua')"), "luafoobar");
 }
 
 BOOST_AUTO_TEST_CASE(call_lua_from_cpp)
@@ -614,6 +614,21 @@ BOOST_AUTO_TEST_CASE(raw_char)
     char c = 'c';
     env << c;
     BOOST_CHECK_EQUAL(lua::get<std::string>(env, 1), "c");
+
+    lua::run_string(env, "return 'z'");
+    BOOST_CHECK_EQUAL(lua::get<char>(env, -1), 'z');
+}
+
+BOOST_AUTO_TEST_CASE(raw_char_rejects_invalid_source)
+{
+    auto env = lua::create();
+
+    lua::run_string(env, "return 42");
+    BOOST_CHECK_THROW(lua::get<char>(env, -1), lua::error);
+
+    lua::clear(env);
+    lua::run_string(env, "return 'too long'");
+    BOOST_CHECK_THROW(lua::get<char>(env, -1), lua::error);
 }
 
 struct Named {

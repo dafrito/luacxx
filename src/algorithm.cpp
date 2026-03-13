@@ -13,7 +13,7 @@ static int on_error(lua_State* const state)
 {
     if (lua::size(state) > 0) {
         if (!lua::index(state, 1).type().userdata()) {
-            lua::error ex(lua::get<const char*>(state, 1));
+            lua::error ex(lua::get<std::string>(state, 1));
             lua::clear(state);
             lua::push(state, ex);
         }

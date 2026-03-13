@@ -20,7 +20,9 @@ void lua::store_lua_Integer(lua_Integer& destination, lua_State* const state, co
 
     // Convert the first character of a string to its numeric value.
     if(source.type().string()) {
-        destination = source.get<const char*>()[0];
+        size_t len = 0;
+        auto str = lua_tolstring(source.state(), source.pos(), &len);
+        destination = (str != nullptr && len > 0) ? str[0] : 0;
         return;
     }
 
