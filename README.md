@@ -131,6 +131,7 @@ The user guide and reference live under [`docs/`](docs/). Good entry points are:
 - [`docs/guide/binding-a-class.md`](docs/guide/binding-a-class.md) for userdata-backed classes
 - [`docs/guide/working-with-shared-ptr.md`](docs/guide/working-with-shared-ptr.md) for shared-ownership bindings
 - [`docs/guide/conversion-templates.md`](docs/guide/conversion-templates.md) for `Push<T>`, `Store<T>`, `Get<T>`, and `Construct<T>`
+- [`docs/guide/light-userdata-and-void-p.md`](docs/guide/light-userdata-and-void-p.md) for when `void*` works and why it is limited to light userdata
 - [`docs/guide/metatable-macros.md`](docs/guide/metatable-macros.md) for the quick metatable-definition macros
 - [`docs/guide/luacxx-allow-missing-metatables.md`](docs/guide/luacxx-allow-missing-metatables.md) for the fallback-metatable policy and why it is off by default
 - [`docs/guide/understanding-type-safety.md`](docs/guide/understanding-type-safety.md) for how userdata type checks and inheritance casts work
