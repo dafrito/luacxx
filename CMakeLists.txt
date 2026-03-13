@@ -77,7 +77,6 @@ target_sources(luacxx
       include/luacxx/convert/unordered_map.hpp
       include/luacxx/convert/vector.hpp
       include/luacxx/convert/void.hpp
-      include/luacxx/std/vector.hpp
 )
 
 target_include_directories(luacxx

@@ -21,5 +21,4 @@ nobase_include_HEADERS = \
 	luacxx/convert/shared_ptr.hpp \
 	luacxx/convert/string.hpp \
 	luacxx/convert/vector.hpp \
-	luacxx/convert/void.hpp \
-	luacxx/std/vector.hpp
+	luacxx/convert/void.hpp

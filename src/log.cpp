@@ -7,9 +7,33 @@
 #include "luacxx/convert/callable.hpp"
 #include "luacxx/convert/const_char_p.hpp"
 #include "luacxx/convert/string.hpp"
-#include "luacxx/std/vector.hpp"
+
+#include <vector>
 
 namespace lua {
+
+struct LoggerList {
+    std::vector<lua::logger> value;
+};
+
+template <>
+struct Metatable<LoggerList>
+{
+    static const userdata_type& info()
+    {
+        static userdata_type _info("LoggerList");
+        if (!_info.has_casts()) {
+            _info.add_cast<LoggerList>();
+        }
+        return _info;
+    }
+
+    static bool metatable(lua_State* const state, const int pos, LoggerList* const)
+    {
+        lua::index mt(state, pos);
+        return static_cast<bool>(mt);
+    }
+};
 
 void appendStrings(std::stringstream&)
 {
@@ -21,7 +45,7 @@ int addLogger(lua_State* const state, const lua::logger& logFunction)
     if (lua_type(state, -1) == LUA_TNIL) {
         lua_pop(state, 1);
         // Create our logger table since it doesn't exist.
-        lua::make<std::vector<lua::logger>>(state);
+        lua::make<LoggerList>(state);
         lua_pushvalue(state, -1);
         lua_setfield(state, LUA_REGISTRYINDEX, "luacxx.loggers");
     }
@@ -32,10 +56,10 @@ int addLogger(lua_State* const state, const lua::logger& logFunction)
     }
 
     // Add the new logging receiver
-    auto loggers = lua::get<std::vector<lua::logger>*>(state, -1);
-    loggers->push_back(logFunction);
+    auto loggers = lua::get<LoggerList*>(state, -1);
+    loggers->value.push_back(logFunction);
     lua_pop(state, 1);
-    return loggers->size() - 1;
+    return loggers->value.size() - 1;
 }
 
 void removeLogger(lua_State* const state, const int loggingPos)
@@ -51,8 +75,8 @@ void removeLogger(lua_State* const state, const int loggingPos)
         return;
     }
 
-    auto loggers = lua::get<std::vector<lua::logger>*>(state, -1);
-    loggers->at(loggingPos) = lua::logger();
+    auto loggers = lua::get<LoggerList*>(state, -1);
+    loggers->value.at(loggingPos) = lua::logger();
     lua_pop(state, 1);
 }
 
@@ -67,7 +91,7 @@ void dispatchLog(lua_State* const state, const LogMessageType messageType, const
     if (!lua::get_userdata_block(state, -1)->has_value()) {
         goto end;
     }
-    for (auto& logFunction : lua::get<std::vector<lua::logger>&>(state, -1)) {
+    for (auto& logFunction : lua::get<LoggerList&>(state, -1).value) {
         if (logFunction) {
             logFunction(state, messageType, message);
         }
