@@ -129,6 +129,12 @@ the marshalling code yourself or running a preprocessor:
         return first + second;
     });
 
+### DOCUMENTATION
+
+See [docs/index.md](docs/index.md) for the user guide and API reference. The
+larger conceptual material that used to live in the C++ headers has been moved
+there so the headers can stay focused on the API itself.
+
 ### STYLE
 
 STL conventions are used for naming and case, though not slavishly, to
