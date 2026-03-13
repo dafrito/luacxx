@@ -49,6 +49,9 @@ and a few internal facilities.
 
 Returns the current top index of the stack.
 
+For a non-empty stack, `lua_absindex(state, -1)` is the same position as
+`lua_gettop(state)`.
+
 ### `lua_settop(state, top)`
 
 Adjusts the top of the stack. This is the fastest way to clear unwanted values
@@ -66,6 +69,15 @@ Moves the topmost value into `index` and pops the original top.
 
 This is a common way to place a return value into slot `1` and then trim the
 rest of the stack.
+
+That leads to a common return-value pattern:
+
+```cpp
+lua_pushstring(state, "No time.");
+lua_replace(state, 1);
+lua_settop(state, 1);
+return 1;
+```
 
 ### `lua_remove(state, index)`
 

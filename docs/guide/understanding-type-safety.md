@@ -95,6 +95,28 @@ type.add_cast<Base, Derived>();
 Luacxx records the pointer offset from `Derived*` to `Base*`. That matters for
 multiple inheritance, where a base subobject may not begin at offset zero.
 
+In practice, that registration usually happens in the type's metatable info.
+For example:
+
+```cpp
+template <>
+struct lua::Metatable<Derived>
+{
+    static const lua::userdata_type& info()
+    {
+        static lua::userdata_type type("Derived");
+        if (!type.has_casts()) {
+            type.add_cast<Derived>();
+            type.add_cast<Base, Derived>();
+        }
+        return type;
+    }
+};
+```
+
+Luacxx also provides helper macros such as `LUA_METATABLE_INHERIT(name, parent)`
+for this common pattern.
+
 When the userdata is later requested as `Base*`, Luacxx:
 
 - verifies that `Base` is a registered cast target
@@ -103,6 +125,16 @@ When the userdata is later requested as `Base*`, Luacxx:
 
 So this is not just “same name means OK.” It is a checked runtime cast table
 with offset-aware pointer adjustment.
+
+That means code like this is supported when the cast was registered:
+
+```cpp
+Derived* derived = lua::get<Derived*>(state, 1);
+Base* base = lua::get<Base*>(state, 1);
+```
+
+Both retrievals refer to the same underlying userdata, but the `Base*` path may
+apply an offset before returning the pointer.
 
 ## Why Not Just Use `lua_touserdata()`?
 

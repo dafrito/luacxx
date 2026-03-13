@@ -113,6 +113,8 @@ The user guide and reference live under [`docs/`](docs/):
 - [`docs/guide/binding-a-class.md`](docs/guide/binding-a-class.md)
 - [`docs/guide/working-with-shared-ptr.md`](docs/guide/working-with-shared-ptr.md)
 - [`docs/guide/understanding-type-safety.md`](docs/guide/understanding-type-safety.md)
+- [`docs/guide/understanding-userdata-memory.md`](docs/guide/understanding-userdata-memory.md)
+- [`docs/guide/metatable-macros.md`](docs/guide/metatable-macros.md)
 - [`docs/guide/writing-bindings.md`](docs/guide/writing-bindings.md)
 - [`docs/guide/useful-lua-functions.md`](docs/guide/useful-lua-functions.md)
 - [`docs/reference/stack-and-userdata.md`](docs/reference/stack-and-userdata.md)

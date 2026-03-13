@@ -11,6 +11,8 @@ Luacxx's documentation is split into two parts:
 - [Binding a Class](guide/binding-a-class.md)
 - [Working With shared_ptr](guide/working-with-shared-ptr.md)
 - [Understanding Type Safety](guide/understanding-type-safety.md)
+- [Understanding Userdata Memory](guide/understanding-userdata-memory.md)
+- [Metatable Macros](guide/metatable-macros.md)
 - [Writing Bindings](guide/writing-bindings.md)
 - [Useful Lua Functions](guide/useful-lua-functions.md)
 
