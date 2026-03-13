@@ -35,7 +35,6 @@ luacxx - Lua binding library for modern C++
 ### DESCRIPTION
 
 Luacxx is a C++ library that helps you write Lua bindings for C++ and C code.
-It also contains example bindings for several major C and C++ libraries.
 
 *Luacxx plays well with others.* Luacxx does not try to cover up Lua's C API
 or its stack-based model. In fact, Luacxx and Lua C API's can and must be
@@ -76,11 +75,6 @@ directly to the intended C++ type.
 allows you to add new support for your own types without needing to recompile
 Luacxx. Once a new template specialization for your type is found, all of
 Luacxx's APIs will be able to use it.
-
-*Luacxx is comprehensive*. Luacxx includes example bindings for over 150 Qt
-classes, as well as automatic introspection support for QObjects. It also has
-preliminary support for Gtk's introspection system, allowing any project with
-GObject introspection support to work with Luacxx.
 
 *Luacxx is not a generator*. Luacxx doesn't write header files or extra
 boilerplate. Everything can be done using just a modern C++ compiler.
@@ -202,8 +196,7 @@ on Github.
 
 ### LICENSE
 
-By default, this project uses the MIT license. The included bindings use the
-license of their respective projects.
+By default, this project uses the MIT license.
 
 ### LUA DOCUMENTATION
 

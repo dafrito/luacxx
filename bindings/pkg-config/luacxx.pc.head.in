@@ -1,9 +1,0 @@
-prefix=@prefix@
-exec_prefix="${prefix}"
-libdir="${prefix}/lib"
-includedir="${prefix}/include"
-
-Name: @PACKAGE_NAME@
-Description: @PACKAGE_DESCRIPTION@
-Version: @PACKAGE_VERSION@
-Requires: lua >= @LUA_MINIMUM_VERSION@

@@ -961,19 +961,3 @@ BOOST_AUTO_TEST_CASE(globals_can_be_called_without_rv)
     // Check the side-effect
     BOOST_CHECK_EQUAL(env["FOO"].get<std::string>(), "This is an argument from C++");
 }
-
-#ifdef HAVE_gobject_introspection
-
-#include "search/GIRepository.hpp"
-
-BOOST_AUTO_TEST_CASE(gobject_introspection)
-{
-    auto env = lua::create();
-    env["package"]["cpath"] = ".libs/libluacxx-?.so";
-
-    lua::run_string(env, "require 'luacxx.search.GIRepository'");
-    lua::run_string(env, "require 'Gtk'");
-    lua::run_string(env, "app = gtk_application_new()");
-}
-
-#endif // HAVE_gobject_introspection
