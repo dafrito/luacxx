@@ -17,6 +17,15 @@ This is useful when:
 
 This hooks `std::shared_ptr<T>` into Luacxx's userdata system.
 
+If your binding code also uses string keys such as `mt["add"]` or
+`env["make_counter"]`, include the usual helper conversions as well:
+
+```cpp
+#include <luacxx/convert/callable.hpp>
+#include <luacxx/convert/const_char_p.hpp>
+#include <luacxx/convert/numeric.hpp>
+```
+
 ## What It Does
 
 For `std::shared_ptr<T>`, Luacxx reuses the metatable information for `T`

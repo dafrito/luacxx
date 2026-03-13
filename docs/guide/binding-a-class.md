@@ -9,6 +9,17 @@ The core pieces are:
 - `lua::get<T*>()` to recover the C++ object
 - `lua::Metatable<T>` to describe the userdata type and its methods
 
+The snippets below use string keys like `mt["add"]` and numeric extraction like
+`lua::get<int>(...)`, so they assume these conversion headers are available:
+
+```cpp
+#include <luacxx/convert/callable.hpp>
+#include <luacxx/convert/const_char_p.hpp>
+#include <luacxx/convert/numeric.hpp>
+#include <luacxx/thread.hpp>
+#include <luacxx/value.hpp>
+```
+
 ## Example Class
 
 ```cpp
@@ -161,3 +172,4 @@ code generator.
 - [Binding a Primitive Type](binding-a-primitive-type.md)
 - [Writing Bindings](writing-bindings.md)
 - [Stack and Userdata](../reference/stack-and-userdata.md)
+- [`examples/003-counter-binding`](../../examples/003-counter-binding)
