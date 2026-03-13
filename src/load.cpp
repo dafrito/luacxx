@@ -5,10 +5,12 @@
 #include "luacxx/error.hpp"
 
 namespace {
+    constexpr std::size_t chunk_size = 4096;
+
     struct LuaReadingData
     {
         std::istream& stream;
-        char buffer[4096];
+        char buffer[chunk_size];
         bool atStart;
         LuaReadingData(std::istream& stream) :
             stream(stream),
@@ -17,7 +19,6 @@ namespace {
         }
     };
 
-    const int CHUNKSIZE = 4096;
     const char EMPTY_LINE = '\n';
 
     const char* readStdStream(lua_State* const, void* data, size_t* size)
@@ -47,7 +48,7 @@ namespace {
         if (d->stream.eof()) {
             return NULL;
         }
-        d->stream.read(d->buffer, CHUNKSIZE);
+        d->stream.read(d->buffer, chunk_size);
         switch (d->stream.rdstate()) {
             case std::ifstream::failbit:
             throw std::runtime_error("std::ifstream::failbit: A logical error occurred on a I/O operation.");
@@ -117,4 +118,3 @@ lua::index lua::load_string(lua_State* const state, const char* input)
     do_post_load(state, luaL_loadstring(state, input));
     return lua::index(state, -1);
 }
-
