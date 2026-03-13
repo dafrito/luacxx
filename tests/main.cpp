@@ -95,6 +95,46 @@ BOOST_AUTO_TEST_CASE(run_string)
     BOOST_CHECK_THROW(lua::run_string(env, "foo.y.z = 42"), lua::error);
 }
 
+BOOST_AUTO_TEST_CASE(load_file_invalid_path_throws_lua_error)
+{
+    auto env = lua::create();
+
+    BOOST_CHECK_THROW(
+        lua::load_file(env, "/definitely/not/a/real/luacxx-test-file.lua"),
+        lua::error
+    );
+}
+
+BOOST_AUTO_TEST_CASE(load_file_invalid_stream_throws_lua_error)
+{
+    auto env = lua::create();
+
+    std::istringstream stream("return 42");
+    stream.setstate(std::ios::badbit);
+
+    BOOST_CHECK_THROW(lua::load_file(env, stream, "broken-stream"), lua::error);
+}
+
+BOOST_AUTO_TEST_CASE(load_file_from_stream)
+{
+    auto env = lua::create();
+
+    std::istringstream stream("return 42");
+    auto callable = lua::load_file(env, stream, "in-memory.lua");
+
+    BOOST_CHECK_EQUAL(lua::call<int>(callable), 42);
+}
+
+BOOST_AUTO_TEST_CASE(load_file_from_stream_with_shebang)
+{
+    auto env = lua::create();
+
+    std::istringstream stream("#!/usr/bin/env lua\nreturn 42");
+    auto callable = lua::load_file(env, stream, "shebang.lua");
+
+    BOOST_CHECK_EQUAL(lua::call<int>(callable), 42);
+}
+
 BOOST_AUTO_TEST_CASE(index_and_global)
 {
     auto env = lua::create();

@@ -6,6 +6,7 @@
 
 namespace {
     constexpr std::size_t chunk_size = 4096;
+    constexpr char empty_line = '\n';
 
     struct LuaReadingData
     {
@@ -19,49 +20,53 @@ namespace {
         }
     };
 
-    const char EMPTY_LINE = '\n';
-
     const char* readStdStream(lua_State* const, void* data, size_t* size)
     {
         LuaReadingData* d = static_cast<LuaReadingData*>(data);
         if (d->atStart) {
             d->atStart = false;
             d->stream.read(d->buffer, 2);
-            if (d->stream.eof()) {
-                // This can occur if insufficient characters were read
-                return NULL;
+            const auto prefix_size = d->stream.gcount();
+            if (d->stream.bad()) {
+                throw lua::error("I/O error while reading the start of a Lua stream.");
             }
-            d->buffer[2] = '\0';
-            if (std::string(d->buffer) == "#!") {
+
+            if (prefix_size == 2 && d->buffer[0] == '#' && d->buffer[1] == '!') {
                 // Shebang, so ignore the rest of the line
                 std::string shebangLine;
                 std::getline(d->stream, shebangLine);
+                if (d->stream.bad()) {
+                    throw lua::error("I/O error while skipping a Lua shebang line.");
+                }
 
                 // Return a newline so line counts are correct
                 *size = 1;
-                return &EMPTY_LINE;
+                return &empty_line;
             } else {
                 // Nothing found, so head back to the start of the file
+                d->stream.clear();
                 d->stream.seekg(0);
+                if (!d->stream) {
+                    throw lua::error("Failed to seek to the start of a Lua stream.");
+                }
             }
         }
-        if (d->stream.eof()) {
+
+        d->stream.read(d->buffer, chunk_size);
+        *size = static_cast<size_t>(d->stream.gcount());
+
+        if (d->stream.bad()) {
+            throw lua::error("I/O error while reading a Lua stream.");
+        }
+
+        if (d->stream.fail() && !d->stream.eof()) {
+            throw lua::error("Failed while reading a Lua stream.");
+        }
+
+        if (*size == 0) {
             return NULL;
         }
-        d->stream.read(d->buffer, chunk_size);
-        switch (d->stream.rdstate()) {
-            case std::ifstream::failbit:
-            throw std::runtime_error("std::ifstream::failbit: A logical error occurred on a I/O operation.");
-            break;
 
-            case std::ifstream::badbit:
-            throw std::runtime_error("std::ifstream::badbit: A read/writing error occurred on a I/O operation.");
-            break;
-
-            default:
-            break;
-        }
-        *size = d->stream.gcount();
         return d->buffer;
     }
 
@@ -71,7 +76,7 @@ namespace {
             case LUA_ERRSYNTAX:
                 throw lua::error(std::string("Syntax error during compilation:\n") + lua_tostring(state, -1));
             case LUA_ERRMEM:
-                throw std::runtime_error(std::string("Memory allocation error during compilation:\n") + lua_tostring(state, -1));
+                throw lua::error(std::string("Memory allocation error during compilation:\n") + lua_tostring(state, -1));
         }
         return lua::index(state, -1);
     }
@@ -82,7 +87,7 @@ lua::index lua::load_file(lua_State* const state, const std::string& file)
 {
     std::ifstream stream(file, std::ios::in);
     if (!stream) {
-        throw std::runtime_error(std::string("File stream could not be opened for '") + file + "'");
+        throw lua::error(state, std::string("File stream could not be opened for '") + file + "'");
     }
 
     return lua::load_file(state, stream, file);
@@ -92,7 +97,7 @@ lua::index lua::load_file(lua_State* const state, std::istream& stream, const st
 {
     LuaReadingData d(stream);
     if (!stream) {
-        throw std::runtime_error(std::string("Input stream is invalid for '") + name + "'");
+        throw lua::error(state, std::string("Input stream is invalid for '") + name + "'");
     }
 
     return do_post_load(state, lua_load(state, &readStdStream, &d, name.c_str()
