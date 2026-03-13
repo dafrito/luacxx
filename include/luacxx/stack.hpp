@@ -216,17 +216,26 @@ lua::userdata_block* get_userdata_block(lua_State* const state, const int pos);
 
 namespace lua {
 
+// Backward-compatible alias for the older policy macro name.
+#if defined(LUACXX_AUTO_METATABLE) && !defined(LUACXX_ALLOW_MISSING_METATABLES)
+#define LUACXX_ALLOW_MISSING_METATABLES
+#endif
+
 // By default, Luacxx does not provide a fallback `Metatable<T>` for arbitrary
 // types. That strict behavior helps catch missing metatable headers at compile
 // time instead of silently producing generic opaque userdata. Defining
-// `LUACXX_AUTO_METATABLE` enables the fallback specialization below. See
-// docs/guide/luacxx-auto-metatable.md for the tradeoffs.
-#ifndef LUACXX_AUTO_METATABLE
+// `LUACXX_ALLOW_MISSING_METATABLES` enables the fallback specialization below.
+// See docs/guide/luacxx-allow-missing-metatables.md for the tradeoffs.
+#ifndef LUACXX_ALLOW_MISSING_METATABLES
 template <class T>
 struct Metatable
 {
-    static_assert(sizeof(T) != sizeof(T), "Default metatables are not provided automatically."
-        " Use -DLUACXX_AUTO_METATABLE to override."
+    static_assert(sizeof(T) != sizeof(T),
+        "No lua::Metatable<T> is defined for this type. "
+        "Include the header that defines the metatable, use a LUACXX metatable macro, "
+        "or write a lua::Metatable<T> specialization. "
+        "If you intentionally want generic fallback userdata, define "
+        "LUACXX_ALLOW_MISSING_METATABLES."
     );
 };
 #else

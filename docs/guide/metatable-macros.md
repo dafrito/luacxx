@@ -20,7 +20,7 @@ The macros cover the most common patterns:
 - types that inherit from a base Luacxx userdata type
 
 These macros are especially important because Luacxx does not enable automatic
-fallback metatables by default. See [LUACXX_AUTO_METATABLE](luacxx-auto-metatable.md)
+fallback metatables by default. See [LUACXX_ALLOW_MISSING_METATABLES](luacxx-allow-missing-metatables.md)
 for the policy behind that choice.
 
 ## `LUA_METATABLE_NAMED(name)`

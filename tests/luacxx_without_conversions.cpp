@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE luacxx_without_conversions
 #include <boost/test/unit_test.hpp>
 
-#define LUACXX_AUTO_METATABLE
+#define LUACXX_ALLOW_MISSING_METATABLES
 #include "luacxx/stack.hpp"
 #include "luacxx/thread.hpp"
 #include "luacxx/algorithm.hpp"

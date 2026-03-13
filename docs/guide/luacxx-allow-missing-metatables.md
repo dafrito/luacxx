@@ -1,6 +1,6 @@
-# `LUACXX_AUTO_METATABLE`
+# `LUACXX_ALLOW_MISSING_METATABLES`
 
-`LUACXX_AUTO_METATABLE` changes one of Luacxx's most important policies:
+`LUACXX_ALLOW_MISSING_METATABLES` changes one of Luacxx's most important policies:
 whether an otherwise-unsupported C++ type should be accepted as userdata by
 default.
 
@@ -10,7 +10,7 @@ That default is intentional.
 
 ## Default Behavior: No Implicit Metatable
 
-When `LUACXX_AUTO_METATABLE` is not defined, the primary `lua::Metatable<T>`
+When `LUACXX_ALLOW_MISSING_METATABLES` is not defined, the primary `lua::Metatable<T>`
 template does not provide a fallback implementation.
 
 That means a type must have an explicit metatable specialization before Luacxx
@@ -42,7 +42,7 @@ So the default behavior is designed to catch integration mistakes early.
 
 ## What Happens When It Is Enabled
 
-When `LUACXX_AUTO_METATABLE` is defined, Luacxx provides a fallback
+When `LUACXX_ALLOW_MISSING_METATABLES` is defined, Luacxx provides a fallback
 `lua::Metatable<T>` for otherwise-unsupported types.
 
 That fallback:
@@ -62,7 +62,7 @@ Lua's point of view.
 
 ## Why This Can Be Misleading
 
-`LUACXX_AUTO_METATABLE` can make missing metatable definitions much harder to
+`LUACXX_ALLOW_MISSING_METATABLES` can make missing metatable definitions much harder to
 notice.
 
 A type that should have had a real metatable may instead:
@@ -79,7 +79,7 @@ that the proper metatable definition was never included.
 
 This fallback does **not** automatically reuse a parent class metatable.
 
-If you push a `Derived` type with `LUACXX_AUTO_METATABLE` enabled and there is
+If you push a `Derived` type with `LUACXX_ALLOW_MISSING_METATABLES` enabled and there is
 no explicit `lua::Metatable<Derived>`, Luacxx uses the generic fallback for
 `Derived`. It does not infer that `Derived` should behave like `Base`, and it
 does not automatically register base-class casts.
@@ -96,7 +96,7 @@ with a manual specialization or `LUA_METATABLE_INHERIT(...)`.
 
 ## Recommended Use
 
-Treat `LUACXX_AUTO_METATABLE` as a deliberate compatibility or experimentation
+Treat `LUACXX_ALLOW_MISSING_METATABLES` as a deliberate compatibility or experimentation
 mode, not as the normal way to fix missing metatable errors.
 
 Good reasons to use it:
@@ -114,6 +114,12 @@ Poor reasons to use it:
 If your Lua value is supposed to have methods, names, casts, or inheritance
 behavior, the better fix is usually to define or include the correct
 `lua::Metatable<T>`.
+
+## Compatibility Note
+
+Older code may still define `LUACXX_AUTO_METATABLE`. Luacxx currently treats
+that as a compatibility alias for `LUACXX_ALLOW_MISSING_METATABLES`, but the
+newer name better reflects the intended policy.
 
 ## Related Docs
 
