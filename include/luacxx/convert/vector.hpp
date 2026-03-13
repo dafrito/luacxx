@@ -39,12 +39,11 @@ struct Store<std::vector<T>>
         }
 
         auto num_elements = lua_rawlen(source.state(), source.pos());
-        auto target_index = destination.size();
-        destination.resize(destination.size() + num_elements);
+        destination.resize(num_elements);
 
-        for (lua_Unsigned i = 1; i <= num_elements; ++i, ++target_index) {
+        for (lua_Unsigned i = 1; i <= num_elements; ++i) {
             lua_rawgeti(source.state(), source.pos(), i);
-            lua::store(destination[target_index], source.state(), -1);
+            lua::store(destination[i - 1], source.state(), -1);
             lua_pop(source.state(), 1);
         }
     }
