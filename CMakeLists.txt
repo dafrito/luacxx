@@ -64,12 +64,16 @@ target_sources(luacxx
       include/luacxx/type.hpp
       include/luacxx/value.hpp
       include/luacxx/convert/callable.hpp
+      include/luacxx/convert/array.hpp
       include/luacxx/convert/char.hpp
       include/luacxx/convert/char_p.hpp
       include/luacxx/convert/const_char_p.hpp
+      include/luacxx/convert/map.hpp
       include/luacxx/convert/numeric.hpp
+      include/luacxx/convert/optional.hpp
       include/luacxx/convert/shared_ptr.hpp
       include/luacxx/convert/string.hpp
+      include/luacxx/convert/unordered_map.hpp
       include/luacxx/convert/vector.hpp
       include/luacxx/convert/void.hpp
       include/luacxx/std/vector.hpp
