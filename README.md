@@ -124,24 +124,36 @@ If you want to add your own types, start with
 
 ## Documentation
 
-The user guide and reference live under [`docs/`](docs/). Good entry points are:
+The user guide and reference live under [`docs/`](docs/).
+
+Start here:
 
 - [`docs/index.md`](docs/index.md) for the full guide/reference index
+- [`docs/guide/writing-bindings.md`](docs/guide/writing-bindings.md) for the overall binding style and design advice
+
+Common tasks:
+
 - [`docs/guide/binding-a-primitive-type.md`](docs/guide/binding-a-primitive-type.md) for teaching Luacxx a value-like type
 - [`docs/guide/binding-a-class.md`](docs/guide/binding-a-class.md) for userdata-backed classes
 - [`docs/guide/working-with-shared-ptr.md`](docs/guide/working-with-shared-ptr.md) for shared-ownership bindings
-- [`docs/guide/conversion-templates.md`](docs/guide/conversion-templates.md) for `Push<T>`, `Store<T>`, `Get<T>`, and `Construct<T>`
-- [`docs/guide/light-userdata-and-void-p.md`](docs/guide/light-userdata-and-void-p.md) for when `void*` works and why it is limited to light userdata
-- [`docs/guide/standard-library-types.md`](docs/guide/standard-library-types.md) for how built-in `std` types are represented, copied, and validated
 - [`docs/guide/working-with-strings.md`](docs/guide/working-with-strings.md) for the intended `std::string` path and the raw Lua string escape hatch
 - [`docs/guide/working-with-callables.md`](docs/guide/working-with-callables.md) for function pointers, member pointers, `std::function`, and `lua::call`
+- [`docs/guide/standard-library-types.md`](docs/guide/standard-library-types.md) for how built-in `std` types are represented, copied, and validated
+- [`docs/guide/light-userdata-and-void-p.md`](docs/guide/light-userdata-and-void-p.md) for when `void*` works and why it is limited to light userdata
+
+Concepts and policies:
+
+- [`docs/guide/conversion-templates.md`](docs/guide/conversion-templates.md) for `Push<T>`, `Store<T>`, `Get<T>`, and `Construct<T>`
 - [`docs/guide/metatable-macros.md`](docs/guide/metatable-macros.md) for the quick metatable-definition macros
 - [`docs/guide/luacxx-allow-missing-metatables.md`](docs/guide/luacxx-allow-missing-metatables.md) for the fallback-metatable policy and why it is off by default
 - [`docs/guide/understanding-type-safety.md`](docs/guide/understanding-type-safety.md) for how userdata type checks and inheritance casts work
 - [`docs/guide/understanding-userdata-memory.md`](docs/guide/understanding-userdata-memory.md) for how Luacxx stores and destroys C++ objects in userdata
-- [`docs/guide/writing-bindings.md`](docs/guide/writing-bindings.md) for broader binding design guidance
 - [`docs/guide/useful-lua-functions.md`](docs/guide/useful-lua-functions.md) for the Lua C API functions Luacxx leans on most
-- [`docs/reference/stack-and-userdata.md`](docs/reference/stack-and-userdata.md) and [`docs/reference/thread-and-algorithms.md`](docs/reference/thread-and-algorithms.md) for API-oriented reference notes
+
+Reference:
+
+- [`docs/reference/stack-and-userdata.md`](docs/reference/stack-and-userdata.md)
+- [`docs/reference/thread-and-algorithms.md`](docs/reference/thread-and-algorithms.md)
 
 ## License
 
