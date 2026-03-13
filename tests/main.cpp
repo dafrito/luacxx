@@ -637,6 +637,40 @@ BOOST_AUTO_TEST_CASE(raw_char_rejects_invalid_source)
     BOOST_CHECK_THROW(lua::get<char>(env, -1), lua::error);
 }
 
+BOOST_AUTO_TEST_CASE(light_userdata_round_trip)
+{
+    auto env = lua::create();
+
+    int value = 42;
+    void* original = &value;
+
+    env["ptr"] = original;
+    BOOST_CHECK(env["ptr"].type().lightuserdata());
+    BOOST_CHECK_EQUAL(lua::get<void*>(env["ptr"]), original);
+}
+
+BOOST_AUTO_TEST_CASE(void_ptr_rejects_full_userdata)
+{
+    auto env = lua::create();
+
+    env["counter"] = Counter(42);
+    BOOST_CHECK(env["counter"].type().userdata());
+    BOOST_CHECK_THROW(lua::get<void*>(env["counter"]), lua::error);
+}
+
+BOOST_AUTO_TEST_CASE(void_ptr_rejects_primitives)
+{
+    auto env = lua::create();
+
+    env["number"] = 42;
+    BOOST_CHECK(env["number"].type().number());
+    BOOST_CHECK_THROW(lua::get<void*>(env["number"]), lua::error);
+
+    env["text"] = std::string("hello");
+    BOOST_CHECK(env["text"].type().string());
+    BOOST_CHECK_THROW(lua::get<void*>(env["text"]), lua::error);
+}
+
 struct Named {
     const char* name;
 

@@ -13,6 +13,7 @@
 #include "luacxx/convert/char.hpp"
 #include "luacxx/convert/callable.hpp"
 #include "luacxx/convert/shared_ptr.hpp"
+#include "luacxx/convert/void.hpp"
 
 #include "luacxx/range.hpp"
 #include "luacxx/thread.hpp"
