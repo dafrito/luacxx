@@ -17,32 +17,14 @@ struct Push<void*>
 template <>
 struct Store<void*>
 {
-    static void store(void*& destination, const lua::index& source)
+    static void store(void*& destination, lua_State* const state, const int source)
     {
-        if (lua_islightuserdata(source.state(), source.pos())) {
-            destination = lua_touserdata(source.state(), source.pos());
+        if (lua_islightuserdata(state, source)) {
+            destination = lua_touserdata(state, source);
             return;
         }
 
-        // It's a full userdata, so retrieve the underlying value
-        auto userdata_block = lua::get<lua::userdata_block*>(source);
-        if (!userdata_block) {
-            destination = nullptr;
-            return;
-
-        }
-
-        void* block = lua_touserdata(source.state(), source.pos());
-        switch (userdata_block->storage()) {
-        case lua::userdata_storage::value:
-            destination = block;
-            break;
-        case lua::userdata_storage::pointer:
-            destination = *reinterpret_cast<void**>(block);
-            break;
-        case lua::userdata_storage::shared_ptr:
-            throw std::logic_error("shared_ptr's cannot be safely converted to void pointers");
-        }
+        throw lua::error(state, "lua::Store<void*>::store: source must be light userdata");
     }
 };
 } // namespace lua
