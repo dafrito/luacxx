@@ -132,6 +132,9 @@ The user guide and reference live under [`docs/`](docs/). Good entry points are:
 - [`docs/guide/working-with-shared-ptr.md`](docs/guide/working-with-shared-ptr.md) for shared-ownership bindings
 - [`docs/guide/conversion-templates.md`](docs/guide/conversion-templates.md) for `Push<T>`, `Store<T>`, `Get<T>`, and `Construct<T>`
 - [`docs/guide/light-userdata-and-void-p.md`](docs/guide/light-userdata-and-void-p.md) for when `void*` works and why it is limited to light userdata
+- [`docs/guide/standard-library-types.md`](docs/guide/standard-library-types.md) for how built-in `std` types are represented, copied, and validated
+- [`docs/guide/working-with-strings.md`](docs/guide/working-with-strings.md) for the intended `std::string` path and the raw Lua string escape hatch
+- [`docs/guide/working-with-callables.md`](docs/guide/working-with-callables.md) for function pointers, member pointers, `std::function`, and `lua::call`
 - [`docs/guide/metatable-macros.md`](docs/guide/metatable-macros.md) for the quick metatable-definition macros
 - [`docs/guide/luacxx-allow-missing-metatables.md`](docs/guide/luacxx-allow-missing-metatables.md) for the fallback-metatable policy and why it is off by default
 - [`docs/guide/understanding-type-safety.md`](docs/guide/understanding-type-safety.md) for how userdata type checks and inheritance casts work

@@ -16,6 +16,9 @@ Luacxx's documentation is split into two parts:
 - [LUACXX_ALLOW_MISSING_METATABLES](guide/luacxx-allow-missing-metatables.md)
 - [Conversion Templates](guide/conversion-templates.md)
 - [Light Userdata And `void*`](guide/light-userdata-and-void-p.md)
+- [Standard Library Types](guide/standard-library-types.md)
+- [Working With Strings](guide/working-with-strings.md)
+- [Working With Callables](guide/working-with-callables.md)
 - [Writing Bindings](guide/writing-bindings.md)
 - [Useful Lua Functions](guide/useful-lua-functions.md)
 

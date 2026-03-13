@@ -94,6 +94,30 @@ that position upward.
 
 Pops `n` values from the top of the stack.
 
+## Strings
+
+### `lua_pushstring(state, const char*)`
+
+Pushes a null-terminated C string to Lua.
+
+### `lua_pushlstring(state, data, len)`
+
+Pushes a string with an explicit byte length.
+
+This is the right choice when the source is not null-terminated or may contain
+embedded null bytes.
+
+### `lua_tolstring(state, index, &len)`
+
+Returns a borrowed pointer to Lua-managed string data and writes its length.
+
+This is the raw escape hatch if you truly want `const char*` access instead of
+Luacxx's preferred `std::string` path.
+
+### `lua_tostring(state, index)`
+
+Like `lua_tolstring`, but without an explicit output length.
+
 ## Why These Matter In Luacxx
 
 Luacxx does not try to hide Lua's stack model. The wrappers are designed to
