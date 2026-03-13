@@ -73,6 +73,7 @@ target_sources(luacxx
       include/luacxx/convert/optional.hpp
       include/luacxx/convert/shared_ptr.hpp
       include/luacxx/convert/string.hpp
+      include/luacxx/convert/tuple.hpp
       include/luacxx/convert/unordered_map.hpp
       include/luacxx/convert/vector.hpp
       include/luacxx/convert/void.hpp
@@ -110,6 +111,7 @@ if(LUACXX_BUILD_TESTS)
     tests/main.cpp
     tests/main.hpp
     tests/luacxx_convert_array.cpp
+    tests/luacxx_convert_tuple.cpp
     tests/luacxx_convert_unordered_map.cpp
     tests/luacxx_convert_vector.cpp
     tests/luacxx_convert_map.cpp
