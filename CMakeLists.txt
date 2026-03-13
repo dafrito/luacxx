@@ -105,6 +105,8 @@ if(LUACXX_BUILD_TESTS)
   add_executable(luacxx_test_main
     tests/main.cpp
     tests/main.hpp
+    tests/luacxx_convert_array.cpp
+    tests/luacxx_convert_unordered_map.cpp
     tests/luacxx_convert_vector.cpp
     tests/luacxx_convert_map.cpp
     tests/luacxx_convert_optional.cpp
