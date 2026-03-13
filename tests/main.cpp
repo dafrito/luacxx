@@ -546,6 +546,12 @@ BOOST_AUTO_TEST_CASE(error_support)
 {
     auto env = lua::create();
 
+    env["err"] = lua::error("Intentional");
+    lua::run_string(env,
+        "assert(err:what() == 'Intentional')\n"
+        "assert(tostring(err) == 'Intentional')"
+    );
+
     int value = 0;
     env["call"] = lua::push_function<void(bool)>(env, [&](bool shouldErr) {
         Wrapper wrapper(value);

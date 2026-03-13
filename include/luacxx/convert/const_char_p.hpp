@@ -63,4 +63,6 @@ struct Push<std::string_view>
 
 } // namespace lua
 
+LUA_METATABLE_NAMED(const char*)
+
 #endif // LUACXX_CONVERT_CONST_CHAR_P_INCLUDED
