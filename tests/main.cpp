@@ -231,6 +231,16 @@ BOOST_AUTO_TEST_CASE(table_algorithms)
     BOOST_CHECK_EQUAL(lua::get<int>(env["c"]["d"]["e"]["f"]), 96);
 }
 
+BOOST_AUTO_TEST_CASE(memory_address)
+{
+    auto env = lua::create();
+    auto table = lua::push(env, lua::value::table);
+
+    std::ostringstream expected;
+    expected << lua_topointer(env, table.pos());
+    BOOST_CHECK_EQUAL(lua::memory_address(table), expected.str());
+}
+
 BOOST_AUTO_TEST_CASE(index_algorithms)
 {
     auto env = lua::create();
