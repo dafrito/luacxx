@@ -50,9 +50,9 @@ representation, such as:
 
 Examples in the codebase include:
 
-- numeric types in [`include/luacxx/convert/numeric.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/numeric.hpp)
-- strings in [`include/luacxx/convert/string.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/string.hpp)
-- containers in [`include/luacxx/convert/vector.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/vector.hpp)
+- numeric types in [`include/luacxx/convert/numeric.hpp`](../../include/luacxx/convert/numeric.hpp)
+- strings in [`include/luacxx/convert/string.hpp`](../../include/luacxx/convert/string.hpp)
+- containers in [`include/luacxx/convert/vector.hpp`](../../include/luacxx/convert/vector.hpp)
 
 ## `lua::Store<T>`
 
@@ -79,9 +79,9 @@ You specialize `Store<T>` when:
 
 Examples:
 
-- `std::optional<T>` treats `nil` as reset in [`include/luacxx/convert/optional.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/optional.hpp)
-- `std::vector<T>` rebuilds from a Lua array table in [`include/luacxx/convert/vector.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/vector.hpp)
-- pointer retrieval uses userdata type checks in [`include/luacxx/stack.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/stack.hpp)
+- `std::optional<T>` treats `nil` as reset in [`include/luacxx/convert/optional.hpp`](../../include/luacxx/convert/optional.hpp)
+- `std::vector<T>` rebuilds from a Lua array table in [`include/luacxx/convert/vector.hpp`](../../include/luacxx/convert/vector.hpp)
+- pointer retrieval uses userdata type checks in [`include/luacxx/stack.hpp`](../../include/luacxx/stack.hpp)
 
 ## `lua::Get<T>`
 
@@ -111,9 +111,9 @@ You specialize `Get<T>` when:
 
 Examples:
 
-- `Get<T&>` and `Get<const T&>` in [`include/luacxx/stack.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/stack.hpp)
-- `Get<std::tuple<...>>` in [`include/luacxx/convert/tuple.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/tuple.hpp)
-- `Get<std::function<...>>` in [`include/luacxx/convert/callable.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/callable.hpp)
+- `Get<T&>` and `Get<const T&>` in [`include/luacxx/stack.hpp`](../../include/luacxx/stack.hpp)
+- `Get<std::tuple<...>>` in [`include/luacxx/convert/tuple.hpp`](../../include/luacxx/convert/tuple.hpp)
+- `Get<std::function<...>>` in [`include/luacxx/convert/callable.hpp`](../../include/luacxx/convert/callable.hpp)
 
 ## `lua::Construct<T>`
 

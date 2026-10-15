@@ -56,7 +56,12 @@ higher-level helper that:
 1. pushes the callable and arguments
 2. invokes it
 3. converts the result back to C++
-4. restores the stack shape for you
+
+When invoking a Lua function, the typed `call<RV>` form leaves its Lua result
+on the stack after conversion; it does not pop that result. The untyped `call`
+form requests no results, while `call<N>` leaves the requested results for the
+caller. Manage those stack
+values explicitly when mixing these helpers with raw Lua API calls.
 
 These helpers are meant to coexist with raw Lua API calls, not replace them in
 every situation.

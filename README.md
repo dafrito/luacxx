@@ -77,7 +77,7 @@ To build the test suite:
 
 ```sh
 cmake -S . -B build -DLUACXX_BUILD_TESTS=ON
-cmake --build build --target luacxx_test_main
+cmake --build build
 ctest --test-dir build --output-on-failure
 ```
 

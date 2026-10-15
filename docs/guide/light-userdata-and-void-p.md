@@ -6,7 +6,7 @@ This is intentionally limited.
 
 ## What Luacxx Does
 
-In [`include/luacxx/convert/void.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/void.hpp):
+In [`include/luacxx/convert/void.hpp`](../../include/luacxx/convert/void.hpp):
 
 - `lua::Push<void*>` pushes a pointer as Lua light userdata
 - `lua::Store<void*>` only accepts Lua light userdata
