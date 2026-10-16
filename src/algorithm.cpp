@@ -115,7 +115,7 @@ std::string lua::class_name(lua_State* const state, int pos)
     return std::string();
 }
 
-std::string memory_address(const lua::index& index)
+std::string lua::memory_address(const lua::index& index)
 {
     std::stringstream str;
     str << lua_topointer(index.state(), index.pos());
