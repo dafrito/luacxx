@@ -37,8 +37,8 @@ Strictness:
 
 Related headers:
 
-- [`include/luacxx/convert/string.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/string.hpp)
-- [`include/luacxx/convert/const_char_p.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/const_char_p.hpp) for push-only C string and `std::string_view` inputs
+- [`include/luacxx/convert/string.hpp`](../../include/luacxx/convert/string.hpp)
+- [`include/luacxx/convert/const_char_p.hpp`](../../include/luacxx/convert/const_char_p.hpp) for push-only C string and `std::string_view` inputs
 
 ## `std::vector<T>`
 
@@ -59,7 +59,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/vector.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/vector.hpp)
+- [`include/luacxx/convert/vector.hpp`](../../include/luacxx/convert/vector.hpp)
 
 ## `std::array<T, N>`
 
@@ -80,7 +80,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/array.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/array.hpp)
+- [`include/luacxx/convert/array.hpp`](../../include/luacxx/convert/array.hpp)
 
 ## `std::tuple<Ts...>`
 
@@ -101,7 +101,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/tuple.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/tuple.hpp)
+- [`include/luacxx/convert/tuple.hpp`](../../include/luacxx/convert/tuple.hpp)
 
 ## `std::optional<T>`
 
@@ -124,7 +124,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/optional.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/optional.hpp)
+- [`include/luacxx/convert/optional.hpp`](../../include/luacxx/convert/optional.hpp)
 
 ## `std::map<K, V>`
 
@@ -145,7 +145,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/map.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/map.hpp)
+- [`include/luacxx/convert/map.hpp`](../../include/luacxx/convert/map.hpp)
 
 ## `std::unordered_map<K, V>`
 
@@ -166,7 +166,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/unordered_map.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/unordered_map.hpp)
+- [`include/luacxx/convert/unordered_map.hpp`](../../include/luacxx/convert/unordered_map.hpp)
 
 ## `std::shared_ptr<T>`
 
@@ -188,7 +188,7 @@ Strictness:
 
 Related header:
 
-- [`include/luacxx/convert/shared_ptr.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/convert/shared_ptr.hpp)
+- [`include/luacxx/convert/shared_ptr.hpp`](../../include/luacxx/convert/shared_ptr.hpp)
 
 ## Push-Only String Inputs
 

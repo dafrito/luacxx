@@ -17,7 +17,7 @@ The built-in `lua::value` entries are:
 - `lua::value::registry`
 
 They all work through the `Push<lua::value>` specialization in
-[`include/luacxx/value.hpp`](/Users/aaronfaanes/Documents/luacxx/include/luacxx/value.hpp).
+[`include/luacxx/value.hpp`](../../include/luacxx/value.hpp).
 
 ## Common Uses
 

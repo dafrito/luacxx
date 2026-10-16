@@ -89,17 +89,14 @@ int Counter_new(lua_State* const state)
 
     lua::make<Counter>(state, initial);
 
-    lua_pushvalue(state, 1);
-    lua_setmetatable(state, -2);
-
-    lua_replace(state, 1);
-    lua_settop(state, 1);
     return 1;
 }
 ```
 
-This version expects the metatable table in stack slot `1`, so it fits the
-common `Counter:new(...)` Lua style.
+This version expects the class table in stack slot `1`, so it fits the
+common `Counter:new(...)` Lua style. `lua::make<Counter>()` already installs
+the userdata metatable, including its methods and `__gc`; do not replace it
+with the class table.
 
 ## Export The Class Table
 
