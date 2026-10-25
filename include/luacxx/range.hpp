@@ -10,7 +10,7 @@ namespace lua {
 
 template <class T>
 class iterator {
-    lua_State* const _state;
+    lua_State* _state;
     int _pos;
 
 public:
@@ -50,12 +50,7 @@ public:
         return _pos >= 1 && _pos <= lua_gettop(_state);
     }
 
-    iterator& operator=(const iterator& other)
-    {
-        _state = other._state;
-        _pos = other._pos;
-        return *this;
-    }
+    iterator& operator=(const iterator& other) = default;
 
     template <class U>
     bool operator==(const iterator<U>& other)

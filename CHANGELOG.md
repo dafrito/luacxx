@@ -43,6 +43,8 @@ requirements.
 
 ### Fixed
 
+- Make stack iterators copy-assignable across Lua states and stack positions,
+  fixing a compile error reported by GCC when including `luacxx/range.hpp`.
 - Define `lua::memory_address` in the namespace declared by its public header,
   fixing downstream linking.
 - Handle short streams, shebang-prefixed Lua source, and stream I/O failures

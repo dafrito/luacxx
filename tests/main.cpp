@@ -7,6 +7,28 @@
 
 #include <memory>
 
+BOOST_AUTO_TEST_CASE(iterator_assignment_rebinds_state_and_position)
+{
+    auto first = lua::create();
+    auto second = lua::create();
+    lua::push(first, 99);
+    lua::push(second, 10, 20);
+
+    lua::iterator<int> destination(first, 1);
+    lua::iterator<int> source(second, 2);
+    auto& assigned = (destination = source);
+
+    BOOST_CHECK(&assigned == &destination);
+    BOOST_CHECK(destination.state() == second.state());
+    BOOST_CHECK_EQUAL(destination.pos(), 2);
+    BOOST_CHECK_EQUAL(*destination, 20);
+
+    --destination;
+    BOOST_CHECK_EQUAL(*destination, 10);
+    BOOST_CHECK_EQUAL(source.pos(), 2);
+    BOOST_CHECK_EQUAL(*source, 20);
+}
+
 BOOST_AUTO_TEST_CASE(push_and_store)
 {
     auto env = lua::create();
