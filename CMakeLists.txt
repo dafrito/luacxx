@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 
 project(luacxx
-  VERSION 4.0.0
+  VERSION 5.0.0
   LANGUAGES CXX
   DESCRIPTION "Lua binding library for modern C++"
 )

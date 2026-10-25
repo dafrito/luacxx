@@ -59,6 +59,9 @@ path that Luacxx uses for non-primitive types.
 
 ## Build
 
+For changes and migration guidance from 4.0.0, see
+[`CHANGELOG.md`](CHANGELOG.md).
+
 Luacxx requires:
 
 - C++20
